@@ -1,6 +1,7 @@
 
 from django.shortcuts import render
 from rest_framework import viewsets, status
+from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
 from .serializers import MainCoreMasterSerializer, CategoryMasterSerializer, SubcategoryMasterSerializer, \
@@ -57,3 +58,17 @@ class CityMasterView(viewsets.ModelViewSet):
 class PincodeMasterView(viewsets.ModelViewSet):
     queryset = PincodeMaster.objects.all()
     serializer_class = PincodeMasterSerializer
+
+@api_view(['post'])
+def get_category_by_maincore(request):
+    data=request.data
+    maincoreid=data['maincoreid']
+    try:
+        catobj=CategoryMaster.objects.filter(maincore_id=maincoreid).values()
+        if catobj:
+            return Response({'status':200,'message':'Category List','data':catobj},status=200)
+        else:
+            return Response({'status': 200, 'message': 'Category List', 'data': catobj}, status=200)
+    except Exception as e:
+        return Response({'status':500,'error':str(e)},status=500)
+

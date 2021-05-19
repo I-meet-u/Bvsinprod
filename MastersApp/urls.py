@@ -17,6 +17,7 @@ router.register('pincode-master',views.PincodeMasterView)
 
 urlpatterns = [
     path('masters-router-urls/',include(router.urls)), #router urls are included
+    path('get-category-by-maincore/',views.get_category_by_maincore)
 
 
 

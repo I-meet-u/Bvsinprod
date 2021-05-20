@@ -1,11 +1,17 @@
+import json
 import math
 import random
 
 from django.contrib.auth.hashers import make_password, check_password
 from mailjet_rest import Client
-
+# import mailchimp_marketing
+# from mailchimp_marketing.api_client import ApiClientError
+import mailchimp_transactional as MailchimpTransactional
+from mailchimp_transactional.api_client import ApiClientError
 import requests
+from mailchimp3 import MailChimp
 from django.core.exceptions import ObjectDoesNotExist
+from itertools import chain
 
 from django.shortcuts import render
 
@@ -17,13 +23,19 @@ from rest_framework.exceptions import ValidationError
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
+
 from .models import SelfRegistration, SelfRegistration_Sample, BasicCompanyDetails, BillingAddress, ShippingAddress, \
     IndustrialInfo, IndustrialHierarchy, BankDetails
 from .serializers import SelfRegistrationSerializer, SelfRegistrationSerializerSample, BasicCompanyDetailsSerializers, \
     BillingAddressSerializer, ShippingAddressSeializer, IndustrialInfoSerializer, IndustrialHierarchySerializer, \
     BankDetailsSerializer
 from rest_framework.permissions import AllowAny
+from rest_framework import status
 
+# from mailchimp_marketing import Client
+from rest_framework.response import Response
+from rest_framework.generics import GenericAPIView
+# from Vendorsinprojectversion2.settings import (MAILCHIMP_API_KEY,MAILCHIMP_DATA_CENTER,MAILCHIMP_EMAIL_LIST_ID)
 
 class SelfRegisterView(viewsets.ModelViewSet):
     # Register user information
@@ -511,3 +523,105 @@ class BankDetailsView(viewsets.ModelViewSet):
 #     except Exception as e:
 #         return Response({'status': 500, 'message': str(e)}, status=500)
 #--------------------------------------venndor-info-get---------------------------
+# class MailSubscriptionAPIView(GenericAPIView):
+#     def subscribe_email(email):
+#         mailchimp = Client()
+#         mailchimp.set_config({"api_key": MAILCHIMP_API_KEY,"server": MAILCHIMP_DATA_CENTER})
+#
+#         member_info = {
+#             "email_address": email,
+#             "status": "subscribed"
+#         }
+#
+#         try:
+#             response=mailchimp.lists.add_list_member(MAILCHIMP_EMAIL_LIST_ID, member_info)
+#             print("response: {}".format(response))
+#             data1=json.dumps((response))
+#             print(data1)
+#
+#         except ApiClientError as error:
+#             print(error.text)
+#             print("An exception occurred: {}".format(error.text))
+#
+#     def post(self, request, *args, **kwargs):
+#         email = request.data['email']
+#         digits = '0123456789'
+#         OTP = ""
+#         for i in range(6):
+#             OTP += digits[math.floor(random.random() * 10)]
+#             user = SelfRegistration.objects.get(username=email)
+#             if user:
+#                 result =MailSubscriptionAPIView.subscribe_email(email)
+#                 print(result)
+#             return Response({"status_code": status.HTTP_200_OK,"message":"Mail Received"})
+#         else:
+#             return Response({'status_code':status.HTTP_204_NO_CONTENT,'message':'No data present'})
+
+
+# @api_view(['post'])
+# def send_mail(request):
+#     data=request.data
+#     email=data['email']
+#     digits = '0123456789'
+#     try:
+#         user = SelfRegistration.objects.get(username=email)
+#         print(user)
+#         if user:
+#             OTP = ""
+#             for i in range(6):
+#                 OTP += digits[math.floor(random.random() * 10)]
+#             Mailchimp = Client()
+#
+#             # Mailchimp.set_config({"api_key": MAILCHIMP_API_KEY})
+#             mailchimp =MailchimpTransactional.Client("14kMF-44pCPZu8XbNkAzFA")
+#             response = client.messages.send({"message":{"from_email":"cloud.admin@vendorsin.in"}, "to": [{"email":email}],
+#                  "subject": "OTP Confirmation",
+#                  "text": "Dear Sir|Madam" + "\n\n This is the OTP for email verification" +" "+OTP+ "\n\nThis is System Generated Email Please Don't Reply For This Mail" + "\n\n Thank You"})
+#             print(response)
+#         return Response({'status':200,'message':'ok'},status=200)
+#     except ApiClientError as error:
+#         print("An exception occurred: {}".format(error.text))
+
+@api_view(['post'])
+def get_basic_info_by_gst(request):
+    data=request.data
+    gst_no=data['gst_no']
+    basicdetailslist=[]
+    try:
+        basicobj=BasicCompanyDetails.objects.get(gst_number=gst_no)
+        print(basicobj.company_code)
+        if basicobj:
+            billobj=BillingAddress.objects.get(company_code_id=basicobj.company_code)
+            shipobj=ShippingAddress.objects.get(company_code_id=basicobj.company_code)
+            basicdetailslist.append({
+                'gst_number':basicobj.gst_number,
+                'company_name':basicobj.company_name,
+                'company_code':basicobj.company_code,
+                'company_type':basicobj.company_type,
+                'listing_date':basicobj.listing_date,
+                'pan_number':basicobj.pan_number,
+                'tax_payer_type':basicobj.tax_payer_type,
+                'msme_registered':basicobj.msme_registered,
+                'company_established':basicobj.company_established,
+                'registered_iec':basicobj.registered_iec,
+                'industrial_scale':basicobj.industrial_scale,
+                'bill_address':billobj.bill_address,
+                'bill_country':billobj.bill_country,
+                'bill_city':billobj.bill_city,
+                'bill_pincode':billobj.bill_pincode,
+                'bill_landmark':billobj.bill_landmark,
+                'bill_location':billobj.bill_location,
+                'ship_address':shipobj.ship_address,
+                'ship_country':shipobj.ship_country,
+                'ship_city':shipobj.ship_city,
+                'ship_pincode':shipobj.ship_pincode,
+                'ship_landmark':shipobj.ship_landmark,
+                'ship_location':shipobj.ship_location,
+                'updated_by':basicobj.updated_by_id
+            })
+            return Response({'status': 200, 'message': 'Basic Details List','data':basicdetailslist}, status=200)
+        else:
+            return Response({'status':204,'message':'Not Present'},status=204)
+    except Exception as e:
+        return Response({'status':500,'error':str(e)},status=500)
+

@@ -1,6 +1,8 @@
 from django.urls import path, include
 from rest_framework import routers
 
+
+
 from . import  views
 
 router=routers.DefaultRouter()
@@ -29,7 +31,11 @@ urlpatterns = [
     # path('waiting-mail-for-admin-approval/',views.waiting_mail_for_admin_approval),
     path('otp-session-time-out-of-phone-and-email/',views.otp_session_time_out_of_phone_and_email),
     path('phone-otp-session-out/',views.phone_otp_session_out),
-    path('email-otp-session-out/',views.email_otp_session_out)
+    path('email-otp-session-out/',views.email_otp_session_out),
+    # path('send_mail/',views.send_mail)
+    path('get-basic-info-by-gst/',views.get_basic_info_by_gst)
+    # path('subscribe_email/', MailSubscriptionAPIView.as_view(),name='subscribe-email')
+
 
 
 

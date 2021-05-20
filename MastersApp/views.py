@@ -68,7 +68,62 @@ def get_category_by_maincore(request):
         if catobj:
             return Response({'status':200,'message':'Category List','data':catobj},status=200)
         else:
-            return Response({'status': 200, 'message': 'Category List', 'data': catobj}, status=200)
+            return Response({'status': 204, 'message':'No categoreis are found'}, status=204)
     except Exception as e:
         return Response({'status':500,'error':str(e)},status=500)
 
+
+@api_view(['post'])
+def get_subcategory_by_category(request):
+    data=request.data
+    categoryid=data['categoryid']
+    try:
+        subcatobj=SubCategoryMaster.objects.filter(category_id__in=categoryid).values()
+        if subcatobj:
+            return Response({'status':200,'message':'SubCategory List','data':subcatobj},status=200)
+        else:
+            return Response({'status': 204, 'message':'No subcategories are found'}, status=204)
+    except Exception as e:
+        return Response({'status':500,'error':str(e)},status=500)
+
+
+@api_view(['post'])
+def maincore_search(request):
+    data=request.data
+    maincore_name=data['maincore_name']
+    try:
+        maincoreobj=MaincoreMaster.objects.filter(maincore_name__icontains=maincore_name).values()
+        if maincoreobj:
+            return Response({'status':200,'message':'Maincore search success','data':maincoreobj},status=200)
+        else:
+            return Response({'status':204,'message':'No maincore content'},status=204)
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)
+
+
+@api_view(['post'])
+def category_search(request):
+    data=request.data
+    category_name=data['category_name']
+    try:
+        categoryobj=CategoryMaster.objects.filter(category_name__icontains=category_name).values()
+        if categoryobj:
+            return Response({'status':200,'message':'Category search success','data':categoryobj},status=200)
+        else:
+            return Response({'status':204,'message':'No category content'},status=204)
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)
+
+
+@api_view(['post'])
+def sub_cateory_search(request):
+    data=request.data
+    sub_category_name=data['sub_category_name']
+    try:
+        subcategoryobj=SubCategoryMaster.objects.filter(sub_category_name__icontains=sub_category_name).values()
+        if subcategoryobj:
+            return Response({'status':200,'message':'SubCategory search success','data':subcategoryobj},status=200)
+        else:
+            return Response({'status':204,'message':'No subcategory content'},status=204)
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)

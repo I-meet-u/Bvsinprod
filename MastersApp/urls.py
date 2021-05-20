@@ -17,7 +17,11 @@ router.register('pincode-master',views.PincodeMasterView)
 
 urlpatterns = [
     path('masters-router-urls/',include(router.urls)), #router urls are included
-    path('get-category-by-maincore/',views.get_category_by_maincore)
+    path('get-category-by-maincore/',views.get_category_by_maincore),
+    path('get-sub-category-by-category/',views.get_subcategory_by_category),
+    path('maincore-search/',views.maincore_search),
+    path('category-search/',views.category_search),
+    path('sub-category-search/',views.sub_cateory_search)
 
 
 

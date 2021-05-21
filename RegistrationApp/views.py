@@ -6,10 +6,10 @@ from django.contrib.auth.hashers import make_password, check_password
 from mailjet_rest import Client
 # import mailchimp_marketing
 # from mailchimp_marketing.api_client import ApiClientError
-import mailchimp_transactional as MailchimpTransactional
-from mailchimp_transactional.api_client import ApiClientError
+# import mailchimp_transactional as MailchimpTransactional
+# from mailchimp_transactional.api_client import ApiClientError
 import requests
-from mailchimp3 import MailChimp
+# from mailchimp3 import MailChimp
 from django.core.exceptions import ObjectDoesNotExist
 from itertools import chain
 

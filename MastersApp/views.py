@@ -4,10 +4,10 @@ from rest_framework import viewsets, status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
-from .serializers import MainCoreMasterSerializer, CategoryMasterSerializer, SubcategoryMasterSerializer, \
-    CountryMasterSerializer, StateMasterSerializer, CityMasterSerializer, IndustryToServeMasterSerializer, \
+from .serializers import MainCoreMasterSerializer, CategoryMasterSerializer, SubcategoryMasterSerializer,\
+    IndustryToServeMasterSerializer, \
     NatureOfBusinessMasterSerializer, SupplyCapabilitiesMasterSerializer, PincodeMasterSerializer
-from .models import MaincoreMaster, CategoryMaster, SubCategoryMaster, CountryMaster, StateMaster, CityMaster, \
+from .models import MaincoreMaster, CategoryMaster, SubCategoryMaster,\
     IndustryToServeMaster,NatureOfBusinessMaster,SupplyCapabilitiesMaster,PincodeMaster
 
 
@@ -25,9 +25,6 @@ class SupplyCapabilitiesMasterView(viewsets.ModelViewSet):
     queryset = SupplyCapabilitiesMaster.objects.all()
     serializer_class =SupplyCapabilitiesMasterSerializer
 
-
-
-
 class MaincoreMasterView(viewsets.ModelViewSet):
     queryset = MaincoreMaster.objects.all()
     serializer_class = MainCoreMasterSerializer
@@ -39,20 +36,6 @@ class CategoryMasterView(viewsets.ModelViewSet):
 class SubCategoryMasterView(viewsets.ModelViewSet):
     queryset = SubCategoryMaster.objects.all()
     serializer_class = SubcategoryMasterSerializer
-
-class CountryMasterView(viewsets.ModelViewSet):
-    queryset = CountryMaster.objects.all()
-    serializer_class = CountryMasterSerializer
-
-class StateMasterView(viewsets.ModelViewSet):
-    queryset = StateMaster.objects.all()
-    serializer_class = StateMasterSerializer
-
-
-class CityMasterView(viewsets.ModelViewSet):
-    queryset = CityMaster.objects.all()
-    serializer_class = CityMasterSerializer
-
 
 
 class PincodeMasterView(viewsets.ModelViewSet):
@@ -116,7 +99,7 @@ def category_search(request):
 
 
 @api_view(['post'])
-def sub_cateory_search(request):
+def sub_category_search(request):
     data=request.data
     sub_category_name=data['sub_category_name']
     try:

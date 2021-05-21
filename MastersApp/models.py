@@ -13,10 +13,11 @@ class IndustryToServeMaster(models.Model):
     is_verified = models.BooleanField(default=False)
     created_on = models.DateTimeField(auto_now_add=True)
     updated_on = models.DateTimeField(auto_now=True)
-    created_by_name = models.CharField(max_length=100, blank=True, null=True)
-    updated_by_name = models.CharField(max_length=100, blank=True, null=True)
-    created_by = models.BigIntegerField()
-    updated_by = models.ForeignKey(SelfRegistration, on_delete=models.CASCADE)
+    status=models.CharField(max_length=30,default='Active')
+    # created_by_name = models.CharField(max_length=100, blank=True, null=True)
+    # updated_by_name = models.CharField(max_length=100, blank=True, null=True)
+    # created_by = models.BigIntegerField()
+    # updated_by = models.ForeignKey(SelfRegistration, on_delete=models.CASCADE)
     history = HistoricalRecords()
 
     class Meta:
@@ -31,10 +32,11 @@ class NatureOfBusinessMaster(models.Model):
     is_verified = models.BooleanField(default=False)
     created_on = models.DateTimeField(auto_now_add=True)
     updated_on = models.DateTimeField(auto_now=True)
-    created_by_name = models.CharField(max_length=100, blank=True, null=True)
-    updated_by_name = models.CharField(max_length=100, blank=True, null=True)
-    created_by = models.BigIntegerField()
-    updated_by = models.ForeignKey(SelfRegistration, on_delete=models.CASCADE)
+    status = models.CharField(max_length=30, default='Active')
+    # created_by_name = models.CharField(max_length=100, blank=True, null=True)
+    # updated_by_name = models.CharField(max_length=100, blank=True, null=True)
+    # created_by = models.BigIntegerField()
+    # updated_by = models.ForeignKey(SelfRegistration, on_delete=models.CASCADE)
     history = HistoricalRecords()
 
     class Meta:
@@ -49,10 +51,11 @@ class SupplyCapabilitiesMaster(models.Model):
     is_verified = models.BooleanField(default=False)
     created_on = models.DateTimeField(auto_now_add=True)
     updated_on = models.DateTimeField(auto_now=True)
-    created_by_name = models.CharField(max_length=100, blank=True, null=True)
-    updated_by_name = models.CharField(max_length=100, blank=True, null=True)
-    created_by = models.BigIntegerField()
-    updated_by = models.ForeignKey(SelfRegistration, on_delete=models.CASCADE)
+    status = models.CharField(max_length=30, default='Active')
+    # created_by_name = models.CharField(max_length=100, blank=True, null=True)
+    # updated_by_name = models.CharField(max_length=100, blank=True, null=True)
+    # created_by = models.BigIntegerField()
+    # updated_by = models.ForeignKey(SelfRegistration, on_delete=models.CASCADE)
     history = HistoricalRecords()
 
     class Meta:
@@ -67,10 +70,10 @@ class MaincoreMaster(models.Model):
     is_verified = models.BooleanField(default=False)
     created_on = models.DateTimeField(auto_now_add=True)
     updated_on = models.DateTimeField(auto_now=True)
-    created_by_name = models.CharField(max_length=100, blank=True, null=True)
-    updated_by_name = models.CharField(max_length=100, blank=True, null=True)
-    created_by = models.BigIntegerField()
-    updated_by = models.ForeignKey(SelfRegistration, on_delete=models.CASCADE)
+    # created_by_name = models.CharField(max_length=100, blank=True, null=True)
+    # updated_by_name = models.CharField(max_length=100, blank=True, null=True)
+    # created_by = models.BigIntegerField()
+    # updated_by = models.ForeignKey(SelfRegistration, on_delete=models.CASCADE)
     history = HistoricalRecords()
     class Meta:
         db_table = "MaincoreMaster"
@@ -84,10 +87,10 @@ class CategoryMaster(models.Model):
     maincore = models.ForeignKey(MaincoreMaster, on_delete=models.CASCADE)
     created_on = models.DateTimeField(auto_now_add=True)
     updated_on = models.DateTimeField(auto_now=True)
-    created_by_name = models.CharField(max_length=100, blank=True, null=True)
-    updated_by_name = models.CharField(max_length=100, blank=True, null=True)
-    created_by = models.BigIntegerField()
-    updated_by = models.ForeignKey(SelfRegistration, on_delete=models.CASCADE)
+    # created_by_name = models.CharField(max_length=100, blank=True, null=True)
+    # updated_by_name = models.CharField(max_length=100, blank=True, null=True)
+    # created_by = models.BigIntegerField()
+    # updated_by = models.ForeignKey(SelfRegistration, on_delete=models.CASCADE)
     history = HistoricalRecords()
 
     class Meta:
@@ -102,71 +105,16 @@ class SubCategoryMaster(models.Model):
     category = models.ForeignKey(CategoryMaster, on_delete=models.CASCADE)
     created_on = models.DateTimeField(auto_now_add=True)
     updated_on = models.DateTimeField(auto_now=True)
-    created_by_name = models.CharField(max_length=100, blank=True, null=True)
-    updated_by_name = models.CharField(max_length=100, blank=True, null=True)
-    created_by = models.BigIntegerField()
-    updated_by = models.ForeignKey(SelfRegistration, on_delete=models.CASCADE)
+    # created_by_name = models.CharField(max_length=100, blank=True, null=True)
+    # updated_by_name = models.CharField(max_length=100, blank=True, null=True)
+    # created_by = models.BigIntegerField()
+    # updated_by = models.ForeignKey(SelfRegistration, on_delete=models.CASCADE)
     history = HistoricalRecords()
 
     class Meta:
         db_table = "SubCategoryMaster"
 
-#-----------------------------------------COUNTRY MASTER-------------------------------------------------------------
-class CountryMaster(models.Model):
-    country_id = models.BigAutoField(primary_key=True)
-    country_name = models.CharField(max_length=50, unique=True)
-    country_code = models.CharField(max_length=50, unique=True)
-    country_prefix = models.CharField(max_length=50)
-    country_currency = models.CharField(max_length=50)
-    is_verified = models.BooleanField(default=False)
-    created_on = models.DateTimeField(auto_now_add=True)
-    updated_on = models.DateTimeField(auto_now=True)
-    created_by_name = models.CharField(max_length=100, blank=True, null=True)
-    updated_by_name = models.CharField(max_length=100, blank=True, null=True)
-    created_by = models.BigIntegerField()
-    updated_by = models.ForeignKey(SelfRegistration, on_delete=models.CASCADE)
-    history = HistoricalRecords()
 
-    class Meta:
-        db_table = "CountryMaster"
-
-#-----------------------------------------STATE MASTER-------------------------------------------------------------
-
-class StateMaster(models.Model):
-    state_id = models.BigAutoField(primary_key=True)
-    state_name = models.CharField(max_length=50, unique=True)
-    state_code = models.CharField(max_length=50, unique=True,blank=True,null=True)
-    is_verified = models.BooleanField(default=False)
-    created_on = models.DateTimeField(auto_now_add=True)
-    updated_on = models.DateTimeField(auto_now=True)
-    created_by_name = models.CharField(max_length=100, blank=True, null=True)
-    updated_by_name = models.CharField(max_length=100, blank=True, null=True)
-    created_by = models.BigIntegerField()
-    updated_by = models.ForeignKey(SelfRegistration, on_delete=models.CASCADE)
-    countries=models.ForeignKey(CountryMaster,on_delete=models.CASCADE)
-    history = HistoricalRecords()
-
-    class Meta:
-        db_table = "StateMaster"
-
-#-----------------------------------------CITY MASTER-------------------------------------------------------------
-
-class CityMaster(models.Model):
-    city_id = models.BigAutoField(primary_key=True)
-    city_name = models.CharField(max_length=50, unique=True)
-    city_code = models.CharField(max_length=50, unique=True,blank=True,null=True)
-    is_verified = models.BooleanField(default=False)
-    created_on = models.DateTimeField(auto_now_add=True)
-    updated_on = models.DateTimeField(auto_now=True)
-    created_by_name = models.CharField(max_length=100, blank=True, null=True)
-    updated_by_name = models.CharField(max_length=100, blank=True, null=True)
-    created_by = models.BigIntegerField()
-    updated_by = models.ForeignKey(SelfRegistration, on_delete=models.CASCADE)
-    states = models.ForeignKey(StateMaster, on_delete=models.CASCADE)
-    history = HistoricalRecords()
-
-    class Meta:
-        db_table = "CityMaster"
 
 #-----------------------------------------PINCODE MASTER-------------------------------------------------------------
 class PincodeMaster(models.Model):
@@ -176,11 +124,11 @@ class PincodeMaster(models.Model):
     is_verified = models.BooleanField(default=False)
     created_on = models.DateTimeField(auto_now_add=True)
     updated_on = models.DateTimeField(auto_now=True)
-    created_by_name = models.CharField(max_length=100, blank=True, null=True)
-    updated_by_name = models.CharField(max_length=100, blank=True, null=True)
-    created_by = models.BigIntegerField()
-    updated_by = models.ForeignKey(SelfRegistration, on_delete=models.CASCADE)
-    states = models.ForeignKey(StateMaster, on_delete=models.CASCADE)
+    status = models.CharField(max_length=30, default='Active')
+    # created_by_name = models.CharField(max_length=100, blank=True, null=True)
+    # updated_by_name = models.CharField(max_length=100, blank=True, null=True)
+    # created_by = models.BigIntegerField()
+    # updated_by = models.ForeignKey(SelfRegistration, on_delete=models.CASCADE)
     history = HistoricalRecords()
 
     class Meta:

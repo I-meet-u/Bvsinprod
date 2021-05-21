@@ -10,9 +10,6 @@ router.register('supply-capability-master',views.SupplyCapabilitiesMasterView)
 router.register('maincore-master',views.MaincoreMasterView)
 router.register('category-master',views.CategoryMasterView)
 router.register('sub-category-master',views.SubCategoryMasterView)
-router.register('country-master',views.CountryMasterView)
-router.register('state-master',views.StateMasterView)
-router.register('city-master',views.CityMasterView)
 router.register('pincode-master',views.PincodeMasterView)
 
 urlpatterns = [
@@ -21,7 +18,7 @@ urlpatterns = [
     path('get-sub-category-by-category/',views.get_subcategory_by_category),
     path('maincore-search/',views.maincore_search),
     path('category-search/',views.category_search),
-    path('sub-category-search/',views.sub_cateory_search)
+    path('sub-category-search/',views.sub_category_search)
 
 
 

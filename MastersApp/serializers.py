@@ -1,6 +1,6 @@
 from django.http import request
 
-from .models import MaincoreMaster, CategoryMaster, SubCategoryMaster, CountryMaster, StateMaster, CityMaster, \
+from .models import MaincoreMaster, CategoryMaster, SubCategoryMaster,\
     IndustryToServeMaster,NatureOfBusinessMaster,SupplyCapabilitiesMaster,PincodeMaster
 from rest_framework import serializers
 
@@ -35,23 +35,6 @@ class SubcategoryMasterSerializer(serializers.ModelSerializer):
     class Meta:
         model=SubCategoryMaster
         fields='__all__'
-
-class CountryMasterSerializer(serializers.ModelSerializer):
-    class Meta:
-        model=CountryMaster
-        fields='__all__'
-
-class StateMasterSerializer(serializers.ModelSerializer):
-    class Meta:
-        model=StateMaster
-        fields='__all__'
-
-class CityMasterSerializer(serializers.ModelSerializer):
-    class Meta:
-        model=CityMaster
-        fields='__all__'
-
-
 
 class PincodeMasterSerializer(serializers.ModelSerializer):
     class Meta:

@@ -13,6 +13,8 @@ import os.path
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
+
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
@@ -43,7 +45,7 @@ INSTALLED_APPS = [
     'MastersApp',
     'MaterialApp',
     'LandingPageApp',
-    'rest_framework.authtoken'
+    'rest_framework.authtoken',
 ]
 
 MIDDLEWARE = [
@@ -146,7 +148,11 @@ REST_FRAMEWORK = {
         'rest_framework.parsers.MultiPartParser',
     ],
 }
+# Mailchimp credentials
 
+# MAILCHIMP_API_KEY  = "5e55a31f4a4e88d543a95d1d35bad317-us1"
+# MAILCHIMP_DATA_CENTER = "us1"
+# MAILCHIMP_EMAIL_LIST_ID = "7491dd57e4"
 
 
 # Static files (CSS, JavaScript, Images)
@@ -157,9 +163,9 @@ STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 STATICFILES_DIRS=[
     os.path.join(BASE_DIR,'static')
 ]
-MEDIA_URL='/media/'
-MEDIA_ROOT=os.path.join(BASE_DIR,'mediafiles')
-MEDIAFILES_DIRS = os.path.join(BASE_DIR, "media")
+# MEDIA_URL='/media/'
+# MEDIA_ROOT=os.path.join(BASE_DIR,'mediafiles')
+# MEDIAFILES_DIRS = os.path.join(BASE_DIR, "media")
 
 
 # Default primary key field type

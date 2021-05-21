@@ -40,7 +40,7 @@ class SelfRegistration_Sample(models.Model):
     updated_on = models.DateTimeField(auto_now=True)
     email_otp = models.CharField(max_length=20, blank=True)
     phone_otp = models.CharField(max_length=20, blank=True)
-    profile_cover_photo = models.FileField(upload_to='coverphoto')
+    profile_cover_photo = models.FileField(upload_to='static/coverphoto')
     history = HistoricalRecords()
 
     class Meta:
@@ -79,8 +79,8 @@ class BillingAddress(models.Model):
     created_on = models.DateTimeField(auto_now_add=True)
     updated_on = models.DateTimeField(auto_now=True)
     created_by = models.BigIntegerField()
-    updated_by = models.OneToOneField(SelfRegistration, on_delete=models.CASCADE)
-    company_code = models.OneToOneField(BasicCompanyDetails, on_delete=models.CASCADE)
+    updated_by = models.ForeignKey(SelfRegistration, on_delete=models.CASCADE)
+    company_code = models.ForeignKey(BasicCompanyDetails, on_delete=models.CASCADE)
     history = HistoricalRecords()
 
     class Meta:
@@ -97,8 +97,8 @@ class ShippingAddress(models.Model):
     created_on = models.DateTimeField(auto_now_add=True)
     updated_on = models.DateTimeField(auto_now=True)
     created_by = models.BigIntegerField()
-    updated_by = models.OneToOneField(SelfRegistration, on_delete=models.CASCADE)
-    company_code = models.OneToOneField(BasicCompanyDetails, on_delete=models.CASCADE)
+    updated_by = models.ForeignKey(SelfRegistration, on_delete=models.CASCADE)
+    company_code = models.ForeignKey(BasicCompanyDetails, on_delete=models.CASCADE)
     history = HistoricalRecords()
 
     class Meta:
@@ -150,8 +150,8 @@ class BankDetails(models.Model):
     created_on = models.DateTimeField(auto_now_add=True)
     updated_on = models.DateTimeField(auto_now=True)
     created_by = models.BigIntegerField()
-    updated_by = models.OneToOneField(SelfRegistration, on_delete=models.CASCADE)
-    company_code = models.OneToOneField(BasicCompanyDetails, on_delete=models.CASCADE)
+    updated_by = models.ForeignKey(SelfRegistration, on_delete=models.CASCADE)
+    company_code = models.ForeignKey(BasicCompanyDetails, on_delete=models.CASCADE)
     history = HistoricalRecords()
 
     class Meta:

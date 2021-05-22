@@ -388,7 +388,7 @@ class BasicCompanyDetailsView(viewsets.ModelViewSet):
     def get_queryset(self):
         basicobj = BasicCompanyDetails.objects.filter(user_id=self.request.GET.get('user_id'))
         if not basicobj:
-            raise ValidationError({'message': 'Related Documents are not present for this user'})
+            raise ValidationError({'message': 'Basic Details not exist','status':204})
         return basicobj
 
 
@@ -412,6 +412,12 @@ class IndustrialHierarchyView(viewsets.ModelViewSet):
 class BankDetailsView(viewsets.ModelViewSet):
     queryset =BankDetails.objects.all()
     serializer_class=BankDetailsSerializer
+
+    def get_queryset(self):
+        bankobj = BankDetails.objects.filter(updated_by=self.request.GET.get('updated_by'))
+        if not bankobj:
+            raise ValidationError({'message': 'Bank Details not exist','status':204})
+        return bankobj
 
 # @api_view(['put'])
 # def update_basic_company_info1(request):

@@ -14,6 +14,7 @@ router.register('shipping-address',views.ShippingAddressView),
 router.register('industry-info',views.IndustrialInfoView),
 router.register('industrial-hierarchy',views.IndustrialHierarchyView),
 router.register('bank-details',views.BankDetailsView)
+router.register('legal-documents',views.LegalDocumentsView)
 
 urlpatterns = [
     path('router-register-urls/',include(router.urls)), #router urls are included
@@ -32,8 +33,9 @@ urlpatterns = [
     path('otp-session-time-out-of-phone-and-email/',views.otp_session_time_out_of_phone_and_email),
     path('phone-otp-session-out/',views.phone_otp_session_out),
     path('email-otp-session-out/',views.email_otp_session_out),
-    # path('send_mail/',views.send_mail)
-    path('get-basic-info-by-gst/',views.get_basic_info_by_gst)
+    # path('send_mail/',views.send_mail),
+    path('get-basic-info-by-gst/',views.get_basic_info_by_gst),
+    # path('send_mail_template/',views.send_mail_template)
     # path('subscribe_email/', MailSubscriptionAPIView.as_view(),name='subscribe-email')
 
 

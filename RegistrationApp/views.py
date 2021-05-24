@@ -2,6 +2,7 @@ import json
 import math
 import random
 
+
 from django.contrib.auth.hashers import make_password, check_password
 from mailjet_rest import Client
 # import mailchimp_marketing
@@ -9,10 +10,11 @@ from mailjet_rest import Client
 # import mailchimp_transactional as MailchimpTransactional
 # from mailchimp_transactional.api_client import ApiClientError
 import requests
-# from mailchimp3 import MailChimp
+from mailchimp3 import MailChimp
 from django.core.exceptions import ObjectDoesNotExist
 from itertools import chain
-
+import mailchimp_transactional as MailchimpTransactional
+from mailchimp_transactional.api_client import ApiClientError
 from django.shortcuts import render
 
 # Create your views here.
@@ -20,15 +22,16 @@ from rest_framework import viewsets, status
 from rest_framework.authtoken.models import Token
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.exceptions import ValidationError
+from rest_framework.parsers import MultiPartParser
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
 
 from .models import SelfRegistration, SelfRegistration_Sample, BasicCompanyDetails, BillingAddress, ShippingAddress, \
-    IndustrialInfo, IndustrialHierarchy, BankDetails
+    IndustrialInfo, IndustrialHierarchy, BankDetails, LegalDocuments
 from .serializers import SelfRegistrationSerializer, SelfRegistrationSerializerSample, BasicCompanyDetailsSerializers, \
     BillingAddressSerializer, ShippingAddressSeializer, IndustrialInfoSerializer, IndustrialHierarchySerializer, \
-    BankDetailsSerializer
+    BankDetailsSerializer,LegalDocumentsSerializers
 from rest_framework.permissions import AllowAny
 from rest_framework import status
 
@@ -56,6 +59,11 @@ class SelfRegistrationSampleView(viewsets.ModelViewSet):
             serializer.save(password=password)
         else:
             serializer.save()
+
+class LegalDocumentsView(viewsets.ModelViewSet):
+    queryset = LegalDocuments.objects.all()
+    serializer_class = LegalDocumentsSerializers
+    parser_classes = [MultiPartParser]
 
 
 #
@@ -124,32 +132,36 @@ def phone_verification_otp(request):
 @api_view(['post'])
 def email_verification_otp(request):
     data = request.data
-    digits = '0123456789'
     email = data['email']
+    digits = '0123456789'
+    OTP = ""
     try:
         user = SelfRegistration.objects.get(username=email)
+        print(user)
         if user:
-            api_key = '15dd5580cada57242e99c2ebc87dfd96'
-            api_secret = '352ffb29187a798012b1cfdc7eb9f62f'
-            OTP = ""
             for i in range(6):
                 OTP += digits[math.floor(random.random() * 10)]
-            mailjet = Client(auth=(api_key, api_secret), version='v3.1')
-            data1 = {'Messages': [
-                {"From": {"Email": "admin@vendorson.com", "Name": "Vendors In"}, "To": [{"Email": email}],
-                 "Subject": "OTP Confirmation",
-                 "TextPart": "Dear Sir|Madam" + "\n\n This is the OTP for email verification" +" "+OTP+ "\n\nThis is System Generated Email Please Don't Reply For This Mail" + "\n\n Thank You"}]}
-
-            result = mailjet.send.create(data=data1)
-            print(result)
-            if result.status_code == 200:
-                user.email_otp = OTP
-                user.save()
-            return Response({'status': 200, 'message':'OTP successfully sent to mail'}, status=200)
+            mailchimp = MailchimpTransactional.Client('14kMF-44pCPZu8XbNkAzFA')
+            message = {
+                "from_email": "admin@vendorsin.com",
+                "subject": "Mail Verification OTP",
+                "to": [
+                    {
+                        "email": user.username,
+                        "type": "to"
+                    }
+                ]
+            }
+            response = mailchimp.messages.send({"message": message})
+            print(response)
+            return Response({'status': 200, 'message': 'Email sent successfully'}, status=200)
+        else:
+            return Response({'status': 202, 'message': 'Not present'}, status=202)
     except ObjectDoesNotExist as e:
         return Response({'status': 404, 'error': "Email not exist"}, status=404)
-    except Exception as e:
-        return Response({'status': 500, 'error': str(e)}, status=500)
+    except ApiClientError as error:
+        return Response({'status': 500, 'error': error}, status=500)
+
 
 @api_view(['post'])
 @permission_classes([AllowAny])
@@ -179,30 +191,35 @@ def get_userid_by_token(request):
 @api_view(['post'])
 def email_verification_otp_to_change_email(request):
     data = request.data
+    email = data['email']
     digits = '0123456789'
-    mail = data['mail']
+    OTP = ""
     try:
-
-        api_key = '15dd5580cada57242e99c2ebc87dfd96'
-        api_secret = '352ffb29187a798012b1cfdc7eb9f62f'
-        OTP = ""
-        for i in range(6):
-            OTP += digits[math.floor(random.random() * 10)]
-        mailjet = Client(auth=(api_key, api_secret), version='v3.1')
-        data1 = {'Messages': [
-                {"From": {"Email": "admin@vendorson.com", "Name": "Vendors In"}, "To": [{"Email": mail}],
-                 "Subject": "OTP Confirmation",
-                 "TextPart": "Dear Sir|Madam" + "\n\n This is the OTP for email verification to change your email" + " "+ OTP + "\n\nThis is System Generated Email Please Don't Reply For This Mail" + "\n\n Thank You"
-                 }]}
-        result = mailjet.send.create(data=data1)
-        if result.status_code == 200:
-            return Response({'status': 200, 'message':'OTP successfully sent to your mail','OTP':OTP}, status=200)
+        user = SelfRegistration.objects.get(username=email)
+        print(user)
+        if user:
+            for i in range(6):
+                OTP += digits[math.floor(random.random() * 10)]
+            mailchimp = MailchimpTransactional.Client('14kMF-44pCPZu8XbNkAzFA')
+            message = {
+                "from_email": "admin@vendorsin.com",
+                "subject": "Mail Verification OTP",
+                "to": [
+                    {
+                        "email": user.username,
+                        "type": "to"
+                    }
+                ]
+            }
+            response = mailchimp.messages.send({"message": message})
+            print(response)
+            return Response({'status': 200, 'message': 'Email sent successfully'}, status=200)
         else:
-            return Response({'status': 202, 'message': 'OTP not sent to your email'}, status=202)
+            return Response({'status': 202, 'message': 'Not present'}, status=202)
     except ObjectDoesNotExist as e:
         return Response({'status': 404, 'error': "Email not exist"}, status=404)
-    except Exception as e:
-        return Response({'status': 500, 'error': str(e)}, status=500)
+    except ApiClientError as error:
+        return Response({'status': 500, 'error': error}, status=500)
 
 @api_view(['post'])
 def change_email(request):
@@ -631,3 +648,80 @@ def get_basic_info_by_gst(request):
     except Exception as e:
         return Response({'status':500,'error':str(e)},status=500)
 
+
+
+# @api_view(['post'])
+# def send_mail(request):
+#     data = request.data
+#     email = data['email']
+#     digits = '0123456789'
+#     OTP = ""
+#     try:
+#         user = SelfRegistration.objects.get(username=email)
+#         print(user)
+#         if user:
+#             for i in range(6):
+#                 OTP += digits[math.floor(random.random() * 10)]
+#             mailchimp = MailchimpTransactional.Client('14kMF-44pCPZu8XbNkAzFA')
+#             message = {
+#                 "from_email": "admin@vendorsin.com",
+#                 "subject": "Mail Confirmation OTP",
+#                 "to": [
+#                     {
+#                         "email": user.username,
+#                         "type": "to"
+#                     }
+#                 ]
+#             }
+#             response = mailchimp.messages.send({"message": message})
+#             print(response)
+#             return Response({'status':200,'message':'Email sent successfully'},status=200)
+#         else:
+#             return Response({'status': 202, 'message': 'Not present'}, status=202)
+#
+#
+#     except ApiClientError as error:
+#         return Response({'status':500,'error':error},status=500)
+
+
+
+# @api_view(['post'])
+# def send_mail_template(request):
+#     data = request.data
+#     email = data['email']
+#     digits = '0123456789'
+#     OTP = ""
+#     try:
+#         user = SelfRegistration.objects.get(username=email)
+#         print(user)
+#         if user:
+#             for i in range(6):
+#                 OTP += digits[math.floor(random.random() * 10)]
+#             mailchimp = MailchimpTransactional.Client('14kMF-44pCPZu8XbNkAzFA')
+#             message = {
+#                 "from_email": "admin@vendorsin.com",
+#                 "subject": "Mail Confirmation OTP",
+#                 "to": [
+#                     {
+#                         "email": user.username,
+#                         "type": "to"
+#                     }
+#                 ]
+#             }
+#             response = mailchimp.messages.send_template({"template_name":"REQUEST_FOR_RESET_PASSWORD_FOR_VENDORSIN_ACCOUNT",
+#                                                          "template_content":[{
+#                                                              "Variables":{
+#                                                                  "User Name":user.username,
+#                                                                  "OTP":OTP
+#                                                              }
+#                                                             }],
+#                                                             "message": message
+#                                                          })
+#             print(response)
+#             return Response({'status':200,'message':'Email sent successfully'},status=200)
+#         else:
+#             return Response({'status': 202, 'message': 'Not present'}, status=202)
+#
+#
+#     except ApiClientError as error:
+#         return Response({'status':500,'error':error},status=500)

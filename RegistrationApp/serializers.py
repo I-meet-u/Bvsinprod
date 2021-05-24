@@ -4,7 +4,7 @@ from rest_framework import serializers
 from rest_framework.validators import UniqueValidator
 
 from .models import SelfRegistration, SelfRegistration_Sample, BasicCompanyDetails, BillingAddress, ShippingAddress, \
-    IndustrialInfo, IndustrialHierarchy, BankDetails
+    IndustrialInfo, IndustrialHierarchy, BankDetails, LegalDocuments
 
 
 class SelfRegistrationSerializer(serializers.ModelSerializer):
@@ -103,4 +103,9 @@ class IndustrialHierarchySerializer(serializers.ModelSerializer):
 class BankDetailsSerializer(serializers.ModelSerializer):
     class Meta:
         model=BankDetails
+        fields="__all__"
+
+class LegalDocumentsSerializers(serializers.ModelSerializer):
+    class Meta:
+        model=LegalDocuments
         fields="__all__"

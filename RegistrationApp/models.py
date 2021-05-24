@@ -158,12 +158,14 @@ class BankDetails(models.Model):
         db_table = "BankDetails"
 
 class LegalDocuments(models.Model):
-    documentname = models.CharField(max_length=100, null=True, blank=True)
+    document_name = models.CharField(max_length=100, null=True, blank=True)
     document = models.FileField(upload_to='LegalDocumentsFiles', blank=True, null=True)
     created_on = models.DateTimeField(auto_now_add=True)
     updated_on = models.DateTimeField(auto_now=True)
     created_by = models.BigIntegerField()
     updated_by = models.ForeignKey(SelfRegistration, on_delete=models.CASCADE)
+    history = HistoricalRecords()
+
 
     class Meta:
         db_table = "LegalDocuments"

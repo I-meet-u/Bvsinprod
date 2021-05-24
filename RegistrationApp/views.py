@@ -403,7 +403,7 @@ class BasicCompanyDetailsView(viewsets.ModelViewSet):
     serializer_class = BasicCompanyDetailsSerializers
 
     def get_queryset(self):
-        basicobj = BasicCompanyDetails.objects.filter(user_id=self.request.GET.get('user_id'))
+        basicobj = BasicCompanyDetails.objects.filter(updated_by=self.request.GET.get('updated_by'))
         if not basicobj:
             raise ValidationError({'message': 'Basic Details not exist','status':204})
         return basicobj

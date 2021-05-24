@@ -10,11 +10,11 @@ from mailjet_rest import Client
 # import mailchimp_transactional as MailchimpTransactional
 # from mailchimp_transactional.api_client import ApiClientError
 import requests
-from mailchimp3 import MailChimp
+# from mailchimp3 import MailChimp
 from django.core.exceptions import ObjectDoesNotExist
 from itertools import chain
-import mailchimp_transactional as MailchimpTransactional
-from mailchimp_transactional.api_client import ApiClientError
+# import mailchimp_transactional as MailchimpTransactional
+# from mailchimp_transactional.api_client import ApiClientError
 from django.shortcuts import render
 
 # Create your views here.

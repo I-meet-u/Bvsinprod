@@ -725,3 +725,16 @@ def get_basic_info_by_gst(request):
 #
 #     except ApiClientError as error:
 #         return Response({'status':500,'error':error},status=500)
+
+@api_view(['post'])
+def get_bank_details_by_pk(request):
+    data=request.data
+    id=data['id']
+    try:
+        bankobj=BankDetails.objects.filter(id=id).values()
+        if bankobj:
+            return Response({'status':200,'message':'ok','data':bankobj},status=200)
+        else:
+            return Response({'status': 204, 'message': 'Not Present'}, status=204)
+    except Exception as e:
+        return Response({'status':500,'error':str(e)},status=500)

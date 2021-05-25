@@ -10,6 +10,7 @@ from RegistrationApp.models import SelfRegistration, BasicCompanyDetails, Indust
 @api_view(['get'])
 @permission_classes([AllowAny])
 def maincore_all_list(request):
+    # maincore master all data by using filter
     try:
         maincoreobj=MaincoreMaster.objects.filter().values()
         if maincoreobj:
@@ -22,6 +23,7 @@ def maincore_all_list(request):
 @api_view(['post'])
 @permission_classes([AllowAny])
 def maincore_list(request):
+    # maincore master all data by using filter and passing maincore_id and maincore_name
     data=request.data
     maincore_id=data['maincore_id']
     maincore_name=data['maincore_name']
@@ -37,6 +39,7 @@ def maincore_list(request):
 @api_view(['post'])
 @permission_classes([AllowAny])
 def category_list(request):
+    # category master all data by using filter and passing maincore_id
     data = request.data
     maincoreid = data['maincoreid']
     categoryarray=[]
@@ -65,6 +68,7 @@ def category_list(request):
 @api_view(['post'])
 @permission_classes([AllowAny])
 def subcategory_list(request):
+    # sub_category master all data by using filter and passing category
     data = request.data
     category = data['category']
     try:
@@ -79,6 +83,7 @@ def subcategory_list(request):
 @api_view(['post'])
 @permission_classes([AllowAny])
 def subcategory_list_category_in_array(request):
+    # sub_category master all data by using filter and passing category in array format. example: category[1,2,3]
     data = request.data
     category = data['category']
     try:
@@ -90,24 +95,13 @@ def subcategory_list_category_in_array(request):
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)
 
-#
-# @api_view(['post'])
-# @permission_classes([AllowAny])
-# def categorysearch_byname(request):
-#     data=request.data
-#     try:
-#         catobj = IndustryCategoryModel.objects.filter(category_name__icontains=data['category_name']).values()
-#         if catobj:
-#             return Response({'status':200, 'data':catobj}, status=200)
-#         else:
-#             return Response({'status':204, 'message':'not found'}, status=204)
-#     except Exception as e:
-#         return Response({'status':500, 'error':str(e)}, status=500)
+
 
 
 @api_view(['post'])
 @permission_classes([AllowAny])
 def company_name_search(request):
+    # company_name search by passing company names to basic_info and using icontains
     data=request.data
     try:
         regobj =BasicCompanyDetails.objects.filter(company_name__icontains=data['company_name']).values()
@@ -119,30 +113,10 @@ def company_name_search(request):
         return Response({'status':500, 'error':str(e)}, status=500)
 
 
-
-# @api_view(['post'])
-# @permission_classes([AllowAny])
-# def get_company_code_basedon_companyname(request):
-#     data=request.data
-#     company_name=data['company_name']
-#     bill_city=data['bill_city']
-#     try:
-#         if len(bill_city)!=0:
-#             regobj=BasicCompanyDetails.objects.filter(company_name__icontains=company_name,bill_city=bill_city).values()
-#             if regobj:
-#                 return Response({'status':200,'message':'Success','data':regobj}, status=200)
-#             else:
-#                 return Response({'status':204, 'message':'Company name not found or proper details does not exist'}, status=204)
-#         else:
-#             return Response({'status':202,'message':'Please enter city name,city name must not be empty'},status=202)
-#     except Exception as e:
-#         return Response({'status':500, 'error':str(e)}, status=500)
-
-
 @api_view(['post'])
 @permission_classes([AllowAny])
-#search by name
 def sub_category_search_by_name(request):
+    # sub_category name search by passing sub_category_names to sub_category_master and using icontains
     data = request.data
 
     try:
@@ -159,6 +133,7 @@ def sub_category_search_by_name(request):
 @api_view(['post'])
 @permission_classes([AllowAny])
 def category_search_by_name(request):
+    # category_name master search by passing category_name to category_master and using icontains
     data=request.data
     category_name = data['category_name']
     array=[]
@@ -183,24 +158,26 @@ def category_search_by_name(request):
 @api_view(['post'])
 @permission_classes([AllowAny])
 def company_details_by_category_id(request):
+    # get company details by passing category_id to sub_category and also fetching basic details and industry hierarchy
+
     data = request.data
     categoryid = data['categoryid']
     subcategoryarray =[]
     compcodearray=[]
     subcatnamearrayofarray=[]
     try:
-        subIndustryCategoryModelobj = SubCategoryMaster.objects.filter(category__in=categoryid).values()
-        for i in range(0,len(subIndustryCategoryModelobj)):
-            subcatnamearrayofarray.append({'sub_category_name':subIndustryCategoryModelobj[i].get('sub_category_name'),
-                                           'sub_category_id':subIndustryCategoryModelobj[i].get('sub_category_id')})
-            subcategoryarray.append({subIndustryCategoryModelobj[i].get('sub_category_name')})
-            supobj=IndustrialHierarchy.objects.filter(subcategory__icontains=subIndustryCategoryModelobj[i].get('sub_category_name')).values()
+        subcategoryobj = SubCategoryMaster.objects.filter(category__in=categoryid).values()
+        for i in range(0,len(subcategoryobj)):
+            subcatnamearrayofarray.append({'sub_category_name':subcategoryobj[i].get('sub_category_name'),
+                                           'sub_category_id':subcategoryobj[i].get('sub_category_id')})
+            subcategoryarray.append({subcategoryobj[i].get('sub_category_name')})
+            supobj=IndustrialHierarchy.objects.filter(subcategory__icontains=subcategoryobj[i].get('sub_category_name')).values()
             for j in range(0,len(supobj)):
-                BasiCompanyInfoobj = BasicCompanyDetails.objects.filter(company_code=supobj[j].get('company_code_id')).values()
+                basicinfoobj = BasicCompanyDetails.objects.filter(company_code=supobj[j].get('company_code_id')).values()
                 bill_obj=BillingAddress.objects.filter(company_code_id=supobj[j].get('company_code_id')).values()
                 compcodearray.append({'compcode':supobj[j].get('company_code_id'),
-                                      'cname':BasiCompanyInfoobj[0].get('company_name'),
-                                      'GST':BasiCompanyInfoobj[0].get('gst_number'),
+                                      'cname':basicinfoobj[0].get('company_name'),
+                                      'GST':basicinfoobj[0].get('gst_number'),
                                       'city': bill_obj[0].get('bill_city'),
                                       'state': bill_obj[0].get('bill_state'),
                                       'country': bill_obj[0].get('bill_country'),
@@ -212,25 +189,11 @@ def company_details_by_category_id(request):
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)
 
-# @api_view(['post'])
-# @permission_classes([AllowAny])
-# def getBasicDetails(request):
-#     data=request.data
-#     companyname=data['companyname']
-#     city=data['city']
-#     try:
-#         basicobj=BasicCompanyDetails.objects.filter(company_name__icontains=companyname,bill_city__icontains=city).values()
-#         if basicobj:
-#             return Response({'status':200,'message':'Basic Info List','data':basicobj},status=200)
-#         else:
-#             return Response({'status': 204, 'message': 'not found'}, status=204)
-#     except Exception as e:
-#         return Response({'status': 500, 'error': str(e)}, status=500)
-
 
 @api_view(['get'])
 @permission_classes([AllowAny])
 def get_all_billing_cities(request):
+    # getting bill_city by using filter from Billing Address
     try:
         cityobj=BillingAddress.objects.filter().values('bill_city')
         if cityobj:
@@ -243,6 +206,7 @@ def get_all_billing_cities(request):
 @api_view(['post'])
 @permission_classes([AllowAny])
 def get_all_company_details_company_code(request):
+    # get all basic-info details by passing company_code
     data=request.data
     companycode=data['companycode']
     try:
@@ -250,7 +214,7 @@ def get_all_company_details_company_code(request):
         if companyobj:
             return Response({'status': 200, 'message': 'Company List', 'data': companyobj}, status=200)
         else:
-            return Response({'status': 204, 'message': 'No Cities Found'}, status=204)
+            return Response({'status': 204, 'message': 'No Data Found'}, status=204)
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)
 
@@ -258,6 +222,7 @@ def get_all_company_details_company_code(request):
 @api_view(['post'])
 @permission_classes([AllowAny])
 def company_details_by_subcategory_id(request):
+    # get company details by passing sub_category_id to sub_category and also fetching basic details and industry hierarchy
     data=request.data
     sub_category_id=data['sub_category_id']
     companycodearray=[]
@@ -267,11 +232,11 @@ def company_details_by_subcategory_id(request):
         subcname=subobj[0].get('sub_category_name')
         supplyobj=IndustrialHierarchy.objects.filter(subcategory__icontains=subcname).values()
         for i in range(0,len(supplyobj)):
-            BasiCompanyInfoobj = BasicCompanyDetails.objects.filter(company_code=supplyobj[i].get('company_code_id')).values()
+            basicoinfoobj = BasicCompanyDetails.objects.filter(company_code=supplyobj[i].get('company_code_id')).values()
             bill_obj = BillingAddress.objects.filter(company_code_id=supplyobj[i].get('company_code_id')).values()
             companycodearray.append({'compcode': supplyobj[i].get('company_code_id'),
-                                  'cname': BasiCompanyInfoobj[0].get('company_name'),
-                                  'GST': BasiCompanyInfoobj[0].get('gst_no'),
+                                  'cname': basicoinfoobj[0].get('company_name'),
+                                  'GST': basicoinfoobj[0].get('gst_no'),
                                   'city': bill_obj[0].get('bill_city'),
                                   'state': bill_obj[0].get('bill_state'),
                                   'country': bill_obj[0].get('bill_country'),

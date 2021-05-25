@@ -8,6 +8,7 @@ from simple_history.models import HistoricalRecords
 
 
 class SelfRegistration(AbstractUser):
+    # registration model create
     first_name = None
     last_name = None
     email = None
@@ -22,6 +23,7 @@ class SelfRegistration(AbstractUser):
     admin_approve = models.CharField(max_length=50, default='Pending')
     email_otp = models.CharField(max_length=20, blank=True)
     phone_otp = models.CharField(max_length=20, blank=True)
+    profile_cover_photo = models.FileField(upload_to='static/coverphoto',null=True)
     registration_status = models.CharField(max_length=80, default='Not Registered')
     history = HistoricalRecords()
 
@@ -40,7 +42,7 @@ class SelfRegistration_Sample(models.Model):
     updated_on = models.DateTimeField(auto_now=True)
     email_otp = models.CharField(max_length=20, blank=True)
     phone_otp = models.CharField(max_length=20, blank=True)
-    profile_cover_photo = models.FileField(upload_to='static/coverphoto')
+    profile_cover_photo = models.FileField(upload_to='static/coverphoto',null=True)
     history = HistoricalRecords()
 
     class Meta:
@@ -48,6 +50,7 @@ class SelfRegistration_Sample(models.Model):
 
 
 class BasicCompanyDetails(models.Model):
+    # basic details model fields
     company_code = models.CharField(max_length=20, primary_key=True)
     gst_number = models.CharField(max_length=30, unique=True)
     company_name = models.CharField(max_length=200,unique=True)
@@ -70,6 +73,7 @@ class BasicCompanyDetails(models.Model):
 
 
 class BillingAddress(models.Model):
+    # billing address model fields
     bill_address = models.TextField(max_length=500)
     bill_country = models.CharField(max_length=200)
     bill_city = models.CharField(max_length=200)
@@ -80,7 +84,7 @@ class BillingAddress(models.Model):
     updated_on = models.DateTimeField(auto_now=True)
     created_by = models.BigIntegerField()
     updated_by = models.ForeignKey(SelfRegistration, on_delete=models.CASCADE)
-    company_code = models.ForeignKey(BasicCompanyDetails, on_delete=models.CASCADE)
+    company_code = models.ForeignKey(BasicCompanyDetails,on_delete=models.CASCADE)
     history = HistoricalRecords()
 
     class Meta:
@@ -88,6 +92,8 @@ class BillingAddress(models.Model):
 
 
 class ShippingAddress(models.Model):
+    # shipping address model fields
+
     ship_address = models.TextField(max_length=500)
     ship_country = models.CharField(max_length=200)
     ship_city = models.CharField(max_length=200)
@@ -98,7 +104,7 @@ class ShippingAddress(models.Model):
     updated_on = models.DateTimeField(auto_now=True)
     created_by = models.BigIntegerField()
     updated_by = models.ForeignKey(SelfRegistration, on_delete=models.CASCADE)
-    company_code = models.ForeignKey(BasicCompanyDetails, on_delete=models.CASCADE)
+    company_code = models.ForeignKey(BasicCompanyDetails,on_delete=models.CASCADE)
     history = HistoricalRecords()
 
     class Meta:
@@ -106,6 +112,7 @@ class ShippingAddress(models.Model):
 
 
 class IndustrialInfo(models.Model):
+    # industry info model fields
     nature_of_business = ArrayField(models.CharField(max_length=800))
     geographical_area = ArrayField(models.CharField(max_length=100))
     supply_capabilites = ArrayField(models.CharField(max_length=800))
@@ -122,6 +129,7 @@ class IndustrialInfo(models.Model):
 
 
 class IndustrialHierarchy(models.Model):
+    # industrial hierarchy model fields
     maincore = ArrayField(models.CharField(max_length=500))
     category = ArrayField(models.CharField(max_length=500))
     subcategory = ArrayField(models.CharField(max_length=500))
@@ -137,6 +145,7 @@ class IndustrialHierarchy(models.Model):
 
 
 class BankDetails(models.Model):
+    # bank details model fields
     ifsc_code = models.CharField(max_length=40)
     account_number = models.CharField(max_length=40, unique=True)
     account_type = models.CharField(max_length=50)
@@ -158,8 +167,9 @@ class BankDetails(models.Model):
         db_table = "BankDetails"
 
 class LegalDocuments(models.Model):
+    # legal documents model fields
     document_name = models.CharField(max_length=100, null=True, blank=True)
-    document = models.FileField(upload_to='LegalDocumentsFiles', blank=True, null=True)
+    document = models.FileField(upload_to='static/legalfiles', blank=True, null=True)
     created_on = models.DateTimeField(auto_now_add=True)
     updated_on = models.DateTimeField(auto_now=True)
     created_by = models.BigIntegerField()

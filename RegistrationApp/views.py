@@ -30,7 +30,7 @@ from rest_framework.views import APIView
 from .models import SelfRegistration, SelfRegistration_Sample, BasicCompanyDetails, BillingAddress, ShippingAddress, \
     IndustrialInfo, IndustrialHierarchy, BankDetails, LegalDocuments
 from .serializers import SelfRegistrationSerializer, SelfRegistrationSerializerSample, BasicCompanyDetailsSerializers, \
-    BillingAddressSerializer, ShippingAddressSeializer, IndustrialInfoSerializer, IndustrialHierarchySerializer, \
+    BillingAddressSerializer, ShippingAddressSerializer, IndustrialInfoSerializer, IndustrialHierarchySerializer, \
     BankDetailsSerializer,LegalDocumentsSerializers
 from rest_framework.permissions import AllowAny
 from rest_framework import status
@@ -46,8 +46,8 @@ class SelfRegisterView(viewsets.ModelViewSet):
     serializer_class = SelfRegistrationSerializer
     permission_classes = (AllowAny,)
 
-
 class SelfRegistrationSampleView(viewsets.ModelViewSet):
+    # registration user information sample view
     queryset= SelfRegistration_Sample.objects.all()
     serializer_class = SelfRegistrationSerializerSample
     permission_classes = (AllowAny,)
@@ -61,31 +61,10 @@ class SelfRegistrationSampleView(viewsets.ModelViewSet):
             serializer.save()
 
 class LegalDocumentsView(viewsets.ModelViewSet):
+    # legal document view
     queryset = LegalDocuments.objects.all()
     serializer_class = LegalDocumentsSerializers
     parser_classes = [MultiPartParser]
-
-
-#
-# @api_view(['post'])
-# def deleteuser(request):
-#     data=request.data
-#     userid=data['userid']
-#     try:
-#         regs=Registration.objects.get(id=userid)
-#         print(regs.id)
-#         regobj=Registration_sample.objects.get(id=regs.id)
-#         print(regobj.id)
-#         basicobj=BasiCompanyInfo.objects.filter(user_id_id=regobj.id).values()
-#         if basicobj:
-#             return Response({'status':200,'message':'Valid user'},status=200)
-#         else:
-#             reg=Registration.objects.get(id=userid)
-#             reg.delete()
-#             return Response({'status':204,'error':'deleted'},status=204)
-#     except Exception as e:
-#         return Response({'status': 500, 'error': str(e)}, status=500)
-
 
 class Logout(APIView):
     def get(self, request, format=None):
@@ -96,6 +75,7 @@ class Logout(APIView):
 
 @api_view(['post'])
 def phone_verification_otp(request):
+    # phone number verification by OTP
     data = request.data
     digits = "0123456789"
     phone_number = data['phone_number']
@@ -131,6 +111,7 @@ def phone_verification_otp(request):
 
 @api_view(['post'])
 def email_verification_otp(request):
+    # email id verification by otp sending to mail
     data = request.data
     email = data['email']
     digits = '0123456789'
@@ -166,6 +147,7 @@ def email_verification_otp(request):
 @api_view(['post'])
 @permission_classes([AllowAny])
 def get_token_key_by_userid(request):
+    # geting token by userid
     data = request.data
     try:
         auth_token=Token.objects.filter(user_id=data['userid']).values('key')
@@ -178,6 +160,7 @@ def get_token_key_by_userid(request):
 @api_view(['post'])
 @permission_classes([AllowAny])
 def get_userid_by_token(request):
+    # get user_id by passing token
     data = request.data
     try:
         auth_token_userid=Token.objects.filter(key=data['token']).values('user_id')
@@ -190,6 +173,7 @@ def get_userid_by_token(request):
 
 @api_view(['post'])
 def email_verification_otp_to_change_email(request):
+    # email verification to change mail
     data = request.data
     email = data['email']
     digits = '0123456789'
@@ -223,6 +207,7 @@ def email_verification_otp_to_change_email(request):
 
 @api_view(['post'])
 def change_email(request):
+    # passing userid and already presented email and changing email to another email
     data=request.data
     email=data['email']
     userid=data['userid']
@@ -240,6 +225,7 @@ def change_email(request):
 
 @api_view(['post'])
 def phone_otp_verfication_to_change_phonenumber(request):
+    # otp verification to change phone number
     data = request.data
     digits = "0123456789"
     phonenumber = data['phonenumber']
@@ -265,6 +251,7 @@ def phone_otp_verfication_to_change_phonenumber(request):
 
 @api_view(['post'])
 def change_phonenumber(request):
+    # change phone number by using userid and already presented phone and changed to new phone number
     data=request.data
     phonenumber=data['phonenumber']
     userid=data['userid']
@@ -282,6 +269,7 @@ def change_phonenumber(request):
 
 @api_view(['post'])
 def change_password_with_phone_number(request):
+    # change password by using phone_number
     data = request.data
     phonenumber=data['phonenumber']
     try:
@@ -299,6 +287,7 @@ def change_password_with_phone_number(request):
 
 @api_view(['post'])
 def change_password_with_email(request):
+    # change password by using email_id
     data = request.data
     password=data['password']
     try:
@@ -317,43 +306,10 @@ def change_password_with_email(request):
 
 
 
-# @api_view(['post'])
-# def waiting_mail_for_admin_approval(request):
-#     data = request.data
-#     digits = '0123456789'
-#     userid = data['company_user_id']
-#
-#     try:
-#         userdeatils = SelfRegistration.objects.filter(id=userid).values()
-#         print(userdeatils)
-#         recemail = userdeatils[0].get('username')
-#         print(recemail)
-#         username = userdeatils[0].get('full_name')
-#         print(username)
-#         api_key = '15dd5580cada57242e99c2ebc87dfd96'
-#         api_secret = '352ffb29187a798012b1cfdc7eb9f62f'
-#         OTP = ""
-#         for i in range(6):
-#             OTP += digits[math.floor(random.random() * 10)]
-#         mailjet = Client(auth=(api_key, api_secret), version='v3.1')
-#         data1 = {'Messages': [
-#             {"From": {"Email": "admin@vendorson.com", "Name": "Vendors In"}, "To": [{"Email": recemail}],
-#              "Subject": "Wait For admin Approval",
-#              "TextPart": "Dear Sir|Madam" + "\n\n Waiting for admin approval mail" + "\n\nThis is System Generated Email Please Don't Reply For This Mail" + "\n\n Thank You"
-#
-#              }]}
-#         result = mailjet.send.create(data=data1)
-#         print(result)
-#         return Response({'status': 200, 'message': 'Waiting for admin approval for mail sent successfully'}, status=200)
-#
-#     except ObjectDoesNotExist as e:
-#         return Response({'status': 424, 'error': "Email not exist"}, status=404)
-#
-#     except Exception as e:
-#         return Response({'status': 500, 'error': str(e)}, status=500)
 
 @api_view(['post'])
 def otp_session_time_out_of_phone_and_email(request):
+    #otp session time out for both phone and email by using user_id
     data=request.data
 
     try:
@@ -370,6 +326,7 @@ def otp_session_time_out_of_phone_and_email(request):
 
 @api_view(['post'])
 def phone_otp_session_out(request):
+    # otp session time out for both phone  by using user_id
     data=request.data
 
     try:
@@ -385,6 +342,7 @@ def phone_otp_session_out(request):
 
 @api_view(['post'])
 def email_otp_session_out(request):
+    # otp session time out for both email by using user_id
     data = request.data
     try:
         emailsessionobj = SelfRegistration.objects.get(id=data['user_id'])
@@ -399,10 +357,12 @@ def email_otp_session_out(request):
 
 
 class BasicCompanyDetailsView(viewsets.ModelViewSet):
+    # basic company info viewset
     queryset = BasicCompanyDetails.objects.all()
     serializer_class = BasicCompanyDetailsSerializers
 
     def get_queryset(self):
+        # overriding get_queryset by passing user_id. Here user_id is nothing but updated_by
         basicobj = BasicCompanyDetails.objects.filter(updated_by=self.request.GET.get('updated_by'))
         if not basicobj:
             raise ValidationError({'message': 'Basic Details not exist','status':204})
@@ -410,203 +370,41 @@ class BasicCompanyDetailsView(viewsets.ModelViewSet):
 
 
 class BillingAddressView(viewsets.ModelViewSet):
+    # billing address viewsets
     queryset = BillingAddress.objects.all()
     serializer_class = BillingAddressSerializer
 
 class ShippingAddressView(viewsets.ModelViewSet):
+    # shipping address viewsets
     queryset = ShippingAddress.objects.all()
-    serializer_class = ShippingAddressSeializer
+    serializer_class = ShippingAddressSerializer
 
 
 class IndustrialInfoView(viewsets.ModelViewSet):
+    # industrail info viewsets
     queryset =IndustrialInfo.objects.all()
     serializer_class=IndustrialInfoSerializer
 
 class IndustrialHierarchyView(viewsets.ModelViewSet):
+    # industrial hierarchy viewsets
     queryset =IndustrialHierarchy.objects.all()
     serializer_class=IndustrialHierarchySerializer
 
 class BankDetailsView(viewsets.ModelViewSet):
+    # bank details viewsets
     queryset =BankDetails.objects.all()
     serializer_class=BankDetailsSerializer
 
     def get_queryset(self):
+        # it determines the list of objects that you want to display by passing userid(updated_by)
         bankobj = BankDetails.objects.filter(updated_by=self.request.GET.get('updated_by'))
         if not bankobj:
             raise ValidationError({'message': 'Bank Details not exist','status':204})
         return bankobj
 
-# @api_view(['put'])
-# def update_basic_company_info1(request):
-#     data=request.data
-#     try:
-#         basic_compinfo_obj = BasiCompanyInfo.objects.filter(company_code=data['company_code']).values()
-#         basic_compinfo_user = BasiCompanyInfo.objects.get(user_id=data['user_id'])
-#         marketloc=data['marketloc']
-#         msmereg=data['msmereg']
-#         indusscale=data['indusscale']
-#         website=data['website']
-#         natureofbuz=data['natureofbuz']
-#         servicearealocal=data['servicearealocal']
-#         serservicearearegional=data['serservicearearegional']
-#         servicearenational=data['servicearenational']
-#         serviceareainternational=data['serviceareainternational']
-#         serviceareaworld=data['serviceareaworld']
-#         created_by_id = data['created_by_id']
-#         updated_by_id = data['updated_by_id']
-#         bill_address=data['bill_address']
-#         bill_city=data['bill_city']
-#         bill_state=data['bill_state']
-#         bill_country = data['bill_country']
-#         bill_pincode = data['bill_pincode']
-#         bill_landmark = data['bill_landmark']
-#         bill_location = data['bill_location']
-#
-#         ship_address=data['ship_address']
-#         ship_city = data['ship_city']
-#         ship_state = data['ship_state']
-#         ship_country = data['ship_country']
-#         ship_pincode = data['ship_pincode']
-#         ship_landmark = data['ship_landmark']
-#         ship_location = data['ship_location']
-#         if basic_compinfo_obj and updated_by_id !="":
-#             if basic_compinfo_user.business_type!=marketloc:
-#                 basic_compinfo_user.business_type=marketloc
-#                 basic_compinfo_user.save()
-#             if basic_compinfo_user.msme_registered!=msmereg:
-#                 basic_compinfo_user.msme_registered=msmereg
-#                 basic_compinfo_user.save()
-#             if  basic_compinfo_user.industrial_scale!=indusscale:
-#                 basic_compinfo_user.industrial_scale = indusscale
-#                 basic_compinfo_user.save()
-#             if basic_compinfo_user.website!=website:
-#                 basic_compinfo_user.website = website
-#                 basic_compinfo_user.save()
-#             if basic_compinfo_user.natureofbuz != natureofbuz:
-#                 basic_compinfo_user.natureofbuz = natureofbuz
-#                 basic_compinfo_user.save()
-#             if basic_compinfo_user.service_area_local!=servicearealocal:
-#                 basic_compinfo_user.service_area_local=servicearealocal
-#                 basic_compinfo_user.save()
-#             if basic_compinfo_user.service_area_regional!=serservicearearegional:
-#                 basic_compinfo_user.service_area_regional = serservicearearegional
-#                 basic_compinfo_user.save()
-#             if basic_compinfo_user.service_area_national!=servicearenational:
-#                 basic_compinfo_user.service_area_national = servicearenational
-#                 basic_compinfo_user.save()
-#             if basic_compinfo_user.service_area_international!=serviceareainternational:
-#                 basic_compinfo_user.service_area_international = serviceareainternational
-#                 basic_compinfo_user.save()
-#             if basic_compinfo_user.service_area_worldwide!=serviceareaworld:
-#                 basic_compinfo_user.service_area_worldwide = serviceareaworld
-#                 basic_compinfo_user.save()
-#             if basic_compinfo_user.bill_address != bill_address:
-#                 basic_compinfo_user.bill_address = bill_address
-#                 basic_compinfo_user.save()
-#             if basic_compinfo_user.bill_city != bill_city:
-#                 basic_compinfo_user.bill_city = bill_city
-#                 basic_compinfo_user.save()
-#             if basic_compinfo_user.bill_state != bill_state:
-#                 basic_compinfo_user.bill_state = bill_state
-#                 basic_compinfo_user.save()
-#             if basic_compinfo_user.bill_country != bill_country:
-#                 basic_compinfo_user.bill_country = bill_country
-#                 basic_compinfo_user.save()
-#             if basic_compinfo_user.bill_pincode != bill_pincode:
-#                 basic_compinfo_user.bill_pincode = bill_pincode
-#                 basic_compinfo_user.save()
-#             if basic_compinfo_user.bill_landmark != bill_landmark:
-#                 basic_compinfo_user.bill_landmark = bill_landmark
-#                 basic_compinfo_user.save()
-#             if basic_compinfo_user.bill_location != bill_location:
-#                 basic_compinfo_user.bill_location = bill_location
-#                 basic_compinfo_user.save()
-#             if basic_compinfo_user.ship_address != ship_address:
-#                 basic_compinfo_user.ship_address = ship_address
-#                 basic_compinfo_user.save()
-#             if basic_compinfo_user.ship_city != ship_city:
-#                 basic_compinfo_user.ship_city = ship_city
-#                 basic_compinfo_user.save()
-#             if basic_compinfo_user.ship_state != ship_state:
-#                 basic_compinfo_user.ship_state = ship_state
-#                 basic_compinfo_user.save()
-#             if basic_compinfo_user.ship_country != ship_country:
-#                 basic_compinfo_user.ship_country = ship_country
-#                 basic_compinfo_user.save()
-#             if basic_compinfo_user.ship_pincode != ship_pincode:
-#                 basic_compinfo_user.ship_pincode = ship_pincode
-#                 basic_compinfo_user.save()
-#             if basic_compinfo_user.ship_landmark != ship_landmark:
-#                 basic_compinfo_user.ship_landmark = ship_landmark
-#                 basic_compinfo_user.save()
-#             if basic_compinfo_user.ship_location != ship_location:
-#                 basic_compinfo_user.ship_location = ship_location
-#                 basic_compinfo_user.save()
-#             return Response({'status': 200, 'message': 'details updated',"data":basic_compinfo_obj}, status=200)
-#     except Exception as e:
-#         return Response({'status': 500, 'message': str(e)}, status=500)
-#--------------------------------------venndor-info-get---------------------------
-# class MailSubscriptionAPIView(GenericAPIView):
-#     def subscribe_email(email):
-#         mailchimp = Client()
-#         mailchimp.set_config({"api_key": MAILCHIMP_API_KEY,"server": MAILCHIMP_DATA_CENTER})
-#
-#         member_info = {
-#             "email_address": email,
-#             "status": "subscribed"
-#         }
-#
-#         try:
-#             response=mailchimp.lists.add_list_member(MAILCHIMP_EMAIL_LIST_ID, member_info)
-#             print("response: {}".format(response))
-#             data1=json.dumps((response))
-#             print(data1)
-#
-#         except ApiClientError as error:
-#             print(error.text)
-#             print("An exception occurred: {}".format(error.text))
-#
-#     def post(self, request, *args, **kwargs):
-#         email = request.data['email']
-#         digits = '0123456789'
-#         OTP = ""
-#         for i in range(6):
-#             OTP += digits[math.floor(random.random() * 10)]
-#             user = SelfRegistration.objects.get(username=email)
-#             if user:
-#                 result =MailSubscriptionAPIView.subscribe_email(email)
-#                 print(result)
-#             return Response({"status_code": status.HTTP_200_OK,"message":"Mail Received"})
-#         else:
-#             return Response({'status_code':status.HTTP_204_NO_CONTENT,'message':'No data present'})
-
-
-# @api_view(['post'])
-# def send_mail(request):
-#     data=request.data
-#     email=data['email']
-#     digits = '0123456789'
-#     try:
-#         user = SelfRegistration.objects.get(username=email)
-#         print(user)
-#         if user:
-#             OTP = ""
-#             for i in range(6):
-#                 OTP += digits[math.floor(random.random() * 10)]
-#             Mailchimp = Client()
-#
-#             # Mailchimp.set_config({"api_key": MAILCHIMP_API_KEY})
-#             mailchimp =MailchimpTransactional.Client("14kMF-44pCPZu8XbNkAzFA")
-#             response = client.messages.send({"message":{"from_email":"cloud.admin@vendorsin.in"}, "to": [{"email":email}],
-#                  "subject": "OTP Confirmation",
-#                  "text": "Dear Sir|Madam" + "\n\n This is the OTP for email verification" +" "+OTP+ "\n\nThis is System Generated Email Please Don't Reply For This Mail" + "\n\n Thank You"})
-#             print(response)
-#         return Response({'status':200,'message':'ok'},status=200)
-#     except ApiClientError as error:
-#         print("An exception occurred: {}".format(error.text))
-
 @api_view(['post'])
 def get_basic_info_by_gst(request):
+    # get basic_details by passing gst_number
     data=request.data
     gst_no=data['gst_no']
     basicdetailslist=[]
@@ -650,78 +448,4 @@ def get_basic_info_by_gst(request):
 
 
 
-# @api_view(['post'])
-# def send_mail(request):
-#     data = request.data
-#     email = data['email']
-#     digits = '0123456789'
-#     OTP = ""
-#     try:
-#         user = SelfRegistration.objects.get(username=email)
-#         print(user)
-#         if user:
-#             for i in range(6):
-#                 OTP += digits[math.floor(random.random() * 10)]
-#             mailchimp = MailchimpTransactional.Client('14kMF-44pCPZu8XbNkAzFA')
-#             message = {
-#                 "from_email": "admin@vendorsin.com",
-#                 "subject": "Mail Confirmation OTP",
-#                 "to": [
-#                     {
-#                         "email": user.username,
-#                         "type": "to"
-#                     }
-#                 ]
-#             }
-#             response = mailchimp.messages.send({"message": message})
-#             print(response)
-#             return Response({'status':200,'message':'Email sent successfully'},status=200)
-#         else:
-#             return Response({'status': 202, 'message': 'Not present'}, status=202)
-#
-#
-#     except ApiClientError as error:
-#         return Response({'status':500,'error':error},status=500)
 
-
-
-# @api_view(['post'])
-# def send_mail_template(request):
-#     data = request.data
-#     email = data['email']
-#     digits = '0123456789'
-#     OTP = ""
-#     try:
-#         user = SelfRegistration.objects.get(username=email)
-#         print(user)
-#         if user:
-#             for i in range(6):
-#                 OTP += digits[math.floor(random.random() * 10)]
-#             mailchimp = MailchimpTransactional.Client('14kMF-44pCPZu8XbNkAzFA')
-#             message = {
-#                 "from_email": "admin@vendorsin.com",
-#                 "subject": "Mail Confirmation OTP",
-#                 "to": [
-#                     {
-#                         "email": user.username,
-#                         "type": "to"
-#                     }
-#                 ]
-#             }
-#             response = mailchimp.messages.send_template({"template_name":"REQUEST_FOR_RESET_PASSWORD_FOR_VENDORSIN_ACCOUNT",
-#                                                          "template_content":[{
-#                                                              "Variables":{
-#                                                                  "User Name":user.username,
-#                                                                  "OTP":OTP
-#                                                              }
-#                                                             }],
-#                                                             "message": message
-#                                                          })
-#             print(response)
-#             return Response({'status':200,'message':'Email sent successfully'},status=200)
-#         else:
-#             return Response({'status': 202, 'message': 'Not present'}, status=202)
-#
-#
-#     except ApiClientError as error:
-#         return Response({'status':500,'error':error},status=500)

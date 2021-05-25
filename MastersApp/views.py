@@ -13,37 +13,45 @@ from .models import MaincoreMaster, CategoryMaster, SubCategoryMaster,\
 
 # Create your views here.
 class IndustryToServeMasterView(viewsets.ModelViewSet):
+    # industry_servce master viewsets
     queryset = IndustryToServeMaster.objects.all()
     serializer_class = IndustryToServeMasterSerializer
 
 class NatureOfBusinessMasterView(viewsets.ModelViewSet):
+    # nature_of_business master viewsets
     queryset = NatureOfBusinessMaster.objects.all()
     serializer_class =NatureOfBusinessMasterSerializer
 
 
 class SupplyCapabilitiesMasterView(viewsets.ModelViewSet):
+    # supply_capability master viewsets
     queryset = SupplyCapabilitiesMaster.objects.all()
     serializer_class =SupplyCapabilitiesMasterSerializer
 
 class MaincoreMasterView(viewsets.ModelViewSet):
+    # maincore_master master viewsets
     queryset = MaincoreMaster.objects.all()
     serializer_class = MainCoreMasterSerializer
 
 class CategoryMasterView(viewsets.ModelViewSet):
+    # category_master master viewsets
     queryset =CategoryMaster.objects.all()
     serializer_class=CategoryMasterSerializer
 
 class SubCategoryMasterView(viewsets.ModelViewSet):
+    # sub_category_master master viewsets
     queryset = SubCategoryMaster.objects.all()
     serializer_class = SubcategoryMasterSerializer
 
 
 class PincodeMasterView(viewsets.ModelViewSet):
+    # pincode_master master viewsets
     queryset = PincodeMaster.objects.all()
     serializer_class = PincodeMasterSerializer
 
 @api_view(['post'])
 def get_category_by_maincore(request):
+    # getting categories list by passing maincore_id
     data=request.data
     maincoreid=data['maincoreid']
     try:
@@ -58,6 +66,7 @@ def get_category_by_maincore(request):
 
 @api_view(['post'])
 def get_subcategory_by_category(request):
+    #  getting sub-categories list by passing category_id
     data=request.data
     categoryid=data['categoryid']
     try:
@@ -72,6 +81,7 @@ def get_subcategory_by_category(request):
 
 @api_view(['post'])
 def maincore_search(request):
+    # maincore_name search passing maincore_name
     data=request.data
     maincore_name=data['maincore_name']
     try:
@@ -86,6 +96,7 @@ def maincore_search(request):
 
 @api_view(['post'])
 def category_search(request):
+    # category-name search passing category_name
     data=request.data
     category_name=data['category_name']
     try:
@@ -100,6 +111,7 @@ def category_search(request):
 
 @api_view(['post'])
 def sub_category_search(request):
+    # sub-category-name search passing sub_category_name
     data=request.data
     sub_category_name=data['sub_category_name']
     try:
@@ -110,3 +122,79 @@ def sub_category_search(request):
             return Response({'status':204,'message':'No subcategory content'},status=204)
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)
+
+
+@api_view(['put'])
+def disable_nature_of_business(request):
+    # disable nature_of_business by changing status from Active to Disabled by passing primary key(natureid)
+    data=request.data
+    natureid=data['natureid']
+    try:
+        natureobj=NatureOfBusinessMaster.objects.filter(nature_of_business_id__in=natureid).values()
+        if natureobj:
+            for i in range(0,len(natureobj)):
+                print(natureobj[i].get('nature_of_business_id'))
+                natureobjget=NatureOfBusinessMaster.objects.get(nature_of_business_id=natureobj[i].get('nature_of_business_id'))
+                print(natureobjget)
+                if natureobjget.status=='Active':
+                    natureobjget.status='Disabled'
+                    natureobjget.save()
+                else:
+                    return Response({'status': 202, 'message': 'Already status disabled'}, status=202)
+            return Response({'status':200,'message':'Nature of business status changed to disabled'},status=200)
+        else:
+            return Response({'status': 204, 'message': 'Not exist'}, status=204)
+    except Exception as e:
+        return Response({'status':500,'error':str(e)},status=500)
+
+
+@api_view(['put'])
+def disable_supply_capabilities(request):
+    # disable supply_capabilities by changing status from Active to Disabled by passing primary key(supplyid)
+    data=request.data
+    supplyid=data['supplyid']
+    try:
+        supplyobj=SupplyCapabilitiesMaster.objects.filter(supply_capability_id__in=supplyid).values()
+        if supplyobj:
+            for i in range(0,len(supplyobj)):
+                print(supplyobj[i].get('supply_capability_id'))
+                supplyobjget=SupplyCapabilitiesMaster.objects.get(supply_capability_id=supplyobj[i].get('supply_capability_id'))
+                print(supplyobjget)
+                if supplyobjget.status=='Active':
+                    supplyobjget.status='Disabled'
+                    supplyobjget.save()
+                else:
+                    return Response({'status': 202, 'message': 'Already status disabled'}, status=202)
+            return Response({'status':200,'message':'Supply capabilites status changed to disabled'},status=200)
+        else:
+            return Response({'status': 204, 'message': 'Not exist'}, status=204)
+    except Exception as e:
+        return Response({'status':500,'error':str(e)},status=500)
+
+
+
+@api_view(['put'])
+def disable_industry_serve(request):
+    # disable industry_serve by changing status from Active to Disabled by passing primary key(industryid)
+    data=request.data
+    industryid=data['industryid']
+    try:
+        industryobj=IndustryToServeMaster.objects.filter(industry_id__in=industryid).values()
+        if industryobj:
+            for i in range(0,len(industryobj)):
+                print(industryobj[i].get('industry_id'))
+                industryobjget=IndustryToServeMaster.objects.get(industry_id=industryobj[i].get('industry_id'))
+                print(industryobjget)
+                if industryobjget.status=='Active':
+                    industryobjget.status='Disabled'
+                    industryobjget.save()
+                else:
+                    return Response({'status': 202, 'message': 'Already status disabled'}, status=202)
+            return Response({'status':200,'message':'Inudstry serve status changed to disabled'},status=200)
+        else:
+            return Response({'status': 204, 'message': 'Not exist'}, status=204)
+    except Exception as e:
+        return Response({'status':500,'error':str(e)},status=500)
+
+
+

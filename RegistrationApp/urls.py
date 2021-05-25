@@ -6,6 +6,8 @@ from rest_framework import routers
 from . import  views
 
 router=routers.DefaultRouter()
+#routers are used with ViewSets in django rest framework to auto config the urls.
+#when we are used serializers and viewsets we used router
 router.register('user-register',views.SelfRegisterView)
 router.register('user-register-sample',views.SelfRegistrationSampleView)
 router.register('basic-company-details',views.BasicCompanyDetailsView)
@@ -18,6 +20,8 @@ router.register('legal-documents',views.LegalDocumentsView)
 
 urlpatterns = [
     path('router-register-urls/',include(router.urls)), #router urls are included
+
+    #normal urls other than router
     path('logout/',views.Logout.as_view()), # logout
     path('phone-verification-otp/',views.phone_verification_otp),
     path('email-verification-otp/',views.email_verification_otp),

@@ -35,7 +35,6 @@ urlpatterns = [
     path('email-otp-session-out/',views.email_otp_session_out),
     # path('send_mail/',views.send_mail),
     path('get-basic-info-by-gst/',views.get_basic_info_by_gst),
-    path('get-bank-details-by-pk/',views.get_bank_details_by_pk)
     # path('send_mail_template/',views.send_mail_template)
     # path('subscribe_email/', MailSubscriptionAPIView.as_view(),name='subscribe-email')
 

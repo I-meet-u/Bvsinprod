@@ -374,10 +374,26 @@ class BillingAddressView(viewsets.ModelViewSet):
     queryset = BillingAddress.objects.all()
     serializer_class = BillingAddressSerializer
 
+    def get_queryset(self):
+        # overriding get_queryset by passing user_id. Here user_id is nothing but updated_by
+        basicobj = BillingAddress.objects.filter(updated_by=self.request.GET.get('updated_by'))
+        if not basicobj:
+            raise ValidationError({'message': 'Billing Address not exist', 'status': 204})
+        return basicobj
+
+
+
 class ShippingAddressView(viewsets.ModelViewSet):
     # shipping address viewsets
     queryset = ShippingAddress.objects.all()
     serializer_class = ShippingAddressSerializer
+
+    def get_queryset(self):
+        # overriding get_queryset by passing user_id. Here user_id is nothing but updated_by
+        basicobj = ShippingAddress.objects.filter(updated_by=self.request.GET.get('updated_by'))
+        if not basicobj:
+            raise ValidationError({'message': 'Shipping Address not exist', 'status': 204})
+        return basicobj
 
 
 class IndustrialInfoView(viewsets.ModelViewSet):

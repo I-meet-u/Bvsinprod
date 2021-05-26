@@ -76,6 +76,7 @@ class BillingAddress(models.Model):
     # billing address model fields
     bill_address = models.TextField(max_length=500)
     bill_country = models.CharField(max_length=200)
+    bill_state=models.CharField(max_length=200)
     bill_city = models.CharField(max_length=200)
     bill_pincode = models.IntegerField()
     bill_landmark = models.CharField(max_length=50, blank=True)
@@ -96,6 +97,7 @@ class ShippingAddress(models.Model):
 
     ship_address = models.TextField(max_length=500)
     ship_country = models.CharField(max_length=200)
+    ship_state = models.CharField(max_length=200)
     ship_city = models.CharField(max_length=200)
     ship_pincode = models.BigIntegerField()
     ship_landmark = models.CharField(max_length=50, blank=True)

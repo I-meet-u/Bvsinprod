@@ -1,0 +1,7 @@
+name: django-continuous-integration
+on: [push]
+jobs:
+  simpleCheckout:
+    runs-on: self-hosted
+    steps:
+      - uses: actions/checkout@master

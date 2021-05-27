@@ -4,17 +4,11 @@ import random
 
 
 from django.contrib.auth.hashers import make_password, check_password
-from mailjet_rest import Client
-# import mailchimp_marketing
-# from mailchimp_marketing.api_client import ApiClientError
-# import mailchimp_transactional as MailchimpTransactional
-# from mailchimp_transactional.api_client import ApiClientError
+import mailchimp_transactional as MailchimpTransactional
+from mailchimp_transactional.api_client import ApiClientError
 import requests
 # from mailchimp3 import MailChimp
 from django.core.exceptions import ObjectDoesNotExist
-from itertools import chain
-# import mailchimp_transactional as MailchimpTransactional
-# from mailchimp_transactional.api_client import ApiClientError
 from django.shortcuts import render
 
 # Create your views here.
@@ -92,22 +86,23 @@ def phone_verification_otp(request):
     try:
         user = SelfRegistration.objects.get(phone_number=phone_number)
         if user:
+            pass
             OTP = ""
-            for i in range(6):
-                OTP += digits[math.floor(random.random() * 10)]
-            print(OTP)
-            user.phone_otp = OTP
-            user.save()
-            mjtoken = 'a68496eb4e6d4286887b3196db434fc0'
-            print(mjtoken)
-            headers = {
-                'Authorization': f"Bearer {mjtoken}",
-                'Content-Type': 'application/json',
-            }
-            data = '{ "From": "VendorsIn", "To": "'+phone_number_otp+'", "Text": "Your OTP for Registration to Vendorsin portal is '+OTP+" Please donot share your OTP to anyone"'" }'
-            # data = '{ "Text": "Have a nice SMS flight with Mailjet !", "To":'++919482212344", "From": "VendorsIn" }'
-            response = requests.post('https://api.mailjet.com/v4/sms-send', headers=headers, data=data)
-            print(response)
+            # for i in range(6):
+            #     OTP += digits[math.floor(random.random() * 10)]
+            # print(OTP)
+            # user.phone_otp = OTP
+            # user.save()
+            # mjtoken = 'a68496eb4e6d4286887b3196db434fc0'
+            # print(mjtoken)
+            # headers = {
+            #     'Authorization': f"Bearer {mjtoken}",
+            #     'Content-Type': 'application/json',
+            # }
+            # data = '{ "From": "VendorsIn", "To": "'+phone_number_otp+'", "Text": "Your OTP for Registration to Vendorsin portal is '+OTP+" Please donot share your OTP to anyone"'" }'
+            # # data = '{ "Text": "Have a nice SMS flight with Mailjet !", "To":'++919482212344", "From": "VendorsIn" }'
+            # response = requests.post('https://api.mailjet.com/v4/sms-send', headers=headers, data=data)
+            # print(response)
         return Response({'status': 200, 'message': 'OTP successfully sent to phone'}, status=200)
     except ObjectDoesNotExist as e:
         return Response({'status': 404, 'error': "phone number not exist"}, status=404)
@@ -239,18 +234,19 @@ def phone_otp_verfication_to_change_phonenumber(request):
     phonenumber = data['phonenumber']
     phone_number_otp = "+91" + str(phonenumber)
     try:
-        OTP = ""
-        for i in range(6):
-            OTP += digits[math.floor(random.random() * 10)]
-            print(OTP)
-
-        mjtoken = 'a68496eb4e6d4286887b3196db434fc0'
-        print(mjtoken)
-        headers = {'Authorization': f"Bearer {mjtoken}",'Content-Type': 'application/json',}
-        data = '{ "From": "VendorsIn", "To": "' + phone_number_otp + '", "Text": "Your OTP for phone number verification to change phone number ' + OTP + " Please donot share your OTP to anyone"'" }'
-        response = requests.post('https://api.mailjet.com/v4/sms-send', headers=headers, data=data)
-        print(response)
-        return Response({'status': 200, 'message': 'OTP Sent Successfully','OTP':OTP}, status=200)
+        pass
+        # OTP = ""
+        # for i in range(6):
+        #     OTP += digits[math.floor(random.random() * 10)]
+        #     print(OTP)
+        #
+        # mjtoken = 'a68496eb4e6d4286887b3196db434fc0'
+        # print(mjtoken)
+        # headers = {'Authorization': f"Bearer {mjtoken}",'Content-Type': 'application/json',}
+        # data = '{ "From": "VendorsIn", "To": "' + phone_number_otp + '", "Text": "Your OTP for phone number verification to change phone number ' + OTP + " Please donot share your OTP to anyone"'" }'
+        # response = requests.post('https://api.mailjet.com/v4/sms-send', headers=headers, data=data)
+        # print(response)
+        return Response({'status': 200, 'message': 'OTP Sent Successfully'}, status=200)
     except ObjectDoesNotExist as e:
         return Response({'status': 404, 'error': "phone number not exist"}, status=404)
     except Exception as e:
@@ -408,6 +404,14 @@ class IndustrialInfoView(viewsets.ModelViewSet):
     # industrail info viewsets
     queryset =IndustrialInfo.objects.all()
     serializer_class=IndustrialInfoSerializer
+
+    def get_queryset(self):
+        # it determines the list of objects that you want to display by passing userid(updated_by)
+        industryinfoobj = IndustrialInfo.objects.filter(updated_by=self.request.GET.get('updated_by'))
+        if not industryinfoobj:
+            raise ValidationError({'message': 'Industry info details not exist','status':204})
+        return industryinfoobj
+
 
 class IndustrialHierarchyView(viewsets.ModelViewSet):
     # industrial hierarchy viewsets

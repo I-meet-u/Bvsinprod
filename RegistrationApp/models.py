@@ -11,7 +11,6 @@ class SelfRegistration(AbstractUser):
     # registration model create
     first_name = None
     last_name = None
-    email = None
     contact_person = models.CharField(max_length=200)
     business_to_serve = models.CharField(max_length=50)
     country = models.CharField(max_length=100)

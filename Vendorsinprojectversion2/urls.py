@@ -23,5 +23,6 @@ urlpatterns = [
     path('self-register/',include('RegistrationApp.urls')), # registrationapp urls
     path('masters/',include('MastersApp.urls')),
     path('materials/',include('MaterialApp.urls')),
-    path('landing-page/',include('LandingPageApp.urls'))
+    path('landing-page/',include('LandingPageApp.urls')),
+    path('admin-page/',include('AdminApp.urls'))
 ]

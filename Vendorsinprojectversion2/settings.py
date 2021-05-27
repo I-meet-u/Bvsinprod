@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'MaterialApp',
     'LandingPageApp',
     'rest_framework.authtoken',
+    'AdminApp'
 ]
 
 MIDDLEWARE = [

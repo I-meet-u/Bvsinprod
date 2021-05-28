@@ -476,4 +476,39 @@ def get_basic_info_by_gst(request):
 
 
 
+@api_view(['post'])
+def list_documents_user(request):
+    data = request.data
+    msme = data['msme']
+    msmeexist = False
+    cancelledcheck = False
+    panexist = False
+    docarray = []
+    try:
+        userdoc = list(LegalDocuments.objects.filter(updated_by=data['userid']).values())
+
+        print(len(userdoc))
+        if len(userdoc) > 0:
+            print("inside")
+            if msme == "Yes":
+                print("yes inside")
+                for i in range(len(userdoc)):
+                    if userdoc[i].get('document_name') == "msmecertificate":
+                        docarray.append('msmecertificate')
+                    if userdoc[i].get('document_name') == "cancelledcheque":
+                        docarray.append('cancelledcheque')
+                    if userdoc[i].get('document_name') == "pancard":
+                        docarray.append('pancard')
+                    if userdoc[i].get('document_name') == "registerediec":
+                        docarray.append('registerediec')
+            else:
+                for i in range(len(userdoc)):
+                    if userdoc[i].get('document_name') == "cancelledcheque":
+                        docarray.append('cancelledcheque')
+                    if userdoc[i].get('document_name') == "pancard":
+                        docarray.append('pancard')
+
+        return Response({'status': 200, 'message': "Success", 'data': docarray}, status=200)
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)
 

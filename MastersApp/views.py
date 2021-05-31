@@ -15,6 +15,7 @@ from .models import MaincoreMaster, CategoryMaster, SubCategoryMaster,\
 # Create your views here.
 class IndustryToServeMasterView(viewsets.ModelViewSet):
     # industry_servce master viewsets
+    permission_classes = (AllowAny,)
     queryset = IndustryToServeMaster.objects.all()
     serializer_class = IndustryToServeMasterSerializer
 

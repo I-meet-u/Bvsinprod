@@ -88,10 +88,10 @@ WSGI_APPLICATION = 'Vendorsinprojectversion2.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'Version2DB',
-        'USER': 'vendorsincommerce@vsincommerce',
-        'PASSWORD': 'Vendorsin@2021',
-        'HOST': 'vsincommerce.postgres.database.azure.com',
+        'NAME': 'Version2db',
+        'USER': 'azureadmin@postgresdbtest',
+        'PASSWORD':'Vendorsin@2021',
+        'HOST': 'postgresdbtest.postgres.database.azure.com',
         'PORT': '5432',
         'sslrequire':True,
     }
@@ -149,11 +149,6 @@ REST_FRAMEWORK = {
         'rest_framework.parsers.MultiPartParser',
     ],
 }
-# Mailchimp credentials
-
-# MAILCHIMP_API_KEY  = "5e55a31f4a4e88d543a95d1d35bad317-us1"
-# MAILCHIMP_DATA_CENTER = "us1"
-# MAILCHIMP_EMAIL_LIST_ID = "7491dd57e4"
 
 
 # Static files (CSS, JavaScript, Images)
@@ -161,13 +156,6 @@ REST_FRAMEWORK = {
 
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
-# STATICFILES_DIRS=[
-#     os.path.join(BASE_DIR,'static')
-# ]
-# MEDIA_URL='/media/'
-# MEDIA_ROOT=os.path.join(BASE_DIR,'mediafiles')
-# MEDIAFILES_DIRS = os.path.join(BASE_DIR, "media")
-
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field

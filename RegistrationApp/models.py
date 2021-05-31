@@ -93,7 +93,6 @@ class BillingAddress(models.Model):
 
 class ShippingAddress(models.Model):
     # shipping address model fields
-
     ship_address = models.TextField(max_length=500)
     ship_country = models.CharField(max_length=200)
     ship_state = models.CharField(max_length=200)

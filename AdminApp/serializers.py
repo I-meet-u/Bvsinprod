@@ -15,6 +15,10 @@ class AdminInviteSerializer(serializers.ModelSerializer):
 
 class CreateUserSerializer(serializers.ModelSerializer):
     user_code = serializers.SerializerMethodField()
+    numeric = serializers.SerializerMethodField()
+
+    def get_numeric(self, obj):
+        return obj.numeric
 
     def get_user_code(self, obj):
         return obj.user_code
@@ -28,13 +32,13 @@ class CreateUserSerializer(serializers.ModelSerializer):
         print(validate_data)
         createobj = CreateUser.objects.count()
         if createobj == 0:
-            user_code = 100001
+            numeric = 100001
         else:
             createobj = CreateUser.objects.values_list('user_code', flat=True).last()
             print(createobj)
-            user_code = int(createobj) + 1
-            print(user_code)
-        values = CreateUser.objects.create(user_code=user_code, **validate_data)
+            numeric = int(createobj) + 1
+            print(numeric)
+        values = CreateUser.objects.create(numeric=numeric,user_code="USR"+str(numeric), **validate_data)
         return values
 
 

@@ -1,6 +1,7 @@
 from django.db import models
 
 # Create your models here.
+from AdminApp.models import AdminRegister
 from RegistrationApp.models import SelfRegistration
 from simple_history.models import HistoricalRecords
 
@@ -15,18 +16,15 @@ class IndustryToServeMaster(models.Model):
     is_verified = models.BooleanField(default=False)
     created_on = models.DateTimeField(auto_now_add=True)
     updated_on = models.DateTimeField(auto_now=True)
+    admins = models.ForeignKey(AdminRegister, on_delete=models.CASCADE)
     status = models.CharField(max_length=30, default='Active')
-    # created_by_name = models.CharField(max_length=100, blank=True, null=True)
-    # updated_by_name = models.CharField(max_length=100, blank=True, null=True)
-    # created_by = models.BigIntegerField()
-    # updated_by = models.ForeignKey(SelfRegistration, on_delete=models.CASCADE)
     history = HistoricalRecords()
 
     class Meta:
         db_table = "IndustryToServeMaster"
 
 
-# -----------------------------------------NATURE_OF_BUSINESS MASTER-------------------------------------------------------------
+#-----------------------------------------NATURE_OF_BUSINESS MASTER-------------------------------------------------------------
 
 class NatureOfBusinessMaster(models.Model):
     # nature of business master model and fields
@@ -37,10 +35,7 @@ class NatureOfBusinessMaster(models.Model):
     created_on = models.DateTimeField(auto_now_add=True)
     updated_on = models.DateTimeField(auto_now=True)
     status = models.CharField(max_length=30, default='Active')
-    # created_by_name = models.CharField(max_length=100, blank=True, null=True)
-    # updated_by_name = models.CharField(max_length=100, blank=True, null=True)
-    # created_by = models.BigIntegerField()
-    # updated_by = models.ForeignKey(SelfRegistration, on_delete=models.CASCADE)
+    admins = models.ForeignKey(AdminRegister, on_delete=models.CASCADE)
     history = HistoricalRecords()
 
     class Meta:
@@ -58,10 +53,7 @@ class SupplyCapabilitiesMaster(models.Model):
     created_on = models.DateTimeField(auto_now_add=True)
     updated_on = models.DateTimeField(auto_now=True)
     status = models.CharField(max_length=30, default='Active')
-    # created_by_name = models.CharField(max_length=100, blank=True, null=True)
-    # updated_by_name = models.CharField(max_length=100, blank=True, null=True)
-    # created_by = models.BigIntegerField()
-    # updated_by = models.ForeignKey(SelfRegistration, on_delete=models.CASCADE)
+    admins = models.ForeignKey(AdminRegister, on_delete=models.CASCADE)
     history = HistoricalRecords()
 
     class Meta:
@@ -77,11 +69,8 @@ class MaincoreMaster(models.Model):
     is_verified = models.BooleanField(default=False)
     created_on = models.DateTimeField(auto_now_add=True)
     updated_on = models.DateTimeField(auto_now=True)
-    # created_by_name = models.CharField(max_length=100, blank=True, null=True)
-    # updated_by_name = models.CharField(max_length=100, blank=True, null=True)
-    # created_by = models.BigIntegerField()
-    # updated_by = models.ForeignKey(SelfRegistration, on_delete=models.CASCADE)
-    history = HistoricalRecords()
+    admin_order = models.CharField(max_length=50, null=True)
+    admins = models.ForeignKey(AdminRegister, on_delete=models.CASCADE)
 
     class Meta:
         db_table = "MaincoreMaster"
@@ -96,10 +85,8 @@ class CategoryMaster(models.Model):
     maincore = models.ForeignKey(MaincoreMaster, on_delete=models.CASCADE)
     created_on = models.DateTimeField(auto_now_add=True)
     updated_on = models.DateTimeField(auto_now=True)
-    # created_by_name = models.CharField(max_length=100, blank=True, null=True)
-    # updated_by_name = models.CharField(max_length=100, blank=True, null=True)
-    # created_by = models.BigIntegerField()
-    # updated_by = models.ForeignKey(SelfRegistration, on_delete=models.CASCADE)
+    admin_order = models.CharField(max_length=50, null=True)
+    admins = models.ForeignKey(AdminRegister, on_delete=models.CASCADE)
     history = HistoricalRecords()
 
     class Meta:
@@ -115,10 +102,8 @@ class SubCategoryMaster(models.Model):
     category = models.ForeignKey(CategoryMaster, on_delete=models.CASCADE)
     created_on = models.DateTimeField(auto_now_add=True)
     updated_on = models.DateTimeField(auto_now=True)
-    # created_by_name = models.CharField(max_length=100, blank=True, null=True)
-    # updated_by_name = models.CharField(max_length=100, blank=True, null=True)
-    # created_by = models.BigIntegerField()
-    # updated_by = models.ForeignKey(SelfRegistration, on_delete=models.CASCADE)
+    admin_order = models.CharField(max_length=50, null=True)
+    admins = models.ForeignKey(AdminRegister, on_delete=models.CASCADE)
     history = HistoricalRecords()
 
     class Meta:
@@ -135,10 +120,7 @@ class PincodeMaster(models.Model):
     created_on = models.DateTimeField(auto_now_add=True)
     updated_on = models.DateTimeField(auto_now=True)
     status = models.CharField(max_length=30, default='Active')
-    # created_by_name = models.CharField(max_length=100, blank=True, null=True)
-    # updated_by_name = models.CharField(max_length=100, blank=True, null=True)
-    # created_by = models.BigIntegerField()
-    # updated_by = models.ForeignKey(SelfRegistration, on_delete=models.CASCADE)
+    admins = models.ForeignKey(AdminRegister, on_delete=models.CASCADE)
     history = HistoricalRecords()
 
     class Meta:
@@ -148,16 +130,13 @@ class PincodeMaster(models.Model):
 class UOMMaster(models.Model):
     # uom master models and fields
     uom_id = models.BigAutoField(primary_key=True)
-    uom_code = models.CharField(max_length=30, unique=True)
+    uom_code = models.CharField(max_length=30)
     uom_description = models.CharField(max_length=300, unique=True)
     is_verified = models.BooleanField(default=False)
     created_on = models.DateTimeField(auto_now_add=True)
     updated_on = models.DateTimeField(auto_now=True)
     status = models.CharField(max_length=30, default='Active')
-    # created_by_name = models.CharField(max_length=100, blank=True, null=True)
-    # updated_by_name = models.CharField(max_length=100, blank=True, null=True)
-    # created_by = models.BigIntegerField()
-    # updated_by = models.ForeignKey(SelfRegistration, on_delete=models.CASCADE)
+    admins = models.ForeignKey(AdminRegister, on_delete=models.CASCADE)
     history = HistoricalRecords()
 
     class Meta:
@@ -174,10 +153,7 @@ class DepartmentMaster(models.Model):
     created_on = models.DateTimeField(auto_now_add=True)
     updated_on = models.DateTimeField(auto_now=True)
     status = models.CharField(max_length=30, default='Active')
-    # created_by_name = models.CharField(max_length=100, blank=True, null=True)
-    # updated_by_name = models.CharField(max_length=100, blank=True, null=True)
-    # created_by = models.BigIntegerField()
-    # updated_by = models.ForeignKey(SelfRegistration, on_delete=models.CASCADE)
+    admins = models.ForeignKey(AdminRegister, on_delete=models.CASCADE)
     history = HistoricalRecords()
 
     class Meta:
@@ -194,50 +170,42 @@ class DesignationMaster(models.Model):
     created_on = models.DateTimeField(auto_now_add=True)
     updated_on = models.DateTimeField(auto_now=True)
     status = models.CharField(max_length=30, default='Active')
-    # created_by_name = models.CharField(max_length=100, blank=True, null=True)
-    # updated_by_name = models.CharField(max_length=100, blank=True, null=True)
-    # created_by = models.BigIntegerField()
-    # updated_by = models.ForeignKey(SelfRegistration, on_delete=models.CASCADE)
+    admins = models.ForeignKey(AdminRegister, on_delete=models.CASCADE)
     history = HistoricalRecords()
 
     class Meta:
         db_table = "DesignationMaster"
 
 
-#
-# class TaxMaster(models.Model):
-#     tax_id = models.BigAutoField(primary_key=True)
-#     tax_group = models.CharField(max_length=30,null=True,blank=True)
-#     tax_slab_name = models.CharField(max_length=200, unique=True)
-#     tax_percent = models.FloatField(max_length=30,unique=True)
-#     is_verified = models.BooleanField(default=False)
-#     created_on = models.DateTimeField(auto_now_add=True)
-#     updated_on = models.DateTimeField(auto_now=True)
-#     status = models.CharField(max_length=30, default='Active')
-#     # created_by_name = models.CharField(max_length=100, blank=True, null=True)
-#     # updated_by_name = models.CharField(max_length=100, blank=True, null=True)
-#     # created_by = models.BigIntegerField()
-#     # updated_by = models.ForeignKey(SelfRegistration, on_delete=models.CASCADE)
-#     history = HistoricalRecords()
-#
-#     class Meta:
-#         db_table = "TaxMaster"
+
+class TaxMaster(models.Model):
+    # tax_master models and fields
+    tax_id = models.BigAutoField(primary_key=True)
+    tax_group = models.CharField(max_length=30,null=True,blank=True)
+    tax_slab_name = models.CharField(max_length=200,null=True)
+    tax_percent = models.CharField(max_length=30,null=True)
+    is_verified = models.BooleanField(default=False)
+    created_on = models.DateTimeField(auto_now_add=True)
+    updated_on = models.DateTimeField(auto_now=True)
+    status = models.CharField(max_length=30, default='Active')
+    admins = models.ForeignKey(AdminRegister, on_delete=models.CASCADE)
+    history = HistoricalRecords()
+
+    class Meta:
+        db_table = "TaxMaster"
 
 
 class HSNMaster(models.Model):
     # hsn_master models and fields
     hsn_id = models.BigAutoField(primary_key=True)
     hsn_code = models.CharField(max_length=30, null=True, blank=True)
-    gst_rate_percentage = models.CharField(max_length=200, unique=True)
-    description_of_goods = models.CharField(max_length=30, unique=True)
+    gst_rate_percentage = models.CharField(max_length=200)
+    description_of_goods = models.TextField()
     is_verified = models.BooleanField(default=False)
     created_on = models.DateTimeField(auto_now_add=True)
     updated_on = models.DateTimeField(auto_now=True)
     status = models.CharField(max_length=30, default='Active')
-    # created_by_name = models.CharField(max_length=100, blank=True, null=True)
-    # updated_by_name = models.CharField(max_length=100, blank=True, null=True)
-    # created_by = models.BigIntegerField()
-    # updated_by = models.ForeignKey(SelfRegistration, on_delete=models.CASCADE)
+    admins = models.ForeignKey(AdminRegister, on_delete=models.CASCADE)
     history = HistoricalRecords()
 
     class Meta:
@@ -248,16 +216,13 @@ class SACMaster(models.Model):
     # sac_master models and fields
     sac_id = models.BigAutoField(primary_key=True)
     sac_code = models.CharField(max_length=30, null=True, blank=True)
-    gst_rate_percentage = models.CharField(max_length=200, unique=True)
-    description_of_goods = models.CharField(max_length=30, unique=True)
+    gst_rate_percentage = models.CharField(max_length=200)
+    description_of_goods = models.TextField()
     is_verified = models.BooleanField(default=False)
     created_on = models.DateTimeField(auto_now_add=True)
     updated_on = models.DateTimeField(auto_now=True)
     status = models.CharField(max_length=30, default='Active')
-    # created_by_name = models.CharField(max_length=100, blank=True, null=True)
-    # updated_by_name = models.CharField(max_length=100, blank=True, null=True)
-    # created_by = models.BigIntegerField()
-    # updated_by = models.ForeignKey(SelfRegistration, on_delete=models.CASCADE)
+    admins = models.ForeignKey(AdminRegister, on_delete=models.CASCADE)
     history = HistoricalRecords()
 
     class Meta:
@@ -274,10 +239,7 @@ class CurrencyMaster(models.Model):
     created_on = models.DateTimeField(auto_now_add=True)
     updated_on = models.DateTimeField(auto_now=True)
     status = models.CharField(max_length=30, default='Active')
-    # created_by_name = models.CharField(max_length=100, blank=True, null=True)
-    # updated_by_name = models.CharField(max_length=100, blank=True, null=True)
-    # created_by = models.BigIntegerField()
-    # updated_by = models.ForeignKey(SelfRegistration, on_delete=models.CASCADE)
+    admins = models.ForeignKey(AdminRegister, on_delete=models.CASCADE)
     history = HistoricalRecords()
 
     class Meta:
@@ -293,10 +255,7 @@ class PFChargesMaster(models.Model):
     created_on = models.DateTimeField(auto_now_add=True)
     updated_on = models.DateTimeField(auto_now=True)
     status = models.CharField(max_length=30, default='Active')
-    # created_by_name = models.CharField(max_length=100, blank=True, null=True)
-    # updated_by_name = models.CharField(max_length=100, blank=True, null=True)
-    # created_by = models.BigIntegerField()
-    # updated_by = models.ForeignKey(SelfRegistration, on_delete=models.CASCADE)
+    admins = models.ForeignKey(AdminRegister, on_delete=models.CASCADE)
     history = HistoricalRecords()
 
     class Meta:

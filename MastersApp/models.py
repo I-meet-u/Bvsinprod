@@ -234,7 +234,7 @@ class CurrencyMaster(models.Model):
     currency_id = models.BigAutoField(primary_key=True)
     currency_code = models.CharField(max_length=30,unique=True)
     currency = models.CharField(max_length=200, unique=True)
-    currency_name = models.CharField(max_length=30, unique=True)
+    currency_name = models.CharField(max_length=500, unique=True)
     is_verified = models.BooleanField(default=False)
     created_on = models.DateTimeField(auto_now_add=True)
     updated_on = models.DateTimeField(auto_now=True)

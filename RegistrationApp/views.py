@@ -22,10 +22,10 @@ from rest_framework.views import APIView
 
 
 from .models import SelfRegistration, SelfRegistration_Sample, BasicCompanyDetails, BillingAddress, ShippingAddress, \
-    IndustrialInfo, IndustrialHierarchy, BankDetails, LegalDocuments
+    IndustrialInfo, IndustrialHierarchy, BankDetails, LegalDocuments, BasicCompanyDetails_Others
 from .serializers import SelfRegistrationSerializer, SelfRegistrationSerializerSample, BasicCompanyDetailsSerializers, \
     BillingAddressSerializer, ShippingAddressSerializer, IndustrialInfoSerializer, IndustrialHierarchySerializer, \
-    BankDetailsSerializer,LegalDocumentsSerializers
+    BankDetailsSerializer, LegalDocumentsSerializers, BasicCompanyDetailsOthersSerializers
 from rest_framework.permissions import AllowAny
 from rest_framework import status
 
@@ -512,3 +512,15 @@ def list_documents_user(request):
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)
 
+
+class BasicCompanyDetailsOthersView(viewsets.ModelViewSet):
+    # basic company info viewset
+    queryset = BasicCompanyDetails_Others.objects.all()
+    serializer_class = BasicCompanyDetailsOthersSerializers
+
+    def get_queryset(self):
+        # overriding get_queryset by passing user_id. Here user_id is nothing but updated_by
+        basicobj = BasicCompanyDetails_Others.objects.filter(updated_by=self.request.GET.get('updated_by'))
+        if not basicobj:
+            raise ValidationError({'message': 'Basic Details not exist','status':204})
+        return basicobj

@@ -51,8 +51,8 @@ class SelfRegistration_Sample(models.Model):
 class BasicCompanyDetails(models.Model):
     # basic details model fields
     company_code = models.CharField(max_length=20, primary_key=True)
-    gst_number = models.CharField(max_length=30, unique=True)
-    company_name = models.CharField(max_length=200,unique=True)
+    gst_number = models.CharField(max_length=30)
+    company_name = models.CharField(max_length=200)
     company_type = models.CharField(max_length=200)
     listing_date = models.CharField(blank=True, max_length=200)
     pan_number = models.CharField(max_length=30)
@@ -179,3 +179,23 @@ class LegalDocuments(models.Model):
 
     class Meta:
         db_table = "LegalDocuments"
+
+
+class BasicCompanyDetails_Others(models.Model):
+    # basic details model fields
+    company_name = models.CharField(max_length=200)
+    company_code = models.CharField(max_length=20, primary_key=True)
+    company_established = models.CharField(max_length=200)
+    industrial_scale = models.CharField(max_length=150)
+    market_location= models.CharField(max_length=150)
+    company_type = models.CharField(max_length=200)
+    tax_id_or_vat = models.CharField(max_length=200)
+    currency = models.CharField(max_length=30)
+    created_on = models.DateTimeField(auto_now_add=True)
+    updated_on = models.DateTimeField(auto_now=True)
+    created_by = models.BigIntegerField()
+    updated_by = models.OneToOneField(SelfRegistration, on_delete=models.CASCADE)
+    history = HistoricalRecords()
+
+    class Meta:
+        db_table = "BasicCompanyDetails_Others"

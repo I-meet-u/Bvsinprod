@@ -4,7 +4,7 @@ from rest_framework import serializers
 from rest_framework.validators import UniqueValidator
 
 from .models import SelfRegistration, SelfRegistration_Sample, BasicCompanyDetails, BillingAddress, ShippingAddress, \
-    IndustrialInfo, IndustrialHierarchy, BankDetails, LegalDocuments
+    IndustrialInfo, IndustrialHierarchy, BankDetails, LegalDocuments, BasicCompanyDetails_Others
 
 
 class SelfRegistrationSerializer(serializers.ModelSerializer):
@@ -121,3 +121,30 @@ class LegalDocumentsSerializers(serializers.ModelSerializer):
         fields="__all__"
 
 
+class BasicCompanyDetailsOthersSerializers(serializers.ModelSerializer):
+    # basic info details serializers
+    company_code = serializers.SerializerMethodField()
+
+    def get_company_code(self, obj):
+        return obj.company_code
+
+
+    class Meta:
+        model=BasicCompanyDetails_Others
+        fields=('company_code','company_name','company_established','industrial_scale','market_location','company_type',
+               'tax_id_or_vat','currency','created_on','updated_on',
+                'created_by','updated_by')
+
+    def create(self, validate_data):
+        # to add any extra details into the object before saving
+        print(validate_data)
+        basic = BasicCompanyDetails_Others.objects.count()
+        if basic == 0:
+            company_code = '100001'
+        else:
+            basic = BasicCompanyDetails_Others.objects.values_list('company_code', flat=True).last()
+            print(basic)
+            company_code = int(basic) + 1
+            print(company_code)
+        values = BasicCompanyDetails_Others.objects.create(company_code=company_code,**validate_data)
+        return values

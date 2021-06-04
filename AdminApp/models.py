@@ -75,7 +75,7 @@ class CreateUser(models.Model):
     land_mark = models.CharField(max_length=200, null=True, blank=True)
     created_on = models.DateTimeField(auto_now_add=True, null=True)
     updated_on = models.DateTimeField(auto_now=True, null=True)
-    status = models.CharField(max_length=50, default='Pending')
+    status = models.CharField(max_length=50, default='Active')
     history = HistoricalRecords()
 
     class Meta:

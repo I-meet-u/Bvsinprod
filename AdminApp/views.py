@@ -104,3 +104,22 @@ class CreateUserView(viewsets.ModelViewSet):
 class PermissionsView(viewsets.ModelViewSet):
     queryset = Permissions.objects.all()
     serializer_class=PermissionsSerializer
+
+
+@api_view(['put'])
+def create_user_status_update(request):
+    data=request.data
+    id=data['id']
+    try:
+        createuserobj=CreateUser.objects.filter(id__in=id).values()
+        if len(createuserobj)>0:
+            for i in range(0,len(createuserobj)):
+                userobj=CreateUser.objects.get(id=createuserobj[i].get('id'))
+                if userobj.status=='Active':
+                    userobj.status='Disabled'
+                    userobj.save()
+                else:
+                    return Response({'status': 202, 'message': 'Already status disabled'}, status=202)
+            return Response({'status': 200, 'message': 'User status changed to disabled'}, status=200)
+    except Exception as e:
+        return Response({'status':500,'error':str(e)},status=500)

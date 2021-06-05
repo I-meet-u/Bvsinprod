@@ -199,3 +199,43 @@ class BasicCompanyDetails_Others(models.Model):
 
     class Meta:
         db_table = "BasicCompanyDetails_Others"
+
+
+class BillingAddress_Others(models.Model):
+    # billing address model fields
+    bill_address_others = models.TextField(max_length=500)
+    bill_country_others = models.CharField(max_length=200)
+    bill_state_others=models.CharField(max_length=200)
+    bill_city_others = models.CharField(max_length=200)
+    bill_pincode_others = models.IntegerField()
+    bill_landmark_others = models.CharField(max_length=50, blank=True)
+    bill_location_others = models.CharField(max_length=200, blank=True)
+    created_on_others = models.DateTimeField(auto_now_add=True)
+    updated_on_others = models.DateTimeField(auto_now=True)
+    created_by_others = models.BigIntegerField()
+    updated_by_others = models.ForeignKey(SelfRegistration, on_delete=models.CASCADE)
+    company_code_others = models.ForeignKey(BasicCompanyDetails_Others,on_delete=models.CASCADE)
+    history = HistoricalRecords()
+
+    class Meta:
+        db_table = "BillingAddress_Others"
+
+
+class ShippingAddress_Others(models.Model):
+    # shipping address model fields
+    ship_address_others = models.TextField(max_length=500)
+    ship_country_others = models.CharField(max_length=200)
+    ship_state_others = models.CharField(max_length=200)
+    ship_city_others = models.CharField(max_length=200)
+    ship_pincode_others = models.BigIntegerField()
+    ship_landmark_others = models.CharField(max_length=50, blank=True)
+    ship_location_others = models.CharField(max_length=200, blank=True)
+    created_on_others = models.DateTimeField(auto_now_add=True)
+    updated_on_others = models.DateTimeField(auto_now=True)
+    created_by_others = models.BigIntegerField()
+    updated_by_others = models.ForeignKey(SelfRegistration, on_delete=models.CASCADE)
+    company_code_others = models.ForeignKey(BasicCompanyDetails_Others,on_delete=models.CASCADE)
+    history = HistoricalRecords()
+
+    class Meta:
+        db_table = "ShippingAddress_Others"

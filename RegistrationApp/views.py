@@ -22,7 +22,8 @@ from rest_framework.views import APIView
 
 
 from .models import SelfRegistration, SelfRegistration_Sample, BasicCompanyDetails, BillingAddress, ShippingAddress, \
-    IndustrialInfo, IndustrialHierarchy, BankDetails, LegalDocuments, BasicCompanyDetails_Others
+    IndustrialInfo, IndustrialHierarchy, BankDetails, LegalDocuments, BasicCompanyDetails_Others, BillingAddress_Others, \
+    ShippingAddress_Others
 from .serializers import SelfRegistrationSerializer, SelfRegistrationSerializerSample, BasicCompanyDetailsSerializers, \
     BillingAddressSerializer, ShippingAddressSerializer, IndustrialInfoSerializer, IndustrialHierarchySerializer, \
     BankDetailsSerializer, LegalDocumentsSerializers, BasicCompanyDetailsOthersSerializers
@@ -524,3 +525,59 @@ class BasicCompanyDetailsOthersView(viewsets.ModelViewSet):
         if not basicobj:
             raise ValidationError({'message': 'Basic Details not exist','status':204})
         return basicobj
+
+@api_view(['post'])
+def all_basic_data(request):
+    data=request.data
+    user_id=data['user_id']
+    try:
+        basic_obj=BasicCompanyDetails_Others.objects.count()
+        if basic_obj==0:
+            company_code='100001'
+        else:
+            basic_obj=BasicCompanyDetails_Others.objects.values_list('company_code', flat=True).last()
+            company_code=int(basic_obj)+1
+            print(company_code)
+        basicobject=BasicCompanyDetails_Others.objects.filter(updated_by=user_id).values()
+        if len(basicobject)==0:
+            basicobjcode = BasicCompanyDetails_Others.objects.create(company_code=company_code,
+                                                                     company_name=data['company_name'],
+                                                                     company_established=data['company_established'],
+                                                                     industrial_scale=data['industrial_scale'],
+                                                                     market_location=data['market_location'],
+                                                                     company_type=data['company_type'],
+                                                                     tax_id_or_vat=data['tax_id_or_vat'],
+                                                                     currency=data['currency'],
+                                                                     created_by=data['created_by'],
+                                                                     updated_by=SelfRegistration.objects.get(id=user_id)
+                                                                     )
+            BillingAddress_Others.objects.create(company_code_others=BasicCompanyDetails_Others.objects.get(company_code=basicobjcode.company_code),
+                                        updated_by_others=SelfRegistration.objects.get(id=user_id),
+                                        bill_address_others=data['bill_address_others'],
+                                        bill_country_others=data['bill_country_others'],
+                                        bill_state_others=data['bill_state_others'],
+                                        bill_city_others=data['bill_city_others'],
+                                        bill_pincode_others=data['bill_pincode_others'],
+                                        bill_landmark_others=data['bill_landmark_others'],
+                                        bill_location_others=data['bill_location_others'],
+                                        created_by_others=user_id)
+
+            ShippingAddress_Others.objects.create(company_code_others=BasicCompanyDetails_Others.objects.get(company_code=basicobjcode.company_code),
+                                           updated_by_others=SelfRegistration.objects.get(id=user_id),
+                                           ship_address_others=data['ship_address_others'],
+                                           ship_country_others=data['ship_country_others'],
+                                           ship_state_others=data['ship_state_others'],
+                                           ship_city_others=data['ship_city_others'],
+                                           ship_pincode_others=data['ship_pincode_others'],
+                                           ship_landmark_others=data['ship_landmark_others'],
+                                           ship_location_others=data['ship_location_others'],
+                                           created_by_others=user_id
+                                           )
+
+            return Response({'status':200,'message':'Basic Details Created','data':basicobjcode.company_code},status=200)
+        else:
+            return Response({'status': 202, 'message': 'Basic Details Already present','data':basicobject[0].get('company_code')}, status=202)
+    except Exception as e:
+        return Response({'status':500,'error':str(e)},status=500)
+
+

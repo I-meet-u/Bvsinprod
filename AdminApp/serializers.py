@@ -34,11 +34,11 @@ class CreateUserSerializer(serializers.ModelSerializer):
         if createobj == 0:
             numeric = 100001
         else:
-            createobj = CreateUser.objects.values_list('user_code', flat=True).last()
+            createobj = CreateUser.objects.values_list('numeric', flat=True).last()
             print(createobj)
             numeric = int(createobj) + 1
             print(numeric)
-        values = CreateUser.objects.create(numeric=numeric,user_code=numeric, **validate_data)
+        values = CreateUser.objects.create(numeric=numeric,user_code="USR"+str(numeric), **validate_data)
         return values
 
 

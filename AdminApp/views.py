@@ -4,6 +4,7 @@ from django.shortcuts import render
 # Create your views here.
 from rest_framework import viewsets, permissions
 from rest_framework.decorators import api_view, permission_classes
+from rest_framework.exceptions import ValidationError
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 import mailchimp_transactional as MailchimpTransactional
@@ -98,6 +99,12 @@ class AdminInviteView(viewsets.ModelViewSet):
 class CreateUserView(viewsets.ModelViewSet):
     queryset = CreateUser.objects.all()
     serializer_class = CreateUserSerializer
+
+    def get_queryset(self):
+        createuserobj=CreateUser.objects.filter(admins=self.request.GET.get('admins'))
+        if not createuserobj:
+            raise ValidationError({'message': 'Create User Details are not found', 'status': 204})
+        return  createuserobj
 
 
 

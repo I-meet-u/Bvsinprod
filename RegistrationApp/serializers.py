@@ -17,7 +17,7 @@ class SelfRegistrationSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = SelfRegistration
-        fields = ('username', 'password', 'confirm_password', 'last_login', 'contact_person', 'business_to_serve', 'country',
+        fields = ('is','username', 'password', 'confirm_password', 'last_login', 'contact_person', 'business_to_serve', 'country',
         'nature_of_business','user_type','phone_number', 'admin_approve', 'registration_status')
 
     def validate(self, obj):

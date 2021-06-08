@@ -101,9 +101,10 @@ def maincore_search(request):
 def category_search(request):
     # category-name search passing category_name
     data=request.data
+    mid=data['mid']
     category_name=data['category_name']
     try:
-        categoryobj=CategoryMaster.objects.filter(category_name__icontains=category_name).values()
+        categoryobj=CategoryMaster.objects.filter(maincore=mid,category_name__icontains=category_name).values()
         if categoryobj:
             return Response({'status':200,'message':'Category search success','data':categoryobj},status=200)
         else:

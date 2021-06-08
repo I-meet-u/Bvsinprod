@@ -12,11 +12,15 @@ class IndustryToServeMaster(models.Model):
     # industry to serve masters model and fields
     industry_id = models.BigAutoField(primary_key=True)
     industry_name = models.CharField(max_length=50, unique=True)
-    industry_code = models.CharField(max_length=50, unique=True)
+    industry_code = models.CharField(max_length=50, unique=True,null=True,blank=True)
     is_verified = models.BooleanField(default=False)
     created_on = models.DateTimeField(auto_now_add=True)
     updated_on = models.DateTimeField(auto_now=True)
-    admins = models.ForeignKey(AdminRegister, on_delete=models.CASCADE)
+    admins = models.ForeignKey(AdminRegister,on_delete=models.CASCADE,null=True,blank=True)
+    created_by=models.BigIntegerField(null=True)
+    updated_by = models.ForeignKey(SelfRegistration, on_delete=models.CASCADE,null=True,blank=True)
+    updated_by_name = models.CharField(null=True, blank=True,max_length=100)
+    created_by_name=models.CharField(null=True,blank=True,max_length=100)
     status = models.CharField(max_length=30, default='Active')
     history = HistoricalRecords()
 
@@ -29,6 +33,7 @@ class IndustryToServeMaster(models.Model):
 class NatureOfBusinessMaster(models.Model):
     # nature of business master model and fields
     nature_of_business_id = models.BigAutoField(primary_key=True)
+    nature_of_business_code=models.CharField(max_length=80,null=True)
     nature_of_business_name = models.CharField(max_length=50, unique=True)
     nature_of_business_description = models.TextField(unique=True, null=True)
     is_verified = models.BooleanField(default=False)
@@ -165,7 +170,7 @@ class DesignationMaster(models.Model):
     designation_id = models.BigAutoField(primary_key=True)
     designation_code = models.CharField(max_length=30, null=True, blank=True)
     designation_name = models.CharField(max_length=200, unique=True)
-    designation_level = models.CharField(max_length=30, unique=True)
+    designation_level = models.CharField(max_length=30,null=True)
     is_verified = models.BooleanField(default=False)
     created_on = models.DateTimeField(auto_now_add=True)
     updated_on = models.DateTimeField(auto_now=True)

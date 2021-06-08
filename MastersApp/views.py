@@ -117,9 +117,10 @@ def category_search(request):
 def sub_category_search(request):
     # sub-category-name search passing sub_category_name
     data=request.data
+    catid=data['catid']
     sub_category_name=data['sub_category_name']
     try:
-        subcategoryobj=SubCategoryMaster.objects.filter(sub_category_name__icontains=sub_category_name).values()
+        subcategoryobj=SubCategoryMaster.objects.filter(category__in=catid,sub_category_name__icontains=sub_category_name).values()
         if subcategoryobj:
             return Response({'status':200,'message':'SubCategory search success','data':subcategoryobj},status=200)
         else:

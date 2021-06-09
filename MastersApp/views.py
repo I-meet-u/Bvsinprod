@@ -101,9 +101,10 @@ def maincore_search(request):
 def category_search(request):
     # category-name search passing category_name
     data=request.data
+    mid=data['mid']
     category_name=data['category_name']
     try:
-        categoryobj=CategoryMaster.objects.filter(category_name__icontains=category_name).values()
+        categoryobj=CategoryMaster.objects.filter(maincore=mid,category_name__icontains=category_name).values()
         if categoryobj:
             return Response({'status':200,'message':'Category search success','data':categoryobj},status=200)
         else:
@@ -116,9 +117,10 @@ def category_search(request):
 def sub_category_search(request):
     # sub-category-name search passing sub_category_name
     data=request.data
+    catid=data['catid']
     sub_category_name=data['sub_category_name']
     try:
-        subcategoryobj=SubCategoryMaster.objects.filter(sub_category_name__icontains=sub_category_name).values()
+        subcategoryobj=SubCategoryMaster.objects.filter(category__in=catid,sub_category_name__icontains=sub_category_name).values()
         if subcategoryobj:
             return Response({'status':200,'message':'SubCategory search success','data':subcategoryobj},status=200)
         else:

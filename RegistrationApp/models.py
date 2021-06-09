@@ -148,6 +148,9 @@ class BankDetails(models.Model):
     # bank details model fields
     ifsc_code = models.CharField(max_length=40)
     account_number = models.CharField(max_length=40, unique=True)
+    iban_number=models.CharField(max_length=50,null=True)
+    swift_code=models.CharField(max_length=50,null=True)
+    micr_number=models.CharField(max_length=50,null=True)
     account_type = models.CharField(max_length=50)
     bank_name = models.CharField(max_length=200)
     branch = models.CharField(max_length=50)

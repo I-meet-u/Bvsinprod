@@ -71,7 +71,6 @@ def admin_login(request):
                 print(response)
                 admin_user_data = {
                     'adminemail': admin_obj.admin_email,
-                    'Phoneno': admin_obj.admin_phone,
                     'OTP':OTP
                 }
                 return Response({'status': 200, 'message': 'Email sent successfully','data': admin_user_data}, status=200)

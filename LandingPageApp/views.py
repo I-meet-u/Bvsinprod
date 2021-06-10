@@ -46,7 +46,7 @@ def category_list(request):
     subcatarray=[]
     subcategoryarray = []
     try:
-        catobj = CategoryMaster.objects.filter(maincoreid=maincoreid).values()
+        catobj = CategoryMaster.objects.filter(maincore=maincoreid).values()
         print(len(catobj))
         if catobj:
             for i in range(0, len(catobj)):

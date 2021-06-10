@@ -41,7 +41,7 @@ class AdminRegisterView(viewsets.ModelViewSet):
             serializer.save()
 
 @api_view(['post'])
-@permission_classes([AllowAny])
+@permission_classes((AllowAny,))
 def admin_login(request):
     data = request.data
     password = data['password']
@@ -138,6 +138,7 @@ def create_user_status_update(request):
 
 
 @api_view(['post'])
+@permission_classes((AllowAny,))
 def admin_login_verification_otp(request):
     # email id verification by otp sending to mail
     data = request.data
@@ -153,7 +154,9 @@ def admin_login_verification_otp(request):
             mailchimp = MailchimpTransactional.Client('14kMF-44pCPZu8XbNkAzFA')
             message = {
                 "from_email": "admin@vendorsin.com",
-                "subject": "Login Verification OTP",
+                "subject": "Admin Login Verification OTP",
+                "text":"Your Login Confirmation OTP is"+" "+OTP+" "+"Please Don't Share it with anyone \n Thank You",
+
                 "to": [
                     {
                         "email": adminuserobj.admin_email,

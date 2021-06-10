@@ -1,4 +1,8 @@
+import math
+import random
+
 from django.contrib.auth.hashers import make_password,check_password
+from django.core.exceptions import ObjectDoesNotExist
 from django.shortcuts import render
 
 # Create your views here.
@@ -37,7 +41,7 @@ class AdminRegisterView(viewsets.ModelViewSet):
             serializer.save()
 
 @api_view(['post'])
-@permission_classes([AllowAny])
+@permission_classes((AllowAny,))
 def admin_login(request):
     data = request.data
     password = data['password']
@@ -130,3 +134,42 @@ def create_user_status_update(request):
             return Response({'status': 200, 'message': 'User status changed to disabled'}, status=200)
     except Exception as e:
         return Response({'status':500,'error':str(e)},status=500)
+
+
+
+@api_view(['post'])
+@permission_classes((AllowAny,))
+def admin_login_verification_otp(request):
+    # email id verification by otp sending to mail
+    data = request.data
+    adminemail = data['adminemail']
+    digits = '0123456789'
+    OTP = ""
+    try:
+        adminuserobj = AdminRegister.objects.get(admin_email=adminemail)
+        print(adminuserobj)
+        if adminuserobj:
+            for i in range(6):
+                OTP += digits[math.floor(random.random() * 10)]
+            mailchimp = MailchimpTransactional.Client('14kMF-44pCPZu8XbNkAzFA')
+            message = {
+                "from_email": "admin@vendorsin.com",
+                "subject": "Admin Login Verification OTP",
+                "text":"Your Login Confirmation OTP is"+" "+OTP+" "+"Please Don't Share it with anyone \n Thank You",
+
+                "to": [
+                    {
+                        "email": adminuserobj.admin_email,
+                        "type": "to"
+                    }
+                ]
+            }
+            response = mailchimp.messages.send({"message": message})
+            print(response)
+            return Response({'status': 200, 'message': 'Email sent successfully'}, status=200)
+        else:
+            return Response({'status': 202, 'message': 'Not present'}, status=202)
+    except ObjectDoesNotExist as e:
+        return Response({'status': 404, 'error': "Email not exist"}, status=404)
+    except ApiClientError as error:
+        return Response({'status': 500, 'error': error}, status=500)

@@ -89,21 +89,21 @@ def phone_verification_otp(request):
         if user:
             pass
             OTP = ""
-            # for i in range(6):
-            #     OTP += digits[math.floor(random.random() * 10)]
-            # print(OTP)
-            # user.phone_otp = OTP
-            # user.save()
-            # mjtoken = 'a68496eb4e6d4286887b3196db434fc0'
-            # print(mjtoken)
-            # headers = {
-            #     'Authorization': f"Bearer {mjtoken}",
-            #     'Content-Type': 'application/json',
-            # }
-            # data = '{ "From": "VendorsIn", "To": "'+phone_number_otp+'", "Text": "Your OTP for Registration to Vendorsin portal is '+OTP+" Please donot share your OTP to anyone"'" }'
-            # # data = '{ "Text": "Have a nice SMS flight with Mailjet !", "To":'++919482212344", "From": "VendorsIn" }'
-            # response = requests.post('https://api.mailjet.com/v4/sms-send', headers=headers, data=data)
-            # print(response)
+            for i in range(6):
+                OTP += digits[math.floor(random.random() * 10)]
+            print(OTP)
+            user.phone_otp = OTP
+            user.save()
+            mjtoken = 'a68496eb4e6d4286887b3196db434fc0'
+            print(mjtoken)
+            headers = {
+                'Authorization': f"Bearer {mjtoken}",
+                'Content-Type': 'application/json',
+            }
+            data = '{ "From": "VendorsIn", "To": "'+phone_number_otp+'", "Text": "Your OTP for Registration to Vendorsin portal is '+OTP+" Please donot share your OTP to anyone"'" }'
+            # data = '{ "Text": "Have a nice SMS flight with Mailjet !", "To":'++919482212344", "From": "VendorsIn" }'
+            response = requests.post('https://api.mailjet.com/v4/sms-send', headers=headers, data=data)
+            print(response)
         return Response({'status': 200, 'message': 'OTP successfully sent to phone'}, status=200)
     except ObjectDoesNotExist as e:
         return Response({'status': 404, 'error': "phone number not exist"}, status=404)
@@ -432,52 +432,6 @@ class BankDetailsView(viewsets.ModelViewSet):
         return bankobj
 
 @api_view(['post'])
-def get_basic_info_by_gst(request):
-    # get basic_details by passing gst_number
-    data=request.data
-    gst_no=data['gst_no']
-    basicdetailslist=[]
-    try:
-        basicobj=BasicCompanyDetails.objects.get(gst_number=gst_no)
-        print(basicobj.company_code)
-        if basicobj:
-            billobj=BillingAddress.objects.get(company_code_id=basicobj.company_code)
-            shipobj=ShippingAddress.objects.get(company_code_id=basicobj.company_code)
-            basicdetailslist.append({
-                'gst_number':basicobj.gst_number,
-                'company_name':basicobj.company_name,
-                'company_code':basicobj.company_code,
-                'company_type':basicobj.company_type,
-                'listing_date':basicobj.listing_date,
-                'pan_number':basicobj.pan_number,
-                'tax_payer_type':basicobj.tax_payer_type,
-                'msme_registered':basicobj.msme_registered,
-                'company_established':basicobj.company_established,
-                'registered_iec':basicobj.registered_iec,
-                'industrial_scale':basicobj.industrial_scale,
-                'bill_address':billobj.bill_address,
-                'bill_country':billobj.bill_country,
-                'bill_city':billobj.bill_city,
-                'bill_pincode':billobj.bill_pincode,
-                'bill_landmark':billobj.bill_landmark,
-                'bill_location':billobj.bill_location,
-                'ship_address':shipobj.ship_address,
-                'ship_country':shipobj.ship_country,
-                'ship_city':shipobj.ship_city,
-                'ship_pincode':shipobj.ship_pincode,
-                'ship_landmark':shipobj.ship_landmark,
-                'ship_location':shipobj.ship_location,
-                'updated_by':basicobj.updated_by_id
-            })
-            return Response({'status': 200, 'message': 'Basic Details List','data':basicdetailslist}, status=200)
-        else:
-            return Response({'status':204,'message':'Not Present'},status=204)
-    except Exception as e:
-        return Response({'status':500,'error':str(e)},status=500)
-
-
-
-@api_view(['post'])
 def list_documents_user(request):
     data = request.data
     msme = data['msme']
@@ -560,7 +514,7 @@ def all_basic_data(request):
                                         bill_pincode_others=data['bill_pincode_others'],
                                         bill_landmark_others=data['bill_landmark_others'],
                                         bill_location_others=data['bill_location_others'],
-                                        created_by_others=user_id)
+                                        created_by_others=data['created_by'])
 
             ShippingAddress_Others.objects.create(company_code_others=BasicCompanyDetails_Others.objects.get(company_code=basicobjcode.company_code),
                                            updated_by_others=SelfRegistration.objects.get(id=user_id),
@@ -571,7 +525,7 @@ def all_basic_data(request):
                                            ship_pincode_others=data['ship_pincode_others'],
                                            ship_landmark_others=data['ship_landmark_others'],
                                            ship_location_others=data['ship_location_others'],
-                                           created_by_others=user_id
+                                           created_by_others=data['created_by']
                                            )
 
             return Response({'status':200,'message':'Basic Details Created','data':basicobjcode.company_code},status=200)

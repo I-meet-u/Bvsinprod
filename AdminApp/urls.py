@@ -12,5 +12,6 @@ router.register('permissions',views.PermissionsView)
 urlpatterns = [
     path('admin-router-urls/',include(router.urls)),
     path('admin-login/',views.admin_login),
-    path('create-user-status-update/',views.create_user_status_update)
+    path('create-user-status-update/',views.create_user_status_update),
+    path('admin-login-verification-otp/',views.admin_login_verification_otp)
     ]

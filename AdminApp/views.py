@@ -73,22 +73,41 @@ def admin_login(request):
                     'adminemail': admin_obj.admin_email,
                     'OTP':OTP
                 }
+                admin_obj.email_otp=OTP
+                admin_obj.save()
                 return Response({'status': 200, 'message': 'Email sent successfully','data': admin_user_data}, status=200)
             else:
                 return Response({'status': 424, 'message': 'Password entered is not correct,Please Check Once'},
                             status=424)
-        else:
-            return Response({'status': 204, 'message':'Not Present or check the email is valid or not'},
-                            status=204)
-
 
     except ObjectDoesNotExist as e:
         return Response({'status': 404, 'error': "Email not exist"}, status=404)
+
     except ApiClientError as error:
         return Response({'status': 500, 'error': error}, status=500)
 
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)
+
+
+@api_view(['post'])
+@permission_classes((AllowAny,))
+def admin_email_otp_verify(request):
+    data=request.data
+    email_otp=data['email_otp']
+    admin_email=data['admin_email']
+    try:
+        adminobjverify=AdminRegister.objects.get(admin_email=admin_email)
+        if adminobjverify and adminobjverify.email_otp==email_otp:
+            return Response({'status':200,'message':"Email OTP is verified"},status=200)
+        else:
+            return Response({'status': 204, 'message': "Email OTP is not correct"}, status=204)
+    except ObjectDoesNotExist as e:
+        return Response({'status': 404, 'error': "Email not exist"}, status=404)
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)
+
+
 
 class AdminInviteView(viewsets.ModelViewSet):
     queryset = AdminInvite.objects.all()

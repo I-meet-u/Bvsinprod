@@ -12,7 +12,14 @@ router.register('maincore-master',views.MaincoreMasterView)
 router.register('category-master',views.CategoryMasterView)
 router.register('sub-category-master',views.SubCategoryMasterView)
 router.register('pincode-master',views.PincodeMasterView)
-
+router.register('uom-master',views.UOMMasterView)
+router.register('department-master',views.DepartmentMasterView)
+router.register('designation-master',views.DesignationMasterView)
+router.register('tax-master',views.TaxMasterView)
+router.register('hsn-master',views.HSNMasterSerializerView)
+router.register('sac-master',views.SACMasterView)
+router.register('currency-master',views.CurrencyMasterView)
+router.register('pf_charge-master',views.PFChargesMasterView)
 urlpatterns = [
     path('masters-router-urls/',include(router.urls)), #router urls are included
 

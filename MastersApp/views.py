@@ -5,11 +5,14 @@ from rest_framework.decorators import api_view
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 
-from .serializers import MainCoreMasterSerializer, CategoryMasterSerializer, SubcategoryMasterSerializer,\
+from .serializers import MainCoreMasterSerializer, CategoryMasterSerializer, SubcategoryMasterSerializer, \
     IndustryToServeMasterSerializer, \
-    NatureOfBusinessMasterSerializer, SupplyCapabilitiesMasterSerializer, PincodeMasterSerializer
-from .models import MaincoreMaster, CategoryMaster, SubCategoryMaster,\
-    IndustryToServeMaster,NatureOfBusinessMaster,SupplyCapabilitiesMaster,PincodeMaster
+    NatureOfBusinessMasterSerializer, SupplyCapabilitiesMasterSerializer, PincodeMasterSerializer, UOMMasterSerializer, \
+    DepartmentMasterSerializer, DesignationMasterSerializer, TaxMasterSerializer, HSNMasterSerializer, \
+    SACMasterSerializer, CurrencyMasterSerializer, PFChargesMasterSerializer
+from .models import MaincoreMaster, CategoryMaster, SubCategoryMaster, \
+    IndustryToServeMaster, NatureOfBusinessMaster, SupplyCapabilitiesMaster, PincodeMaster, UOMMaster, DepartmentMaster, \
+    DesignationMaster, TaxMaster, HSNMaster, SACMaster, CurrencyMaster, PFChargesMaster
 
 
 # Create your views here.
@@ -51,6 +54,61 @@ class PincodeMasterView(viewsets.ModelViewSet):
     # pincode_master master viewsets
     queryset = PincodeMaster.objects.all()
     serializer_class = PincodeMasterSerializer
+
+class UOMMasterView(viewsets.ModelViewSet):
+    # pincode_master master viewsets
+    queryset = UOMMaster.objects.all()
+    serializer_class = UOMMasterSerializer
+
+class DepartmentMasterView(viewsets.ModelViewSet):
+    # pincode_master master viewsets
+    queryset = DepartmentMaster.objects.all()
+    serializer_class = DepartmentMasterSerializer
+
+
+class DesignationMasterView(viewsets.ModelViewSet):
+    # pincode_master master viewsets
+    queryset = DesignationMaster.objects.all()
+    serializer_class = DesignationMasterSerializer
+
+
+class TaxMasterView(viewsets.ModelViewSet):
+    # pincode_master master viewsets
+    queryset = TaxMaster.objects.all()
+    serializer_class = TaxMasterSerializer
+
+
+class HSNMasterSerializerView(viewsets.ModelViewSet):
+    # pincode_master master viewsets
+    queryset = HSNMaster.objects.all()
+    serializer_class = HSNMasterSerializer
+
+
+class SACMasterView(viewsets.ModelViewSet):
+    # pincode_master master viewsets
+    queryset = SACMaster.objects.all()
+    serializer_class = SACMasterSerializer
+
+
+
+class CurrencyMasterView(viewsets.ModelViewSet):
+    # pincode_master master viewsets
+    queryset = CurrencyMaster.objects.all()
+    serializer_class = CurrencyMasterSerializer
+
+
+class PFChargesMasterView(viewsets.ModelViewSet):
+    # pincode_master master viewsets
+    queryset = PFChargesMaster.objects.all()
+    serializer_class = PFChargesMasterSerializer
+
+
+
+
+
+
+
+
 
 @api_view(['post'])
 def get_category_by_maincore(request):

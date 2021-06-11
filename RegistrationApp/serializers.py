@@ -4,7 +4,7 @@ from rest_framework import serializers
 from rest_framework.validators import UniqueValidator
 
 from .models import SelfRegistration, SelfRegistration_Sample, BasicCompanyDetails, BillingAddress, ShippingAddress, \
-    IndustrialInfo, IndustrialHierarchy, BankDetails, LegalDocuments, BasicCompanyDetails_Others
+    IndustrialInfo, IndustrialHierarchy, BankDetails, LegalDocuments, BasicCompanyDetails_Others, EmployeeRegistration
 
 
 class SelfRegistrationSerializer(serializers.ModelSerializer):
@@ -148,3 +148,9 @@ class BasicCompanyDetailsOthersSerializers(serializers.ModelSerializer):
             print(company_code)
         values = BasicCompanyDetails_Others.objects.create(company_code=company_code,**validate_data)
         return values
+
+
+class EmployeeRegistrationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = EmployeeRegistration
+        fields = '__all__'

@@ -18,6 +18,7 @@ router.register('industrial-hierarchy',views.IndustrialHierarchyView),
 router.register('bank-details',views.BankDetailsView)
 router.register('legal-documents',views.LegalDocumentsView)
 router.register('basic-company-details-others',views.BasicCompanyDetailsOthersView)
+router.register('employee-registration',views.EmployeeRegistrationView)
 
 urlpatterns = [
     path('router-register-urls/',include(router.urls)), #router urls are included

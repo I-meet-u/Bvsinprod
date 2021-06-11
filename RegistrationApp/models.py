@@ -242,3 +242,66 @@ class ShippingAddress_Others(models.Model):
 
     class Meta:
         db_table = "ShippingAddress_Others"
+
+
+class EmployeeRegistration(models.Model):
+    emp_id=models.BigAutoField(primary_key=True)
+    username=models.CharField(max_length=100)
+    country=models.CharField(max_length=100)
+    department=models.CharField(max_length=100)
+    designation=models.CharField(max_length=100)
+    email_id=models.CharField(max_length=100,unique=True)
+    phone_no=models.CharField(max_length=20,unique=True)
+    password=models.CharField(max_length=300)
+    created_on_others = models.DateTimeField(auto_now_add=True)
+    updated_on_others = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        db_table:"EmployeeRegistration"
+
+class Employee_CompanyDetails(models.Model):
+    # basic details model fields
+    emp_company_name = models.CharField(max_length=200)
+    emp_company_code = models.CharField(max_length=20, primary_key=True)
+    emp_tax_id_or_vat = models.CharField(max_length=200)
+    emp_company_established = models.CharField(max_length=200)
+    emp_industrial_scale = models.CharField(max_length=150)
+    emp_market_location= models.CharField(max_length=150)
+    emp_company_type = models.CharField(max_length=200)
+    emp_currency = models.CharField(max_length=30)
+    emp_bill_address = models.TextField(max_length=500)
+    emp_bill_country = models.CharField(max_length=200)
+    emp_bill_state = models.CharField(max_length=200)
+    emp_bill_city = models.CharField(max_length=200)
+    emp_bill_pincode = models.IntegerField()
+    emp_bill_landmark = models.CharField(max_length=50, blank=True)
+    emp_bill_location = models.CharField(max_length=200, blank=True)
+    emp_ship_address = models.TextField(max_length=500)
+    emp_ship_country = models.CharField(max_length=200)
+    emp_ship_state = models.CharField(max_length=200)
+    emp_ship_city = models.CharField(max_length=200)
+    emp_ship_pincode = models.BigIntegerField()
+    emp_ship_landmark = models.CharField(max_length=50, blank=True)
+    emp_ship_location = models.CharField(max_length=200, blank=True)
+    emp_created_on = models.DateTimeField(auto_now_add=True)
+    emp_updated_on = models.DateTimeField(auto_now=True)
+    emp_created_by = models.BigIntegerField()
+    emp_updated_by = models.ForeignKey(EmployeeRegistration, on_delete=models.CASCADE)
+    history = HistoricalRecords()
+
+    class Meta:
+        db_table = "Employee_CompanyDetails"
+
+
+class Employee_IndustryInfo(models.Model):
+    emp_nature_of_business = ArrayField(models.CharField(max_length=800))
+    emp_supply_capabilites = ArrayField(models.CharField(max_length=800))
+    emp_industry_to_serve = ArrayField(models.CharField(max_length=800))
+    emp_created_on = models.DateTimeField(auto_now_add=True)
+    emp_updated_on = models.DateTimeField(auto_now=True)
+    emp_created_by = models.BigIntegerField()
+    emp_updated_by = models.ForeignKey(EmployeeRegistration, on_delete=models.CASCADE)
+    history = HistoricalRecords()
+
+    class Meta:
+        db_table = "Employee_IndustryInfo"

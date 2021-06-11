@@ -12,7 +12,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.shortcuts import render
 
 # Create your views here.
-from rest_framework import viewsets, status
+from rest_framework import viewsets, status, permissions
 from rest_framework.authtoken.models import Token
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.exceptions import ValidationError
@@ -23,10 +23,11 @@ from rest_framework.views import APIView
 
 from .models import SelfRegistration, SelfRegistration_Sample, BasicCompanyDetails, BillingAddress, ShippingAddress, \
     IndustrialInfo, IndustrialHierarchy, BankDetails, LegalDocuments, BasicCompanyDetails_Others, BillingAddress_Others, \
-    ShippingAddress_Others
+    ShippingAddress_Others, EmployeeRegistration
 from .serializers import SelfRegistrationSerializer, SelfRegistrationSerializerSample, BasicCompanyDetailsSerializers, \
     BillingAddressSerializer, ShippingAddressSerializer, IndustrialInfoSerializer, IndustrialHierarchySerializer, \
-    BankDetailsSerializer, LegalDocumentsSerializers, BasicCompanyDetailsOthersSerializers
+    BankDetailsSerializer, LegalDocumentsSerializers, BasicCompanyDetailsOthersSerializers, \
+    EmployeeRegistrationSerializer
 from rest_framework.permissions import AllowAny
 from rest_framework import status
 
@@ -130,6 +131,7 @@ def email_verification_otp(request):
             message = {
                 "from_email": "admin@vendorsin.com",
                 "subject": "Mail Verification OTP",
+                "text":"You mail verificaton OTP is"+" "+OTP+" "+"Please Don't Share Your OTP \n Thank You",
                 "to": [
                     {
                         "email": user.username,
@@ -535,3 +537,22 @@ def all_basic_data(request):
         return Response({'status':500,'error':str(e)},status=500)
 
 
+class EmployeeRegistrationView(viewsets.ModelViewSet):
+    permission_classes = [permissions.AllowAny]
+    queryset = EmployeeRegistration.objects.all()
+    serializer_class = EmployeeRegistrationSerializer
+
+    def perform_create(self, serializer):
+        # Hash password but passwords are not required
+        if ('password' in self.request.data):
+            password = make_password(self.request.data['password'])
+            serializer.save(password=password)
+        else:
+            serializer.save()
+
+    def perform_update(self, serializer):
+        if ('password' in self.request.data):
+            password = make_password(self.request.data['password'])
+            serializer.save(password=password)
+        else:
+            serializer.save()

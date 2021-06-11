@@ -57,35 +57,41 @@ class PincodeMasterView(viewsets.ModelViewSet):
 
 class UOMMasterView(viewsets.ModelViewSet):
     # pincode_master master viewsets
+    permission_classes = (AllowAny,)
     queryset = UOMMaster.objects.all()
     serializer_class = UOMMasterSerializer
 
 class DepartmentMasterView(viewsets.ModelViewSet):
     # pincode_master master viewsets
+    permission_classes = (AllowAny,)
     queryset = DepartmentMaster.objects.all()
     serializer_class = DepartmentMasterSerializer
 
 
 class DesignationMasterView(viewsets.ModelViewSet):
     # pincode_master master viewsets
+    permission_classes = (AllowAny,)
     queryset = DesignationMaster.objects.all()
     serializer_class = DesignationMasterSerializer
 
 
 class TaxMasterView(viewsets.ModelViewSet):
     # pincode_master master viewsets
+    permission_classes = (AllowAny,)
     queryset = TaxMaster.objects.all()
     serializer_class = TaxMasterSerializer
 
 
 class HSNMasterSerializerView(viewsets.ModelViewSet):
     # pincode_master master viewsets
+    permission_classes = (AllowAny,)
     queryset = HSNMaster.objects.all()
     serializer_class = HSNMasterSerializer
 
 
 class SACMasterView(viewsets.ModelViewSet):
     # pincode_master master viewsets
+    permission_classes = (AllowAny,)
     queryset = SACMaster.objects.all()
     serializer_class = SACMasterSerializer
 
@@ -93,12 +99,14 @@ class SACMasterView(viewsets.ModelViewSet):
 
 class CurrencyMasterView(viewsets.ModelViewSet):
     # pincode_master master viewsets
+    permission_classes = (AllowAny,)
     queryset = CurrencyMaster.objects.all()
     serializer_class = CurrencyMasterSerializer
 
 
 class PFChargesMasterView(viewsets.ModelViewSet):
     # pincode_master master viewsets
+    permission_classes = (AllowAny,)
     queryset = PFChargesMaster.objects.all()
     serializer_class = PFChargesMasterSerializer
 

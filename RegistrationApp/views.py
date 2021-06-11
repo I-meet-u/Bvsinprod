@@ -23,11 +23,11 @@ from rest_framework.views import APIView
 
 from .models import SelfRegistration, SelfRegistration_Sample, BasicCompanyDetails, BillingAddress, ShippingAddress, \
     IndustrialInfo, IndustrialHierarchy, BankDetails, LegalDocuments, BasicCompanyDetails_Others, BillingAddress_Others, \
-    ShippingAddress_Others, EmployeeRegistration
+    ShippingAddress_Others, EmployeeRegistration, Employee_CompanyDetails, Employee_IndustryInfo
 from .serializers import SelfRegistrationSerializer, SelfRegistrationSerializerSample, BasicCompanyDetailsSerializers, \
     BillingAddressSerializer, ShippingAddressSerializer, IndustrialInfoSerializer, IndustrialHierarchySerializer, \
     BankDetailsSerializer, LegalDocumentsSerializers, BasicCompanyDetailsOthersSerializers, \
-    EmployeeRegistrationSerializer
+    EmployeeRegistrationSerializer, Employee_CompanyDetailsSerializers, Employee_IndustryInfoSerializer
 from rest_framework.permissions import AllowAny
 from rest_framework import status
 
@@ -556,3 +556,30 @@ class EmployeeRegistrationView(viewsets.ModelViewSet):
             serializer.save(password=password)
         else:
             serializer.save()
+
+
+class Employee_CompanyDetailsView(viewsets.ModelViewSet):
+    # employee company info viewset
+    permission_classes = [permissions.AllowAny]
+    queryset = Employee_CompanyDetails.objects.all()
+    serializer_class = Employee_CompanyDetailsSerializers
+
+    def get_queryset(self):
+        # overriding get_queryset by passing user_id. Here user_id is nothing but updated_by
+        employeeobj = Employee_CompanyDetails.objects.filter(emp_updated_by=self.request.GET.get('emp_updated_by')).order_by('emp_company_id')
+        if not employeeobj:
+            raise ValidationError({'message': 'Employee Basic Details not exist','status':204})
+        return employeeobj
+
+class EmployeeIndustrialInfoView(viewsets.ModelViewSet):
+    # industrail info viewsets
+    permission_classes = [permissions.AllowAny]
+    queryset =Employee_IndustryInfo.objects.all()
+    serializer_class=Employee_IndustryInfoSerializer
+
+    def get_queryset(self):
+        # it determines the list of objects that you want to display by passing userid(updated_by)
+        employee_industry = Employee_IndustryInfo.objects.filter(emp_updated_by=self.request.GET.get('emp_updated_by')).order_by('id')
+        if not employee_industry:
+            raise ValidationError({'message': ' Employee Industry info details not exist','status':204})
+        return employee_industry

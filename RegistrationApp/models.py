@@ -187,7 +187,7 @@ class LegalDocuments(models.Model):
 class BasicCompanyDetails_Others(models.Model):
     # basic details model fields
     company_name = models.CharField(max_length=200)
-    company_code = models.CharField(max_length=20, primary_key=True)
+    company_code = models.CharField(max_length=20,primary_key=True)
     company_established = models.CharField(max_length=200)
     industrial_scale = models.CharField(max_length=150)
     market_location= models.CharField(max_length=150)
@@ -257,12 +257,13 @@ class EmployeeRegistration(models.Model):
     updated_on_others = models.DateTimeField(auto_now=True)
 
     class Meta:
-        db_table:"EmployeeRegistration"
+        db_table="EmployeeRegistration"
 
 class Employee_CompanyDetails(models.Model):
     # basic details model fields
+    emp_company_id=models.BigAutoField(primary_key=True)
     emp_company_name = models.CharField(max_length=200)
-    emp_company_code = models.CharField(max_length=20, primary_key=True)
+    emp_company_code = models.CharField(max_length=20,unique=True)
     emp_tax_id_or_vat = models.CharField(max_length=200)
     emp_company_established = models.CharField(max_length=200)
     emp_industrial_scale = models.CharField(max_length=150)
@@ -301,6 +302,7 @@ class Employee_IndustryInfo(models.Model):
     emp_updated_on = models.DateTimeField(auto_now=True)
     emp_created_by = models.BigIntegerField()
     emp_updated_by = models.ForeignKey(EmployeeRegistration, on_delete=models.CASCADE)
+    emp_company = models.ForeignKey(Employee_CompanyDetails, on_delete=models.CASCADE)
     history = HistoricalRecords()
 
     class Meta:

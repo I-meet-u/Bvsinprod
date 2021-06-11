@@ -4,7 +4,8 @@ from rest_framework import serializers
 from rest_framework.validators import UniqueValidator
 
 from .models import SelfRegistration, SelfRegistration_Sample, BasicCompanyDetails, BillingAddress, ShippingAddress, \
-    IndustrialInfo, IndustrialHierarchy, BankDetails, LegalDocuments, BasicCompanyDetails_Others, EmployeeRegistration
+    IndustrialInfo, IndustrialHierarchy, BankDetails, LegalDocuments, BasicCompanyDetails_Others, EmployeeRegistration, \
+    Employee_CompanyDetails, Employee_IndustryInfo
 
 
 class SelfRegistrationSerializer(serializers.ModelSerializer):
@@ -154,3 +155,35 @@ class EmployeeRegistrationSerializer(serializers.ModelSerializer):
     class Meta:
         model = EmployeeRegistration
         fields = '__all__'
+
+
+class Employee_CompanyDetailsSerializers(serializers.ModelSerializer):
+    # employee basic info details serializers
+    emp_company_code = serializers.SerializerMethodField()
+
+    def get_emp_company_code(self, obj):
+        return obj.emp_company_code
+
+
+    class Meta:
+        model=Employee_CompanyDetails
+        fields='__all__'
+
+    def create(self, validate_data):
+        # to add any extra details into the object before saving
+        print(validate_data)
+        empobj = Employee_CompanyDetails.objects.count()
+        if empobj == 0:
+            emp_company_code = '1100001'
+        else:
+            empobj = Employee_CompanyDetails.objects.values_list('emp_company_code', flat=True).last()
+            print(empobj)
+            emp_company_code = int(empobj) + 1
+            print(emp_company_code)
+        values = Employee_CompanyDetails.objects.create(emp_company_code=emp_company_code,**validate_data)
+        return values
+
+class Employee_IndustryInfoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model=Employee_IndustryInfo
+        fields="__all__"

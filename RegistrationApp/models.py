@@ -252,6 +252,7 @@ class EmployeeRegistration(models.Model):
     designation=models.CharField(max_length=100)
     email_id=models.CharField(max_length=100,unique=True)
     phone_no=models.CharField(max_length=20,unique=True)
+    employee_usertype=models.CharField(max_length=70,null=True)
     password=models.CharField(max_length=300)
     created_on_others = models.DateTimeField(auto_now_add=True)
     updated_on_others = models.DateTimeField(auto_now=True)

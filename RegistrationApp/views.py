@@ -583,3 +583,58 @@ class EmployeeIndustrialInfoView(viewsets.ModelViewSet):
         if not employee_industry:
             raise ValidationError({'message': ' Employee Industry info details not exist','status':204})
         return employee_industry
+
+
+@api_view(['get'])
+@permission_classes([AllowAny])
+def registration_list(request):
+    emptydata=list()
+    try:
+        regobj=SelfRegistration.objects.filter().values()
+        for i in range(0,len(regobj)):
+            val=regobj[i].get('id')
+            basicobj=BasicCompanyDetails.objects.filter(updated_by=val).values()
+            # basics = BasicCompanyDetails.objects.get(updated_by=val)
+            industry_info = IndustrialInfo.objects.filter(updated_by=val).values()
+            industry_hierarchy = IndustrialHierarchy.objects.filter(updated_by=val).values()
+            bankdetails = BankDetails.objects.filter(updated_by=val).values()
+            legalobj = LegalDocuments.objects.filter(updated_by=val).values()
+            emptydata.append({
+                "username": regobj[i].get('contact_person'),
+                "user_type": regobj[i].get('user_type'),
+                "email": regobj[i].get('username'),
+                "phone_number": regobj[i].get('phone_number'),
+                "nature_of_business": regobj[i].get('nature_of_business'),
+                "business_type": regobj[i].get('business_to_serve'),
+                # "register_status": "Company Details",
+            })
+
+            if basicobj:
+                if industry_info:
+                    if industry_hierarchy:
+                        if bankdetails:
+                            if legalobj:
+                                    return Response({'status': 200, 'mesage': 'upto legal obj', 'data': emptydata}, status=200)
+                            else:
+                                return Response({'status': 200, 'mesage': 'upto bank', 'data': emptydata},
+                                                status=200)
+                        else:
+                            return Response({'status': 200, 'mesage': 'upto industry hierarchy', 'data': emptydata}, status=200)
+                    else:
+                        return Response({'status': 200, 'mesage': 'upto industry info', 'data': emptydata},
+                                        status=200)
+                else:
+                    return Response({'status': 200, 'mesage': 'upto basic info', 'data': emptydata}, status=200)
+            else:
+                return Response({'status': 200, 'mesage': 'not present'}, status=200)
+
+
+
+
+
+
+
+        return Response({'status':200,'mesage':'ok','data':emptydata},status=200)
+
+    except Exception as e:
+        return Response({'status':500,'error':str(e)},status=500)

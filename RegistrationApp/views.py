@@ -641,14 +641,11 @@ class EmployeeIndustrialInfoView(viewsets.ModelViewSet):
 #         return Response({'status':500,'error':str(e)},status=500)
 
 
-@api_view(['post'])
+@api_view(['get'])
 @permission_classes([AllowAny])
 def registration_list(request):
     data=request.data
     emptydata=list()
-    val=list()
-    basiarray=[]
-    # x=data['userid']
     try:
         regobj=SelfRegistration.objects.filter().values()
         for i in range(0, len(regobj)):

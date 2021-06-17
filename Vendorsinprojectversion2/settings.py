@@ -47,7 +47,7 @@ INSTALLED_APPS = [
     'LandingPageApp',
     'rest_framework.authtoken',
     'AdminApp',
-    'DashboardApp'
+    'DashboardApp',
 ]
 
 MIDDLEWARE = [

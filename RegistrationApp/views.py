@@ -641,53 +641,90 @@ class EmployeeIndustrialInfoView(viewsets.ModelViewSet):
 #         return Response({'status':500,'error':str(e)},status=500)
 
 
-@api_view(['get'])
+@api_view(['post'])
 @permission_classes([AllowAny])
 def registration_list(request):
+    data=request.data
     emptydata=list()
     val=list()
     basiarray=[]
+    # x=data['userid']
     try:
         regobj=SelfRegistration.objects.filter().values()
-        for i in range(0,len(regobj)):
-            val.append(regobj[i].get('id'))
-            emptydata.append({
-                "username": regobj[i].get('contact_person'),
-                "user_type": regobj[i].get('user_type'),
-                "email": regobj[i].get('username'),
-                "phone_number": regobj[i].get('phone_number'),
-                "nature_of_business": regobj[i].get('nature_of_business'),
-                "business_type": regobj[i].get('business_to_serve'),
-                # "register_status": "Company Details",
-            })
-        basicobj=BasicCompanyDetails.objects.filter(updated_by__in=val).values()
-        # basics = BasicCompanyDetails.objects.get(updated_by=val)
-        industry_info = IndustrialInfo.objects.filter(updated_by__in=val).values()
-        industry_hierarchy = IndustrialHierarchy.objects.filter(updated_by__in=val).values()
-        bankdetails = BankDetails.objects.filter(updated_by__in=val).values()
-        legalobj = LegalDocuments.objects.filter(updated_by__in=val).values()
+        for i in range(0, len(regobj)):
+            x = regobj[i].get('id')
+            basicobj = BasicCompanyDetails.objects.filter(updated_by=x).values()
+            if basicobj:
+                print('basic', x)
+                industry_info = IndustrialInfo.objects.filter(updated_by=x).values()
+                if industry_info:
+                    industry_hierarchy = IndustrialHierarchy.objects.filter(updated_by=x).values()
+                    if industry_hierarchy:
+                        bankdetails = BankDetails.objects.filter(updated_by=x).values()
+                        if bankdetails:
+                            legalobj = LegalDocuments.objects.filter(updated_by=x).values()
+                            if legalobj:
+                                emptydata.append({"id":x ,
+                                        "company_code":basicobj[0].get('company_code'),
+                                        "company_name":basicobj[0].get('company_name'),
+                                        "username": regobj[i].get('contact_person'),
+                                        "user_type": regobj[i].get('user_type'),
+                                        "email": regobj[i].get('username'),
+                                        "phone_number": regobj[i].get('phone_number'),
+                                        "nature_of_business": regobj[i].get('nature_of_business'),
+                                        "business_type": regobj[i].get('business_to_serve'),
+                                        "registration_status": "Registration completed"})
+                            else:
+                                emptydata.append({"id": x,
+                                                  "company_code": basicobj[0].get('company_code'),
+                                                  "company_name": basicobj[0].get('company_name'),
+                                                  "username": regobj[i].get('contact_person'),
+                                                  "user_type": regobj[i].get('user_type'),
+                                                  "email": regobj[i].get('username'),
+                                                  "phone_number": regobj[i].get('phone_number'),
+                                                  "nature_of_business": regobj[i].get('nature_of_business'),
+                                                  "business_type": regobj[i].get('business_to_serve'),
+                                                  "registration_status": "Bank Details"})
 
-
-        if basicobj:
-            for i in range(0,len(basicobj)):
-                pass
-            if industry_info:
-                if industry_hierarchy:
-                    if bankdetails:
-                        if legalobj:
-                                return Response({'status': 200, 'mesage': 'upto legal obj', 'data': emptydata}, status=200)
                         else:
-                            return Response({'status': 200, 'mesage': 'upto bank', 'data': emptydata},
-                                            status=200)
-                    else:
-                        return Response({'status': 200, 'mesage': 'upto industry hierarchy', 'data': emptydata}, status=200)
-                else:
-                    return Response({'status': 200, 'mesage': 'upto industry info', 'data': emptydata},
-                                    status=200)
-            else:
-                return Response({'status': 200, 'mesage': 'upto basic info', 'data': emptydata}, status=200)
-        else:
-            return Response({'status': 200, 'mesage': 'not present'}, status=200)
+                            emptydata.append({"id": x,
+                                              "company_code": basicobj[0].get('company_code'),
+                                              "company_name": basicobj[0].get('company_name'),
+                                              "username": regobj[i].get('contact_person'),
+                                              "user_type": regobj[i].get('user_type'),
+                                              "email": regobj[i].get('username'),
+                                              "phone_number": regobj[i].get('phone_number'),
+                                              "nature_of_business": regobj[i].get('nature_of_business'),
+                                              "business_type": regobj[i].get('business_to_serve'),
+                                              "registration_status": "Industry hierarchy"})
 
+                    else:
+                        emptydata.append({"id": x,
+                                          "company_code": basicobj[0].get('company_code'),
+                                          "company_name": basicobj[0].get('company_name'),
+                                          "username": regobj[i].get('contact_person'),
+                                          "user_type": regobj[i].get('user_type'),
+                                          "email": regobj[i].get('username'),
+                                          "phone_number": regobj[i].get('phone_number'),
+                                          "nature_of_business": regobj[i].get('nature_of_business'),
+                                          "business_type": regobj[i].get('business_to_serve'),
+                                          "registration_status": "Seller info"})
+
+
+
+
+                else:
+                    emptydata.append({"id": x,
+                                      "company_code": basicobj[0].get('company_code'),
+                                      "company_name": basicobj[0].get('company_name'),
+                                      "username": regobj[i].get('contact_person'),
+                                      "user_type": regobj[i].get('user_type'),
+                                      "email": regobj[i].get('username'),
+                                      "phone_number": regobj[i].get('phone_number'),
+                                      "nature_of_business": regobj[i].get('nature_of_business'),
+                                      "business_type": regobj[i].get('business_to_serve'),
+                                      "registration_status": "company details"})
+
+        return Response({'status': 200, 'message': 'ok', 'data': emptydata}, status=200)
     except Exception as e:
         return Response({'status':500,'error':str(e)},status=500)

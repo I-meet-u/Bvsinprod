@@ -251,6 +251,7 @@ def disable_industry_serve(request):
     industryid=data['industryid']
     try:
         industryobj=IndustryToServeMaster.objects.filter(industry_id__in=industryid).values()
+        print(industryobj)
         if industryobj:
             for i in range(0,len(industryobj)):
                 print(industryobj[i].get('industry_id'))

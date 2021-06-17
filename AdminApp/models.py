@@ -99,3 +99,21 @@ class Permissions(models.Model):
 
     class Meta:
         db_table = "Permissions"
+#
+# class BusinessRequest(models.Model):
+#     company_code=models.CharField(max_length=100)
+#     company_name=models.CharField(max_length=200)
+#     email=models.CharField(max_length=150)
+#     phone_number=models.CharField(max_length=20)
+#     city=models.CharField(max_length=200)
+#     state=models.CharField(max_length=200)
+#     billing=models.TextField(null=True,blank=True)
+#     shipping=models.TextField(null=True,blank=True)
+#     status=models.CharField(max_length=100, null=True, blank=True)
+#     industry_scale=models.CharField(max_length=100, null=True, blank=True)
+#     request_type=models.CharField(max_length=100, null=True, blank=True)
+#     created_on = models.DateTimeField(auto_now_add=True, null=True)
+#     updated_on = models.DateTimeField(auto_now=True, null=True)
+#
+#     class Meta:
+#         db_table = "BusinessRequest"

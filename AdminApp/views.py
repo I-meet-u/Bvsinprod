@@ -151,6 +151,8 @@ class AdminInviteView(viewsets.ModelViewSet):
 class CreateUserView(viewsets.ModelViewSet):
     queryset = CreateUser.objects.all()
     serializer_class = CreateUserSerializer
+    permission_classes = [permissions.AllowAny]
+
 
     def get_queryset(self):
         createuserobj=CreateUser.objects.filter(admins=self.request.GET.get('admins'))
@@ -227,3 +229,4 @@ def create_user_status_update(request):
 # def admin_email_otp_verify(request):
 #     otp=data['otp']
 #
+

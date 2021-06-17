@@ -1,49 +1,50 @@
-# from django.db import models
-#
-# # Create your models here.
-#
-# from django.db import models
-#
-# from RegistrationApp.models import SelfRegistration
-#
-# class VendorProductsDetail(models.Model):
-#
-#     core_sector=models.CharField(max_length=100, blank=True)
-#     category = models.CharField(max_length=100, blank=True)
-#     sub_category = models.CharField(max_length=100, blank=True)
-#     product_category=models.CharField(max_length=100, blank=True)
-#     product_subcategory=models.CharField(max_length=100, blank=True)
-#     product_type=models.CharField(max_length=100, null=True)
-#     product_code=models.CharField(max_length=100, null=True)
-#     product_name=models.CharField(max_length=100, null=True)
-#     product_description=models.CharField(max_length=100, null=True)
-#     product_document=models.FileField(upload_to='ProductsFile',blank=True)
-#     numeric=models.CharField(max_length=100, blank=True)
-#     addImage1 = models.FileField(upload_to='vendorproductimage', null=True, blank=True)
-#     addImage2 = models.FileField(upload_to='vendorproductimage', null=True, blank=True)
-#     addImage3 = models.FileField(upload_to='vendorproductimage', null=True, blank=True)
-#     addImage4 = models.FileField(upload_to='vendorproductimage', null=True, blank=True)
-#     uom=models.CharField(max_length=100, blank=True)
-#     quantity=models.CharField(max_length=100, blank=True)
-#     hsn_sac=models.CharField(max_length=100, blank=True)
-#     unit_price=models.CharField(max_length=100, blank=True)
-#     discount=models.CharField(max_length=50, blank=True)
-#     tax=models.CharField(max_length=100, blank=True)
-#     sku_id=models.CharField(max_length=100, blank=True)
-#     country_of_origin=models.CharField(max_length=50, blank=True)
-#     currency=models.CharField(max_length=50, blank=True)
-#     pandf_charges=models.CharField(max_length=100, blank=True)
-#     fright_charges=models.CharField(max_length=100, blank=True)
-#     warrenty_or_guarantee=models.CharField(max_length=100, blank=True)
-#     created_on = models.DateTimeField(auto_now_add=True)
-#     updated_on = models.DateTimeField(auto_now=True)
-#     created_by = models.BigIntegerField()
-#     updated_by = models.ForeignKey(SelfRegistration, on_delete=models.CASCADE)
-#
-#     class Meta:
-#         db_table = "VendorProductsDetail"
-#
-#
+from django.db import models
+
+# Create your models here.
+
+from django.db import models
+
+from RegistrationApp.models import SelfRegistration
+
+class VendorProductsDetail(models.Model):
+
+    core_sector=models.CharField(max_length=100, blank=True)
+    category = models.CharField(max_length=100, blank=True)
+    sub_category = models.CharField(max_length=100, blank=True)
+    product_category=models.CharField(max_length=100, blank=True)
+    product_subcategory=models.CharField(max_length=100, blank=True)
+    product_type=models.CharField(max_length=100, null=True)
+    type_of_product=models.CharField(max_length=100,null=True)
+    product_code=models.CharField(max_length=100,null=True,unique=True)
+    product_name=models.CharField(max_length=100, null=True)
+    product_description=models.CharField(max_length=100, null=True)
+    product_document=models.FileField(upload_to='ProductsFile',blank=True)
+    numeric=models.BigIntegerField(null=True)
+    add_image1 = models.FileField(upload_to='vendorproductimage', null=True, blank=True)
+    add_image2 = models.FileField(upload_to='vendorproductimage', null=True, blank=True)
+    add_image3 = models.FileField(upload_to='vendorproductimage', null=True, blank=True)
+    add_image4 = models.FileField(upload_to='vendorproductimage', null=True, blank=True)
+    uom=models.CharField(max_length=100, blank=True)
+    quantity=models.CharField(max_length=100, blank=True)
+    hsn_sac=models.CharField(max_length=100, blank=True)
+    unit_price=models.CharField(max_length=100, blank=True)
+    discount=models.CharField(max_length=50, blank=True)
+    tax=models.CharField(max_length=100, blank=True)
+    sku_id=models.CharField(max_length=100, blank=True)
+    country_of_origin=models.CharField(max_length=50, blank=True)
+    currency=models.CharField(max_length=50, blank=True)
+    p_andf_charges=models.CharField(max_length=100, blank=True)
+    fright_charges=models.CharField(max_length=100, blank=True)
+    warrenty_or_guarantee=models.CharField(max_length=100, blank=True)
+    created_on = models.DateTimeField(auto_now_add=True)
+    updated_on = models.DateTimeField(auto_now=True)
+    created_by = models.BigIntegerField()
+    updated_by = models.ForeignKey(SelfRegistration, on_delete=models.CASCADE)
+
+    class Meta:
+        db_table = "VendorProductsDetail"
+
+
 # class GeneralProductsDetails(models.Model):
 #
 #     warrenty=models.CharField(max_length=100, blank=True)

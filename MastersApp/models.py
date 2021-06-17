@@ -1,7 +1,7 @@
 from django.db import models
 
 # Create your models here.
-from AdminApp.models import AdminRegister
+from AdminApp.models import AdminRegister, CreateUser
 from RegistrationApp.models import SelfRegistration
 from simple_history.models import HistoricalRecords
 
@@ -40,7 +40,8 @@ class NatureOfBusinessMaster(models.Model):
     created_on = models.DateTimeField(auto_now_add=True)
     updated_on = models.DateTimeField(auto_now=True)
     status = models.CharField(max_length=30, default='Active')
-    admins = models.ForeignKey(AdminRegister, on_delete=models.CASCADE)
+    admins = models.ForeignKey(AdminRegister, on_delete=models.CASCADE, null=True)
+    updated_by = models.ForeignKey(CreateUser, on_delete=models.CASCADE, null=True)
     history = HistoricalRecords()
 
     class Meta:
@@ -58,7 +59,8 @@ class SupplyCapabilitiesMaster(models.Model):
     created_on = models.DateTimeField(auto_now_add=True)
     updated_on = models.DateTimeField(auto_now=True)
     status = models.CharField(max_length=30, default='Active')
-    admins = models.ForeignKey(AdminRegister, on_delete=models.CASCADE)
+    admins = models.ForeignKey(AdminRegister, on_delete=models.CASCADE, null=True)
+    updated_by = models.ForeignKey(CreateUser, on_delete=models.CASCADE, null=True)
     history = HistoricalRecords()
 
     class Meta:
@@ -75,7 +77,9 @@ class MaincoreMaster(models.Model):
     created_on = models.DateTimeField(auto_now_add=True)
     updated_on = models.DateTimeField(auto_now=True)
     admin_order = models.CharField(max_length=50, null=True)
-    admins = models.ForeignKey(AdminRegister, on_delete=models.CASCADE)
+    admins = models.ForeignKey(AdminRegister, on_delete=models.CASCADE, null=True)
+    updated_by = models.ForeignKey(CreateUser, on_delete=models.CASCADE, null=True)
+    history = HistoricalRecords()
 
     class Meta:
         db_table = "MaincoreMaster"
@@ -91,7 +95,8 @@ class CategoryMaster(models.Model):
     created_on = models.DateTimeField(auto_now_add=True)
     updated_on = models.DateTimeField(auto_now=True)
     admin_order = models.CharField(max_length=50, null=True)
-    admins = models.ForeignKey(AdminRegister, on_delete=models.CASCADE)
+    admins = models.ForeignKey(AdminRegister, on_delete=models.CASCADE, null=True)
+    updated_by = models.ForeignKey(CreateUser, on_delete=models.CASCADE, null=True)
     history = HistoricalRecords()
 
     class Meta:
@@ -108,7 +113,8 @@ class SubCategoryMaster(models.Model):
     created_on = models.DateTimeField(auto_now_add=True)
     updated_on = models.DateTimeField(auto_now=True)
     admin_order = models.CharField(max_length=50, null=True)
-    admins = models.ForeignKey(AdminRegister, on_delete=models.CASCADE)
+    admins = models.ForeignKey(AdminRegister, on_delete=models.CASCADE, null=True)
+    updated_by = models.ForeignKey(CreateUser, on_delete=models.CASCADE, null=True)
     history = HistoricalRecords()
 
     class Meta:
@@ -125,7 +131,8 @@ class PincodeMaster(models.Model):
     created_on = models.DateTimeField(auto_now_add=True)
     updated_on = models.DateTimeField(auto_now=True)
     status = models.CharField(max_length=30, default='Active')
-    admins = models.ForeignKey(AdminRegister, on_delete=models.CASCADE)
+    admins = models.ForeignKey(AdminRegister, on_delete=models.CASCADE, null=True)
+    updated_by = models.ForeignKey(CreateUser, on_delete=models.CASCADE, null=True)
     history = HistoricalRecords()
 
     class Meta:
@@ -141,7 +148,8 @@ class UOMMaster(models.Model):
     created_on = models.DateTimeField(auto_now_add=True)
     updated_on = models.DateTimeField(auto_now=True)
     status = models.CharField(max_length=30, default='Active')
-    admins = models.ForeignKey(AdminRegister, on_delete=models.CASCADE)
+    admins = models.ForeignKey(AdminRegister, on_delete=models.CASCADE, null=True)
+    updated_by = models.ForeignKey(CreateUser, on_delete=models.CASCADE, null=True)
     history = HistoricalRecords()
 
     class Meta:
@@ -158,7 +166,8 @@ class DepartmentMaster(models.Model):
     created_on = models.DateTimeField(auto_now_add=True)
     updated_on = models.DateTimeField(auto_now=True)
     status = models.CharField(max_length=30, default='Active')
-    admins = models.ForeignKey(AdminRegister, on_delete=models.CASCADE)
+    admins = models.ForeignKey(AdminRegister, on_delete=models.CASCADE, null=True)
+    updated_by = models.ForeignKey(CreateUser, on_delete=models.CASCADE, null=True)
     history = HistoricalRecords()
 
     class Meta:
@@ -175,7 +184,8 @@ class DesignationMaster(models.Model):
     created_on = models.DateTimeField(auto_now_add=True)
     updated_on = models.DateTimeField(auto_now=True)
     status = models.CharField(max_length=30, default='Active')
-    admins = models.ForeignKey(AdminRegister, on_delete=models.CASCADE)
+    admins = models.ForeignKey(AdminRegister, on_delete=models.CASCADE, null=True)
+    updated_by = models.ForeignKey(CreateUser, on_delete=models.CASCADE, null=True)
     history = HistoricalRecords()
 
     class Meta:
@@ -193,7 +203,8 @@ class TaxMaster(models.Model):
     created_on = models.DateTimeField(auto_now_add=True)
     updated_on = models.DateTimeField(auto_now=True)
     status = models.CharField(max_length=30, default='Active')
-    admins = models.ForeignKey(AdminRegister, on_delete=models.CASCADE)
+    admins = models.ForeignKey(AdminRegister, on_delete=models.CASCADE, null=True)
+    updated_by = models.ForeignKey(CreateUser, on_delete=models.CASCADE, null=True)
     history = HistoricalRecords()
 
     class Meta:
@@ -210,7 +221,8 @@ class HSNMaster(models.Model):
     created_on = models.DateTimeField(auto_now_add=True)
     updated_on = models.DateTimeField(auto_now=True)
     status = models.CharField(max_length=30, default='Active')
-    admins = models.ForeignKey(AdminRegister, on_delete=models.CASCADE)
+    admins = models.ForeignKey(AdminRegister, on_delete=models.CASCADE, null=True)
+    updated_by = models.ForeignKey(CreateUser, on_delete=models.CASCADE, null=True)
     history = HistoricalRecords()
 
     class Meta:
@@ -227,7 +239,8 @@ class SACMaster(models.Model):
     created_on = models.DateTimeField(auto_now_add=True)
     updated_on = models.DateTimeField(auto_now=True)
     status = models.CharField(max_length=30, default='Active')
-    admins = models.ForeignKey(AdminRegister, on_delete=models.CASCADE)
+    admins = models.ForeignKey(AdminRegister, on_delete=models.CASCADE,null=True)
+    updated_by=models.ForeignKey(CreateUser,on_delete=models.CASCADE,null=True)
     history = HistoricalRecords()
 
     class Meta:
@@ -244,7 +257,8 @@ class CurrencyMaster(models.Model):
     created_on = models.DateTimeField(auto_now_add=True)
     updated_on = models.DateTimeField(auto_now=True)
     status = models.CharField(max_length=30, default='Active')
-    admins = models.ForeignKey(AdminRegister, on_delete=models.CASCADE)
+    admins = models.ForeignKey(AdminRegister, on_delete=models.CASCADE, null=True)
+    updated_by = models.ForeignKey(CreateUser, on_delete=models.CASCADE, null=True)
     history = HistoricalRecords()
 
     class Meta:
@@ -260,7 +274,8 @@ class PFChargesMaster(models.Model):
     created_on = models.DateTimeField(auto_now_add=True)
     updated_on = models.DateTimeField(auto_now=True)
     status = models.CharField(max_length=30, default='Active')
-    admins = models.ForeignKey(AdminRegister, on_delete=models.CASCADE)
+    admins = models.ForeignKey(AdminRegister, on_delete=models.CASCADE, null=True)
+    updated_by = models.ForeignKey(CreateUser, on_delete=models.CASCADE, null=True)
     history = HistoricalRecords()
 
     class Meta:

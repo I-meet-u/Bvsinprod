@@ -46,7 +46,8 @@ INSTALLED_APPS = [
     'MaterialApp',
     'LandingPageApp',
     'rest_framework.authtoken',
-    'AdminApp'
+    'AdminApp',
+    'DashboardApp'
 ]
 
 MIDDLEWARE = [
@@ -88,7 +89,7 @@ WSGI_APPLICATION = 'Vendorsinprojectversion2.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'Version2db',
+        'NAME': 'NewVersion2DB',
         'USER': 'azureadmin@postgresdbtest',
         'PASSWORD':'Vendorsin@2021',
         'HOST': 'postgresdbtest.postgres.database.azure.com',

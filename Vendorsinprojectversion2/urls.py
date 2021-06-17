@@ -22,7 +22,8 @@ urlpatterns = [
     path('api-token-auth/', views.obtain_auth_token),  # rest_framework authtoken url
     path('self-register/',include('RegistrationApp.urls')), # registrationapp urls
     path('masters/',include('MastersApp.urls')),
-    # path('materials/',include('MaterialApp.urls')),
+    path('materials/',include('MaterialApp.urls')),
     path('landing-page/',include('LandingPageApp.urls')),
+    path('dashboard-page/',include('DashboardApp.urls')),
     path('admin-page/',include('AdminApp.urls'))
 ]

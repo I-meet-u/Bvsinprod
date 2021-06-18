@@ -1,7 +1,14 @@
+from __future__ import print_function
+import time
+import sib_api_v3_sdk
+from sib_api_v3_sdk.rest import ApiException
+from pprint import pprint
 import itertools
 import json
 import math
 import random
+
+
 
 
 from django.contrib.auth.hashers import make_password, check_password
@@ -725,3 +732,59 @@ def registration_list(request):
         return Response({'status': 200, 'message': 'ok', 'data': emptydata}, status=200)
     except Exception as e:
         return Response({'status':500,'error':str(e)},status=500)
+
+
+
+@api_view(['post'])
+@permission_classes([AllowAny])
+def sendbluemail(request):
+
+    try:
+
+        headers = {
+            'accept': 'application/json',
+            'api-key': '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',
+            'content-type': 'application/json',
+        }
+        data = '{ "sender":{ "name":"VENDORSIN COMMERCE PVT LTD", "email":"admin@vendorsin.com" }, "to":[ { "email":"harishshetty7459@gmail.com", "name":"Harish" } ], "subject":"OTP Confirmation", "templateId":1 ,"params":{"OTP":"12345"}''}'
+
+        # data = '{ "sender":{ "name":"VENDORSIN COMMERCE PVT LTD", "email":"admin@vendorsin.com" },"subject":"This is my default subject line","templateId":96,"to":[ { "email":"harishshetty7459@gmail.com", "name":"harish" } ]'
+
+
+
+        response = requests.post('https://api.sendinblue.com/v3/smtp/email', headers=headers, data=data)
+        print("----")
+        print(response)
+        print("----")
+
+        return Response({'status': 200, 'message': 'ok'}, status=200)
+
+
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)
+
+
+
+
+    # # Configure API key authorization: api-key
+    # configuration = sib_api_v3_sdk.Configuration()
+    # configuration.api_key['api-key'] = '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'
+    # # Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+    # # configuration.api_key_prefix['api-key'] = 'Bearer'
+    # # Configure API key authorization: partner-key
+    # # configuration = sib_api_v3_sdk.Configuration()
+    # # configuration.api_key['partner-key'] = 'bde61914a5675f77af7a7a69fd87d8651ff62cb94d7d5e39a2d5f3d9b67c3390'
+    # # Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+    # # configuration.api_key_prefix['partner-key'] = 'Bearer'
+    #
+    # # create an instance of the API class
+    # api_instance = sib_api_v3_sdk.ContactsApi(sib_api_v3_sdk.ApiClient(configuration))
+    # identifier = 'harishshetty7459@gmail.com'  # str | Email (urlencoded) OR ID of the contact OR its SMS attribute value
+    #
+    # try:
+    #     # Get a contact's details
+    #     api_response = api_instance.get_contact_info(identifier)
+    #     pprint(api_response)
+    # except ApiException as e:
+    #     print("Exception when calling ContactsApi->get_contact_info: %s\n" % e)
+

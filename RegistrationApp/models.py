@@ -23,7 +23,7 @@ class SelfRegistration(AbstractUser):
     email_otp = models.CharField(max_length=20, blank=True)
     phone_otp = models.CharField(max_length=20, blank=True)
     profile_cover_photo = models.FileField(upload_to='static/coverphoto',null=True)
-    registration_status = models.CharField(max_length=80, default='Not Registered')
+    # registration_status = models.CharField(max_length=80, default='Not Registered')
     history = HistoricalRecords()
 
     class Meta:

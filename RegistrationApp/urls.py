@@ -43,7 +43,6 @@ urlpatterns = [
     # path('send_mail/',views.send_mail),
     path('list-documents-user/',views.list_documents_user),
     path('all-basic-data/',views.all_basic_data),
-    path('registration-list/',views.registration_list)
     # path('send_mail_template/',views.send_mail_template)
     # path('subscribe_email/', MailSubscriptionAPIView.as_view(),name='subscribe-email')
 

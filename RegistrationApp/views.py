@@ -429,6 +429,13 @@ class IndustrialHierarchyView(viewsets.ModelViewSet):
     queryset =IndustrialHierarchy.objects.all()
     serializer_class=IndustrialHierarchySerializer
 
+    def get_queryset(self):
+        # it determines the list of objects that you want to display by passing userid(updated_by)
+        industryhierarchyobj = IndustrialHierarchy.objects.filter(updated_by=self.request.GET.get('updated_by'))
+        if not industryhierarchyobj:
+            raise ValidationError({'message': 'Industry hierarchy  details not exist','status':204})
+        return industryhierarchyobj
+
 class BankDetailsView(viewsets.ModelViewSet):
     # bank details viewsets
     queryset =BankDetails.objects.all()

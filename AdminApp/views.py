@@ -320,37 +320,24 @@ def registration_list(request):
 @permission_classes([AllowAny])
 def admin_approval(request):
     data=request.data
-    type=data['type']
+    adminid = data['adminid']
+    userid = data['userid']
     try:
-        if type=='Pending_list':
-            regobj = SelfRegistration.objects.filter(admin_approve='Pending').values()
-            if regobj:
-                return Response({'status': 200, 'message': 'Pending List', 'data': regobj}, status=200)
-            else:
-                return Response({'status': 204, 'message': 'pending list not present'}, status=204)
-
-        if type=='Admin_Approve':
-            adminid = data['adminid']
-            userid = data['userid']
-            adminobj=AdminRegister.objects.get(admin_id=adminid)
-            if adminobj:
-                regobjdata=SelfRegistration.objects.filter(id=userid).values()
-                if regobjdata:
-                    regobj=SelfRegistration.objects.get(id=userid)
-                    if regobj.admin_approve=='Pending':
-                        regobj.admin_approve='Approved'
-                        regobj.save()
-                        return Response({'status': 200, 'message': 'Admin Approved'}, status=200)
-                    else:
-                        return Response({'status': 202, 'message': 'Admin Already Approved'}, status=202)
+        adminobj=AdminRegister.objects.get(admin_id=adminid)
+        if adminobj:
+            regobjdata=SelfRegistration.objects.filter(id=userid).values()
+            if regobjdata:
+                regobj=SelfRegistration.objects.get(id=userid)
+                if regobj.admin_approve=='Pending':
+                    regobj.admin_approve='Approved'
+                    regobj.save()
+                    return Response({'status': 200, 'message': 'Admin Approved'}, status=200)
                 else:
-                    return Response({'status': 200, 'message': 'user is not present or not registered'}, status=200)
+                    return Response({'status': 202, 'message': 'Admin Already Approved'}, status=202)
+            else:
+                return Response({'status': 200, 'message': 'user is not present or not registered'}, status=200)
         else:
             return Response({'status':204,'message':'type is not correct or mis-spelled'},status=204)
-
-
-
-
     except Exception as e:
         return Response({'status':500,'error':str(e)},status=500)
 

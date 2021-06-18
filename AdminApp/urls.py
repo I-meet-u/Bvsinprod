@@ -16,4 +16,5 @@ urlpatterns = [
     path('admin-email-otp-verify/',views.admin_email_otp_verify),
     path('registration-list/', views.registration_list),
     path('admin-approval/',views.admin_approval)
+
     ]

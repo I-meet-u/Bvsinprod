@@ -854,8 +854,6 @@ def checkotp(request):
                 return Response({'status': 200, 'message': "Both OTP Matching"}, status=200)
             else:
                 return Response({'status': 202, 'message': "OTP Not Matching"}, status=202)
-
-        return Response({'status': 200, 'message': "Success"}, status=200)
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)
 

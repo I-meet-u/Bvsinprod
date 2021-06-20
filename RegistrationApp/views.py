@@ -658,7 +658,6 @@ class EmployeeIndustrialInfoView(viewsets.ModelViewSet):
 
 
 @api_view(['post'])
-@permission_classes([AllowAny])
 def sendOtpmail(request):
     data=request.data
     phone=data['phone']
@@ -778,77 +777,67 @@ def sendOtpmail(request):
 
 
 @api_view(['post'])
-@permission_classes([AllowAny])
 def sendbluemail(request):
-
+    data=request.data
+    email = data['email']
+    digits = "0123456789"
     try:
-
-        headers = {
-            'accept': 'application/json',
-            'api-key': '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',
-            'content-type': 'application/json',
-        }
-        data = '{ "sender":{ "name":"VENDORSIN COMMERCE PVT LTD", "email":"admin@vendorsin.com" }, "to":[ { "email":"harishshetty7459@gmail.com", "name":"Harish" } ], "subject":"OTP Confirmation", "templateId":1 ,"params":{"OTP":"12345"}''}'
+        emailuser = SelfRegistration.objects.get(username=email)
+        if emailuser:
+            OTP = ""
+            for i in range(6):
+                OTP += digits[math.floor(random.random() * 10)]
+            print(OTP)
+            emailuser.email_otp = OTP
+            emailuser.save()
+            headers = {
+                'accept': 'application/json',
+                'api-key': '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',
+                'content-type': 'application/json',
+            }
+            data = '{ "sender":{ "name":"VENDORSIN COMMERCE PVT LTD", "email":"admin@vendorsin.com" }, "to":[ { "email":"' + email + '' \
+                                                                                                                                 '", "name":"Harish" } ], "subject":"OTP Confirmation", "templateId":1 ,"params":{"OTP":' + OTP + '}''}'
 
         # data = '{ "sender":{ "name":"VENDORSIN COMMERCE PVT LTD", "email":"admin@vendorsin.com" },"subject":"This is my default subject line","templateId":96,"to":[ { "email":"harishshetty7459@gmail.com", "name":"harish" } ]'
 
-
-
-        response = requests.post('https://api.sendinblue.com/v3/smtp/email', headers=headers, data=data)
-        print("----")
-        print(response)
-        print("----")
+            response = requests.post('https://api.sendinblue.com/v3/smtp/email', headers=headers, data=data)
+            print("----")
+            print(response)
+            print("----")
 
         return Response({'status': 200, 'message': 'ok'}, status=200)
-
-
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)
 
 @api_view(['post'])
-@permission_classes([AllowAny])
 def sendSMS(request):
-    otp="10000"
+    data=request.data
+    digits = "0123456789"
+    phone=data['phone']
     try:
-        apikey = 'YTU3NjhmMDdmYjFlYzA2OWY0YzhlNjA3YmEyYjMxNGM='
-        numbers = '918095994214'
-        message = otp+'Is The OTP To Verify Your Mobile Number On VENDORSIN COMMERCE Self Registration Portal. Do Not Share It With Anyone .'
-        sender = 'VSINVC'
+        phoneuser = SelfRegistration.objects.get(phone_number=phone)
+        if phoneuser:
+            OTP = ""
+            for i in range(6):
+                OTP += digits[math.floor(random.random() * 10)]
+            print(OTP)
+            phoneuser.phone_otp = OTP
+            phoneuser.save()
 
-        data = urllib.parse.urlencode({'apikey': apikey, 'numbers': numbers,
-                                       'message': message, 'sender': sender,'Template Name':'REGISTRATION OTP'})
-        data = data.encode('utf-8')
-        request = urllib.request.Request("https://api.textlocal.in/send/?")
-        f = urllib.request.urlopen(request, data)
-        fr = f.read()
-        print(fr)
+            apikey = 'YTU3NjhmMDdmYjFlYzA2OWY0YzhlNjA3YmEyYjMxNGM='
+            numbers = '91' + phone
+            message = OTP + 'Is The OTP To Verify Your Mobile Number On VENDORSIN COMMERCE Self Registration Portal. Do Not Share It With Anyone .'
+            sender = 'VSINVC'
+
+            data = urllib.parse.urlencode({'apikey': apikey, 'numbers': numbers,
+                                           'message': message, 'sender': sender})
+            data = data.encode('utf-8')
+            request = urllib.request.Request("https://api.textlocal.in/send/?")
+            f = urllib.request.urlopen(request, data)
+            fr = f.read()
+            print(fr)
 
         return Response({'status': 200, 'message': "Success"}, status=200)
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)
-
-
-
-
-    # # Configure API key authorization: api-key
-    # configuration = sib_api_v3_sdk.Configuration()
-    # configuration.api_key['api-key'] = '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'
-    # # Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
-    # # configuration.api_key_prefix['api-key'] = 'Bearer'
-    # # Configure API key authorization: partner-key
-    # # configuration = sib_api_v3_sdk.Configuration()
-    # # configuration.api_key['partner-key'] = 'bde61914a5675f77af7a7a69fd87d8651ff62cb94d7d5e39a2d5f3d9b67c3390'
-    # # Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
-    # # configuration.api_key_prefix['partner-key'] = 'Bearer'
-    #
-    # # create an instance of the API class
-    # api_instance = sib_api_v3_sdk.ContactsApi(sib_api_v3_sdk.ApiClient(configuration))
-    # identifier = 'harishshetty7459@gmail.com'  # str | Email (urlencoded) OR ID of the contact OR its SMS attribute value
-    #
-    # try:
-    #     # Get a contact's details
-    #     api_response = api_instance.get_contact_info(identifier)
-    #     pprint(api_response)
-    # except ApiException as e:
-    #     print("Exception when calling ContactsApi->get_contact_info: %s\n" % e)
 

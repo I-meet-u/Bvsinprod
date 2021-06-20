@@ -805,7 +805,7 @@ def sendbluemail(request):
             print(response)
             print("----")
 
-        return Response({'status': 200, 'message': 'ok'}, status=200)
+        return Response({'status': 200, 'message': 'ok','data':OTP}, status=200)
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)
 
@@ -837,7 +837,7 @@ def sendSMS(request):
             fr = f.read()
             print(fr)
 
-        return Response({'status': 200, 'message': "Success"}, status=200)
+        return Response({'status': 200, 'message': "Success",'data':OTP}, status=200)
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)
 

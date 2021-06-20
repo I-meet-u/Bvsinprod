@@ -753,7 +753,7 @@ def sendOtpmail(request):
                 phoneuser.save()
 
                 apikey = 'YTU3NjhmMDdmYjFlYzA2OWY0YzhlNjA3YmEyYjMxNGM='
-                numbers = '918095994214'
+                numbers = '91'+phone
                 message = OTP + 'Is The OTP To Verify Your Mobile Number On VENDORSIN COMMERCE Self Registration Portal. Do Not Share It With Anyone .'
                 sender = 'VSINVC'
 

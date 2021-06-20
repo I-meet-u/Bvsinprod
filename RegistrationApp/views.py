@@ -858,6 +858,111 @@ def checkotp(request):
         return Response({'status': 500, 'error': str(e)}, status=500)
 
 
+@api_view(['post'])
+def checkotpemailt(request):
+    data=request.data
+    userid=data['userid']
+    try:
+        user = SelfRegistration.objects.get(id=userid)
+        if user:
+            if user.phone_otp==data['phone_otp'] and user.email_otp==data['email_otp']:
+
+                return Response({'status': 200, 'message': "Both OTP Matching"}, status=200)
+            else:
+                return Response({'status': 202, 'message': "OTP Not Matching"}, status=202)
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)
+
+@api_view(['post'])
+def changeemail(request):
+    data=request.data
+    userid=data['userid']
+    email=data['email']
+    digits = "0123456789"
+    try:
+        user = SelfRegistration.objects.get(id=userid)
+        if user:
+            if user.username!=email:
+                user.username = email
+                user.save()
+
+                OTP = ""
+                for i in range(6):
+                    OTP += digits[math.floor(random.random() * 10)]
+                print(OTP)
+                user.email_otp = OTP
+                user.save()
+                headers = {
+                    'accept': 'application/json',
+                    'api-key': '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',
+                    'content-type': 'application/json',
+                }
+                data = '{ "sender":{ "name":"VENDORSIN COMMERCE PVT LTD", "email":"admin@vendorsin.com" }, "to":[ { "email":"' + email + '' \
+                                                                                                                                         '", "name":"Harish" } ], "subject":"OTP Confirmation", "templateId":1 ,"params":{"OTP":' + OTP + '}''}'
+
+                # data = '{ "sender":{ "name":"VENDORSIN COMMERCE PVT LTD", "email":"admin@vendorsin.com" },"subject":"This is my default subject line","templateId":96,"to":[ { "email":"harishshetty7459@gmail.com", "name":"harish" } ]'
+
+                response = requests.post('https://api.sendinblue.com/v3/smtp/email', headers=headers, data=data)
+                print("----")
+                print(response)
+                print("----")
+
+                return Response({'status': 200, 'message': "success"}, status=200)
+            else:
+                return Response({'status': 202, 'message': "Already Exist"}, status=202)
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)
+
+@api_view(['post'])
+def changephone(request):
+    data = request.data
+    userid = data['userid']
+    phone = data['phone']
+    digits = "0123456789"
+    try:
+        user = SelfRegistration.objects.get(id=userid)
+        if user:
+            if user.phone_number != phone:
+                user.phone_number = phone
+                user.save()
+
+                OTP = ""
+                for i in range(6):
+                    OTP += digits[math.floor(random.random() * 10)]
+                print(OTP)
+                user.phone_otp = OTP
+                user.save()
+
+                apikey = 'YTU3NjhmMDdmYjFlYzA2OWY0YzhlNjA3YmEyYjMxNGM='
+                numbers = '91' + phone
+                message = OTP + 'Is The OTP To Verify Your Mobile Number On VENDORSIN COMMERCE Self Registration Portal. Do Not Share It With Anyone .'
+                sender = 'VSINVC'
+
+                data = urllib.parse.urlencode({'apikey': apikey, 'numbers': numbers,
+                                               'message': message, 'sender': sender})
+                data = data.encode('utf-8')
+                request = urllib.request.Request("https://api.textlocal.in/send/?")
+                f = urllib.request.urlopen(request, data)
+                fr = f.read()
+                print(fr)
+
+                return Response({'status': 200, 'message': "success"}, status=200)
+            else:
+                return Response({'status': 202, 'message': "Already Exist"}, status=202)
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

@@ -4,6 +4,7 @@ from rest_framework import routers
 
 
 from . import  views
+from .views import sendSMS, sendOtpmail
 
 router=routers.DefaultRouter()
 #routers are used with ViewSets in django rest framework to auto config the urls.
@@ -44,7 +45,9 @@ urlpatterns = [
     path('list-documents-user/',views.list_documents_user),
     path('all-basic-data/',views.all_basic_data),
     # path('registration-list/',views.registration_list),
-    path('sendbluemail/',views.sendbluemail)
+    path('sendbluemail/',views.sendbluemail),
+    path('sendSMS/',sendSMS),
+    path('sendOtpmail/',sendOtpmail)
     # path('send_mail_template/',views.send_mail_template)
     # path('subscribe_email/', MailSubscriptionAPIView.as_view(),name='subscribe-email')
 

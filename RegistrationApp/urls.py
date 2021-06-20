@@ -48,7 +48,9 @@ urlpatterns = [
     path('sendbluemail/',views.sendbluemail),
     path('sendSMS/',sendSMS),
     path('sendOtpmail/',sendOtpmail),
-    path('checkotp/',views.checkotp)
+    path('checkotp/',views.checkotp),
+    path('changeemail/',views.changeemail),
+    path('changephone/',views.changephone)
     # path('send_mail_template/',views.send_mail_template)
     # path('subscribe_email/', MailSubscriptionAPIView.as_view(),name='subscribe-email')
 

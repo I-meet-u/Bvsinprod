@@ -953,6 +953,23 @@ def changephone(request):
         return Response({'status': 500, 'error': str(e)}, status=500)
 
 
+# -------------------------------------user-dp-upload----------------------------------------------------
+@api_view(['post'])
+def uploaduserprofile(request):
+    data = request.data
+    try:
+        profileimgobj = SelfRegistration.objects.get(id=data['userid'])
+        if profileimgobj:
+            profileimgobj.profile_cover_photo = data['profileimg']
+            profileimgobj.save()
+            return Response({'status': 200, 'message': 'profile uploaded'}, status=200)
+        else:
+            return Response({'status': 404, 'message': 'user not found'}, status=404)
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)
+
+
+
 
 
 

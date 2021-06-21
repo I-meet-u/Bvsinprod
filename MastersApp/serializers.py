@@ -2,7 +2,8 @@ from django.http import request
 
 from .models import MaincoreMaster, CategoryMaster, SubCategoryMaster, \
     IndustryToServeMaster, NatureOfBusinessMaster, SupplyCapabilitiesMaster, PincodeMaster, UOMMaster, DepartmentMaster, \
-    DesignationMaster, TaxMaster, HSNMaster, SACMaster, CurrencyMaster, PFChargesMaster
+    DesignationMaster, TaxMaster, HSNMaster, SACMaster, CurrencyMaster, PFChargesMaster, FrieghtChargesMaster, \
+    WarrantyGuaranteeMaster, DeliveryMaster
 from rest_framework import serializers
 
 class IndustryToServeMasterSerializer(serializers.ModelSerializer):
@@ -51,50 +52,68 @@ class PincodeMasterSerializer(serializers.ModelSerializer):
 
 
 class UOMMasterSerializer(serializers.ModelSerializer):
-    # pin_code master serializer
+    # uom master serializer
     class Meta:
         model=UOMMaster
         fields='__all__'
 
 class DepartmentMasterSerializer(serializers.ModelSerializer):
-    # pin_code master serializer
+    # department master serializer
     class Meta:
         model=DepartmentMaster
         fields='__all__'
 
 
 class DesignationMasterSerializer(serializers.ModelSerializer):
-    # pin_code master serializer
+    # designation master serializer
     class Meta:
         model=DesignationMaster
         fields='__all__'
 
 class TaxMasterSerializer(serializers.ModelSerializer):
-    # pin_code master serializer
+    # tax master serializer
     class Meta:
         model=TaxMaster
         fields='__all__'
 
 class HSNMasterSerializer(serializers.ModelSerializer):
-    # pin_code master serializer
+    # hsn_master  serializer
     class Meta:
         model=HSNMaster
         fields='__all__'
 
 class SACMasterSerializer(serializers.ModelSerializer):
-    # pin_code master serializer
+    # sac_master serializer
     class Meta:
         model=SACMaster
         fields='__all__'
 
 class CurrencyMasterSerializer(serializers.ModelSerializer):
-    # pin_code master serializer
+    # currency master serializer
     class Meta:
         model=CurrencyMaster
         fields='__all__'
 
 class PFChargesMasterSerializer(serializers.ModelSerializer):
-    # pin_code master serializer
+    # pf_charges master serializer
     class Meta:
         model=PFChargesMaster
+        fields='__all__'
+
+class FrieghtChargesMasterSerializer(serializers.ModelSerializer):
+    # frieght master serializer
+    class Meta:
+        model=FrieghtChargesMaster
+        fields='__all__'
+
+class WarrantyGuaranteeMasterSerializer(serializers.ModelSerializer):
+    # warranty master serializer
+    class Meta:
+        model=WarrantyGuaranteeMaster
+        fields='__all__'
+
+class DeliveryMasterSerializer(serializers.ModelSerializer):
+    # delivery master serializer
+    class Meta:
+        model=DeliveryMaster
         fields='__all__'

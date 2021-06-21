@@ -19,7 +19,10 @@ router.register('tax-master',views.TaxMasterView)
 router.register('hsn-master',views.HSNMasterSerializerView)
 router.register('sac-master',views.SACMasterView)
 router.register('currency-master',views.CurrencyMasterView)
-router.register('pf_charge-master',views.PFChargesMasterView)
+router.register('pf-charge-master',views.PFChargesMasterView)
+router.register('frieght-charge-master',views.FrieghtChargesMasterView)
+router.register('warrantee-master',views.WarrantyGuaranteeMasterView)
+router.register('delivery-master',views.DeliveryMasterView)
 urlpatterns = [
     path('masters-router-urls/',include(router.urls)), #router urls are included
 

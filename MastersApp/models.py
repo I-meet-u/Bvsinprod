@@ -266,10 +266,9 @@ class CurrencyMaster(models.Model):
 
 class PFChargesMaster(models.Model):
     # pf_charge models and fields
-    currency_id = models.BigAutoField(primary_key=True)
-    currency_code = models.CharField(max_length=30,unique=True)
-    currency = models.CharField(max_length=200, unique=True)
-    currency_name = models.CharField(max_length=30, unique=True)
+    pf_charge_id = models.BigAutoField(primary_key=True)
+    pf_charge_code = models.CharField(max_length=30,null=True)
+    pf_charge_description = models.CharField(max_length=200, unique=True)
     is_verified = models.BooleanField(default=False)
     created_on = models.DateTimeField(auto_now_add=True)
     updated_on = models.DateTimeField(auto_now=True)
@@ -281,3 +280,50 @@ class PFChargesMaster(models.Model):
     class Meta:
         db_table = "PFChargesMaster"
 
+class FrieghtChargesMaster(models.Model):
+    # frieght_models and fields
+    frieght_id = models.BigAutoField(primary_key=True)
+    frieght_code = models.CharField(max_length=30,null=True)
+    frieght_description = models.CharField(max_length=200, unique=True)
+    is_verified = models.BooleanField(default=False)
+    created_on = models.DateTimeField(auto_now_add=True)
+    updated_on = models.DateTimeField(auto_now=True)
+    status = models.CharField(max_length=30, default='Active')
+    admins = models.ForeignKey(AdminRegister, on_delete=models.CASCADE, null=True)
+    updated_by = models.ForeignKey(CreateUser, on_delete=models.CASCADE, null=True)
+    history = HistoricalRecords()
+
+    class Meta:
+        db_table = "FrieghtChargesMaster"
+
+class WarrantyGuaranteeMaster(models.Model):
+    # warranty_master models and fields
+    warranty_id = models.BigAutoField(primary_key=True)
+    warranty_code = models.CharField(max_length=30,null=True)
+    warranty_description = models.CharField(max_length=200, unique=True)
+    is_verified = models.BooleanField(default=False)
+    created_on = models.DateTimeField(auto_now_add=True)
+    updated_on = models.DateTimeField(auto_now=True)
+    status = models.CharField(max_length=30, default='Active')
+    admins = models.ForeignKey(AdminRegister, on_delete=models.CASCADE, null=True)
+    updated_by = models.ForeignKey(CreateUser, on_delete=models.CASCADE, null=True)
+    history = HistoricalRecords()
+
+    class Meta:
+        db_table = "WarrantyGuaranteeMaster"
+
+class DeliveryMaster(models.Model):
+    # delivery_master models and fields
+    delivery_id = models.BigAutoField(primary_key=True)
+    delivery_code = models.CharField(max_length=30,null=True)
+    delivery_description = models.CharField(max_length=200, unique=True)
+    is_verified = models.BooleanField(default=False)
+    created_on = models.DateTimeField(auto_now_add=True)
+    updated_on = models.DateTimeField(auto_now=True)
+    status = models.CharField(max_length=30, default='Active')
+    admins = models.ForeignKey(AdminRegister, on_delete=models.CASCADE, null=True)
+    updated_by = models.ForeignKey(CreateUser, on_delete=models.CASCADE, null=True)
+    history = HistoricalRecords()
+
+    class Meta:
+        db_table = "DeliveryMaster"

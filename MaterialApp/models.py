@@ -14,7 +14,6 @@ class VendorProductsDetail(models.Model):
     product_category=models.CharField(max_length=100, blank=True)
     product_subcategory=models.CharField(max_length=100, blank=True)
     product_type=models.CharField(max_length=100, null=True)
-    type_of_product=models.CharField(max_length=100,null=True)
     product_code=models.CharField(max_length=100,null=True,unique=True)
     product_name=models.CharField(max_length=100, null=True)
     product_description=models.CharField(max_length=100, null=True)

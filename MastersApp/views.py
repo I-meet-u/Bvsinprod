@@ -63,6 +63,15 @@ class UOMMasterView(viewsets.ModelViewSet):
     queryset = UOMMaster.objects.all()
     serializer_class= UOMMasterSerializer
 
+    def delete(self, request, *args, **kwargs):
+        uommaster = UOMMaster.objects.filter(uom_id__in=self.request.data['uom_id'])
+        if uommaster.count() > 0:
+            [uommaster.delete() for uom in uommaster]
+            return Response({'message': 'UOM datas are deleted', 'status': status.HTTP_204_NO_CONTENT})
+        return Response(
+            {'message': 'Unable to delete uom data  or data already deleted', 'status': status.HTTP_404_NOT_FOUND})
+
+
 class DepartmentMasterView(viewsets.ModelViewSet):
     # department_master  viewsets
     permission_classes = (AllowAny,)

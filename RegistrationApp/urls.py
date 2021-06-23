@@ -51,7 +51,10 @@ urlpatterns = [
     path('checkotp/',views.checkotp),
     path('changeemail/',views.changeemail),
     path('changephone/',views.changephone),
-    path('uploaduserprofile/',views.uploaduserprofile)
+    path('uploaduserprofile/',views.uploaduserprofile),
+    path('phone-otp-verify/',views.phone_otp_verify),
+    path('email-otp-verify/',views.email_otp_verify)
+
     # path('send_mail_template/',views.send_mail_template)
     # path('subscribe_email/', MailSubscriptionAPIView.as_view(),name='subscribe-email')
 

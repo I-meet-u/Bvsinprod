@@ -969,6 +969,36 @@ def uploaduserprofile(request):
         return Response({'status': 500, 'error': str(e)}, status=500)
 
 
+@api_view(['post'])
+def phone_otp_verify(request):
+    data=request.data
+    phoneotp=data['phoneotp']
+    phonenumber=data['phonenumber']
+    try:
+        regobj=SelfRegistration.objects.get(phone_number=phonenumber)
+        if regobj.phone_otp==phoneotp and regobj.phone_number==phonenumber:
+            return Response({'status':200,'message':'Phone Otp Verified'},status=200)
+        else:
+            return Response({'status': 204, 'message': 'Phone otp not verified or otp is not correct'}, status=204)
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)
+
+
+@api_view(['post'])
+def email_otp_verify(request):
+    data=request.data
+    emailotp=data['emailotp']
+    emailid=data['emailid']
+    try:
+        regobj=SelfRegistration.objects.get(username=emailid)
+        if regobj.email_otp==emailotp and regobj.username==emailid:
+            return Response({'status':200,'message':'Email Otp Verified'},status=200)
+        else:
+            return Response({'status': 204, 'message': 'Email otp not verified or otp is not correct'}, status=204)
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)
+
+
 
 
 

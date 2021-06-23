@@ -6,9 +6,10 @@ from rest_framework import viewsets
 from rest_framework.response import Response
 
 from RegistrationApp.models import SelfRegistration
-from .models import VendorProductsDetail
+from .models import VendorProductsDetail, IndustrialDetails_SearchCategory
 
-from .serializers import VendorProductsDetailSerializer
+from .serializers import VendorProductsDetailSerializer, IndustrialDetails_SearchCategorySerializer
+
 
 class VendorProductsDetailView(viewsets.ModelViewSet):
     queryset = VendorProductsDetail.objects.all()
@@ -69,19 +70,10 @@ class VendorProductsDetailView(viewsets.ModelViewSet):
             return Response({'status':500,'error':str(e)},status=500)
 
 
+class IndustrialDetails_SearchCategoryView(viewsets.ModelViewSet):
+    queryset = IndustrialDetails_SearchCategory.objects.all()
+    serializer_class = IndustrialDetails_SearchCategorySerializer
 
-
-
-
-
-
-
-
-#
-# class GeneralProductsDetailsView(viewsets.ModelViewSet):
-#     queryset = GeneralProductsDetails.objects.all()
-#     serializer_class = GeneralProductsDetailsSerializer
-#
 #
 # class PricingOfferView(viewsets.ModelViewSet):
 #     queryset = PricingOffer.objects.all()

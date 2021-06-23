@@ -1,10 +1,12 @@
+from django.contrib.postgres.fields import ArrayField
 from django.db import models
 
 # Create your models here.
 
 from django.db import models
 
-from RegistrationApp.models import SelfRegistration
+from RegistrationApp.models import SelfRegistration, BasicCompanyDetails
+
 
 class VendorProductsDetail(models.Model):
 
@@ -42,6 +44,20 @@ class VendorProductsDetail(models.Model):
 
     class Meta:
         db_table = "VendorProductsDetail"
+
+
+class IndustrialDetails_SearchCategory(models.Model):
+    product_maincore=ArrayField(models.CharField(max_length=500))
+    product_category=ArrayField(models.CharField(max_length=500))
+    product_sub_category = ArrayField(models.CharField(max_length=500))
+    user_id=models.ForeignKey(SelfRegistration,on_delete=models.CASCADE)
+    company_code=models.ForeignKey(BasicCompanyDetails,on_delete=models.CASCADE)
+    created_on = models.DateTimeField(auto_now_add=True)
+    updated_on = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        db_table = "IndustrialDetails_SearchCategory"
+
 
 
 # class GeneralProductsDetails(models.Model):

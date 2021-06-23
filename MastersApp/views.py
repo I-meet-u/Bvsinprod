@@ -1,7 +1,7 @@
 
 from django.shortcuts import render
 from rest_framework import viewsets, status
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 
@@ -79,11 +79,29 @@ class DepartmentMasterView(viewsets.ModelViewSet):
     serializer_class = DepartmentMasterSerializer
 
 
+    def delete(self, request, *args, **kwargs):
+        departmentmaster = DepartmentMaster.objects.filter(department_id__in=self.request.data['department_id'])
+        if departmentmaster.count() > 0:
+            [departmentmaster.delete() for dept in departmentmaster]
+            return Response({'message': 'Department Master datas are deleted', 'status': status.HTTP_204_NO_CONTENT})
+        return Response(
+            {'message': 'Unable to delete department data  or data already deleted', 'status': status.HTTP_404_NOT_FOUND})
+
+
 class DesignationMasterView(viewsets.ModelViewSet):
     # designation_master viewsets
     permission_classes = (AllowAny,)
     queryset = DesignationMaster.objects.all()
     serializer_class = DesignationMasterSerializer
+
+    def delete(self, request, *args, **kwargs):
+        designationobj = DesignationMaster.objects.filter(designation_id__in=self.request.data['designation_id'])
+        if designationobj.count() > 0:
+            [designationobj.delete() for desig in designationobj]
+            return Response({'message': 'Designation Master datas are deleted', 'status': status.HTTP_204_NO_CONTENT})
+        return Response(
+            {'message': 'Unable to delete designation data  or data already deleted',
+             'status': status.HTTP_404_NOT_FOUND})
 
 
 class TaxMasterView(viewsets.ModelViewSet):
@@ -91,6 +109,17 @@ class TaxMasterView(viewsets.ModelViewSet):
     permission_classes = (AllowAny,)
     queryset = TaxMaster.objects.all()
     serializer_class = TaxMasterSerializer
+
+
+    def delete(self, request, *args, **kwargs):
+        taxmasterobj = TaxMaster.objects.filter(tax_id__in=self.request.data['tax_id'])
+        if taxmasterobj.count() > 0:
+            [taxmasterobj.delete() for tax in taxmasterobj]
+            return Response({'message': 'Tax  datas are deleted', 'status': status.HTTP_204_NO_CONTENT})
+        return Response(
+            {'message': 'Unable to delete designation data  or data already deleted',
+             'status': status.HTTP_404_NOT_FOUND})
+
 
 
 class HSNMasterSerializerView(viewsets.ModelViewSet):
@@ -290,4 +319,44 @@ def disable_industry_serve(request):
         return Response({'status':500,'error':str(e)},status=500)
 
 
+@api_view(['put'])
+@permission_classes([AllowAny,])
+def disable_uom_master(request):
+    data=request.data
+    uomid=data['uomid']
+    try:
+        uomobj=UOMMaster.objects.filter(uom_id__in=uomid).values()
+        if len(uomobj)>0:
+            for i in range(0,len(uomobj)):
+                uomget=UOMMaster.objects.get(uom_id=uomobj[i].get('uom_id'))
+                if uomget.status=='Active':
+                    uomget.status='Disabled'
+                    uomget.save()
+                else:
+                    return Response({'status':202,'message':'UOM status already changed to disabled'},status=202)
+            return Response({'status': 202, 'message': 'UOM status changed to disabled'}, status=202)
+        return Response({'status': 204, 'message': 'UOM data not present'}, status=204)
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)
+
+
+@api_view(['put'])
+@permission_classes([AllowAny,])
+def enable_uom_master(request):
+    data=request.data
+    uomid=data['uomid']
+    try:
+        uomobj=UOMMaster.objects.filter(uom_id__in=uomid).values()
+        if len(uomobj)>0:
+            for i in range(0,len(uomobj)):
+                uomget=UOMMaster.objects.get(uom_id=uomobj[i].get('uom_id'))
+                if uomget.status=='Disabled':
+                    uomget.status='Enabled'
+                    uomget.save()
+                else:
+                    return Response({'status':202,'message':'UOM masters already enabled or it is not in disable state'},status=202)
+            return Response({'status': 202, 'message': 'UOM status changed to enable'}, status=202)
+        return Response({'status': 204, 'message': 'UOM data not present'}, status=204)
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)
 

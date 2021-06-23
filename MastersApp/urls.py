@@ -34,7 +34,9 @@ urlpatterns = [
     path('sub-category-search/',views.sub_category_search),
     path('disable-nature-of-business/',views.disable_nature_of_business),
     path('disable-supply-capabilities/',views.disable_supply_capabilities),
-    path('disable-industry-serve/',views.disable_industry_serve)
+    path('disable-industry-serve/',views.disable_industry_serve),
+    path('disable-uom-master/',views.disable_uom_master),
+    path('enable-uom-master/',views.enable_uom_master)
 
 
 

@@ -142,7 +142,8 @@ class PincodeMaster(models.Model):
 class UOMMaster(models.Model):
     # uom master models and fields
     uom_id = models.BigAutoField(primary_key=True)
-    uom_code = models.CharField(max_length=30)
+    uom_short_text = models.CharField(max_length=30,null=True)
+    uom_code = models.CharField(max_length=30, null=True)
     uom_description = models.CharField(max_length=300, unique=True)
     is_verified = models.BooleanField(default=False)
     created_on = models.DateTimeField(auto_now_add=True)

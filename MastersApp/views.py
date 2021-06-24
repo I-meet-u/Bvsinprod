@@ -168,6 +168,8 @@ class DeliveryMasterView(viewsets.ModelViewSet):
     queryset = DeliveryMaster.objects.all()
     serializer_class = DeliveryMasterSerializer
 
+
+
 @api_view(['post'])
 def get_category_by_maincore(request):
     # getting categories list by passing maincore_id
@@ -359,4 +361,17 @@ def enable_uom_master(request):
         return Response({'status': 204, 'message': 'UOM data not present'}, status=204)
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)
+
+# @api_view(['get'])
+# def all_masters(request):
+#     masterslist=[]
+#     try:
+#         maincoremasterobj=MaincoreMaster.objects.filter().values()
+#         if maincoremasterobj:
+#             masterslist.append({'maincore_masters':maincoremasterobj})
+#         categorymasterobj=CategoryMaster.objects.filter().values()
+#         if categorymasterobj:
+#             masterslist.append({'category_master': categorymasterobj})
+#         subcategoryobj
+
 

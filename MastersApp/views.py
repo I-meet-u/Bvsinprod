@@ -2,6 +2,7 @@
 from django.shortcuts import render
 from rest_framework import viewsets, status
 from rest_framework.decorators import api_view, permission_classes
+from rest_framework.exceptions import ValidationError
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 
@@ -63,13 +64,12 @@ class UOMMasterView(viewsets.ModelViewSet):
     queryset = UOMMaster.objects.all()
     serializer_class= UOMMasterSerializer
 
-    def delete(self, request, *args, **kwargs):
-        uommaster = UOMMaster.objects.filter(uom_id__in=self.request.data['uom_id'])
-        if uommaster.count() > 0:
-            [uommaster.delete() for uom in uommaster]
-            return Response({'message': 'UOM datas are deleted', 'status': status.HTTP_204_NO_CONTENT})
-        return Response(
-            {'message': 'Unable to delete uom data  or data already deleted', 'status': status.HTTP_404_NOT_FOUND})
+    def get_queryset(self):
+        # overriding get_queryset by passing user_id. Here user_id is nothing but updated_by
+        uommasterobj = UOMMaster.objects.filter(updated_by=self.request.GET.get('updated_by')).order_by('uom_id')
+        if not uommasterobj:
+            raise ValidationError({'message': 'UOM Master details not exist', 'status': 204})
+        return uommasterobj
 
 
 class DepartmentMasterView(viewsets.ModelViewSet):
@@ -78,30 +78,11 @@ class DepartmentMasterView(viewsets.ModelViewSet):
     queryset = DepartmentMaster.objects.all()
     serializer_class = DepartmentMasterSerializer
 
-
-    def delete(self, request, *args, **kwargs):
-        departmentmaster = DepartmentMaster.objects.filter(department_id__in=self.request.data['department_id'])
-        if departmentmaster.count() > 0:
-            [departmentmaster.delete() for dept in departmentmaster]
-            return Response({'message': 'Department Master datas are deleted', 'status': status.HTTP_204_NO_CONTENT})
-        return Response(
-            {'message': 'Unable to delete department data  or data already deleted', 'status': status.HTTP_404_NOT_FOUND})
-
-
 class DesignationMasterView(viewsets.ModelViewSet):
     # designation_master viewsets
     permission_classes = (AllowAny,)
     queryset = DesignationMaster.objects.all()
     serializer_class = DesignationMasterSerializer
-
-    def delete(self, request, *args, **kwargs):
-        designationobj = DesignationMaster.objects.filter(designation_id__in=self.request.data['designation_id'])
-        if designationobj.count() > 0:
-            [designationobj.delete() for desig in designationobj]
-            return Response({'message': 'Designation Master datas are deleted', 'status': status.HTTP_204_NO_CONTENT})
-        return Response(
-            {'message': 'Unable to delete designation data  or data already deleted',
-             'status': status.HTTP_404_NOT_FOUND})
 
 
 class TaxMasterView(viewsets.ModelViewSet):
@@ -109,16 +90,6 @@ class TaxMasterView(viewsets.ModelViewSet):
     permission_classes = (AllowAny,)
     queryset = TaxMaster.objects.all()
     serializer_class = TaxMasterSerializer
-
-
-    def delete(self, request, *args, **kwargs):
-        taxmasterobj = TaxMaster.objects.filter(tax_id__in=self.request.data['tax_id'])
-        if taxmasterobj.count() > 0:
-            [taxmasterobj.delete() for tax in taxmasterobj]
-            return Response({'message': 'Tax  datas are deleted', 'status': status.HTTP_204_NO_CONTENT})
-        return Response(
-            {'message': 'Unable to delete designation data  or data already deleted',
-             'status': status.HTTP_404_NOT_FOUND})
 
 
 
@@ -321,13 +292,35 @@ def disable_industry_serve(request):
         return Response({'status':500,'error':str(e)},status=500)
 
 
+
+
+@api_view(['post'])
+@permission_classes([AllowAny,])
+def delete_uom_master(request):
+    data=request.data
+    uomid=data['uomid']
+    userid = data['userid']
+    try:
+        uomobj=UOMMaster.objects.filter(uom_id__in=uomid,updated_by=userid).values()
+        if len(uomobj)>0:
+            for i in range(0,len(uomobj)):
+                uomget=UOMMaster.objects.get(uom_id=uomobj[i].get('uom_id'))
+                if uomget:
+                    uomget.delete()
+            return Response({'status': 204, 'message': 'UOM details are deleted'}, status=204)
+        return Response({'status': 202, 'message': 'UOM data not present or already deleted'}, status=202)
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)
+
+
 @api_view(['put'])
 @permission_classes([AllowAny,])
 def disable_uom_master(request):
     data=request.data
     uomid=data['uomid']
+    userid=data['userid']
     try:
-        uomobj=UOMMaster.objects.filter(uom_id__in=uomid).values()
+        uomobj=UOMMaster.objects.filter(uom_id__in=uomid,updated_by=userid).values()
         if len(uomobj)>0:
             for i in range(0,len(uomobj)):
                 uomget=UOMMaster.objects.get(uom_id=uomobj[i].get('uom_id'))
@@ -347,8 +340,9 @@ def disable_uom_master(request):
 def enable_uom_master(request):
     data=request.data
     uomid=data['uomid']
+    userid = data['userid']
     try:
-        uomobj=UOMMaster.objects.filter(uom_id__in=uomid).values()
+        uomobj=UOMMaster.objects.filter(uom_id__in=uomid,updated_by=userid).values()
         if len(uomobj)>0:
             for i in range(0,len(uomobj)):
                 uomget=UOMMaster.objects.get(uom_id=uomobj[i].get('uom_id'))

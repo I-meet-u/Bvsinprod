@@ -36,7 +36,8 @@ urlpatterns = [
     path('disable-supply-capabilities/',views.disable_supply_capabilities),
     path('disable-industry-serve/',views.disable_industry_serve),
     path('disable-uom-master/',views.disable_uom_master),
-    path('enable-uom-master/',views.enable_uom_master)
+    path('enable-uom-master/',views.enable_uom_master),
+    path('all-masters/',views.all_masters)
 
 
 

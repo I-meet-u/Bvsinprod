@@ -362,16 +362,57 @@ def enable_uom_master(request):
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)
 
-# @api_view(['get'])
-# def all_masters(request):
-#     masterslist=[]
-#     try:
-#         maincoremasterobj=MaincoreMaster.objects.filter().values()
-#         if maincoremasterobj:
-#             masterslist.append({'maincore_masters':maincoremasterobj})
-#         categorymasterobj=CategoryMaster.objects.filter().values()
-#         if categorymasterobj:
-#             masterslist.append({'category_master': categorymasterobj})
-#         subcategoryobj
+@api_view(['get'])
+@permission_classes([AllowAny,])
+def all_masters(request):
+    masterslist=[]
+    try:
+        maincoremasterobj=MaincoreMaster.objects.filter().values().order_by('maincore_id')
+        if maincoremasterobj:
+            masterslist.append({'maincore_masters':maincoremasterobj})
+        categorymasterobj=CategoryMaster.objects.filter().values().order_by('category_id')
+        if categorymasterobj:
+            masterslist.append({'category_master': categorymasterobj})
+        subcategorymasterobj=SubCategoryMaster.objects.filter().values().order_by('sub_category_id')
+        if subcategorymasterobj:
+            masterslist.append({'sub_category_master': subcategorymasterobj})
+        uommasterobj=UOMMaster.objects.filter().values().order_by('uom_id')
+        if uommasterobj:
+            masterslist.append({'uom_master': uommasterobj})
+        departmentmasterobj = DepartmentMaster.objects.filter().values().order_by('department_id')
+        if departmentmasterobj:
+            masterslist.append({'department_master': departmentmasterobj})
+        designationmasterobj = DesignationMaster.objects.filter().values().order_by('designation_id')
+        if designationmasterobj:
+            masterslist.append({'designation_master': designationmasterobj})
+        taxmasterobj=TaxMaster.objects.filter().values().order_by('tax_id')
+        if taxmasterobj:
+            masterslist.append({'tax_master': taxmasterobj})
+        hsnmasterobj = HSNMaster.objects.filter().values()
+        if hsnmasterobj:
+            masterslist.append({'hsn_master': hsnmasterobj})
+        sacmasterobj = SACMaster.objects.filter().values()
+        if sacmasterobj:
+            masterslist.append({'hsn_master': sacmasterobj})
+        currencymasterobj = CurrencyMaster.objects.filter().values()
+        if currencymasterobj:
+            masterslist.append({'currency_master': currencymasterobj})
+        pfchargesmasterobj = PFChargesMaster.objects.filter().values()
+        if pfchargesmasterobj:
+            masterslist.append({'p_f_charges_master': pfchargesmasterobj})
+        freightmasterobj = FrieghtChargesMaster.objects.filter().values()
+        if freightmasterobj:
+            masterslist.append({'freight_master': freightmasterobj})
+        warrantymasterobj = WarrantyGuaranteeMaster.objects.filter().values()
+        if warrantymasterobj:
+            masterslist.append({'warranty_master': warrantymasterobj})
+        deliverymasterobj = DeliveryMaster.objects.filter().values()
+        if deliverymasterobj:
+            masterslist.append({'delivery_master': deliverymasterobj})
+        return Response({'status': 200, 'message': 'Masters List','data':masterslist}, status=200)
+
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)
+
 
 

@@ -68,11 +68,12 @@ class UOMMasterView(viewsets.ModelViewSet):
     def get_queryset(self):
         # overriding get_queryset by passing user_id. Here user_id is nothing but updated_by
         uommasterobj = UOMMaster.objects.filter(updated_by=self.request.GET.get('updated_by')).order_by('uom_id')
-        uomotherdataobj=UOMMaster.objects.filter(updated_by__isnull=True).values().order_by('uom_id')
+        uomotherdataobj=UOMMaster.objects.filter().values().order_by('uom_id')
         uomvalue=list(chain(uommasterobj,uomotherdataobj))
-        if not uommasterobj:
-            raise ValidationError({'message': 'UOM Master details not exist', 'status': 204})
-        return uomvalue
+        if uommasterobj:
+            return uomvalue
+        raise ValidationError({'message': 'UOM Master details not exist','status': 204})
+
 
 
 class DepartmentMasterView(viewsets.ModelViewSet):
@@ -80,6 +81,16 @@ class DepartmentMasterView(viewsets.ModelViewSet):
     permission_classes = (AllowAny,)
     queryset = DepartmentMaster.objects.all()
     serializer_class = DepartmentMasterSerializer
+
+    def get_queryset(self):
+        # overriding get_queryset by passing user_id. Here user_id is nothing but updated_by
+        departmentmasterobj = DepartmentMaster.objects.filter(updated_by=self.request.GET.get('updated_by')).order_by('department_id')
+        departmentotherdataobj = DepartmentMaster.objects.filter(admins=1).order_by('department_id')
+        departmentvalue = list(chain(departmentmasterobj, departmentotherdataobj))
+        if not departmentmasterobj:
+            raise ValidationError({'message': 'Department Master details not exist', 'status': 204})
+        return departmentvalue
+
 
 class DesignationMasterView(viewsets.ModelViewSet):
     # designation_master viewsets

@@ -387,7 +387,7 @@ def all_masters(request):
             masterslist.append({'hsn_master': hsnmasterobj})
         sacmasterobj = SACMaster.objects.filter().values()
         if sacmasterobj:
-            masterslist.append({'hsn_master': sacmasterobj})
+            masterslist.append({'sac_master': sacmasterobj})
         currencymasterobj = CurrencyMaster.objects.filter().values()
         if currencymasterobj:
             masterslist.append({'currency_master': currencymasterobj})

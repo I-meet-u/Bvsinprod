@@ -1,3 +1,4 @@
+from itertools import chain
 
 from django.shortcuts import render
 from rest_framework import viewsets, status
@@ -67,9 +68,11 @@ class UOMMasterView(viewsets.ModelViewSet):
     def get_queryset(self):
         # overriding get_queryset by passing user_id. Here user_id is nothing but updated_by
         uommasterobj = UOMMaster.objects.filter(updated_by=self.request.GET.get('updated_by')).order_by('uom_id')
+        uomotherdataobj=UOMMaster.objects.filter(updated_by__isnull=True).values().order_by('uom_id')
+        uomvalue=list(chain(uommasterobj,uomotherdataobj))
         if not uommasterobj:
             raise ValidationError({'message': 'UOM Master details not exist', 'status': 204})
-        return uommasterobj
+        return uomvalue
 
 
 class DepartmentMasterView(viewsets.ModelViewSet):

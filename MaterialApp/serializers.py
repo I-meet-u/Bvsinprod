@@ -1,20 +1,38 @@
 from rest_framework import  serializers
 from rest_framework.exceptions import ValidationError
 
-from .models import VendorProductsDetail, IndustrialDetails_SearchCategory
+from .models import VendorProduct_BasicDetails, VendorProduct_GeneralDetails,VendorProduct_TechnicalSpecifications,VendorProduct_ProductFeatures,VendorProduct_Documents
 
 
-class VendorProductsDetailSerializer(serializers.ModelSerializer):
+class VendorProduct_BasicDetailsSerializer(serializers.ModelSerializer):
 
     class Meta:
-        model=VendorProductsDetail
+        model=VendorProduct_BasicDetails
         fields='__all__'
 
 
-class IndustrialDetails_SearchCategorySerializer(serializers.ModelSerializer):
+class VendorProduct_GeneralDetailsSerializer(serializers.ModelSerializer):
 
     class Meta:
-        model=IndustrialDetails_SearchCategory
+        model=VendorProduct_GeneralDetails
+        fields='__all__'
+
+class VendorProduct_TechnicalSpecificationsSerialzer(serializers.ModelSerializer):
+
+    class Meta:
+        model=VendorProduct_TechnicalSpecifications
+        fields='__all__'
+
+class VendorProduct_ProductFeaturesSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model=VendorProduct_ProductFeatures
+        fields='__all__'
+
+class VendorProduct_DocumentsSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model=VendorProduct_Documents
         fields='__all__'
 
 

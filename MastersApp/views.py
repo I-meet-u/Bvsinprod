@@ -12,11 +12,11 @@ from .serializers import MainCoreMasterSerializer, CategoryMasterSerializer, Sub
     NatureOfBusinessMasterSerializer, SupplyCapabilitiesMasterSerializer, PincodeMasterSerializer, UOMMasterSerializer, \
     DepartmentMasterSerializer, DesignationMasterSerializer, TaxMasterSerializer, HSNMasterSerializer, \
     SACMasterSerializer, CurrencyMasterSerializer, PFChargesMasterSerializer, FrieghtChargesMasterSerializer, \
-    WarrantyGuaranteeMasterSerializer, DeliveryMasterSerializer
+    WarrantyGuaranteeMasterSerializer, DeliveryMasterSerializer, CountryMasterSerializer
 from .models import MaincoreMaster, CategoryMaster, SubCategoryMaster, \
     IndustryToServeMaster, NatureOfBusinessMaster, SupplyCapabilitiesMaster, PincodeMaster, UOMMaster, DepartmentMaster, \
     DesignationMaster, TaxMaster, HSNMaster, SACMaster, CurrencyMaster, PFChargesMaster, FrieghtChargesMaster, \
-    WarrantyGuaranteeMaster, DeliveryMaster
+    WarrantyGuaranteeMaster, DeliveryMaster, CountryMaster
 
 
 # Create your views here.
@@ -153,6 +153,11 @@ class DeliveryMasterView(viewsets.ModelViewSet):
     queryset = DeliveryMaster.objects.all()
     serializer_class = DeliveryMasterSerializer
 
+class CountryMasterView(viewsets.ModelViewSet):
+    # country_master viewsets
+    permission_classes = (AllowAny,)
+    queryset = CountryMaster.objects.all()
+    serializer_class = CountryMasterSerializer
 
 
 @api_view(['post'])

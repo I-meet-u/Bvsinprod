@@ -23,6 +23,7 @@ router.register('pf-charge-master',views.PFChargesMasterView)
 router.register('frieght-charge-master',views.FrieghtChargesMasterView)
 router.register('warrantee-master',views.WarrantyGuaranteeMasterView)
 router.register('delivery-master',views.DeliveryMasterView)
+router.register('country-master',views.CountryMasterView)
 urlpatterns = [
     path('masters-router-urls/',include(router.urls)), #router urls are included
 
@@ -41,6 +42,7 @@ urlpatterns = [
     path('enable-uom-master/',views.enable_uom_master),
     path('all-masters/',views.all_masters),
     path('delete-uom-masters/',views.delete_uom_master)
+
 
 
 

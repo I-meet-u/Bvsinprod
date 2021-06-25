@@ -3,7 +3,7 @@ from django.http import request
 from .models import MaincoreMaster, CategoryMaster, SubCategoryMaster, \
     IndustryToServeMaster, NatureOfBusinessMaster, SupplyCapabilitiesMaster, PincodeMaster, UOMMaster, DepartmentMaster, \
     DesignationMaster, TaxMaster, HSNMaster, SACMaster, CurrencyMaster, PFChargesMaster, FrieghtChargesMaster, \
-    WarrantyGuaranteeMaster, DeliveryMaster
+    WarrantyGuaranteeMaster, DeliveryMaster, CountryMaster
 from rest_framework import serializers
 
 class IndustryToServeMasterSerializer(serializers.ModelSerializer):
@@ -116,4 +116,10 @@ class DeliveryMasterSerializer(serializers.ModelSerializer):
     # delivery master serializer
     class Meta:
         model=DeliveryMaster
+        fields='__all__'
+
+class CountryMasterSerializer(serializers.ModelSerializer):
+    # country master serializer
+    class Meta:
+        model=CountryMaster
         fields='__all__'

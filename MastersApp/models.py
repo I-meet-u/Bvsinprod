@@ -328,3 +328,21 @@ class DeliveryMaster(models.Model):
 
     class Meta:
         db_table = "DeliveryMaster"
+
+class CountryMaster(models.Model):
+    # delivery_master models and fields
+    country_id = models.BigAutoField(primary_key=True)
+    country_code = models.CharField(max_length=30,null=True)
+    country_name = models.CharField(max_length=200, unique=True,null=True,blank=True)
+    country_prefix = models.CharField(max_length=200, unique=True,null=True,blank=True)
+    country_flag=models.FileField(upload_to='CountryFlags',null=True,blank=True)
+    is_verified = models.BooleanField(default=False)
+    created_on = models.DateTimeField(auto_now_add=True)
+    updated_on = models.DateTimeField(auto_now=True)
+    status = models.CharField(max_length=30, default='Active')
+    admins = models.ForeignKey(AdminRegister, on_delete=models.CASCADE, null=True)
+    updated_by = models.ForeignKey(CreateUser, on_delete=models.CASCADE, null=True)
+    history = HistoricalRecords()
+
+    class Meta:
+        db_table = "CountryMaster"

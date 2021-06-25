@@ -340,8 +340,8 @@ class CountryMaster(models.Model):
     created_on = models.DateTimeField(auto_now_add=True)
     updated_on = models.DateTimeField(auto_now=True)
     status = models.CharField(max_length=30, default='Active')
-    admins = models.ForeignKey(AdminRegister, on_delete=models.CASCADE, null=True)
-    updated_by = models.ForeignKey(CreateUser, on_delete=models.CASCADE, null=True)
+    admins = models.ForeignKey(AdminRegister, on_delete=models.CASCADE, null=True,blank=True)
+    updated_by = models.ForeignKey(CreateUser, on_delete=models.CASCADE, null=True,blank=True)
     history = HistoricalRecords()
 
     class Meta:

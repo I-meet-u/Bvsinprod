@@ -326,7 +326,7 @@ def enable_industry_serve_masters(request):
                 industryobjget=IndustryToServeMaster.objects.get(industry_id=industryobj[i].get('industry_id'))
                 print(industryobjget)
                 if industryobjget.status=='Disabled':
-                    industryobjget.status='Enabled'
+                    industryobjget.status='Active'
                     industryobjget.save()
                 else:
                     return Response({'status': 202, 'message': 'Already status enabled'}, status=202)
@@ -411,7 +411,7 @@ def enable_uom_master(request):
             for i in range(0,len(uomobj)):
                 uomget=UOMMaster.objects.get(uom_id=uomobj[i].get('uom_id'))
                 if uomget.status=='Disabled':
-                    uomget.status='Enabled'
+                    uomget.status='Active'
                     uomget.save()
                 else:
                     return Response({'status':202,'message':'UOM masters already enabled or it is not in disable state'},status=202)

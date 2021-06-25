@@ -68,7 +68,7 @@ class UOMMasterView(viewsets.ModelViewSet):
     def get_queryset(self):
         # overriding get_queryset by passing user_id. Here user_id is nothing but updated_by
         uommasterobj = UOMMaster.objects.filter(updated_by=self.request.GET.get('updated_by')).order_by('uom_id')
-        uomotherdataobj=UOMMaster.objects.filter().values().order_by('uom_id')
+        uomotherdataobj=UOMMaster.objects.filter(admins=1).values().order_by('uom_id')
         uomvalue=list(chain(uommasterobj,uomotherdataobj))
         if uommasterobj:
             return uomvalue
@@ -282,7 +282,8 @@ def disable_supply_capabilities(request):
 
 
 @api_view(['put'])
-def disable_industry_serve(request):
+@permission_classes([AllowAny,])
+def disable_industry_serve_masters(request):
     # disable industry_serve by changing status from Active to Disabled by passing primary key(industryid)
     data=request.data
     industryid=data['industryid']
@@ -305,7 +306,51 @@ def disable_industry_serve(request):
     except Exception as e:
         return Response({'status':500,'error':str(e)},status=500)
 
+@api_view(['put'])
+@permission_classes([AllowAny,])
+def enable_industry_serve_masters(request):
+    # enble industry_serve by changing status from Active to Disabled by passing primary key(industryid)
+    data=request.data
+    industryid=data['industryid']
+    try:
+        industryobj=IndustryToServeMaster.objects.filter(industry_id__in=industryid).values()
+        print(industryobj)
+        if industryobj:
+            for i in range(0,len(industryobj)):
+                print(industryobj[i].get('industry_id'))
+                industryobjget=IndustryToServeMaster.objects.get(industry_id=industryobj[i].get('industry_id'))
+                print(industryobjget)
+                if industryobjget.status=='Disabled':
+                    industryobjget.status='Enabled'
+                    industryobjget.save()
+                else:
+                    return Response({'status': 202, 'message': 'Already status enabled'}, status=202)
+            return Response({'status':200,'message':'Inudstry serve status changed to enabled'},status=200)
+        else:
+            return Response({'status': 204, 'message': 'Not exist'}, status=204)
+    except Exception as e:
+        return Response({'status':500,'error':str(e)},status=500)
 
+@api_view(['post'])
+@permission_classes([AllowAny,])
+def delete_industry_serve_masters(request):
+    # delete industry_serve by changing status from Active to Disabled by passing primary key(industryid)
+    data=request.data
+    industryid=data['industryid']
+    try:
+        industryobj=IndustryToServeMaster.objects.filter(industry_id__in=industryid).values()
+        print(industryobj)
+        if industryobj:
+            for i in range(0,len(industryobj)):
+                industryobjget=IndustryToServeMaster.objects.get(industry_id=industryobj[i].get('industry_id'))
+                if industryobjget:
+                    industryobjget.delete()
+
+            return Response({'status': 204, 'message': 'Industry Serve data deleted'}, status=204)
+        return Response({'status':202,'message':'Industry data not present or already deleted'},status=202)
+
+    except Exception as e:
+        return Response({'status':500,'error':str(e)},status=500)
 
 
 @api_view(['post'])
@@ -421,6 +466,3 @@ def all_masters(request):
 
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)
-
-
-

@@ -7,10 +7,31 @@ from .models import MaincoreMaster, CategoryMaster, SubCategoryMaster, \
 from rest_framework import serializers
 
 class IndustryToServeMasterSerializer(serializers.ModelSerializer):
+    industry_code = serializers.SerializerMethodField()
+
+    def get_industry_code(self, obj):
+        return obj.industry_code
+
     # industry_serve master serializer
     class Meta:
         model=IndustryToServeMaster
-        fields="__all__"
+        fields="__all_"
+
+    fields = ('industry_id','industry_name','industry_code','is_verified','admins','created_by','updated_by','status')
+
+    def create(self, validate_data):
+        # to add any extra details into the object before saving
+        print(validate_data)
+        industryobj = IndustryToServeMaster.objects.count()
+        if industryobj == 0:
+            industry_code = '3001'
+        else:
+            industryobj = IndustryToServeMaster.objects.values_list('industry_code', flat=True).last()
+            print(industryobj)
+            industry_code = int(industryobj) + 1
+            print(industry_code)
+        values = IndustryToServeMaster.objects.create(industry_code=industry_code, **validate_data)
+        return values
 
 class NatureOfBusinessMasterSerializer(serializers.ModelSerializer):
     # nature_of_business master serializer

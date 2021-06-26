@@ -54,7 +54,7 @@ class SupplyCapabilitiesMaster(models.Model):
     # supply capability master model and fields
     supply_capability_id = models.BigAutoField(primary_key=True)
     supply_capability_name = models.CharField(max_length=50, unique=True)
-    supply_capability_code = models.CharField(max_length=50, unique=True)
+    supply_capability_code = models.CharField(max_length=50, unique=True,null=True,blank=True)
     is_verified = models.BooleanField(default=False)
     created_on = models.DateTimeField(auto_now_add=True)
     updated_on = models.DateTimeField(auto_now=True)

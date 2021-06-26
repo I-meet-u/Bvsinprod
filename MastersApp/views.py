@@ -35,6 +35,7 @@ class NatureOfBusinessMasterView(viewsets.ModelViewSet):
 
 class SupplyCapabilitiesMasterView(viewsets.ModelViewSet):
     # supply_capability  viewsets
+    permission_classes = (AllowAny,)
     queryset = SupplyCapabilitiesMaster.objects.all()
     serializer_class =SupplyCapabilitiesMasterSerializer
 
@@ -238,7 +239,8 @@ def sub_category_search(request):
 
 
 @api_view(['put'])
-def disable_nature_of_business(request):
+@permission_classes([AllowAny,])
+def disable_nature_of_business_master(request):
     # disable nature_of_business by changing status from Active to Disabled by passing primary key(natureid)
     data=request.data
     natureid=data['natureid']
@@ -260,31 +262,47 @@ def disable_nature_of_business(request):
     except Exception as e:
         return Response({'status':500,'error':str(e)},status=500)
 
-
 @api_view(['put'])
-def disable_supply_capabilities(request):
-    # disable supply_capabilities by changing status from Active to Disabled by passing primary key(supplyid)
+@permission_classes([AllowAny,])
+def enable_nature_of_business_master(request):
+    # enable nature_of_business by changing status from Disabled to Active by passing primary key(natureid)
     data=request.data
-    supplyid=data['supplyid']
+    natureid=data['natureid']
     try:
-        supplyobj=SupplyCapabilitiesMaster.objects.filter(supply_capability_id__in=supplyid).values()
-        if supplyobj:
-            for i in range(0,len(supplyobj)):
-                print(supplyobj[i].get('supply_capability_id'))
-                supplyobjget=SupplyCapabilitiesMaster.objects.get(supply_capability_id=supplyobj[i].get('supply_capability_id'))
-                print(supplyobjget)
-                if supplyobjget.status=='Active':
-                    supplyobjget.status='Disabled'
-                    supplyobjget.save()
-                else:
-                    return Response({'status': 202, 'message': 'Already status disabled'}, status=202)
-            return Response({'status':200,'message':'Supply capabilites status changed to disabled'},status=200)
-        else:
-            return Response({'status': 204, 'message': 'Not exist'}, status=204)
+        natureobj=NatureOfBusinessMaster.objects.filter(nature_of_business_id__in=natureid).values()
+        if natureobj:
+            for i in range(0,len(natureobj)):
+                print(natureobj[i].get('nature_of_business_id'))
+                natureobjget=NatureOfBusinessMaster.objects.get(nature_of_business_id=natureobj[i].get('nature_of_business_id'))
+                print(natureobjget)
+                if natureobjget.status=='Disabled':
+                    natureobjget.status='Active'
+                    natureobjget.save()
+            return Response({'status':204,'message':'Already status enabled'},status=204)
+        return Response({'status': 202, 'message': 'Nature of business status changed to emabled'}, status=202)
     except Exception as e:
         return Response({'status':500,'error':str(e)},status=500)
 
+@api_view(['post'])
+@permission_classes([AllowAny,])
+def delete_nature_of_business_master(request):
+    # delete nature_of_business by passing primary key(natureid)
+    data=request.data
+    natureid=data['natureid']
+    try:
+        natureobj=NatureOfBusinessMaster.objects.filter(nature_of_business_id__in=natureid).values()
+        if natureobj:
+            for i in range(0,len(natureobj)):
+                print(natureobj[i].get('nature_of_business_id'))
+                natureobjget=NatureOfBusinessMaster.objects.get(nature_of_business_id=natureobj[i].get('nature_of_business_id'))
+                if natureobjget:
+                    natureobjget.delete()
 
+            return Response({'status': 204, 'message': 'Nature of business data deleted'}, status=204)
+        return Response({'status':200,'message':'Nature of business data not present or already deleted'},status=200)
+
+    except Exception as e:
+        return Response({'status':500,'error':str(e)},status=500)
 
 @api_view(['put'])
 @permission_classes([AllowAny,])
@@ -314,7 +332,7 @@ def disable_industry_serve_masters(request):
 @api_view(['put'])
 @permission_classes([AllowAny,])
 def enable_industry_serve_masters(request):
-    # enble industry_serve by changing status from Active to Disabled by passing primary key(industryid)
+    # enable industry_serve by changing status from Disabled to Active by passing primary key(industryid)
     data=request.data
     industryid=data['industryid']
     try:
@@ -339,7 +357,7 @@ def enable_industry_serve_masters(request):
 @api_view(['post'])
 @permission_classes([AllowAny,])
 def delete_industry_serve_masters(request):
-    # delete industry_serve by changing status from Active to Disabled by passing primary key(industryid)
+    # delete industry_serve by passing primary key(industryid)
     data=request.data
     industryid=data['industryid']
     try:
@@ -354,6 +372,74 @@ def delete_industry_serve_masters(request):
             return Response({'status': 204, 'message': 'Industry Serve data deleted'}, status=204)
         return Response({'status':202,'message':'Industry data not present or already deleted'},status=202)
 
+    except Exception as e:
+        return Response({'status':500,'error':str(e)},status=500)
+
+@api_view(['put'])
+@permission_classes([AllowAny,])
+def disable_supply_capabilities_master(request):
+    # disable supply_capabilities by changing status from Active to Disabled by passing primary key(supplyid)
+    data=request.data
+    supplyid=data['supplyid']
+    try:
+        supplyobj=SupplyCapabilitiesMaster.objects.filter(supply_capability_id__in=supplyid).values()
+        if supplyobj:
+            for i in range(0,len(supplyobj)):
+                print(supplyobj[i].get('supply_capability_id'))
+                supplyobjget=SupplyCapabilitiesMaster.objects.get(supply_capability_id=supplyobj[i].get('supply_capability_id'))
+                print(supplyobjget)
+                if supplyobjget.status=='Active':
+                    supplyobjget.status='Disabled'
+                    supplyobjget.save()
+                else:
+                    return Response({'status': 202, 'message': 'Already status disabled'}, status=202)
+            return Response({'status':200,'message':'Supply capabilites status changed to disabled'},status=200)
+        else:
+            return Response({'status': 204, 'message': 'Not exist'}, status=204)
+    except Exception as e:
+        return Response({'status':500,'error':str(e)},status=500)
+
+@api_view(['put'])
+@permission_classes([AllowAny,])
+def enable_supply_capabilities_master(request):
+    # enable supply_capabilities by changing status from Disabled to Active by passing primary key(supplyid)
+    data=request.data
+    supplyid=data['supplyid']
+    try:
+        supplyobj=SupplyCapabilitiesMaster.objects.filter(supply_capability_id__in=supplyid).values()
+        if supplyobj:
+            for i in range(0,len(supplyobj)):
+                print(supplyobj[i].get('supply_capability_id'))
+                supplyobjget=SupplyCapabilitiesMaster.objects.get(supply_capability_id=supplyobj[i].get('supply_capability_id'))
+                print(supplyobjget)
+                if supplyobjget.status=='Disabled':
+                    supplyobjget.status='Active'
+                    supplyobjget.save()
+                else:
+                    return Response({'status': 202, 'message': 'Already status enabled'}, status=202)
+            return Response({'status':200,'message':'Supply capabilites changed to enabled'},status=200)
+        else:
+            return Response({'status': 204, 'message': 'Not exist'}, status=204)
+    except Exception as e:
+        return Response({'status':500,'error':str(e)},status=500)
+
+
+@api_view(['post'])
+@permission_classes([AllowAny,])
+def delete_supply_capabilities_master(request):
+    # delete supply_capabilities  passing primary key(supplyid)
+    data=request.data
+    supplyid=data['supplyid']
+    try:
+        supplyobj=SupplyCapabilitiesMaster.objects.filter(supply_capability_id__in=supplyid).values()
+        if supplyobj:
+            for i in range(0,len(supplyobj)):
+                print(supplyobj[i].get('supply_capability_id'))
+                supplyobjget=SupplyCapabilitiesMaster.objects.get(supply_capability_id=supplyobj[i].get('supply_capability_id'))
+                if supplyobjget:
+                    supplyobjget.delete()
+            return Response({'status':204,'message':'Supply capabilites data deleted'},status=204)
+        return Response({'status': 200, 'message': 'Supply capabilites data not present or already deleted'}, status=200)
     except Exception as e:
         return Response({'status':500,'error':str(e)},status=500)
 

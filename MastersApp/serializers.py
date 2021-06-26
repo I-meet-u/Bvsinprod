@@ -36,11 +36,38 @@ class NatureOfBusinessMasterSerializer(serializers.ModelSerializer):
         model=NatureOfBusinessMaster
         fields="__all__"
 
+    def create(self, validate_data):
+        # to add any extra details into the object before saving
+        print(validate_data)
+        natureobj = NatureOfBusinessMaster.objects.count()
+        if natureobj == 0:
+            nature_of_business_code = '1001'
+        else:
+            natureobj = NatureOfBusinessMaster.objects.last()
+            print(natureobj.nature_of_business_code)
+            nature_of_business_code = int(natureobj.nature_of_business_code) + 1
+        values = NatureOfBusinessMaster.objects.create(nature_of_business_code=nature_of_business_code, **validate_data)
+        return values
+
+
 class SupplyCapabilitiesMasterSerializer(serializers.ModelSerializer):
     # supply_capabilities master serializer
     class Meta:
         model=SupplyCapabilitiesMaster
         fields="__all__"
+
+    def create(self, validate_data):
+        # to add any extra details into the object before saving
+        print(validate_data)
+        supplyobj = SupplyCapabilitiesMaster.objects.count()
+        if supplyobj == 0:
+            supply_capability_code = '2001'
+        else:
+            supplyobj = SupplyCapabilitiesMaster.objects.last()
+            print(supplyobj.supply_capability_code)
+            supply_capability_code = int(supplyobj.supply_capability_code) + 1
+        values = SupplyCapabilitiesMaster.objects.create(supply_capability_code=supply_capability_code, **validate_data)
+        return values
 
 
 class MainCoreMasterSerializer(serializers.ModelSerializer):

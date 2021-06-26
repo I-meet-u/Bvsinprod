@@ -33,11 +33,19 @@ urlpatterns = [
     path('maincore-search/',views.maincore_search),
     path('category-search/',views.category_search),
     path('sub-category-search/',views.sub_category_search),
-    path('disable-nature-of-business/',views.disable_nature_of_business),
+
     path('disable-industry-serve-masters/', views.disable_industry_serve_masters),
     path('enable-industry-serve-masters/',views.enable_industry_serve_masters),
     path('delete-industry-serve-masters/',views.delete_industry_serve_masters),
-    path('disable-supply-capabilities/',views.disable_supply_capabilities),
+
+    path('disable-nature-of-business-masters/', views.disable_nature_of_business_master),
+    path('enable-nature-of-business-masters/',views.enable_nature_of_business_master),
+    path('delete-nature-of-business-masters/',views.delete_nature_of_business_master),
+
+    path('disable-supply-capabilities-master/',views.disable_supply_capabilities_master),
+    path('enable-supply-capabilities-master/', views.enable_supply_capabilities_master),
+    path('delete-supply-capabilities-master/', views.delete_supply_capabilities_master),
+
     path('disable-uom-master/',views.disable_uom_master),
     path('enable-uom-master/',views.enable_uom_master),
     path('all-masters/',views.all_masters),

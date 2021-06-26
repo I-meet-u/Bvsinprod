@@ -15,9 +15,7 @@ class IndustryToServeMasterSerializer(serializers.ModelSerializer):
     # industry_serve master serializer
     class Meta:
         model=IndustryToServeMaster
-        fields="__all_"
-
-    fields = ('industry_id','industry_name','industry_code','is_verified','admins','created_by','updated_by','status')
+        fields = ('industry_id','industry_name','industry_code','is_verified','admins','created_by','updated_by','status')
 
     def create(self, validate_data):
         # to add any extra details into the object before saving
@@ -26,10 +24,9 @@ class IndustryToServeMasterSerializer(serializers.ModelSerializer):
         if industryobj == 0:
             industry_code = '3001'
         else:
-            industryobj = IndustryToServeMaster.objects.values_list('industry_code', flat=True).last()
-            print(industryobj)
-            industry_code = int(industryobj) + 1
-            print(industry_code)
+            industryobj = IndustryToServeMaster.objects.last()
+            print(industryobj.industry_code)
+            industry_code = int(industryobj.industry_code) + 1
         values = IndustryToServeMaster.objects.create(industry_code=industry_code, **validate_data)
         return values
 

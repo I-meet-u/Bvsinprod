@@ -4,6 +4,7 @@ from django.db import models
 # Create your models here.
 
 from django.db import models
+from simple_history.models import HistoricalRecords
 
 from RegistrationApp.models import SelfRegistration, BasicCompanyDetails
 
@@ -39,6 +40,7 @@ class VendorProduct_BasicDetails(models.Model):
     updated_on = models.DateTimeField(auto_now=True)
     created_by = models.BigIntegerField()
     updated_by = models.ForeignKey(SelfRegistration, on_delete=models.CASCADE)
+    history = HistoricalRecords()
 
     class Meta:
         db_table = "VendorProduct_BasicDetails"
@@ -75,6 +77,7 @@ class VendorProduct_GeneralDetails(models.Model):
     created_by = models.BigIntegerField()
     updated_by = models.ForeignKey(SelfRegistration, on_delete=models.CASCADE)
     vendor_products=models.ForeignKey(VendorProduct_BasicDetails,on_delete=models.CASCADE,null=True,blank=True)
+    history = HistoricalRecords()
 
     class Meta:
         db_table="VendorProduct_GeneralDetails"
@@ -89,6 +92,7 @@ class VendorProduct_TechnicalSpecifications(models.Model):
     created_by = models.BigIntegerField()
     updated_by = models.ForeignKey(SelfRegistration, on_delete=models.CASCADE)
     vendor_products=models.ForeignKey(VendorProduct_BasicDetails,on_delete=models.CASCADE,null=True,blank=True)
+    history = HistoricalRecords()
 
 
     class Meta:
@@ -103,6 +107,7 @@ class VendorProduct_ProductFeatures(models.Model):
     created_by = models.BigIntegerField()
     updated_by = models.ForeignKey(SelfRegistration, on_delete=models.CASCADE)
     vendor_products=models.ForeignKey(VendorProduct_BasicDetails,on_delete=models.CASCADE,null=True,blank=True)
+    history = HistoricalRecords()
 
 
     class Meta:
@@ -117,6 +122,7 @@ class VendorProduct_Documents(models.Model):
     created_by = models.BigIntegerField()
     updated_by = models.ForeignKey(SelfRegistration, on_delete=models.CASCADE)
     vendor_products=models.ForeignKey(VendorProduct_BasicDetails,on_delete=models.CASCADE,null=True,blank=True)
+    history = HistoricalRecords()
 
     class Meta:
         db_table="VendorProduct_Documents"

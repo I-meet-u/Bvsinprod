@@ -11,5 +11,5 @@ router.register('vendor-product-features', views.VendorProduct_ProductFeaturesVi
 router.register('vendor-product-document', views.VendorProduct_DocumentsView)
 urlpatterns = [
     path('vendor-product-router-urls/',include(router.urls)),
-    path('vendor-product-all-details/',views.vendor_product_create)
+    # path('vendor-product-all-details/',views.vendor_product_create)
     ]

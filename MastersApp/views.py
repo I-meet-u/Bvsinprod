@@ -11,12 +11,13 @@ from .serializers import MainCoreMasterSerializer, CategoryMasterSerializer, Sub
     IndustryToServeMasterSerializer, \
     NatureOfBusinessMasterSerializer, SupplyCapabilitiesMasterSerializer, PincodeMasterSerializer, UOMMasterSerializer, \
     DepartmentMasterSerializer, DesignationMasterSerializer, TaxMasterSerializer, HSNMasterSerializer, \
-    SACMasterSerializer, CurrencyMasterSerializer, PFChargesMasterSerializer, FrieghtChargesMasterSerializer, \
-    WarrantyGuaranteeMasterSerializer, DeliveryMasterSerializer, CountryMasterSerializer
+    SACMasterSerializer, CurrencyMasterSerializer, PFChargesMasterSerializer, FrieghtChargesMasterSerializer,\
+    DeliveryMasterSerializer, CountryMasterSerializer, WarrantyMasterSerializer, \
+    GuaranteeMasterSerializer
 from .models import MaincoreMaster, CategoryMaster, SubCategoryMaster, \
     IndustryToServeMaster, NatureOfBusinessMaster, SupplyCapabilitiesMaster, PincodeMaster, UOMMaster, DepartmentMaster, \
     DesignationMaster, TaxMaster, HSNMaster, SACMaster, CurrencyMaster, PFChargesMaster, FrieghtChargesMaster, \
-    WarrantyGuaranteeMaster, DeliveryMaster, CountryMaster
+    DeliveryMaster, CountryMaster, WarrantyMaster, GuaranteeMaster
 
 
 # Create your views here.
@@ -142,11 +143,17 @@ class FrieghtChargesMasterView(viewsets.ModelViewSet):
     queryset = FrieghtChargesMaster.objects.all()
     serializer_class = FrieghtChargesMasterSerializer
 
-class WarrantyGuaranteeMasterView(viewsets.ModelViewSet):
+class WarrantyMasterView(viewsets.ModelViewSet):
     # warranty_master viewsets
     permission_classes = (AllowAny,)
-    queryset = WarrantyGuaranteeMaster.objects.all()
-    serializer_class = WarrantyGuaranteeMasterSerializer
+    queryset = WarrantyMaster.objects.all()
+    serializer_class = WarrantyMasterSerializer
+
+class GuaranteeMasterView(viewsets.ModelViewSet):
+    # warranty_master viewsets
+    permission_classes = (AllowAny,)
+    queryset = GuaranteeMaster.objects.all()
+    serializer_class =GuaranteeMasterSerializer
 
 class DeliveryMasterView(viewsets.ModelViewSet):
     # delivery_master viewsets
@@ -547,9 +554,12 @@ def all_masters(request):
         freightmasterobj = FrieghtChargesMaster.objects.filter().values()
         if freightmasterobj:
             masterslist.append({'freight_master': freightmasterobj})
-        warrantymasterobj = WarrantyGuaranteeMaster.objects.filter().values()
+        warrantymasterobj = WarrantyMaster.objects.filter().values()
         if warrantymasterobj:
             masterslist.append({'warranty_master': warrantymasterobj})
+        guaranteemasterobj = GuaranteeMaster.objects.filter().values()
+        if warrantymasterobj:
+            masterslist.append({'guarantee_master': guaranteemasterobj})
         deliverymasterobj = DeliveryMaster.objects.filter().values()
         if deliverymasterobj:
             masterslist.append({'delivery_master': deliverymasterobj})

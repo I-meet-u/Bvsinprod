@@ -297,7 +297,7 @@ class FrieghtChargesMaster(models.Model):
     class Meta:
         db_table = "FrieghtChargesMaster"
 
-class WarrantyGuaranteeMaster(models.Model):
+class WarrantyMaster(models.Model):
     # warranty_master models and fields
     warranty_id = models.BigAutoField(primary_key=True)
     warranty_code = models.CharField(max_length=30,null=True)
@@ -311,7 +311,23 @@ class WarrantyGuaranteeMaster(models.Model):
     history = HistoricalRecords()
 
     class Meta:
-        db_table = "WarrantyGuaranteeMaster"
+        db_table = "WarrantyMaster"
+
+class GuaranteeMaster(models.Model):
+    # guarantee_master models and fields
+    guarantee_id = models.BigAutoField(primary_key=True)
+    guarantee_code = models.CharField(max_length=30,null=True)
+    guarantee_description = models.CharField(max_length=200, unique=True)
+    is_verified = models.BooleanField(default=False)
+    created_on = models.DateTimeField(auto_now_add=True)
+    updated_on = models.DateTimeField(auto_now=True)
+    status = models.CharField(max_length=30, default='Active')
+    admins = models.ForeignKey(AdminRegister, on_delete=models.CASCADE, null=True)
+    updated_by = models.ForeignKey(CreateUser, on_delete=models.CASCADE, null=True)
+    history = HistoricalRecords()
+
+    class Meta:
+        db_table = "GuaranteeMaster"
 
 class DeliveryMaster(models.Model):
     # delivery_master models and fields

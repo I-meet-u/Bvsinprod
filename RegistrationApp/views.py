@@ -1001,11 +1001,26 @@ def email_otp_verify(request):
 
 
 
+@api_view(['post'])
+@permission_classes((AllowAny,))
+def employee_login(request):
+    data = request.data
+    password = data['password']
+    email_id = data['email_id']
+    try:
+        employeeobj = EmployeeRegistration.objects.get(email_id=email_id)
+        if employeeobj:
+            if check_password(password, employeeobj.password) and employeeobj.email_id == email_id:
+                return Response({'status': 200, 'message': 'Employee Logged in successfully'}, status=200)
+            else:
+                return Response({'status': 424, 'message': 'Password entered is not correct,Please Check Once'},
+                            status=424)
 
+    except ObjectDoesNotExist as e:
+        return Response({'status': 404, 'error': "Email not exist"}, status=404)
 
-
-
-
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)
 
 
 

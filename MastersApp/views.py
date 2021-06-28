@@ -42,16 +42,19 @@ class SupplyCapabilitiesMasterView(viewsets.ModelViewSet):
 
 class MaincoreMasterView(viewsets.ModelViewSet):
     # maincore_master  master viewsets
+    permission_classes = (AllowAny,)
     queryset = MaincoreMaster.objects.all()
     serializer_class = MainCoreMasterSerializer
 
 class CategoryMasterView(viewsets.ModelViewSet):
     # category_master  viewsets
+    permission_classes = (AllowAny,)
     queryset =CategoryMaster.objects.all()
     serializer_class=CategoryMasterSerializer
 
 class SubCategoryMasterView(viewsets.ModelViewSet):
     # sub_category_master  viewsets
+    permission_classes = (AllowAny,)
     queryset = SubCategoryMaster.objects.all()
     serializer_class = SubcategoryMasterSerializer
 

@@ -76,6 +76,19 @@ class MainCoreMasterSerializer(serializers.ModelSerializer):
         model = MaincoreMaster
         fields ="__all__"
 
+    def create(self, validate_data):
+        # to add any extra details into the object before saving
+        print(validate_data)
+        maincoreobj = MaincoreMaster.objects.count()
+        if maincoreobj == 0:
+            maincore_code = '4001'
+        else:
+            maincoreobj = MaincoreMaster.objects.last()
+            print(maincoreobj.maincore_code)
+            maincore_code = int(maincoreobj.maincore_code) + 1
+        values = MaincoreMaster.objects.create(maincore_code=maincore_code, **validate_data)
+        return values
+
 
 class CategoryMasterSerializer(serializers.ModelSerializer):
     # category_master master serializer
@@ -83,11 +96,38 @@ class CategoryMasterSerializer(serializers.ModelSerializer):
         model=CategoryMaster
         fields='__all__'
 
+    def create(self, validate_data):
+        # to add any extra details into the object before saving
+        print(validate_data)
+        categoryobj = CategoryMaster.objects.count()
+        if categoryobj == 0:
+            category_code = '5001'
+        else:
+            categoryobj = CategoryMaster.objects.last()
+            print(categoryobj.category_code)
+            category_code = int(categoryobj.category_code) + 1
+        values = CategoryMaster.objects.create(category_code=category_code, **validate_data)
+        return values
+
+
 class SubcategoryMasterSerializer(serializers.ModelSerializer):
     # sub_category master serializer
     class Meta:
         model=SubCategoryMaster
         fields='__all__'
+
+    def create(self, validate_data):
+        # to add any extra details into the object before saving
+        print(validate_data)
+        subcategoryobj = SubCategoryMaster.objects.count()
+        if subcategoryobj == 0:
+            sub_category_code = '6001'
+        else:
+            subcategoryobj = SubCategoryMaster.objects.last()
+            print(subcategoryobj.sub_category_code)
+            sub_category_code = int(subcategoryobj.sub_category_code) + 1
+        values = SubCategoryMaster.objects.create(sub_category_code=sub_category_code, **validate_data)
+        return values
 
 class PincodeMasterSerializer(serializers.ModelSerializer):
     # pin_code master serializer

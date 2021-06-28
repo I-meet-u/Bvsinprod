@@ -558,12 +558,40 @@ def all_masters(request):
         if warrantymasterobj:
             masterslist.append({'warranty_master': warrantymasterobj})
         guaranteemasterobj = GuaranteeMaster.objects.filter().values()
-        if warrantymasterobj:
+        if guaranteemasterobj:
             masterslist.append({'guarantee_master': guaranteemasterobj})
         deliverymasterobj = DeliveryMaster.objects.filter().values()
         if deliverymasterobj:
             masterslist.append({'delivery_master': deliverymasterobj})
         return Response({'status': 200, 'message': 'Masters List','data':masterslist}, status=200)
 
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)
+
+@api_view(['get'])
+@permission_classes([AllowAny,])
+def industry_to_serve_master_history(request):
+    try:
+        industrytoservehistoryobj=IndustryToServeMaster.history.filter().values()
+        return Response({'status':200,'message':'Industry to Serve Master history','data':industrytoservehistoryobj},status=200)
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)
+
+@api_view(['get'])
+@permission_classes([AllowAny,])
+def nature_of_business_master_history(request):
+    try:
+        natureofbusinesshistoryobj=NatureOfBusinessMaster.history.filter().values()
+        return Response({'status':200,'message':'Nature of business Master history','data':natureofbusinesshistoryobj},status=200)
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)
+
+
+@api_view(['get'])
+@permission_classes([AllowAny,])
+def supply_capabilites_master_history(request):
+    try:
+        supplycapabiliteshistoryobj=SupplyCapabilitiesMaster.history.filter().values()
+        return Response({'status':200,'message':'Supply Capabilities Master history','data':supplycapabiliteshistoryobj},status=200)
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)

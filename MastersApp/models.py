@@ -72,6 +72,7 @@ class SupplyCapabilitiesMaster(models.Model):
 class MaincoreMaster(models.Model):
     # maincore master model and fields
     maincore_id = models.BigAutoField(primary_key=True)
+    maincore_code=models.CharField(max_length=40,null=True,blank=True)
     maincore_name = models.CharField(max_length=50, unique=True, blank=True)
     is_verified = models.BooleanField(default=False)
     created_on = models.DateTimeField(auto_now_add=True)
@@ -89,6 +90,7 @@ class MaincoreMaster(models.Model):
 class CategoryMaster(models.Model):
     # category master model and fields
     category_id = models.BigAutoField(primary_key=True)
+    category_code = models.CharField(max_length=40, null=True, blank=True)
     category_name = models.CharField(max_length=100, unique=True, blank=True)
     is_verified = models.BooleanField(default=False)
     maincore = models.ForeignKey(MaincoreMaster, on_delete=models.CASCADE)
@@ -107,6 +109,7 @@ class CategoryMaster(models.Model):
 class SubCategoryMaster(models.Model):
     # sub-category master model and fields
     sub_category_id = models.BigAutoField(primary_key=True)
+    sub_category_code = models.CharField(max_length=40, null=True, blank=True)
     sub_category_name = models.CharField(max_length=100, unique=True, blank=True)
     is_verified = models.BooleanField(default=False)
     category = models.ForeignKey(CategoryMaster, on_delete=models.CASCADE)

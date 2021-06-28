@@ -50,7 +50,12 @@ urlpatterns = [
     path('disable-uom-master/',views.disable_uom_master),
     path('enable-uom-master/',views.enable_uom_master),
     path('all-masters/',views.all_masters),
-    path('delete-uom-masters/',views.delete_uom_master)
+    path('delete-uom-masters/',views.delete_uom_master),
+
+    path('industry-to-serve-master-history/', views.industry_to_serve_master_history),
+    path('nature-of-business-master-history/',views.nature_of_business_master_history),
+    path('nature-of-business-master-history/', views.nature_of_business_master_history),
+
 
 
 

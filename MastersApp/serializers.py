@@ -116,18 +116,18 @@ class SubcategoryMasterSerializer(serializers.ModelSerializer):
         model=SubCategoryMaster
         fields='__all__'
 
-    def create(self, validate_data):
-        # to add any extra details into the object before saving
-        print(validate_data)
-        subcategoryobj = SubCategoryMaster.objects.count()
-        if subcategoryobj == 0:
-            sub_category_code = '6001'
-        else:
-            subcategoryobj = SubCategoryMaster.objects.last()
-            print(subcategoryobj.sub_category_code)
-            sub_category_code = int(subcategoryobj.sub_category_code) + 1
-        values = SubCategoryMaster.objects.create(sub_category_code=sub_category_code, **validate_data)
-        return values
+    # def create(self, validate_data):
+    #     # to add any extra details into the object before saving
+    #     print(validate_data)
+    #     subcategoryobj = SubCategoryMaster.objects.count()
+    #     if subcategoryobj == 0:
+    #         sub_category_code = '60001'
+    #     else:
+    #         subcategoryobj = SubCategoryMaster.objects.last()
+    #         print(subcategoryobj.sub_category_code)
+    #         sub_category_code = int(subcategoryobj.sub_category_code) + 1
+    #     values = SubCategoryMaster.objects.create(sub_category_code=sub_category_code, **validate_data)
+    #     return values
 
 class PincodeMasterSerializer(serializers.ModelSerializer):
     # pin_code master serializer

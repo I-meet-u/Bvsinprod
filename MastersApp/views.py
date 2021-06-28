@@ -598,3 +598,211 @@ def supply_capabilites_master_history(request):
         return Response({'status':200,'message':'Supply Capabilities Master history','data':supplycapabiliteshistoryobj},status=200)
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)
+
+
+
+@api_view(['put'])
+@permission_classes([AllowAny,])
+def disable_maincore_master(request):
+    # disable maincore master by changing status from Active to Disabled by passing primary key(maincoreid)
+    data=request.data
+    maincoreid=data['maincoreid']
+    try:
+        maincoreobj=MaincoreMaster.objects.filter(maincore_id__in=maincoreid).values()
+        if maincoreobj:
+            for i in range(0,len(maincoreobj)):
+                print(maincoreobj[i].get('maincore_id'))
+                maincoreobjget=MaincoreMaster.objects.get(maincore_id=maincoreobj[i].get('maincore_id'))
+                print(maincoreobjget)
+                if maincoreobjget.status=='Active':
+                    maincoreobjget.status='Disabled'
+                    maincoreobjget.save()
+                else:
+                    return Response({'status': 202, 'message': 'Already status disabled'}, status=202)
+            return Response({'status':200,'message':'Maincore Master status changed to disabled'},status=200)
+        else:
+            return Response({'status': 204, 'message': 'Not exist'}, status=204)
+    except Exception as e:
+        return Response({'status':500,'error':str(e)},status=500)
+
+@api_view(['put'])
+@permission_classes([AllowAny,])
+def enable_maincore_master(request):
+    # enable maincore master by changing status from Disabled to Active by passing primary key(maincoreid)
+    data=request.data
+    maincoreid=data['maincoreid']
+    try:
+        maincoreobj=MaincoreMaster.objects.filter(maincore_id__in=maincoreid).values()
+        if maincoreobj:
+            for i in range(0,len(maincoreobj)):
+                print(maincoreobj[i].get('supply_capability_id'))
+                maincoreobjget=MaincoreMaster.objects.get(maincore_id=maincoreobj[i].get('maincore_id'))
+                print(maincoreobjget)
+                if maincoreobjget.status=='Disabled':
+                    maincoreobjget.status='Active'
+                    maincoreobjget.save()
+                else:
+                    return Response({'status': 202, 'message': 'Already status enabled'}, status=202)
+            return Response({'status':200,'message':'Maincore Master status changed to enabled'},status=200)
+        else:
+            return Response({'status': 204, 'message': 'Not exist'}, status=204)
+    except Exception as e:
+        return Response({'status':500,'error':str(e)},status=500)
+
+
+@api_view(['post'])
+@permission_classes([AllowAny,])
+def delete_maincore_master(request):
+    # delete maincore master  passing primary key(maincoreid)
+    data=request.data
+    maincoreid=data['maincoreid']
+    try:
+        maincoreobj=MaincoreMaster.objects.filter(maincore_id__in=maincoreid).values()
+        if maincoreobj:
+            for i in range(0,len(maincoreobj)):
+                print(maincoreobj[i].get('supply_capability_id'))
+                maincoreobjget=MaincoreMaster.objects.get(maincore_id=maincoreobj[i].get('maincore_id'))
+                if maincoreobjget:
+                    maincoreobjget.delete()
+            return Response({'status':204,'message':'Maincore Masters data deleted'},status=204)
+        return Response({'status': 200, 'message': 'Maincore Masters data not present or already deleted'}, status=200)
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)
+
+
+@api_view(['put'])
+@permission_classes([AllowAny,])
+def disable_category_master(request):
+    # disable category master by changing status from Disabled to Active by passing primary key(categoryid)
+    data=request.data
+    categoryid=data['categoryid']
+    try:
+        categoryobj=CategoryMaster.objects.filter(category_id__in=categoryid).values()
+        if categoryobj:
+            for i in range(0,len(categoryobj)):
+                print(categoryobj[i].get('category_id'))
+                categoryobjget=CategoryMaster.objects.get(category_id=categoryobj[i].get('category_id'))
+                print(categoryobjget)
+                if categoryobjget.status=='Active':
+                    categoryobjget.status='Disabled'
+                    categoryobjget.save()
+                else:
+                    return Response({'status': 202, 'message': 'Already status disabled'}, status=202)
+            return Response({'status':200,'message':'Category Master status changed to disabled'},status=200)
+        else:
+            return Response({'status': 204, 'message': 'Not exist'}, status=204)
+    except Exception as e:
+        return Response({'status':500,'error':str(e)},status=500)
+
+
+@api_view(['put'])
+@permission_classes([AllowAny,])
+def enable_category_master(request):
+    # enable category master by changing status from Disabled to Active by passing primary key(categoryid)
+    data=request.data
+    categoryid=data['categoryid']
+    try:
+        categoryobj=CategoryMaster.objects.filter(category_id__in=categoryid).values()
+        if categoryobj:
+            for i in range(0,len(categoryobj)):
+                print(categoryobj[i].get('category_id'))
+                categoryobjget=CategoryMaster.objects.get(category_id=categoryobj[i].get('category_id'))
+                print(categoryobjget)
+                if categoryobjget.status=='Disabled':
+                    categoryobjget.status='Active'
+                    categoryobjget.save()
+                else:
+                    return Response({'status': 202, 'message': 'Already status enabled'}, status=202)
+            return Response({'status':200,'message':'Category Master status changed to enabled'},status=200)
+        else:
+            return Response({'status': 204, 'message': 'Not exist'}, status=204)
+    except Exception as e:
+        return Response({'status':500,'error':str(e)},status=500)
+
+@api_view(['post'])
+@permission_classes([AllowAny,])
+def delete_category_master(request):
+    # delete category master by passing primary key(categoryid)
+    data=request.data
+    categoryid=data['categoryid']
+    try:
+        categoryobj=CategoryMaster.objects.filter(category_id__in=categoryid).values()
+        if categoryobj:
+            for i in range(0,len(categoryobj)):
+                categoryobjget=CategoryMaster.objects.get(category_id=categoryobj[i].get('category_id'))
+                if categoryobjget:
+                    categoryobjget.delete()
+            return Response({'status': 204, 'message': 'Category Masters data deleted'}, status=204)
+        return Response({'status': 200, 'message': 'Category Masters data not present or already deleted'},
+                            status=200)
+    except Exception as e:
+        return Response({'status':500,'error':str(e)},status=500)
+
+
+@api_view(['put'])
+@permission_classes([AllowAny,])
+def disable_sub_category_master(request):
+    # disable sub_category master by changing status from Disabled to Active by passing primary key(subcategoryid)
+    data=request.data
+    subcategoryid=data['subcategoryid']
+    try:
+        subcategoryobj=SubCategoryMaster.objects.filter(sub_category_id__in=subcategoryid).values()
+        if subcategoryobj:
+            for i in range(0,len(subcategoryobj)):
+                print(subcategoryobj[i].get('sub_category_id'))
+                subcategoryobjget=SubCategoryMaster.objects.get(sub_category_id=subcategoryobj[i].get('sub_category_id'))
+                print(subcategoryobjget)
+                if subcategoryobjget.status=='Active':
+                    subcategoryobjget.status='Disabled'
+                    subcategoryobjget.save()
+                else:
+                    return Response({'status': 202, 'message': 'Already status Disabled'}, status=202)
+            return Response({'status':200,'message':'Sub Category Master status changed to Disabled'},status=200)
+        else:
+            return Response({'status': 204, 'message': 'Not exist'}, status=204)
+    except Exception as e:
+        return Response({'status':500,'error':str(e)},status=500)
+
+
+@api_view(['put'])
+@permission_classes([AllowAny,])
+def enable_sub_category_master(request):
+    # enable sub_category master by changing status from Disabled to Active by passing primary key(subcategoryid)
+    data=request.data
+    subcategoryid=data['subcategoryid']
+    try:
+        subcategoryobj=SubCategoryMaster.objects.filter(sub_category_id__in=subcategoryid).values()
+        if subcategoryobj:
+            for i in range(0,len(subcategoryobj)):
+                print(subcategoryobj[i].get('sub_category_id'))
+                subcategoryobjget=SubCategoryMaster.objects.get(sub_category_id=subcategoryobj[i].get('sub_category_id'))
+                print(subcategoryobjget)
+                if subcategoryobjget.status=='Disabled':
+                    subcategoryobjget.status='Active'
+                    subcategoryobjget.save()
+                else:
+                    return Response({'status': 202, 'message': 'Already status enabled'}, status=202)
+            return Response({'status':200,'message':'Sub Category Master status changed to enabled'},status=200)
+        else:
+            return Response({'status': 204, 'message': 'Not exist'}, status=204)
+    except Exception as e:
+        return Response({'status':500,'error':str(e)},status=500)
+
+@api_view(['post'])
+@permission_classes([AllowAny,])
+def delete_sub_category_master(request):
+    # delete sub_category master by passing primary key(subcategoryid)
+    data=request.data
+    subcategoryid=data['subcategoryid']
+    try:
+        subcategoryobj=SubCategoryMaster.objects.filter(sub_category_id__in=subcategoryid).values()
+        if subcategoryobj:
+            for i in range(0,len(subcategoryobj)):
+                subcategoryobjget=SubCategoryMaster.objects.get(sub_category_id=subcategoryobj[i].get('sub_category_id'))
+                if subcategoryobjget:
+                    subcategoryobjget.delete()
+            return Response({'status': 204, 'message': 'Sub Category Masters data deleted'}, status=204)
+        return Response({'status': 200, 'message': 'Sub Category Masters data not present or already deleted'},
+                            status=200)
+    except Exception as e:
+        return Response({'status':500,'error':str(e)},status=500)

@@ -56,6 +56,18 @@ urlpatterns = [
     path('nature-of-business-master-history/',views.nature_of_business_master_history),
     path('nature-of-business-master-history/', views.nature_of_business_master_history),
 
+    path('disable-maincore-master/',views.disable_maincore_master),
+    path('enable-maincore-master/',views.enable_maincore_master),
+    path('delete-maincore-master/',views.delete_maincore_master),
+
+    path('disable-category-master/', views.disable_category_master),
+    path('enable-category-master/', views.enable_category_master),
+    path('delete-category-master/', views.delete_category_master),
+
+    path('disable-sub-category-master/', views.disable_sub_category_master),
+    path('enable-sub-category-master/', views.enable_sub_category_master),
+    path('delete-sub-category-master/', views.delete_sub_category_master),
+
 
 
 

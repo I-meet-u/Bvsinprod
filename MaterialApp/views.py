@@ -14,78 +14,77 @@ from .serializers import VendorProduct_BasicDetailsSerializer, VendorProduct_Gen
     VendorProduct_DocumentsSerializer
 
 
-class VendorProduct_BasicDetailsView(viewsets.ModelViewSet):
-    queryset = VendorProduct_BasicDetails.objects.all()
-    serializer_class = VendorProduct_BasicDetailsSerializer
-
-    def create(self, request, *args, **kwargs):
-        data=request.data
-        core_sector = data['core_sector']
-        category = data['category']
-        sub_category = data['sub_category']
-        product_category = data['product_category']
-        product_type=data['product_type']
-        item_type = data['item_type']
-        item_name = data['item_name']
-        item_description=data['item_description']
-        final_selling_price = data['final_selling_price']
-        add_image1 = data['add_image1']
-        add_image2 = data['add_image2']
-        add_image3 = data['add_image3']
-        add_image4 = data['add_image4']
-        uom = data['uom']
-        quantity = data['quantity']
-        hsn_sac = data['hsn_sac']
-        unit_price = data['unit_price']
-        discount = data['discount']
-        tax = data['tax']
-        sku_id = data['sku_id']
-        country_of_origin = data['country_of_origin']
-        currency = data['currency']
-        userid = data['userid']
-        type = data['type']
-        try:
-
-            vedordetailsobj = VendorProduct_BasicDetails.objects.filter(updated_by=userid).order_by('-numeric').values()
-            if type == 'auto':
-                if vedordetailsobj:
-                    vendorobj = VendorProduct_BasicDetails.objects.create(core_sector=core_sector, category=category,sub_category=sub_category,product_category=product_category,product_type=product_type,item_type=item_type,item_code=vedordetailsobj[0].get('numeric'),item_name=item_name,item_description=item_description,
-                                                                          final_selling_price=final_selling_price,
-                                                                          numeric=vedordetailsobj[0].get('numeric') + 1,add_image1=add_image1, add_image2=add_image2,add_image3=add_image3, add_image4=add_image4,
-                                                                          uom=uom, quantity=quantity, hsn_sac=hsn_sac,unit_price=unit_price, discount=discount, tax=tax,sku_id=sku_id,country_of_origin=country_of_origin,
-                                                                          currency=currency,created_by=userid,updated_by=SelfRegistration.objects.get(id=userid))
-                else:
-                    print('not exist')
-                    vendorobj = VendorProduct_BasicDetails.objects.create(core_sector=core_sector, category=category,sub_category=sub_category,product_category=product_category,product_type=product_type,item_type=item_type, item_code=100001,item_name=item_name,item_description=item_description,
-                                                                          final_selling_price=final_selling_price,numeric=100002, add_image1=add_image1,add_image2=add_image2, add_image3=add_image3,add_image4=add_image4,
-                                                                          uom=uom, quantity=quantity,hsn_sac=hsn_sac,unit_price=unit_price,discount=discount, tax=tax, sku_id=sku_id,
-                                                                          country_of_origin=country_of_origin,currency=currency,created_by=userid,
-                                                                          updated_by=SelfRegistration.objects.get(id=userid))
-                return Response({'status': 201, 'message': 'Vendor Product  Created'}, status=201)
-            if type == 'manual':
-                item_code = data['item_code']
-                vendorobj=VendorProduct_BasicDetails.objects.count()
-                if vendorobj==0:
-                    print('s')
-                    vendorobj = VendorProduct_BasicDetails.objects.create(core_sector=core_sector, category=category,sub_category=sub_category,product_category=product_category,item_name=item_name,product_type=product_type, item_type=item_type,item_code=item_code,item_description=item_description,
-                                                                          final_selling_price=final_selling_price,numeric='100001',add_image1=add_image1, add_image2=add_image2,add_image3=add_image3, add_image4=add_image4,
-                                                                          uom=uom, quantity=quantity, hsn_sac=hsn_sac,unit_price=unit_price, discount=discount, tax=tax,sku_id=sku_id,country_of_origin=country_of_origin,
-                                                                          currency=currency,created_by=userid,updated_by=SelfRegistration.objects.get(id=userid))
-                else:
-                    vendorobj = VendorProduct_BasicDetails.objects.create(core_sector=core_sector,
-                                                                          category=category,sub_category=sub_category,product_category=product_category,item_name=item_name,product_type=product_type,
-                                                                          item_type=item_type, item_code=item_code,item_description=item_description,
-                                                                          final_selling_price=final_selling_price,numeric=vedordetailsobj[0].get('numeric'), add_image1=add_image1,
-                                                                          add_image2=add_image2,add_image3=add_image3,add_image4=add_image4,uom=uom, quantity=quantity,hsn_sac=hsn_sac, unit_price=unit_price,
-                                                                          discount=discount, tax=tax, sku_id=sku_id,country_of_origin=country_of_origin,
-                                                                          currency=currency, created_by=userid,updated_by=SelfRegistration.objects.get(id=userid))
-
-
-                return Response({'status': 201, 'message': 'Vendor Product  Created'}, status=201)
-            else:
-                return Response({'status': 204, 'message': 'Not Present or enter type name properly'}, status=204)
-        except Exception as e:
-            return Response({'status': 500, 'error': str(e)}, status=500)
+# class VendorProduct_BasicDetailsView(viewsets.ModelViewSet):
+#     queryset = VendorProduct_BasicDetails.objects.all()
+#     serializer_class = VendorProduct_BasicDetailsSerializer
+#
+#     def create(self, request, *args, **kwargs):
+#         data=request.data
+#         core_sector = data['core_sector']
+#         category = data['category']
+#         sub_category = data['sub_category']
+#         product_category = data['product_category']
+#         product_type=data['product_type']
+#         item_type = data['item_type']
+#         item_name = data['item_name']
+#         item_description=data['item_description']
+#         final_selling_price = data['final_selling_price']
+#         add_image1 = data['add_image1']
+#         add_image2 = data['add_image2']
+#         add_image3 = data['add_image3']
+#         add_image4 = data['add_image4']
+#         uom = data['uom']
+#         quantity = data['quantity']
+#         hsn_sac = data['hsn_sac']
+#         unit_price = data['unit_price']
+#         discount = data['discount']
+#         tax = data['tax']
+#         sku_id = data['sku_id']
+#         country_of_origin = data['country_of_origin']
+#         currency = data['currency']
+#         userid = data['userid']
+#         type = data['type']
+#         try:
+#
+#             vedordetailsobj = VendorProduct_BasicDetails.objects.filter(updated_by=userid).order_by('-numeric').values()
+#             if type == 'auto':
+#                 if vedordetailsobj:
+#                     vendorobj = VendorProduct_BasicDetails.objects.create(core_sector=core_sector, category=category,sub_category=sub_category,product_category=product_category,product_type=product_type,item_type=item_type,item_code=vedordetailsobj[0].get('numeric'),item_name=item_name,item_description=item_description,
+#                                                                           final_selling_price=final_selling_price,
+#                                                                           numeric=vedordetailsobj[0].get('numeric') + 1,add_image1=add_image1, add_image2=add_image2,add_image3=add_image3, add_image4=add_image4,
+#                                                                           uom=uom, quantity=quantity, hsn_sac=hsn_sac,unit_price=unit_price, discount=discount, tax=tax,sku_id=sku_id,country_of_origin=country_of_origin,
+#                                                                           currency=currency,created_by=userid,updated_by=SelfRegistration.objects.get(id=userid))
+#                 else:
+#                     print('not exist')
+#                     vendorobj = VendorProduct_BasicDetails.objects.create(core_sector=core_sector, category=category,sub_category=sub_category,product_category=product_category,product_type=product_type,item_type=item_type, item_code=100001,item_name=item_name,item_description=item_description,
+#                                                                           final_selling_price=final_selling_price,numeric=100002, add_image1=add_image1,add_image2=add_image2, add_image3=add_image3,add_image4=add_image4,
+#                                                                           uom=uom, quantity=quantity,hsn_sac=hsn_sac,unit_price=unit_price,discount=discount, tax=tax, sku_id=sku_id,
+#                                                                           country_of_origin=country_of_origin,currency=currency,created_by=userid,
+#                                                                           updated_by=SelfRegistration.objects.get(id=userid))
+#             if type == 'manual':
+#                 item_code = data['item_code']
+#                 vendorobj=VendorProduct_BasicDetails.objects.count()
+#                 if vendorobj==0:
+#                     print('s')
+#                     vendorobj = VendorProduct_BasicDetails.objects.create(core_sector=core_sector, category=category,sub_category=sub_category,product_category=product_category,item_name=item_name,product_type=product_type, item_type=item_type,item_code=item_code,item_description=item_description,
+#                                                                           final_selling_price=final_selling_price,numeric='100001',add_image1=add_image1, add_image2=add_image2,add_image3=add_image3, add_image4=add_image4,
+#                                                                           uom=uom, quantity=quantity, hsn_sac=hsn_sac,unit_price=unit_price, discount=discount, tax=tax,sku_id=sku_id,country_of_origin=country_of_origin,
+#                                                                           currency=currency,created_by=userid,updated_by=SelfRegistration.objects.get(id=userid))
+#                 else:
+#                     vendorobj = VendorProduct_BasicDetails.objects.create(core_sector=core_sector,
+#                                                                           category=category,sub_category=sub_category,product_category=product_category,item_name=item_name,product_type=product_type,
+#                                                                           item_type=item_type, item_code=item_code,item_description=item_description,
+#                                                                           final_selling_price=final_selling_price,numeric=vedordetailsobj[0].get('numeric'), add_image1=add_image1,
+#                                                                           add_image2=add_image2,add_image3=add_image3,add_image4=add_image4,uom=uom, quantity=quantity,hsn_sac=hsn_sac, unit_price=unit_price,
+#                                                                           discount=discount, tax=tax, sku_id=sku_id,country_of_origin=country_of_origin,
+#                                                                           currency=currency, created_by=userid,updated_by=SelfRegistration.objects.get(id=userid))
+#
+#
+#                 return Response({'status': 201, 'message': 'Vendor Product  Created'}, status=201)
+#             else:
+#                 return Response({'status': 204, 'message': 'Not Present or enter type name properly'}, status=204)
+#         except Exception as e:
+#             return Response({'status': 500, 'error': str(e)}, status=500)
 
 
 
@@ -194,3 +193,75 @@ class VendorProduct_DocumentsView(viewsets.ModelViewSet):
 #
 #     except Exception as e:
 #         return Response({'status':500,'error':str(e)},status=500)
+
+class VendorProduct_BasicDetailsView(viewsets.ModelViewSet):
+    queryset = VendorProduct_BasicDetails.objects.all()
+    serializer_class = VendorProduct_BasicDetailsSerializer
+
+    def create(self, request, *args, **kwargs):
+        data=request.data
+        core_sector = data['core_sector']
+        category = data['category']
+        sub_category = data['sub_category']
+        product_category = data['product_category']
+        product_type=data['product_type']
+        item_type = data['item_type']
+        item_name = data['item_name']
+        item_description=data['item_description']
+        final_selling_price = data['final_selling_price']
+        add_image1 = data['add_image1']
+        add_image2 = data['add_image2']
+        add_image3 = data['add_image3']
+        add_image4 = data['add_image4']
+        uom = data['uom']
+        quantity = data['quantity']
+        hsn_sac = data['hsn_sac']
+        unit_price = data['unit_price']
+        discount = data['discount']
+        tax = data['tax']
+        sku_id = data['sku_id']
+        country_of_origin = data['country_of_origin']
+        currency = data['currency']
+        userid = data['userid']
+        type = data['type']
+        try:
+
+            vedordetailsobj = VendorProduct_BasicDetails.objects.filter(updated_by=userid).order_by('-numeric').values()
+            if type == 'auto':
+                if vedordetailsobj:
+                    vendorobj = VendorProduct_BasicDetails.objects.create(core_sector=core_sector, category=category,sub_category=sub_category,product_category=product_category,product_type=product_type,item_type=item_type,item_code=vedordetailsobj[0].get('numeric'),item_name=item_name,item_description=item_description,
+                                                                          final_selling_price=final_selling_price,
+                                                                          numeric=vedordetailsobj[0].get('numeric') + 1,add_image1=add_image1, add_image2=add_image2,add_image3=add_image3, add_image4=add_image4,
+                                                                          uom=uom, quantity=quantity, hsn_sac=hsn_sac,unit_price=unit_price, discount=discount, tax=tax,sku_id=sku_id,country_of_origin=country_of_origin,
+                                                                          currency=currency,created_by=userid,updated_by=SelfRegistration.objects.get(id=userid))
+                else:
+                    print('not exist')
+                    vendorobj = VendorProduct_BasicDetails.objects.create(core_sector=core_sector, category=category,sub_category=sub_category,product_category=product_category,product_type=product_type,item_type=item_type, item_code=100001,item_name=item_name,item_description=item_description,
+                                                                          final_selling_price=final_selling_price,numeric=100002, add_image1=add_image1,add_image2=add_image2, add_image3=add_image3,add_image4=add_image4,
+                                                                          uom=uom, quantity=quantity,hsn_sac=hsn_sac,unit_price=unit_price,discount=discount, tax=tax, sku_id=sku_id,
+                                                                          country_of_origin=country_of_origin,currency=currency,created_by=userid,
+                                                                          updated_by=SelfRegistration.objects.get(id=userid))
+            if type == 'manual':
+                item_code = data['item_code']
+                vendorobj=VendorProduct_BasicDetails.objects.count()
+                if vendorobj==0:
+                    print('s')
+                    vendorobj = VendorProduct_BasicDetails.objects.create(core_sector=core_sector, category=category,sub_category=sub_category,product_category=product_category,item_name=item_name,product_type=product_type, item_type=item_type,item_code=item_code,item_description=item_description,
+                                                                          final_selling_price=final_selling_price,numeric='100001',add_image1=add_image1, add_image2=add_image2,add_image3=add_image3, add_image4=add_image4,
+                                                                          uom=uom, quantity=quantity, hsn_sac=hsn_sac,unit_price=unit_price, discount=discount, tax=tax,sku_id=sku_id,country_of_origin=country_of_origin,
+                                                                          currency=currency,created_by=userid,updated_by=SelfRegistration.objects.get(id=userid))
+                else:
+                    vendorobj = VendorProduct_BasicDetails.objects.create(core_sector=core_sector,
+                                                                          category=category,sub_category=sub_category,product_category=product_category,item_name=item_name,product_type=product_type,
+                                                                          item_type=item_type, item_code=item_code,item_description=item_description,
+                                                                          final_selling_price=final_selling_price,numeric=vedordetailsobj[0].get('numeric'), add_image1=add_image1,
+                                                                          add_image2=add_image2,add_image3=add_image3,add_image4=add_image4,uom=uom, quantity=quantity,hsn_sac=hsn_sac, unit_price=unit_price,
+                                                                          discount=discount, tax=tax, sku_id=sku_id,country_of_origin=country_of_origin,
+                                                                          currency=currency, created_by=userid,updated_by=SelfRegistration.objects.get(id=userid))
+
+
+            return Response({'status': 201, 'message': 'Vendor Product  Created'}, status=201)
+            # else:
+            #     return Response({'status': 204, 'message': 'Not Present or enter type name properly'}, status=204)
+        except Exception as e:
+            return Response({'status': 500, 'error': str(e)}, status=500)

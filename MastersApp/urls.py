@@ -73,7 +73,7 @@ urlpatterns = [
     path('enable-sub-category-master/', views.enable_sub_category_master),
     path('delete-sub-category-master/', views.delete_sub_category_master),
     # path('importindustry/', IndustryServeUploadView.as_view())
-
+#
 
 
 

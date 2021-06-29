@@ -21,7 +21,7 @@ from .serializers import MainCoreMasterSerializer, CategoryMasterSerializer, Sub
     DepartmentMasterSerializer, DesignationMasterSerializer, TaxMasterSerializer, HSNMasterSerializer, \
     SACMasterSerializer, CurrencyMasterSerializer, PFChargesMasterSerializer, FrieghtChargesMasterSerializer, \
     DeliveryMasterSerializer, CountryMasterSerializer, WarrantyMasterSerializer, \
-    GuaranteeMasterSerializer, FileUploadIndustrySerializer
+    GuaranteeMasterSerializer
 from .models import MaincoreMaster, CategoryMaster, SubCategoryMaster, \
     IndustryToServeMaster, NatureOfBusinessMaster, SupplyCapabilitiesMaster, PincodeMaster, UOMMaster, DepartmentMaster, \
     DesignationMaster, TaxMaster, HSNMaster, SACMaster, CurrencyMaster, PFChargesMaster, FrieghtChargesMaster, \

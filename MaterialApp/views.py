@@ -61,14 +61,29 @@ class VendorProduct_BasicDetailsView(viewsets.ModelViewSet):
                                                                           uom=uom, quantity=quantity,hsn_sac=hsn_sac,unit_price=unit_price,discount=discount, tax=tax, sku_id=sku_id,
                                                                           country_of_origin=country_of_origin,currency=currency,created_by=userid,
                                                                           updated_by=SelfRegistration.objects.get(id=userid))
-            if type == 'manual':
+                return Response({'status': 201, 'message': 'Vendor Product  Created'}, status=201)
+            elif type == 'manual':
                 item_code = data['item_code']
-                if vedordetailsobj:
+                vendorobj=VendorProduct_BasicDetails.objects.count()
+                if vendorobj==0:
+                    print('s')
                     vendorobj = VendorProduct_BasicDetails.objects.create(core_sector=core_sector, category=category,sub_category=sub_category,product_category=product_category,item_name=item_name,product_type=product_type, item_type=item_type,item_code=item_code,item_description=item_description,
-                                                                          final_selling_price=final_selling_price,numeric=vedordetailsobj[0].get('numeric'),add_image1=add_image1, add_image2=add_image2,add_image3=add_image3, add_image4=add_image4,
+                                                                          final_selling_price=final_selling_price,numeric='100001',add_image1=add_image1, add_image2=add_image2,add_image3=add_image3, add_image4=add_image4,
                                                                           uom=uom, quantity=quantity, hsn_sac=hsn_sac,unit_price=unit_price, discount=discount, tax=tax,sku_id=sku_id,country_of_origin=country_of_origin,
                                                                           currency=currency,created_by=userid,updated_by=SelfRegistration.objects.get(id=userid))
-            return Response({'status': 201, 'message': 'Vendor Product  Created'}, status=201)
+                else:
+                    vendorobj = VendorProduct_BasicDetails.objects.create(core_sector=core_sector,
+                                                                          category=category,sub_category=sub_category,product_category=product_category,item_name=item_name,product_type=product_type,
+                                                                          item_type=item_type, item_code=item_code,item_description=item_description,
+                                                                          final_selling_price=final_selling_price,numeric=vedordetailsobj[0].get('numeric'), add_image1=add_image1,
+                                                                          add_image2=add_image2,add_image3=add_image3,add_image4=add_image4,uom=uom, quantity=quantity,hsn_sac=hsn_sac, unit_price=unit_price,
+                                                                          discount=discount, tax=tax, sku_id=sku_id,country_of_origin=country_of_origin,
+                                                                          currency=currency, created_by=userid,updated_by=SelfRegistration.objects.get(id=userid))
+
+
+                return Response({'status': 201, 'message': 'Vendor Product  Created'}, status=201)
+            else:
+                return Response({'status': 204, 'message': 'Not Present or enter type name properly'}, status=204)
         except Exception as e:
             return Response({'status': 500, 'error': str(e)}, status=500)
 

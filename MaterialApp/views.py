@@ -61,7 +61,6 @@ class VendorProduct_BasicDetailsView(viewsets.ModelViewSet):
                                                                           uom=uom, quantity=quantity,hsn_sac=hsn_sac,unit_price=unit_price,discount=discount, tax=tax, sku_id=sku_id,
                                                                           country_of_origin=country_of_origin,currency=currency,created_by=userid,
                                                                           updated_by=SelfRegistration.objects.get(id=userid))
-                return Response({'status': 201, 'message': 'Vendor Product Created'}, status=201)
             if type == 'manual':
                 item_code = data['item_code']
                 if vedordetailsobj:
@@ -69,7 +68,7 @@ class VendorProduct_BasicDetailsView(viewsets.ModelViewSet):
                                                                           final_selling_price=final_selling_price,numeric=vedordetailsobj[0].get('numeric'),add_image1=add_image1, add_image2=add_image2,add_image3=add_image3, add_image4=add_image4,
                                                                           uom=uom, quantity=quantity, hsn_sac=hsn_sac,unit_price=unit_price, discount=discount, tax=tax,sku_id=sku_id,country_of_origin=country_of_origin,
                                                                           currency=currency,created_by=userid,updated_by=SelfRegistration.objects.get(id=userid))
-                    return Response({'status': 201, 'message': 'Vendor Product Manual Created'}, status=201)
+            return Response({'status': 201, 'message': 'Vendor Product  Created'}, status=201)
         except Exception as e:
             return Response({'status': 500, 'error': str(e)}, status=500)
 

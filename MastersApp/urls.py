@@ -2,6 +2,7 @@ from django.urls import path, include
 from rest_framework import routers
 
 from . import  views
+from .views import IndustryServeUploadView
 
 router=routers.DefaultRouter()
 #routers for Viewsets
@@ -54,7 +55,7 @@ urlpatterns = [
 
     path('industry-to-serve-master-history/', views.industry_to_serve_master_history),
     path('nature-of-business-master-history/',views.nature_of_business_master_history),
-    path('nature-of-business-master-history/', views.nature_of_business_master_history),
+    path('supply-capabilites-master-history/', views.supply_capabilites_master_history),
     path('maincore-master-history/',views.maincore_master_history),
     path('category-master-history/',views.category_master_history),
     path('sub-category-master-history/',views.sub_category_master_history),
@@ -71,6 +72,7 @@ urlpatterns = [
     path('disable-sub-category-master/', views.disable_sub_category_master),
     path('enable-sub-category-master/', views.enable_sub_category_master),
     path('delete-sub-category-master/', views.delete_sub_category_master),
+    # path('importindustry/', IndustryServeUploadView.as_view())
 
 
 

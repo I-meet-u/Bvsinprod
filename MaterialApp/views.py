@@ -84,13 +84,73 @@ class VendorProduct_TechnicalSpecificationsView(viewsets.ModelViewSet):
     queryset = VendorProduct_TechnicalSpecifications.objects.all()
     serializer_class = VendorProduct_TechnicalSpecificationsSerialzer
 
+
+    def create(self, request, *args, **kwargs):
+        technicaldetailslist = request.data['technicaldetails']
+        updated_by = request.data.get('updated_by',None)
+        print(updated_by)
+        try:
+            if updated_by is None:
+                return Response({'status': 204, 'message': 'Enter user id or user id not exist'}, status=204)
+            for i in range(0, len(technicaldetailslist)):
+                VendorProduct_TechnicalSpecifications.objects.create(item_specification=technicaldetailslist[i].get('item_specification'),
+                                                                      item_description=technicaldetailslist[i].get('item_description'),
+                                                                      description=technicaldetailslist[i].get('description'),
+                                                                      vendor_products=VendorProduct_BasicDetails.objects.get(vendor_product_id=technicaldetailslist[i].get('vendor_products')),
+                                                                      updated_by=SelfRegistration.objects.get(id=updated_by),
+                                                                      created_by=updated_by)
+            return Response({'status': 201, 'message': 'Vendor Product Techinal Specifications Are Added'}, status=201)
+        except Exception as e:
+            return Response({'status': 500, 'error': str(e)}, status=500)
+
 class VendorProduct_ProductFeaturesView(viewsets.ModelViewSet):
     queryset = VendorProduct_ProductFeatures.objects.all()
     serializer_class = VendorProduct_ProductFeaturesSerializer
 
+    def create(self, request, *args, **kwargs):
+        productfeatureslist = request.data['productfeatureslist']
+        updated_by = request.data.get('updated_by',None)
+        try:
+            if updated_by is None:
+                return Response({'status':204,'message':'Enter user id or user id not exist'},status=204)
+            for i in range(0, len(productfeatureslist)):
+                VendorProduct_ProductFeatures.objects.create(
+                    product_item_specification=productfeatureslist[i].get('product_item_specification'),
+                    product_item_description=productfeatureslist[i].get('product_item_description'),
+                    description=productfeatureslist[i].get('description'),
+                    vendor_products=VendorProduct_BasicDetails.objects.get(vendor_product_id=productfeatureslist[i].get('vendor_products')),
+                    updated_by=SelfRegistration.objects.get(id=updated_by),
+                    created_by=updated_by
+                )
+            return Response({'status': 201, 'message': 'Vendor Product Features Are Added'}, status=201)
+        except Exception as e:
+            return Response({'status': 500, 'error': str(e)}, status=500)
+
+
+
 class VendorProduct_DocumentsView(viewsets.ModelViewSet):
     queryset = VendorProduct_Documents.objects.all()
     serializer_class = VendorProduct_DocumentsSerializer
+
+    # def create(self, request, *args, **kwargs):
+    #     vendorproductdocumentslist = request.data['vendorproductdocumentslist']
+    #     updated_by = request.data.get('updated_by', None)
+    #     try:
+    #         if updated_by is None:
+    #             return Response({'status': 204, 'message': 'Enter user id or user id not exist'}, status=204)
+    #         for i in range(0, len(vendorproductdocumentslist)):
+    #             VendorProduct_ProductFeatures.objects.create(
+    #                 product_item_specification=vendorproductdocumentslist[i].get('product_item_specification'),
+    #                 product_item_description=vendorproductdocumentslist[i].get('product_item_description'),
+    #                 description=vendorproductdocumentslist[i].get('description'),
+    #                 vendor_products=VendorProduct_BasicDetails.objects.get(
+    #                     vendor_product_id=vendorproductdocumentslist[i].get('vendor_products')),
+    #                 updated_by=SelfRegistration.objects.get(id=updated_by),
+    #                 created_by=updated_by
+    #             )
+    #         return Response({'status': 201, 'message': 'Vendor Product Features Are Added'}, status=201)
+    #     except Exception as e:
+    #         return Response({'status': 500, 'error': str(e)}, status=500)
 
 # @api_view(['post'])
 # def vendor_product_create(request):

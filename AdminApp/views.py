@@ -22,7 +22,7 @@ from AdminApp.serializers import AdminInviteSerializer, CreateUserSerializer, Ad
 
 
 class AdminRegisterView(viewsets.ModelViewSet):
-    # permission_classes = [permissions.AllowAny]
+    permission_classes = [permissions.AllowAny]
     queryset = AdminRegister.objects.all()
     serializer_class = AdminRegisterSerializer
 
@@ -42,7 +42,7 @@ class AdminRegisterView(viewsets.ModelViewSet):
             serializer.save()
 
 @api_view(['post'])
-# @permission_classes((AllowAny,))
+@permission_classes((AllowAny,))
 def admin_login(request):
     data = request.data
     password = data['password']
@@ -92,7 +92,7 @@ def admin_login(request):
 
 
 @api_view(['post'])
-# @permission_classes((AllowAny,))
+@permission_classes((AllowAny,))
 def admin_email_otp_verify(request):
     data=request.data
     email_otp=data['email_otp']
@@ -232,7 +232,7 @@ def create_user_status_update(request):
 #
 
 @api_view(['get'])
-# @permission_classes([AllowAny])
+@permission_classes([AllowAny])
 def registration_list(request):
     data=request.data
     emptydata=list()
@@ -317,7 +317,7 @@ def registration_list(request):
         return Response({'status':500,'error':str(e)},status=500)
 
 @api_view(['put'])
-# @permission_classes([AllowAny])
+@permission_classes([AllowAny])
 def admin_approval(request):
     data=request.data
     adminid = data['adminid']
@@ -342,7 +342,7 @@ def admin_approval(request):
         return Response({'status':500,'error':str(e)},status=500)
 
 @api_view(['get'])
-# @permission_classes([AllowAny])
+@permission_classes([AllowAny])
 def admin_approve_pending_list(request):
     try:
         regobj=SelfRegistration.objects.filter(admin_approve='Pending').values()

@@ -2,7 +2,7 @@ from django.shortcuts import render
 
 # Create your views here.
 
-from rest_framework import viewsets
+from rest_framework import viewsets, permissions
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
@@ -89,11 +89,13 @@ from .serializers import VendorProduct_BasicDetailsSerializer, VendorProduct_Gen
 
 
 class VendorProduct_GeneralDetailsView(viewsets.ModelViewSet):
+    permission_classes = [permissions.AllowAny]
     queryset = VendorProduct_GeneralDetails.objects.all()
     serializer_class = VendorProduct_GeneralDetailsSerializer
 
 
 class VendorProduct_TechnicalSpecificationsView(viewsets.ModelViewSet):
+    permission_classes = [permissions.AllowAny]
     queryset = VendorProduct_TechnicalSpecifications.objects.all()
     serializer_class = VendorProduct_TechnicalSpecificationsSerialzer
 
@@ -117,6 +119,7 @@ class VendorProduct_TechnicalSpecificationsView(viewsets.ModelViewSet):
             return Response({'status': 500, 'error': str(e)}, status=500)
 
 class VendorProduct_ProductFeaturesView(viewsets.ModelViewSet):
+    permission_classes = [permissions.AllowAny]
     queryset = VendorProduct_ProductFeatures.objects.all()
     serializer_class = VendorProduct_ProductFeaturesSerializer
 
@@ -142,6 +145,7 @@ class VendorProduct_ProductFeaturesView(viewsets.ModelViewSet):
 
 
 class VendorProduct_DocumentsView(viewsets.ModelViewSet):
+    permission_classes = [permissions.AllowAny]
     queryset = VendorProduct_Documents.objects.all()
     serializer_class = VendorProduct_DocumentsSerializer
 
@@ -195,6 +199,7 @@ class VendorProduct_DocumentsView(viewsets.ModelViewSet):
 #         return Response({'status':500,'error':str(e)},status=500)
 
 class VendorProduct_BasicDetailsView(viewsets.ModelViewSet):
+    permission_classes = [permissions.AllowAny]
     queryset = VendorProduct_BasicDetails.objects.all()
     serializer_class = VendorProduct_BasicDetailsSerializer
 

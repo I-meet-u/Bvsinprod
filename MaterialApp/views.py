@@ -61,7 +61,7 @@ class VendorProduct_BasicDetailsView(viewsets.ModelViewSet):
                                                                           uom=uom, quantity=quantity,hsn_sac=hsn_sac,unit_price=unit_price,discount=discount, tax=tax, sku_id=sku_id,
                                                                           country_of_origin=country_of_origin,currency=currency,created_by=userid,
                                                                           updated_by=SelfRegistration.objects.get(id=userid))
-                return Response({'status': 201, 'message': 'Vendor Product  Created'}, status=201)
+                # return Response({'status': 201, 'message': 'Vendor Product  Created'}, status=201)
             elif type == 'manual':
                 item_code = data['item_code']
                 vendorobj=VendorProduct_BasicDetails.objects.count()
@@ -81,9 +81,9 @@ class VendorProduct_BasicDetailsView(viewsets.ModelViewSet):
                                                                           currency=currency, created_by=userid,updated_by=SelfRegistration.objects.get(id=userid))
 
 
-                return Response({'status': 201, 'message': 'Vendor Product  Created'}, status=201)
-            else:
-                return Response({'status': 204, 'message': 'Not Present or enter type name properly'}, status=204)
+            return Response({'status': 201, 'message': 'Vendor Product  Created'}, status=201)
+            # else:
+            #     return Response({'status': 204, 'message': 'Not Present or enter type name properly'}, status=204)
         except Exception as e:
             return Response({'status': 500, 'error': str(e)}, status=500)
 

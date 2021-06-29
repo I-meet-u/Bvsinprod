@@ -214,10 +214,3 @@ class CountryMasterSerializer(serializers.ModelSerializer):
     class Meta:
         model=CountryMaster
         fields='__all__'
-
-class FileUploadIndustrySerializer(serializers.Serializer):
-    csv_industry = serializers.FileField()
-
-    class Meta:
-        models=IndustryToServeMaster
-        fields = ('csv_industry',)

@@ -55,6 +55,10 @@ urlpatterns = [
     path('industry-to-serve-master-history/', views.industry_to_serve_master_history),
     path('nature-of-business-master-history/',views.nature_of_business_master_history),
     path('nature-of-business-master-history/', views.nature_of_business_master_history),
+    path('maincore-master-history/',views.maincore_master_history),
+    path('category-master-history/',views.category_master_history),
+    path('sub-category-master-history/',views.sub_category_master_history),
+
 
     path('disable-maincore-master/',views.disable_maincore_master),
     path('enable-maincore-master/',views.enable_maincore_master),

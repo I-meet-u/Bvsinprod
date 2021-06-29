@@ -571,35 +571,6 @@ def all_masters(request):
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)
 
-@api_view(['get'])
-@permission_classes([AllowAny,])
-def industry_to_serve_master_history(request):
-    try:
-        industrytoservehistoryobj=IndustryToServeMaster.history.filter().values()
-        return Response({'status':200,'message':'Industry to Serve Master history','data':industrytoservehistoryobj},status=200)
-    except Exception as e:
-        return Response({'status': 500, 'error': str(e)}, status=500)
-
-@api_view(['get'])
-@permission_classes([AllowAny,])
-def nature_of_business_master_history(request):
-    try:
-        natureofbusinesshistoryobj=NatureOfBusinessMaster.history.filter().values()
-        return Response({'status':200,'message':'Nature of business Master history','data':natureofbusinesshistoryobj},status=200)
-    except Exception as e:
-        return Response({'status': 500, 'error': str(e)}, status=500)
-
-
-@api_view(['get'])
-@permission_classes([AllowAny,])
-def supply_capabilites_master_history(request):
-    try:
-        supplycapabiliteshistoryobj=SupplyCapabilitiesMaster.history.filter().values()
-        return Response({'status':200,'message':'Supply Capabilities Master history','data':supplycapabiliteshistoryobj},status=200)
-    except Exception as e:
-        return Response({'status': 500, 'error': str(e)}, status=500)
-
-
 
 @api_view(['put'])
 @permission_classes([AllowAny,])
@@ -806,3 +777,64 @@ def delete_sub_category_master(request):
                             status=200)
     except Exception as e:
         return Response({'status':500,'error':str(e)},status=500)
+
+
+@api_view(['get'])
+@permission_classes([AllowAny,])
+def industry_to_serve_master_history(request):
+    try:
+        industrytoservehistoryobj=IndustryToServeMaster.history.filter().values()
+        return Response({'status':200,'message':'Industry to Serve Master history','data':industrytoservehistoryobj},status=200)
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)
+
+@api_view(['get'])
+@permission_classes([AllowAny,])
+def nature_of_business_master_history(request):
+    try:
+        natureofbusinesshistoryobj=NatureOfBusinessMaster.history.filter().values()
+        return Response({'status':200,'message':'Nature of business Master history','data':natureofbusinesshistoryobj},status=200)
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)
+
+
+@api_view(['get'])
+@permission_classes([AllowAny,])
+def supply_capabilites_master_history(request):
+    try:
+        supplycapabiliteshistoryobj=SupplyCapabilitiesMaster.history.filter().values()
+        return Response({'status':200,'message':'Supply Capabilities Master history','data':supplycapabiliteshistoryobj},status=200)
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)
+
+
+@api_view(['get'])
+@permission_classes([AllowAny,])
+def maincore_master_history(request):
+    try:
+        maincorehisotryobj=MaincoreMaster.history.filter().values()
+        return Response({'status':200,'message':'Maincore Master history','data':maincorehisotryobj},status=200)
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)
+
+
+
+@api_view(['get'])
+@permission_classes([AllowAny,])
+def category_master_history(request):
+    try:
+        categoryhistoryobj=CategoryMaster.history.filter().values()
+        return Response({'status':200,'message':'Category Master history','data':categoryhistoryobj},status=200)
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)
+
+
+
+@api_view(['get'])
+@permission_classes([AllowAny,])
+def sub_category_master_history(request):
+    try:
+        subcategoryhistoryobj=SubCategoryMaster.history.filter().values()
+        return Response({'status':200,'message':'Sub Category Master history','data':subcategoryhistoryobj},status=200)
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)

@@ -853,7 +853,7 @@ def sub_category_master_history(request):
 class IndustryServeUploadView(APIView):
     def post(self, request):
         rowdata=[]
-        paramFile =request.data['csv_industry']
+        paramFile =request.data['csv_industry_file']
         # portfolio1 = csv.DictReader(paramFile)
         # list_of_dict = list(portfolio1)
         decoded_file = paramFile.read().decode()
@@ -863,11 +863,6 @@ class IndustryServeUploadView(APIView):
         industryobj=IndustryToServeMaster.objects.filter().values()
         try:
             for row in list_of_dict:
-                print(row['industry_name'])
-                if row['industry_name'] in industryobj:
-                    print('already present')
-                    # rowdata.append({'industryname':row['industry_name']})
-
                 objs = [
                     IndustryToServeMaster(
                         industry_name=row['industry_name'],
@@ -886,7 +881,6 @@ class IndustryServeUploadView(APIView):
                 returnmsg = {"status_code": 200}
                 print('imported successfully')
         except Exception as e:
-            print('Error While Importing Data: ',)
             returnmsg = {"status_code": 500,'message':str(e)}
 
         return JsonResponse(returnmsg)

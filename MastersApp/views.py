@@ -31,38 +31,38 @@ from .models import MaincoreMaster, CategoryMaster, SubCategoryMaster, \
 # Create your views here.
 class IndustryToServeMasterView(viewsets.ModelViewSet):
     # industry_servce master viewsets
-    permission_classes = (AllowAny,)
+    # permission_classes = (AllowAny,)
     queryset = IndustryToServeMaster.objects.all()
     serializer_class = IndustryToServeMasterSerializer
 
 class NatureOfBusinessMasterView(viewsets.ModelViewSet):
     # nature_of_business mster viewsets
-    permission_classes = (AllowAny,)
+    # permission_classes = (AllowAny,)
     queryset = NatureOfBusinessMaster.objects.all()
     serializer_class =NatureOfBusinessMasterSerializer
 
 
 class SupplyCapabilitiesMasterView(viewsets.ModelViewSet):
     # supply_capability  viewsets
-    permission_classes = (AllowAny,)
+    # permission_classes = (AllowAny,)
     queryset = SupplyCapabilitiesMaster.objects.all()
     serializer_class =SupplyCapabilitiesMasterSerializer
 
 class MaincoreMasterView(viewsets.ModelViewSet):
     # maincore_master  master viewsets
-    permission_classes = (AllowAny,)
+    # permission_classes = (AllowAny,)
     queryset = MaincoreMaster.objects.all()
     serializer_class = MainCoreMasterSerializer
 
 class CategoryMasterView(viewsets.ModelViewSet):
     # category_master  viewsets
-    permission_classes = (AllowAny,)
+    # permission_classes = (AllowAny,)
     queryset =CategoryMaster.objects.all()
     serializer_class=CategoryMasterSerializer
 
 class SubCategoryMasterView(viewsets.ModelViewSet):
     # sub_category_master  viewsets
-    permission_classes = (AllowAny,)
+    # permission_classes = (AllowAny,)
     queryset = SubCategoryMaster.objects.all()
     serializer_class = SubcategoryMasterSerializer
 
@@ -74,7 +74,7 @@ class PincodeMasterView(viewsets.ModelViewSet):
 
 class UOMMasterView(viewsets.ModelViewSet):
     # UOM_master = viewsets
-    permission_classes = (AllowAny,)
+    # permission_classes = (AllowAny,)
     queryset = UOMMaster.objects.all()
     serializer_class= UOMMasterSerializer
 
@@ -91,7 +91,7 @@ class UOMMasterView(viewsets.ModelViewSet):
 
 class DepartmentMasterView(viewsets.ModelViewSet):
     # department_master  viewsets
-    permission_classes = (AllowAny,)
+    # permission_classes = (AllowAny,)
     queryset = DepartmentMaster.objects.all()
     serializer_class = DepartmentMasterSerializer
 
@@ -107,14 +107,14 @@ class DepartmentMasterView(viewsets.ModelViewSet):
 
 class DesignationMasterView(viewsets.ModelViewSet):
     # designation_master viewsets
-    permission_classes = (AllowAny,)
+    # permission_classes = (AllowAny,)
     queryset = DesignationMaster.objects.all()
     serializer_class = DesignationMasterSerializer
 
 
 class TaxMasterView(viewsets.ModelViewSet):
     # tax_master  viewsets
-    permission_classes = (AllowAny,)
+    # permission_classes = (AllowAny,)
     queryset = TaxMaster.objects.all()
     serializer_class = TaxMasterSerializer
 
@@ -122,14 +122,14 @@ class TaxMasterView(viewsets.ModelViewSet):
 
 class HSNMasterSerializerView(viewsets.ModelViewSet):
     # hsn_master  viewsets
-    permission_classes = (AllowAny,)
+    # permission_classes = (AllowAny,)
     queryset = HSNMaster.objects.all()
     serializer_class = HSNMasterSerializer
 
 
 class SACMasterView(viewsets.ModelViewSet):
     # sac_master  viewsets
-    permission_classes = (AllowAny,)
+    # permission_classes = (AllowAny,)
     queryset = SACMaster.objects.all()
     serializer_class = SACMasterSerializer
 
@@ -137,44 +137,44 @@ class SACMasterView(viewsets.ModelViewSet):
 
 class CurrencyMasterView(viewsets.ModelViewSet):
     # currency_master viewsets
-    permission_classes = (AllowAny,)
+    # permission_classes = (AllowAny,)
     queryset = CurrencyMaster.objects.all()
     serializer_class = CurrencyMasterSerializer
 
 
 class PFChargesMasterView(viewsets.ModelViewSet):
     # pf_charges master viewsets
-    permission_classes = (AllowAny,)
+    # permission_classes = (AllowAny,)
     queryset = PFChargesMaster.objects.all()
     serializer_class = PFChargesMasterSerializer
 
 class FrieghtChargesMasterView(viewsets.ModelViewSet):
     # frieght_charges master viewsets
-    permission_classes = (AllowAny,)
+    # permission_classes = (AllowAny,)
     queryset = FrieghtChargesMaster.objects.all()
     serializer_class = FrieghtChargesMasterSerializer
 
 class WarrantyMasterView(viewsets.ModelViewSet):
     # warranty_master viewsets
-    permission_classes = (AllowAny,)
+    # permission_classes = (AllowAny,)
     queryset = WarrantyMaster.objects.all()
     serializer_class = WarrantyMasterSerializer
 
 class GuaranteeMasterView(viewsets.ModelViewSet):
     # warranty_master viewsets
-    permission_classes = (AllowAny,)
+    # permission_classes = (AllowAny,)
     queryset = GuaranteeMaster.objects.all()
     serializer_class =GuaranteeMasterSerializer
 
 class DeliveryMasterView(viewsets.ModelViewSet):
     # delivery_master viewsets
-    permission_classes = (AllowAny,)
+    # permission_classes = (AllowAny,)
     queryset = DeliveryMaster.objects.all()
     serializer_class = DeliveryMasterSerializer
 
 class CountryMasterView(viewsets.ModelViewSet):
     # country_master viewsets
-    permission_classes = (AllowAny,)
+    # permission_classes = (AllowAny,)
     queryset = CountryMaster.objects.all()
     serializer_class = CountryMasterSerializer
 
@@ -281,7 +281,7 @@ def disable_nature_of_business_master(request):
         return Response({'status':500,'error':str(e)},status=500)
 
 @api_view(['put'])
-@permission_classes([AllowAny,])
+# @permission_classes([AllowAny,])
 def enable_nature_of_business_master(request):
     # enable nature_of_business by changing status from Disabled to Active by passing primary key(natureid)
     data=request.data
@@ -302,7 +302,7 @@ def enable_nature_of_business_master(request):
         return Response({'status':500,'error':str(e)},status=500)
 
 @api_view(['post'])
-@permission_classes([AllowAny,])
+# @permission_classes([AllowAny,])
 def delete_nature_of_business_master(request):
     # delete nature_of_business by passing primary key(natureid)
     data=request.data
@@ -323,7 +323,7 @@ def delete_nature_of_business_master(request):
         return Response({'status':500,'error':str(e)},status=500)
 
 @api_view(['put'])
-@permission_classes([AllowAny,])
+# @permission_classes([AllowAny,])
 def disable_industry_serve_masters(request):
     # disable industry_serve by changing status from Active to Disabled by passing primary key(industryid)
     data=request.data
@@ -348,7 +348,7 @@ def disable_industry_serve_masters(request):
         return Response({'status':500,'error':str(e)},status=500)
 
 @api_view(['put'])
-@permission_classes([AllowAny,])
+# @permission_classes([AllowAny,])
 def enable_industry_serve_masters(request):
     # enable industry_serve by changing status from Disabled to Active by passing primary key(industryid)
     data=request.data
@@ -373,7 +373,7 @@ def enable_industry_serve_masters(request):
         return Response({'status':500,'error':str(e)},status=500)
 
 @api_view(['post'])
-@permission_classes([AllowAny,])
+# @permission_classes([AllowAny,])
 def delete_industry_serve_masters(request):
     # delete industry_serve by passing primary key(industryid)
     data=request.data
@@ -394,7 +394,7 @@ def delete_industry_serve_masters(request):
         return Response({'status':500,'error':str(e)},status=500)
 
 @api_view(['put'])
-@permission_classes([AllowAny,])
+# @permission_classes([AllowAny,])
 def disable_supply_capabilities_master(request):
     # disable supply_capabilities by changing status from Active to Disabled by passing primary key(supplyid)
     data=request.data
@@ -418,7 +418,7 @@ def disable_supply_capabilities_master(request):
         return Response({'status':500,'error':str(e)},status=500)
 
 @api_view(['put'])
-@permission_classes([AllowAny,])
+# @permission_classes([AllowAny,])
 def enable_supply_capabilities_master(request):
     # enable supply_capabilities by changing status from Disabled to Active by passing primary key(supplyid)
     data=request.data
@@ -443,7 +443,7 @@ def enable_supply_capabilities_master(request):
 
 
 @api_view(['post'])
-@permission_classes([AllowAny,])
+# @permission_classes([AllowAny,])
 def delete_supply_capabilities_master(request):
     # delete supply_capabilities  passing primary key(supplyid)
     data=request.data
@@ -463,7 +463,7 @@ def delete_supply_capabilities_master(request):
 
 
 @api_view(['post'])
-@permission_classes([AllowAny,])
+# @permission_classes([AllowAny,])
 def delete_uom_master(request):
     data=request.data
     uomid=data['uomid']
@@ -482,7 +482,7 @@ def delete_uom_master(request):
 
 
 @api_view(['put'])
-@permission_classes([AllowAny,])
+# @permission_classes([AllowAny,])
 def disable_uom_master(request):
     data=request.data
     uomid=data['uomid']
@@ -504,7 +504,7 @@ def disable_uom_master(request):
 
 
 @api_view(['put'])
-@permission_classes([AllowAny,])
+# @permission_classes([AllowAny,])
 def enable_uom_master(request):
     data=request.data
     uomid=data['uomid']
@@ -525,7 +525,7 @@ def enable_uom_master(request):
         return Response({'status': 500, 'error': str(e)}, status=500)
 
 @api_view(['get'])
-@permission_classes([AllowAny,])
+# @permission_classes([AllowAny,])
 def all_masters(request):
     masterslist=[]
     try:
@@ -581,7 +581,7 @@ def all_masters(request):
 
 
 @api_view(['put'])
-@permission_classes([AllowAny,])
+# @permission_classes([AllowAny,])
 def disable_maincore_master(request):
     # disable maincore master by changing status from Active to Disabled by passing primary key(maincoreid)
     data=request.data
@@ -605,7 +605,7 @@ def disable_maincore_master(request):
         return Response({'status':500,'error':str(e)},status=500)
 
 @api_view(['put'])
-@permission_classes([AllowAny,])
+# @permission_classes([AllowAny,])
 def enable_maincore_master(request):
     # enable maincore master by changing status from Disabled to Active by passing primary key(maincoreid)
     data=request.data
@@ -630,7 +630,7 @@ def enable_maincore_master(request):
 
 
 @api_view(['post'])
-@permission_classes([AllowAny,])
+# @permission_classes([AllowAny,])
 def delete_maincore_master(request):
     # delete maincore master  passing primary key(maincoreid)
     data=request.data
@@ -650,7 +650,7 @@ def delete_maincore_master(request):
 
 
 @api_view(['put'])
-@permission_classes([AllowAny,])
+# @permission_classes([AllowAny,])
 def disable_category_master(request):
     # disable category master by changing status from Disabled to Active by passing primary key(categoryid)
     data=request.data
@@ -675,7 +675,7 @@ def disable_category_master(request):
 
 
 @api_view(['put'])
-@permission_classes([AllowAny,])
+# @permission_classes([AllowAny,])
 def enable_category_master(request):
     # enable category master by changing status from Disabled to Active by passing primary key(categoryid)
     data=request.data
@@ -699,7 +699,7 @@ def enable_category_master(request):
         return Response({'status':500,'error':str(e)},status=500)
 
 @api_view(['post'])
-@permission_classes([AllowAny,])
+# @permission_classes([AllowAny,])
 def delete_category_master(request):
     # delete category master by passing primary key(categoryid)
     data=request.data
@@ -719,7 +719,7 @@ def delete_category_master(request):
 
 
 @api_view(['put'])
-@permission_classes([AllowAny,])
+# @permission_classes([AllowAny,])
 def disable_sub_category_master(request):
     # disable sub_category master by changing status from Disabled to Active by passing primary key(subcategoryid)
     data=request.data
@@ -744,7 +744,7 @@ def disable_sub_category_master(request):
 
 
 @api_view(['put'])
-@permission_classes([AllowAny,])
+# @permission_classes([AllowAny,])
 def enable_sub_category_master(request):
     # enable sub_category master by changing status from Disabled to Active by passing primary key(subcategoryid)
     data=request.data
@@ -768,7 +768,7 @@ def enable_sub_category_master(request):
         return Response({'status':500,'error':str(e)},status=500)
 
 @api_view(['post'])
-@permission_classes([AllowAny,])
+# @permission_classes([AllowAny,])
 def delete_sub_category_master(request):
     # delete sub_category master by passing primary key(subcategoryid)
     data=request.data
@@ -788,7 +788,7 @@ def delete_sub_category_master(request):
 
 
 @api_view(['get'])
-@permission_classes([AllowAny,])
+# @permission_classes([AllowAny,])
 def industry_to_serve_master_history(request):
     try:
         industrytoservehistoryobj=IndustryToServeMaster.history.filter().values()
@@ -797,7 +797,7 @@ def industry_to_serve_master_history(request):
         return Response({'status': 500, 'error': str(e)}, status=500)
 
 @api_view(['get'])
-@permission_classes([AllowAny,])
+# @permission_classes([AllowAny,])
 def nature_of_business_master_history(request):
     try:
         natureofbusinesshistoryobj=NatureOfBusinessMaster.history.filter().values()
@@ -807,7 +807,7 @@ def nature_of_business_master_history(request):
 
 
 @api_view(['get'])
-@permission_classes([AllowAny,])
+# @permission_classes([AllowAny,])
 def supply_capabilites_master_history(request):
     try:
         supplycapabiliteshistoryobj=SupplyCapabilitiesMaster.history.filter().values()
@@ -817,7 +817,7 @@ def supply_capabilites_master_history(request):
 
 
 @api_view(['get'])
-@permission_classes([AllowAny,])
+# @permission_classes([AllowAny,])
 def maincore_master_history(request):
     try:
         maincorehisotryobj=MaincoreMaster.history.filter().values()
@@ -828,7 +828,7 @@ def maincore_master_history(request):
 
 
 @api_view(['get'])
-@permission_classes([AllowAny,])
+# @permission_classes([AllowAny,])
 def category_master_history(request):
     try:
         categoryhistoryobj=CategoryMaster.history.filter().values()
@@ -862,25 +862,37 @@ class IndustryServeUploadView(APIView):
         list_of_dict = csv.DictReader(io_string)
         industryobj=IndustryToServeMaster.objects.filter().values()
         try:
+            industryobj = IndustryToServeMaster.objects.filter().values()
+            for i in range(0,len(industryobj)):
+                rowdata.append(industryobj[i].get('industry_name'))
+            # print(rowdata,'ofsfsd')
             for row in list_of_dict:
-                objs = [
-                    IndustryToServeMaster(
-                        industry_name=row['industry_name'],
-                        is_verified=row['is_verified'],
-                        created_on=row['created_on'],
-                        updated_on=row['updated_on'],
-                        admins=AdminRegister.objects.get(admin_id=row['admins_id']),
-                        status=row['status'],
-                        csv_industry=paramFile
+                # print(row['industry_name'])
+                if row['industry_name'] not in rowdata:
+                    print('Not present')
+                    objs = [
+                        IndustryToServeMaster(
+                            industry_name=row['industry_name'],
+                            is_verified=row['is_verified'],
+                            created_on=row['created_on'],
+                            updated_on=row['updated_on'],
+                            admins=AdminRegister.objects.get(admin_id=row['admins_id']),
+                            status=row['status'],
+                            csv_industry=paramFile
 
-                    )
+                        )
 
+                    ]
+                    msg = IndustryToServeMaster.objects.bulk_create(objs)
 
-                ]
-                msg = IndustryToServeMaster.objects.bulk_create(objs)
-                returnmsg = {"status_code": 200}
-                print('imported successfully')
+                # return Response({'status': 202, 'message': "Already Present"}, status=202)
+            return Response({'status':200,'message':'okkk'},status=200)
+
+                #
+                # msg = IndustryToServeMaster.objects.bulk_create(objs)
+                # returnmsg = {"status_code": 200}
+                # print('imported successfully')
         except Exception as e:
             returnmsg = {"status_code": 500,'message':str(e)}
 
-        return JsonResponse(returnmsg)
+        # return JsonResponse(returnmsg)

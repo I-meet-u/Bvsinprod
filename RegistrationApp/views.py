@@ -50,13 +50,13 @@ class SelfRegisterView(viewsets.ModelViewSet):
     # Register user information
     queryset = SelfRegistration.objects.all()
     serializer_class = SelfRegistrationSerializer
-    permission_classes = (AllowAny,)
+    # permission_classes = (AllowAny,)
 
 class SelfRegistrationSampleView(viewsets.ModelViewSet):
     # registration user information sample view
     queryset= SelfRegistration_Sample.objects.all()
     serializer_class = SelfRegistrationSerializerSample
-    permission_classes = (AllowAny,)
+    # permission_classes = (AllowAny,)
 
     def perform_create(self, serializer):
         # Hash password but passwords are not required
@@ -161,7 +161,7 @@ def email_verification_otp(request):
 
 
 @api_view(['post'])
-@permission_classes([AllowAny])
+# @permission_classes([AllowAny])
 def get_token_key_by_userid(request):
     # geting token by userid
     data = request.data
@@ -174,7 +174,7 @@ def get_token_key_by_userid(request):
         return Response({'status': 500, 'error': str(e)}, status=500)
 
 @api_view(['post'])
-@permission_classes([AllowAny])
+# @permission_classes([AllowAny])
 def get_userid_by_token(request):
     # get user_id by passing token
     data = request.data
@@ -555,7 +555,7 @@ def all_basic_data(request):
 
 
 class EmployeeRegistrationView(viewsets.ModelViewSet):
-    permission_classes = [permissions.AllowAny]
+    # permission_classes = [permissions.AllowAny]
     queryset = EmployeeRegistration.objects.all()
     serializer_class = EmployeeRegistrationSerializer
 
@@ -577,7 +577,7 @@ class EmployeeRegistrationView(viewsets.ModelViewSet):
 
 class Employee_CompanyDetailsView(viewsets.ModelViewSet):
     # employee company info viewset
-    permission_classes = [permissions.AllowAny]
+    # permission_classes = [permissions.AllowAny]
     queryset = Employee_CompanyDetails.objects.all()
     serializer_class = Employee_CompanyDetailsSerializers
 
@@ -590,7 +590,7 @@ class Employee_CompanyDetailsView(viewsets.ModelViewSet):
 
 class EmployeeIndustrialInfoView(viewsets.ModelViewSet):
     # industrail info viewsets
-    permission_classes = [permissions.AllowAny]
+    # permission_classes = [permissions.AllowAny]
     queryset =Employee_IndustryInfo.objects.all()
     serializer_class=Employee_IndustryInfoSerializer
 

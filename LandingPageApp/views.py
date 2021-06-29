@@ -8,7 +8,7 @@ from RegistrationApp.models import SelfRegistration, BasicCompanyDetails, Indust
 
 
 @api_view(['get'])
-@permission_classes([AllowAny])
+# @permission_classes([AllowAny])
 def maincore_all_list(request):
     # maincore master all data by using filter
     try:
@@ -21,7 +21,7 @@ def maincore_all_list(request):
         return Response({'status': 500, 'error': str(e)}, status=500)
 
 @api_view(['post'])
-@permission_classes([AllowAny])
+# @permission_classes([AllowAny])
 def maincore_list(request):
     # maincore master all data by using filter and passing maincore_id and maincore_name
     data=request.data
@@ -37,7 +37,7 @@ def maincore_list(request):
         return Response({'status':500, 'error':str(e)}, status=500)
 
 @api_view(['post'])
-@permission_classes([AllowAny])
+# @permission_classes([AllowAny])
 def category_list(request):
     # category master all data by using filter and passing maincore_id
     data = request.data
@@ -66,7 +66,7 @@ def category_list(request):
 
 
 @api_view(['post'])
-@permission_classes([AllowAny])
+# @permission_classes([AllowAny])
 def subcategory_list(request):
     # sub_category master all data by using filter and passing category
     data = request.data
@@ -81,7 +81,7 @@ def subcategory_list(request):
         return Response({'status': 500, 'error': str(e)}, status=500)
 
 @api_view(['post'])
-@permission_classes([AllowAny])
+# @permission_classes([AllowAny])
 def subcategory_list_category_in_array(request):
     # sub_category master all data by using filter and passing category in array format. example: category[1,2,3]
     data = request.data
@@ -99,7 +99,7 @@ def subcategory_list_category_in_array(request):
 
 
 @api_view(['post'])
-@permission_classes([AllowAny])
+# @permission_classes([AllowAny])
 def company_name_search(request):
     # company_name search by passing company names to basic_info and using icontains
     data=request.data
@@ -114,7 +114,7 @@ def company_name_search(request):
 
 
 @api_view(['post'])
-@permission_classes([AllowAny])
+# @permission_classes([AllowAny])
 def sub_category_search_by_name(request):
     # sub_category name search by passing sub_category_names to sub_category_master and using icontains
     data = request.data
@@ -131,7 +131,7 @@ def sub_category_search_by_name(request):
 
 
 @api_view(['post'])
-@permission_classes([AllowAny])
+# @permission_classes([AllowAny])
 def category_search_by_name(request):
     # category_name master search by passing category_name to category_master and using icontains
     data=request.data
@@ -156,7 +156,7 @@ def category_search_by_name(request):
         return Response({'status': 500, 'error': str(e)}, status=500)
 
 @api_view(['post'])
-@permission_classes([AllowAny])
+# @permission_classes([AllowAny])
 def company_details_by_category_id(request):
     # get company details by passing category_id to sub_category and also fetching basic details and industry hierarchy
 
@@ -191,7 +191,7 @@ def company_details_by_category_id(request):
 
 
 @api_view(['get'])
-@permission_classes([AllowAny])
+# @permission_classes([AllowAny])
 def get_all_billing_cities(request):
     # getting bill_city by using filter from Billing Address
     try:
@@ -204,7 +204,7 @@ def get_all_billing_cities(request):
         return Response({'status': 500, 'error': str(e)}, status=500)
 
 @api_view(['post'])
-@permission_classes([AllowAny])
+# @permission_classes([AllowAny])
 def get_all_company_details_company_code(request):
     # get all basic-info details by passing company_code
     data=request.data
@@ -220,7 +220,7 @@ def get_all_company_details_company_code(request):
 
 
 @api_view(['post'])
-@permission_classes([AllowAny])
+# @permission_classes([AllowAny])
 def company_details_by_subcategory_id(request):
     # get company details by passing sub_category_id to sub_category and also fetching basic details and industry hierarchy
     data=request.data

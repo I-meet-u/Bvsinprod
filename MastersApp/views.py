@@ -856,10 +856,65 @@ def sub_category_master_history(request):
 
 
 
+
+
+#
+# class IndustryServeUploadView(APIView):
+#     permission_classes=(AllowAny,)
+#     def post(self, request):
+#         rowdata=[]
+#         newdata=[]
+#         newval=[]
+#         paramFile =request.data['csv_industry_file']
+#         # portfolio1 = csv.DictReader(paramFile)
+#         # list_of_dict = list(portfolio1)
+#         decoded_file = paramFile.read().decode()
+#         # upload_products_csv.delay(decoded_file, request.user.pk)
+#         io_string = io.StringIO(decoded_file)
+#         list_of_dict = csv.DictReader(io_string)
+#         try:
+#             industryobj = IndustryToServeMaster.objects.filter().values()
+#             for i in range(0,len(industryobj)):
+#                 rowdata.append(industryobj[i].get('industry_name'))
+#             for row in list_of_dict:
+#                 newval.append(row['industry_name'])
+#                 # if row['industry_name']  in  rowdata:
+#                 #     print('already present')
+#                 #     newdata.append(row['industry_name'])
+#                 # else:
+#                 #     print('not  present')
+#                 #     return Response({'status': 202, 'message': 'already present'}, status=202)
+#                 #     objs = [
+#                 #             IndustryToServeMaster(
+#                 #                 industry_name=row['industry_name'],
+#                 #                 csv_industry=paramFile
+#                 #
+#                 #             )
+#                 #
+#                 #
+#                 #         ]
+#                 #     msg = IndustryToServeMaster.objects.bulk_create(objs)
+#                 # else:
+#                 #     print('alreafy present')
+#                 #     newdata.append(row['industry_name'])
+#                 #     return Response({'status':202,'message':'already present'},status=202)
+#             return Response({'status':200,'message':'ok','data':newval},status=200)
+#         except Exception as e:
+#             return Response({'status': 500, 'error': str(e)}, status=500)
+#         #     returnmsg = {"status_code": 200}
+#         #     print('imported successfully')
+#         # except Exception as e:
+#         #     print('Error While Importing Data: ',)
+#         #     returnmsg = {"status_code": 500,'message':str(e)}
+#
+#         # return JsonResponse(returnmsg)
+
+
 class IndustryServeUploadView(APIView):
-    permission_classes = [permissions.AllowAny]
+    permission_classes = (AllowAny,)
     def post(self, request):
         rowdata=[]
+        alldata=[]
         paramFile =request.data['csv_industry_file']
         # portfolio1 = csv.DictReader(paramFile)
         # list_of_dict = list(portfolio1)
@@ -867,39 +922,34 @@ class IndustryServeUploadView(APIView):
         # upload_products_csv.delay(decoded_file, request.user.pk)
         io_string = io.StringIO(decoded_file)
         list_of_dict = csv.DictReader(io_string)
-        industryobj=IndustryToServeMaster.objects.filter().values()
         try:
             industryobj = IndustryToServeMaster.objects.filter().values()
             for i in range(0,len(industryobj)):
                 rowdata.append(industryobj[i].get('industry_name'))
-            # print(rowdata,'ofsfsd')
+            print(rowdata)
             for row in list_of_dict:
-                # print(row['industry_name'])
-                if row['industry_name'] not in rowdata:
-                    print('Not present')
+                if row['industry_name'] not in rowdata and row!="":
+                    industryobj1= IndustryToServeMaster.objects.last()
+                    print('no data,sorry')
+                    code = int(industryobj1.industry_code)
+                    # print(code)
+                    industrycodeval=code+1
+                    # print(industrycodeval,'cxc')
                     objs = [
                         IndustryToServeMaster(
                             industry_name=row['industry_name'],
-                            is_verified=row['is_verified'],
-                            created_on=row['created_on'],
-                            updated_on=row['updated_on'],
-                            admins=AdminRegister.objects.get(admin_id=row['admins_id']),
-                            status=row['status'],
-                            csv_industry=paramFile
+                            csv_industry=paramFile,
+                            industry_code=industrycodeval
 
-                        )
-
-                    ]
+                        )]
                     msg = IndustryToServeMaster.objects.bulk_create(objs)
+                    print(msg, 'meeeee')
+                else:
+                    if row['industry_name'] in rowdata:
+                        rowdata.append(row['industry_name'])
+                        print(row['industry_name'],'already present')
+                        continue
+            return Response({'status': 200, 'message': 'ok','data':rowdata}, status=200)
 
-                # return Response({'status': 202, 'message': "Already Present"}, status=202)
-            return Response({'status':200,'message':'okkk'},status=200)
-
-                #
-                # msg = IndustryToServeMaster.objects.bulk_create(objs)
-                # returnmsg = {"status_code": 200}
-                # print('imported successfully')
         except Exception as e:
-            returnmsg = {"status_code": 500,'message':str(e)}
-
-        # return JsonResponse(returnmsg)
+            return Response({'status': 500, 'error': str(e)}, status=500)

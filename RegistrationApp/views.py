@@ -891,7 +891,7 @@ def checkemailotp(request):
     try:
         user = SelfRegistration.objects.get(id=userid)
         if user:
-            if user.user.email_otp == data['email_otp']:
+            if user.email_otp == data['email_otp']:
                 return Response({'status': 200, 'message': "Both OTP Matching"}, status=200)
             else:
                 return Response({'status': 202, 'message': "OTP Not Matching"}, status=202)

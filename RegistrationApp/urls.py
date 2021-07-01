@@ -49,6 +49,8 @@ urlpatterns = [
     path('sendSMS/',sendSMS),
     path('sendOtpmail/',sendOtpmail),
     path('checkotp/',views.checkotp),
+    path('checkemailotp/',views.checkemailotp),
+    path('checkphoneotp/',views.checkphoneotp),
     path('changeemail/',views.changeemail),
     path('changephone/',views.changephone),
     path('uploaduserprofile/',views.uploaduserprofile),

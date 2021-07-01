@@ -883,6 +883,39 @@ def checkotp(request):
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)
 
+@api_view(['post'])
+@permission_classes((AllowAny,))
+def checkemailotp(request):
+    data = request.data
+    userid = data['userid']
+    try:
+        user = SelfRegistration.objects.get(id=userid)
+        if user:
+            if user.user.email_otp == data['email_otp']:
+                return Response({'status': 200, 'message': "Both OTP Matching"}, status=200)
+            else:
+                return Response({'status': 202, 'message': "OTP Not Matching"}, status=202)
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)
+
+
+@api_view(['post'])
+@permission_classes((AllowAny,))
+def checkphoneotp(request):
+    data=request.data
+    userid=data['userid']
+    try:
+        user = SelfRegistration.objects.get(id=userid)
+        if user:
+            if user.phone_otp==data['phone_otp']:
+
+                return Response({'status': 200, 'message': "Both OTP Matching"}, status=200)
+            else:
+                return Response({'status': 202, 'message': "OTP Not Matching"}, status=202)
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)
+
+
 
 @api_view(['post'])
 @permission_classes((AllowAny,))

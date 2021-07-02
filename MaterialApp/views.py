@@ -303,5 +303,5 @@ def buyer_product_create(request):
                                                buyer_document=data['buyer_document'],buyer_additional_specifications=data['buyer_additional_specifications'],buyer_add_product_supplies=data['buyer_add_product_supplies'],
                                                updated_by=SelfRegistration.objects.get(id=userid),created_by=userid)
 
-    productbuyer=BuyerProductDetails.objects.filter(buyer_product_id=buyerobj.buyer_product_id).values()
-    return Response({'status':201,'message':'Buyer Product Created','data':productbuyer},status=201)
+    # productbuyer=BuyerProductDetails.objects.filter(buyer_product_id=buyerobj.buyer_product_id).values()
+    return Response({'status':201,'message':'Buyer Product Created'},status=201)

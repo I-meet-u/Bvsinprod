@@ -167,18 +167,18 @@ class HSNMasterSerializer(serializers.ModelSerializer):
         model=HSNMaster
         fields='__all__'
 
-    def create(self, validate_data):
-        # to add any extra details into the object before saving
-        print(validate_data)
-        hsnobj = HSNMaster.objects.count()
-        if hsnobj == 0:
-            hsn_code = '1201'
-        else:
-            hsnobj = HSNMaster.objects.last()
-            print(hsnobj.hsn_code)
-            hsn_code = int(hsnobj.hsn_code) + 1
-        values = HSNMaster.objects.create(hsn_code=hsn_code, **validate_data)
-        return values
+    # def create(self, validate_data):
+    #     # to add any extra details into the object before saving
+    #     print(validate_data)
+    #     hsnobj = HSNMaster.objects.count()
+    #     if hsnobj == 0:
+    #         hsn_code = '1201'
+    #     else:
+    #         hsnobj = HSNMaster.objects.last()
+    #         print(hsnobj.hsn_code)
+    #         hsn_code = int(hsnobj.hsn_code) + 1
+    #     values = HSNMaster.objects.create(hsn_code=hsn_code, **validate_data)
+    #     return values
 
 class SACMasterSerializer(serializers.ModelSerializer):
     # sac_master serializer
@@ -186,17 +186,17 @@ class SACMasterSerializer(serializers.ModelSerializer):
         model=SACMaster
         fields='__all__'
 
-    def create(self, validate_data):
-        # to add any extra details into the object before saving
-        print(validate_data)
-        sacobj = SACMaster.objects.count()
-        if sacobj == 0:
-            sac_code = '1301'
-        else:
-            sacobj = SACMaster.objects.last()
-            sac_code = int(sacobj.sac_code) + 1
-        values = SACMaster.objects.create(sac_code=sac_code, **validate_data)
-        return values
+    # def create(self, validate_data):
+    #     # to add any extra details into the object before saving
+    #     print(validate_data)
+    #     sacobj = SACMaster.objects.count()
+    #     if sacobj == 0:
+    #         sac_code = '1301'
+    #     else:
+    #         sacobj = SACMaster.objects.last()
+    #         sac_code = int(sacobj.sac_code) + 1
+    #     values = SACMaster.objects.create(sac_code=sac_code, **validate_data)
+    #     return values
 
 class CurrencyMasterSerializer(serializers.ModelSerializer):
     # currency master serializer

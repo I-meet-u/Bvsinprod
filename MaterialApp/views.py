@@ -3,15 +3,17 @@ from django.shortcuts import render
 # Create your views here.
 
 from rest_framework import viewsets, permissions
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 
 from RegistrationApp.models import SelfRegistration
-from .models import VendorProduct_BasicDetails, VendorProduct_GeneralDetails,VendorProduct_TechnicalSpecifications,VendorProduct_ProductFeatures,VendorProduct_Documents
+from .models import VendorProduct_BasicDetails, VendorProduct_GeneralDetails, VendorProduct_TechnicalSpecifications, \
+    VendorProduct_ProductFeatures, VendorProduct_Documents, BuyerProductDetails
 
 from .serializers import VendorProduct_BasicDetailsSerializer, VendorProduct_GeneralDetailsSerializer, \
     VendorProduct_TechnicalSpecificationsSerialzer, VendorProduct_ProductFeaturesSerializer, \
-    VendorProduct_DocumentsSerializer
+    VendorProduct_DocumentsSerializer, BuyerProductDetailsSerializer
 
 
 # class VendorProduct_BasicDetailsView(viewsets.ModelViewSet):
@@ -266,7 +268,40 @@ class VendorProduct_BasicDetailsView(viewsets.ModelViewSet):
 
 
             return Response({'status': 201, 'message': 'Vendor Product  Created'}, status=201)
-            # else:
-            #     return Response({'status': 204, 'message': 'Not Present or enter type name properly'}, status=204)
         except Exception as e:
             return Response({'status': 500, 'error': str(e)}, status=500)
+
+
+
+class BuyerProductDetailsView(viewsets.ModelViewSet):
+    permission_classes = [permissions.AllowAny]
+    queryset = BuyerProductDetails.objects.all()
+    serializer_class = BuyerProductDetailsSerializer
+
+@api_view(['post'])
+@permission_classes((AllowAny,))
+def buyer_product_create(request):
+    data=request.data
+    userid=data['userid']
+    ccode=data['ccode']
+    buyerdetailsobj=BuyerProductDetails.objects.filter(updated_by=userid).order_by('-buyer_numeric').values()
+    if buyerdetailsobj:
+        print(buyerdetailsobj)
+        buyerobj=BuyerProductDetails.objects.create(buyer_item_type=data['buyer_item_type'],buyer_numeric=buyerdetailsobj[0].get('buyer_numeric')+1,buyer_item_code=str(ccode)+"-"+str(buyerdetailsobj[0].get('buyer_numeric')),buyer_item_name=data['buyer_item_name'],buyer_item_description=data['buyer_item_description'],
+                                                    buyer_uom=data['buyer_uom'],buyer_hsn_sac=data['buyer_hsn_sac'],buyer_unit_price=data['buyer_unit_price'],buyer_currency=data['buyer_currency'],
+                                                    buyer_category=data['buyer_category'],buyer_department=data['buyer_department'],buyer_item_group=data['buyer_item_group'],
+                                                    buyer_annual_consumption=data['buyer_annual_consumption'],buyer_safety_stock=data['buyer_safety_stock'],buyer_model_no=data['buyer_model_no'],buyer_document=data['buyer_document'],
+                                                    buyer_additional_specifications=data['buyer_additional_specifications'],buyer_add_product_supplies=data['buyer_add_product_supplies'],
+                                                    updated_by=SelfRegistration.objects.get(id=userid),created_by=userid)
+
+    else:
+        print("data not exist")
+        buyerobj = BuyerProductDetails.objects.create(buyer_item_type=data['buyer_item_type'],
+                                               buyer_numeric=1002,buyer_item_code=str(ccode)+"-"+"1001",buyer_item_name=data['buyer_item_name'],buyer_item_description=data['buyer_item_description'],
+                                               buyer_uom=data['buyer_uom'], buyer_hsn_sac=data['buyer_hsn_sac'],buyer_unit_price=data['buyer_unit_price'],buyer_currency=data['buyer_currency'],buyer_category=data['buyer_category'], buyer_department=data['buyer_department'],
+                                               buyer_item_group=data['buyer_item_group'],buyer_annual_consumption=data['buyer_annual_consumption'],buyer_safety_stock=data['buyer_safety_stock'],buyer_model_no=data['buyer_model_no'],
+                                               buyer_document=data['buyer_document'],buyer_additional_specifications=data['buyer_additional_specifications'],buyer_add_product_supplies=data['buyer_add_product_supplies'],
+                                               updated_by=SelfRegistration.objects.get(id=userid),created_by=userid)
+
+    productbuyer=BuyerProductDetails.objects.filter(buyer_product_id=buyerobj.buyer_product_id).values()
+    return Response({'status':201,'message':'Buyer Product Created','data':productbuyer},status=201)

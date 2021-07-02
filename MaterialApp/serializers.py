@@ -1,7 +1,8 @@
 from rest_framework import  serializers
 from rest_framework.exceptions import ValidationError
 
-from .models import VendorProduct_BasicDetails, VendorProduct_GeneralDetails,VendorProduct_TechnicalSpecifications,VendorProduct_ProductFeatures,VendorProduct_Documents
+from .models import VendorProduct_BasicDetails, VendorProduct_GeneralDetails, VendorProduct_TechnicalSpecifications, \
+    VendorProduct_ProductFeatures, VendorProduct_Documents, BuyerProductDetails
 
 
 class VendorProduct_BasicDetailsSerializer(serializers.ModelSerializer):
@@ -36,5 +37,9 @@ class VendorProduct_DocumentsSerializer(serializers.ModelSerializer):
         fields='__all__'
 
 
+class BuyerProductDetailsSerializer(serializers.ModelSerializer):
 
+    class Meta:
+        model=BuyerProductDetails
+        fields='__all__'
 

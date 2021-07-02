@@ -155,3 +155,35 @@ class VendorProduct_Documents(models.Model):
 #
 #     class Meta:
 #         db_table="VendorProduct_PricingOffer"
+
+class BuyerProductDetails(models.Model):
+    buyer_product_id = models.BigAutoField(primary_key=True)
+    buyer_item_type = models.CharField(max_length=100, null=True)
+    buyer_item_code = models.CharField(max_length=100, null=True, unique=True)
+    buyer_item_name = models.CharField(max_length=100, null=True)
+    buyer_item_description = models.TextField(null=True)
+    buyer_numeric = models.BigIntegerField(null=True)
+    buyer_uom = models.CharField(max_length=100, blank=True)
+    buyer_hsn_sac = models.CharField(max_length=100, blank=True)
+    buyer_unit_price = models.CharField(max_length=100, blank=True)
+    buyer_currency = models.CharField(max_length=50, blank=True)
+    buyer_country_of_origin = models.CharField(max_length=50, blank=True)
+    buyer_category=models.CharField(max_length=500,null=True)
+    buyer_department=models.CharField(max_length=400,null=True,blank=True)
+    buyer_item_group = models.CharField(max_length=500, blank=True)
+    buyer_annual_consumption = models.CharField(max_length=500, blank=True)
+    buyer_safety_stock = models.CharField(max_length=100, blank=True)
+    buyer_model_no = models.CharField(max_length=500, blank=True)
+    buyer_document=models.FileField(upload_to='BuyerProductFiles',null=True,blank=True)
+    buyer_additional_specifications=models.TextField(null=True,blank=True)
+    buyer_add_product_supplies=models.CharField(max_length=200,null=True,blank=True)
+    created_on = models.DateTimeField(auto_now_add=True)
+    updated_on = models.DateTimeField(auto_now=True)
+    created_by = models.BigIntegerField()
+    updated_by = models.ForeignKey(SelfRegistration, on_delete=models.CASCADE)
+    history = HistoricalRecords()
+
+    class Meta:
+        db_table = "BuyerProductDetails"
+
+

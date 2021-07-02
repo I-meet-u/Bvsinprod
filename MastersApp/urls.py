@@ -80,8 +80,15 @@ urlpatterns = [
     path('delete-item-group-master/', views.delete_item_group_master),
     path('history-item-group-master/', views.item_group_master_history),
 
+    # disable,enable,delete,history of item group master
+    path('disable-hsn-master/', views.disable_hsn_master),
+    path('enable-hsn-master/', views.enable_hsn_master),
+    path('delete-hsn-master/', views.delete_hsn_master),
+    path('history-hsn-master/', views.hsn_master_history),
 
-
-
+    path('disable-sac-master/', views.disable_sac_master),
+    path('enable-sac-master/', views.enable_sac_master),
+    path('delete-sac-master/', views.delete_sac_master),
+    path('history-sac-master/', views.sac_master_history),
 
 ]

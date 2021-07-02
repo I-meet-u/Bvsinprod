@@ -136,6 +136,21 @@ class HSNMasterSerializerView(viewsets.ModelViewSet):
     queryset = HSNMaster.objects.all()
     serializer_class = HSNMasterSerializer
 
+    def get_queryset(self):
+        # overriding get_queryset by passing user_id. Here user_id is nothing but updated_by
+        hsnmasterobj = HSNMaster.objects.filter(updated_by=self.request.GET.get('updated_by')).order_by('hsn_id')
+        hsnotherdataobj = HSNMaster.objects.filter(admins=1).order_by('hsn_id')
+        hsnvalue = list(chain(hsnmasterobj, hsnotherdataobj))
+        if hsnmasterobj and not hsnotherdataobj:
+            return hsnmasterobj
+        elif not hsnmasterobj or hsnotherdataobj:
+            return hsnotherdataobj
+
+        elif hsnmasterobj and hsnotherdataobj:
+            return  hsnvalue
+
+        raise ValidationError({'message': 'HSN Master details not exist', 'status': 204})
+
 
 class SACMasterView(viewsets.ModelViewSet):
     # sac_master  viewsets
@@ -143,6 +158,20 @@ class SACMasterView(viewsets.ModelViewSet):
     queryset = SACMaster.objects.all()
     serializer_class = SACMasterSerializer
 
+    def get_queryset(self):
+        # overriding get_queryset by passing user_id. Here user_id is nothing but updated_by
+        sacmasterobj = SACMaster.objects.filter(updated_by=self.request.GET.get('updated_by')).order_by('sac_id')
+        sacotherdataobj = SACMaster.objects.filter(admins=1).order_by('sac_id')
+        sacval = list(chain(sacmasterobj, sacotherdataobj))
+        if sacmasterobj and not sacotherdataobj:
+            return sacmasterobj
+        elif not sacmasterobj or sacotherdataobj :
+            return sacotherdataobj
+
+        if sacmasterobj and sacotherdataobj:
+            return sacval
+
+        raise ValidationError({'message': 'SAC Master details not exist', 'status': 204})
 
 
 class CurrencyMasterView(viewsets.ModelViewSet):
@@ -1071,3 +1100,170 @@ def item_group_master_history(request):
 
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)
+
+
+
+@api_view(['put'])
+@permission_classes([AllowAny,])
+def disable_hsn_master(request):
+    # disable hsn_master by changing status from Active to Disabled by passing primary key(natureid)
+    data=request.data
+    hsnid=data['hsnid']
+    try:
+        hsnobj=HSNMaster.objects.filter(hsn_id__in=hsnid).values()
+        if hsnobj:
+            for i in range(0,len(hsnobj)):
+                hsnobjget=HSNMaster.objects.get(hsn_id=hsnobj[i].get('hsn_id'))
+                print(hsnobjget)
+                if hsnobjget.status=='Active':
+                    hsnobjget.status='Disabled'
+                    hsnobjget.save()
+                else:
+                    return Response({'status': 202, 'message': 'Already status disabled'}, status=202)
+            return Response({'status':200,'message':'HSN Master status changed to disabled'},status=200)
+        else:
+            return Response({'status': 204, 'message': 'Not exist'}, status=204)
+    except Exception as e:
+        return Response({'status':500,'error':str(e)},status=500)
+
+
+@api_view(['put'])
+@permission_classes([AllowAny,])
+def enable_hsn_master(request):
+    # enable hsn_master by changing status from Active to Disabled by passing primary key(natureid)
+    data=request.data
+    hsnid=data['hsnid']
+    try:
+        hsnobj=HSNMaster.objects.filter(hsn_id__in=hsnid).values()
+        if hsnobj:
+            for i in range(0,len(hsnobj)):
+                hsnobjget=HSNMaster.objects.get(hsn_id=hsnobj[i].get('hsn_id'))
+                print(hsnobjget)
+                if hsnobjget.status=='Disabled':
+                    hsnobjget.status='Active'
+                    hsnobjget.save()
+                else:
+                    return Response({'status': 202, 'message': 'Already status enabled'}, status=202)
+            return Response({'status':200,'message':'HSN Master status changed to enabled'},status=200)
+        else:
+            return Response({'status': 204, 'message': 'Not exist'}, status=204)
+    except Exception as e:
+        return Response({'status':500,'error':str(e)},status=500)
+
+@api_view(['post'])
+@permission_classes([AllowAny,])
+def delete_hsn_master(request):
+    # delete hsn_master by passing primary key(natureid)
+    data=request.data
+    hsnid=data['hsnid']
+    try:
+        hsnobj=HSNMaster.objects.filter(hsn_id__in=hsnid).values()
+        if hsnobj:
+            for i in range(0,len(hsnobj)):
+                hsnobjget=HSNMaster.objects.get(hsn_id=hsnobj[i].get('hsn_id'))
+                if hsnobjget:
+                    hsnobjget.delete()
+
+            return Response({'status': 204, 'message': 'HSN Master data deleted'}, status=204)
+        return Response({'status':200,'message':'HSN Master data not present or already deleted'},status=200)
+
+    except Exception as e:
+        return Response({'status':500,'error':str(e)},status=500)
+
+@api_view(['get'])
+@permission_classes([AllowAny,])
+def hsn_master_history(request):
+    try:
+        hsnmasterobj=HSNMaster.history.filter().values()
+        if hsnmasterobj:
+            return Response({'status':200,'message':'HSN Master history','data':hsnmasterobj},status=200)
+        else:
+            return Response({'status': 204, 'message': 'HSN Master data not persent'},
+                            status=204)
+
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)
+
+
+
+@api_view(['put'])
+@permission_classes([AllowAny,])
+def disable_sac_master(request):
+    # disable sac_master by changing status from Active to Disabled by passing primary key(natureid)
+    data=request.data
+    sacid=data['sacid']
+    try:
+        sacobj=SACMaster.objects.filter(sac_id__in=sacid).values()
+        if sacobj:
+            for i in range(0,len(sacobj)):
+                sacobjget=SACMaster.objects.get(sac_id=sacobj[i].get('sac_id'))
+                print(sacobjget)
+                if sacobjget.status=='Active':
+                    sacobjget.status='Disabled'
+                    sacobjget.save()
+                else:
+                    return Response({'status': 202, 'message': 'Already status disabled'}, status=202)
+            return Response({'status':200,'message':'SAC Master status changed to disabled'},status=200)
+        else:
+            return Response({'status': 204, 'message': 'Not exist'}, status=204)
+    except Exception as e:
+        return Response({'status':500,'error':str(e)},status=500)
+
+
+@api_view(['put'])
+@permission_classes([AllowAny,])
+def enable_sac_master(request):
+    # enable sac_master by changing status from Active to Disabled by passing primary key(natureid)
+    data=request.data
+    sacid=data['sacid']
+    try:
+        sacobj=SACMaster.objects.filter(sac_id__in=sacid).values()
+        if sacobj:
+            for i in range(0,len(sacobj)):
+                sacobjget=SACMaster.objects.get(sac_id=sacobj[i].get('sac_id'))
+                print(sacobjget)
+                if sacobjget.status=='Disabled':
+                    sacobjget.status='Active'
+                    sacobjget.save()
+                else:
+                    return Response({'status': 202, 'message': 'Already status enabled'}, status=202)
+            return Response({'status':200,'message':'SAC Master status changed to enabled'},status=200)
+        else:
+            return Response({'status': 204, 'message': 'Not exist'}, status=204)
+    except Exception as e:
+        return Response({'status':500,'error':str(e)},status=500)
+
+@api_view(['post'])
+@permission_classes([AllowAny,])
+def delete_sac_master(request):
+    # delete hsn_master by passing primary key(natureid)
+    data=request.data
+    sacid=data['sacid']
+    try:
+        sacobj=SACMaster.objects.filter(sac_id__in=sacid).values()
+        if sacobj:
+            for i in range(0,len(sacobj)):
+                sacobjget=SACMaster.objects.get(sac_id=sacobj[i].get('sac_id'))
+                if sacobjget:
+                    sacobjget.delete()
+
+            return Response({'status': 204, 'message': 'SAC Master data deleted'}, status=204)
+        return Response({'status':200,'message':'SAC Master data not present or already deleted'},status=200)
+
+    except Exception as e:
+        return Response({'status':500,'error':str(e)},status=500)
+
+@api_view(['get'])
+@permission_classes([AllowAny,])
+def sac_master_history(request):
+    try:
+        sacmasterobj=SACMaster.history.filter().values()
+        if sacmasterobj:
+            return Response({'status':200,'message':'SAC Master history','data':sacmasterobj},status=200)
+        else:
+            return Response({'status': 204, 'message': 'SAC Master data not persent'},
+                            status=204)
+
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)
+

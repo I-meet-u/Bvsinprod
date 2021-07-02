@@ -589,6 +589,9 @@ def all_masters(request):
         deliverymasterobj = DeliveryMaster.objects.filter().values()
         if deliverymasterobj:
             masterslist.append({'delivery_master': deliverymasterobj})
+        itemgroupmasterobj = ItemGroupMaster.objects.filter().values()
+        if itemgroupmasterobj:
+            masterslist.append({'item_group_master': itemgroupmasterobj})
         return Response({'status': 200, 'message': 'Masters List','data':masterslist}, status=200)
 
     except Exception as e:

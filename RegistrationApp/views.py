@@ -883,6 +883,40 @@ def checkotp(request):
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)
 
+@api_view(['post'])
+@permission_classes((AllowAny,))
+def checkemailotp(request):
+    data = request.data
+    userid = data['userid']
+    try:
+        user = SelfRegistration.objects.get(id=userid)
+        if user:
+            if user.email_otp == data['email_otp']:
+
+                return Response({'status': 200, 'message': "OTP Matching"}, status=200)
+            else:
+                return Response({'status': 202, 'message': "OTP Not Matching"}, status=202)
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)
+
+
+@api_view(['post'])
+@permission_classes((AllowAny,))
+def checkphoneotp(request):
+    data=request.data
+    userid=data['userid']
+    try:
+        user = SelfRegistration.objects.get(id=userid)
+        if user:
+            if user.phone_otp==data['phone_otp']:
+
+                return Response({'status': 200, 'message': "Both OTP Matching"}, status=200)
+            else:
+                return Response({'status': 202, 'message': "OTP Not Matching"}, status=202)
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)
+
+
 
 @api_view(['post'])
 @permission_classes((AllowAny,))
@@ -1056,6 +1090,23 @@ def employee_login(request):
 
 
 
+@api_view(['post'])
+@permission_classes((AllowAny,))
+def getcompanycode(request):
+    data=request.data
+    usercompcode=""
+    try:
+        basicobj=BasicCompanyDetails.objects.filter().last()
+        print(basicobj)
+        Basicobjuser=BasicCompanyDetails.objects.filter(updated_by=data['updated_by']).values()
+        if len(Basicobjuser)!=0:
+            usercompcode=Basicobjuser[0].get('company_code')
+            return Response({'status': 200, 'lastcompanycode':basicobj.company_code,'usercode':usercompcode}, status=200)
+        else:
+            return Response({'status': 202, 'lastcompanycode': basicobj.company_code, 'usercode':0},
+                            status=202)
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)
 
 
 

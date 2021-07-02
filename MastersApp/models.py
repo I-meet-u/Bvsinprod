@@ -374,3 +374,22 @@ class CountryMaster(models.Model):
 
     class Meta:
         db_table = "CountryMaster"
+
+
+class ItemGroupMaster(models.Model):
+    # item_group_master models and fields
+    item_group_id = models.BigAutoField(primary_key=True)
+    item_group_code = models.CharField(max_length=30,null=True)
+    item_groups = models.CharField(max_length=200, unique=True,null=True,blank=True)
+    is_verified = models.BooleanField(default=False)
+    created_on = models.DateTimeField(auto_now_add=True)
+    updated_on = models.DateTimeField(auto_now=True)
+    created_by_name=models.CharField(max_length=100,null=True,blank=True)
+    updated_by_name = models.CharField(max_length=100, null=True, blank=True)
+    status = models.CharField(max_length=30, default='Active')
+    admins = models.ForeignKey(AdminRegister, on_delete=models.CASCADE, null=True,blank=True)
+    updated_by = models.ForeignKey(CreateUser, on_delete=models.CASCADE, null=True,blank=True)
+    history = HistoricalRecords()
+
+    class Meta:
+        db_table = "ItemGroupMaster"

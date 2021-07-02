@@ -3,7 +3,7 @@ from django.http import request
 from .models import MaincoreMaster, CategoryMaster, SubCategoryMaster, \
     IndustryToServeMaster, NatureOfBusinessMaster, SupplyCapabilitiesMaster, PincodeMaster, UOMMaster, DepartmentMaster, \
     DesignationMaster, TaxMaster, HSNMaster, SACMaster, CurrencyMaster, PFChargesMaster, FrieghtChargesMaster, \
-    DeliveryMaster, CountryMaster, WarrantyMaster, GuaranteeMaster
+    DeliveryMaster, CountryMaster, WarrantyMaster, GuaranteeMaster, ItemGroupMaster
 from rest_framework import serializers
 
 class IndustryToServeMasterSerializer(serializers.ModelSerializer):
@@ -214,3 +214,22 @@ class CountryMasterSerializer(serializers.ModelSerializer):
     class Meta:
         model=CountryMaster
         fields='__all__'
+
+class ItemGroupMasterSerializer(serializers.ModelSerializer):
+    # item_group master serializer
+    class Meta:
+        model=ItemGroupMaster
+        fields='__all__'
+
+    def create(self, validate_data):
+        # to add any extra details into the object before saving
+        print(validate_data)
+        itemgroupobj = ItemGroupMaster.objects.count()
+        if itemgroupobj == 0:
+            item_group_code = '1601'
+        else:
+            itemgroupobj = ItemGroupMaster.objects.last()
+            print(itemgroupobj.item_group_code)
+            item_group_code = int(itemgroupobj.item_group_code) + 1
+        values = ItemGroupMaster.objects.create(item_group_code=item_group_code, **validate_data)
+        return values

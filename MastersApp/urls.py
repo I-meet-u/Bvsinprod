@@ -25,6 +25,7 @@ router.register('warrantee-master',views.WarrantyMasterView)
 router.register('guarantee-master',views.GuaranteeMasterView)
 router.register('delivery-master',views.DeliveryMasterView)
 router.register('country-master',views.CountryMasterView)
+router.register('item-group-master',views.ItemGroupMasterView)
 urlpatterns = [
     path('masters-router-urls/',include(router.urls)), #router urls are included
 
@@ -71,8 +72,13 @@ urlpatterns = [
     path('disable-sub-category-master/', views.disable_sub_category_master),
     path('enable-sub-category-master/', views.enable_sub_category_master),
     path('delete-sub-category-master/', views.delete_sub_category_master),
-    path('import-bulk-industry-serve/', views.IndustryServeUploadView.as_view())
-#
+    path('import-bulk-industry-serve/', views.IndustryServeUploadView.as_view()),
+
+    # disable,enable,delete,history of item group master
+    path('disable-item-group-master/', views.disable_item_group_master),
+    path('enable-item-group-master/', views.enable_item_group_master),
+    path('delete-item-group-master/', views.delete_item_group_master),
+    path('history-item-group-master/', views.item_group_master_history),
 
 
 

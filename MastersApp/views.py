@@ -22,11 +22,11 @@ from .serializers import MainCoreMasterSerializer, CategoryMasterSerializer, Sub
     DepartmentMasterSerializer, DesignationMasterSerializer, TaxMasterSerializer, HSNMasterSerializer, \
     SACMasterSerializer, CurrencyMasterSerializer, PFChargesMasterSerializer, FrieghtChargesMasterSerializer, \
     DeliveryMasterSerializer, CountryMasterSerializer, WarrantyMasterSerializer, \
-    GuaranteeMasterSerializer
+    GuaranteeMasterSerializer, ItemGroupMasterSerializer
 from .models import MaincoreMaster, CategoryMaster, SubCategoryMaster, \
     IndustryToServeMaster, NatureOfBusinessMaster, SupplyCapabilitiesMaster, PincodeMaster, UOMMaster, DepartmentMaster, \
     DesignationMaster, TaxMaster, HSNMaster, SACMaster, CurrencyMaster, PFChargesMaster, FrieghtChargesMaster, \
-    DeliveryMaster, CountryMaster, WarrantyMaster, GuaranteeMaster
+    DeliveryMaster, CountryMaster, WarrantyMaster, GuaranteeMaster, ItemGroupMaster
 
 
 # Create your views here.
@@ -964,3 +964,107 @@ class IndustryServeUploadView(APIView):
             return Response({'status': 500, 'error': str(e)}, status=500)
 
 
+class ItemGroupMasterView(viewsets.ModelViewSet):
+    # item group master viewsets
+    permission_classes = (AllowAny,)
+    queryset = ItemGroupMaster.objects.all()
+    serializer_class= ItemGroupMasterSerializer
+
+    def get_queryset(self):
+        # overriding get_queryset by passing user_id. Here user_id is nothing but updated_by
+        itemgroupobj = ItemGroupMaster.objects.filter(updated_by=self.request.GET.get('updated_by')).order_by('item_group_id')
+        itemgroupdataobj=ItemGroupMaster.objects.filter(admins=1).values().order_by('item_group_id')
+        itemgroupval=list(chain(itemgroupobj,itemgroupdataobj))
+        if itemgroupobj:
+            return itemgroupobj
+        elif itemgroupdataobj and itemgroupobj:
+            return  itemgroupval
+        raise ValidationError({'message': 'Item group Master details not exist','status': 204})
+
+
+
+
+@api_view(['put'])
+@permission_classes([AllowAny,])
+def disable_item_group_master(request):
+    # disable item group master by changing status from Disabled to Active by passing primary key(subcategoryid)
+    data=request.data
+    itemgroupid=data['itemgroupid']
+    try:
+        itemgroupobj=ItemGroupMaster.objects.filter(item_group_id__in=itemgroupid).values()
+        if itemgroupobj:
+            for i in range(0,len(itemgroupobj)):
+                print(itemgroupobj[i].get('item_group_id'))
+                itemgroupobjget=ItemGroupMaster.objects.get(item_group_id=itemgroupobj[i].get('item_group_id'))
+                print(itemgroupobjget)
+                if itemgroupobjget.status=='Active':
+                    itemgroupobjget.status='Disabled'
+                    itemgroupobjget.save()
+                else:
+                    return Response({'status': 202, 'message': 'Already status Disabled'}, status=202)
+            return Response({'status':200,'message':'Item group Master status changed to Disabled'},status=200)
+        else:
+            return Response({'status': 204, 'message': 'Not exist'}, status=204)
+    except Exception as e:
+        return Response({'status':500,'error':str(e)},status=500)
+
+
+@api_view(['put'])
+@permission_classes([AllowAny,])
+def enable_item_group_master(request):
+    # enable item group master by changing status from Disabled to Active by passing primary key(subcategoryid)
+    data=request.data
+    itemgroupid=data['itemgroupid']
+    try:
+        itemgroupobj=ItemGroupMaster.objects.filter(item_group_id__in=itemgroupid).values()
+        if itemgroupobj:
+            for i in range(0,len(itemgroupobj)):
+                print(itemgroupobj[i].get('item_group_id'))
+                itemgroupobjget=ItemGroupMaster.objects.get(item_group_id=itemgroupobj[i].get('item_group_id'))
+                print(itemgroupobjget)
+                if itemgroupobjget.status=='Disabled':
+                    itemgroupobjget.status='Active'
+                    itemgroupobjget.save()
+                else:
+                    return Response({'status': 202, 'message': 'Already status Enabled'}, status=202)
+            return Response({'status':200,'message':'Item group Master status changed to Enabled'},status=200)
+        else:
+            return Response({'status': 204, 'message': 'Not exist'}, status=204)
+    except Exception as e:
+        return Response({'status':500,'error':str(e)},status=500)
+
+
+@api_view(['post'])
+@permission_classes([AllowAny,])
+def delete_item_group_master(request):
+    # enable item group master by changing status from Disabled to Active by passing primary key(subcategoryid)
+    data=request.data
+    itemgroupid=data['itemgroupid']
+    try:
+        itemgroupobj=ItemGroupMaster.objects.filter(item_group_id__in=itemgroupid).values()
+        if itemgroupobj:
+            for i in range(0,len(itemgroupobj)):
+                print(itemgroupobj[i].get('item_group_id'))
+                itemgroupobjget=ItemGroupMaster.objects.get(item_group_id=itemgroupobj[i].get('item_group_id'))
+                print(itemgroupobjget)
+                if itemgroupobjget:
+                    itemgroupobjget.delete()
+            return Response({'status':204, 'message':'Item group Master status data deleted'},status=204)
+        return Response({'status': 200, 'message': 'Item group Masters data not present or already deleted'},
+                        status=200)
+    except Exception as e:
+        return Response({'status':500,'error':str(e)},status=500)
+
+@api_view(['get'])
+@permission_classes([AllowAny,])
+def item_group_master_history(request):
+    try:
+        itemgroupmasterobj=ItemGroupMaster.history.filter().values()
+        if itemgroupmasterobj:
+            return Response({'status':200,'message':'Item group Master history','data':itemgroupmasterobj},status=200)
+        else:
+            return Response({'status': 204, 'message': 'Item group Master data not persent'},
+                            status=204)
+
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)

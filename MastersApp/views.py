@@ -5,6 +5,7 @@ from django.shortcuts import render
 from rest_framework import viewsets, status, generics, permissions
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.exceptions import ValidationError
+from rest_framework.pagination import PageNumberPagination
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from django.http import HttpResponse, JsonResponse
@@ -29,11 +30,19 @@ from .models import MaincoreMaster, CategoryMaster, SubCategoryMaster, \
 
 
 # Create your views here.
+# class StandardResultsSetPagination(PageNumberPagination):
+#     page_size = 20
+#     page_size_query_param = 'page_size'
+#     max_page_size = 1000
+
+
+
 class IndustryToServeMasterView(viewsets.ModelViewSet):
     # industry_servce master viewsets
     permission_classes = (AllowAny,)
     queryset = IndustryToServeMaster.objects.all()
     serializer_class = IndustryToServeMasterSerializer
+    # pagination_class = StandardResultsSetPagination
 
 class NatureOfBusinessMasterView(viewsets.ModelViewSet):
     # nature_of_business mster viewsets
@@ -953,3 +962,5 @@ class IndustryServeUploadView(APIView):
 
         except Exception as e:
             return Response({'status': 500, 'error': str(e)}, status=500)
+
+

@@ -91,4 +91,19 @@ urlpatterns = [
     path('delete-sac-master/', views.delete_sac_master),
     path('history-sac-master/', views.sac_master_history),
 
+    path('disable-frieght-master/', views.disable_frieght_charges_master),
+    path('enable-frieght-master/', views.enable_frieght_charges_master),
+    path('delete-frieght-master/', views.delete_freight_master),
+    path('history-frieght-master/', views.frieght_master_history),
+    # path('frieght-master-get-by-pk/',views.frieght_master_get_by_pk),
+
+
+
+    path('disable-pf-charge-master/', views.disable_pf_charge_master),
+    path('enable-pf_charge-master/', views.enable_pf_charge_master),
+    path('delete-pf_charge-master/', views.delete_pf_charge_master),
+    path('history-pf_charge-master/', views.pf_charges_master_history),
+    # path('pf_charge-master-get-by-pk/', views.pf_charges_master_get_by_pk)
+
 ]
+

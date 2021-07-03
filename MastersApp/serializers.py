@@ -210,6 +210,18 @@ class PFChargesMasterSerializer(serializers.ModelSerializer):
         model=PFChargesMaster
         fields='__all__'
 
+    def create(self, validate_data):
+        # to add any extra details into the object before saving
+        print(validate_data)
+        pfchargeobj = PFChargesMaster.objects.count()
+        if pfchargeobj == 0:
+            pf_charge_code = '1901'
+        else:
+            pfchargeobj = PFChargesMaster.objects.last()
+            pf_charge_code = int(pfchargeobj.pf_charge_code) + 1
+        values = PFChargesMaster.objects.create(pf_charge_code=pf_charge_code, **validate_data)
+        return values
+
 
 class FrieghtChargesMasterSerializer(serializers.ModelSerializer):
     # frieght master serializer

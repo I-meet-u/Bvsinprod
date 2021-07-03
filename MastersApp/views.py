@@ -91,16 +91,8 @@ class UOMMasterView(viewsets.ModelViewSet):
     def get_queryset(self):
         # overriding get_queryset by passing user_id. Here user_id is nothing but updated_by
         uommasterobj = UOMMaster.objects.filter(updated_by=self.request.GET.get('updated_by')).order_by('uom_id')
-        uomotherdataobj=UOMMaster.objects.filter(admins=1).values().order_by('uom_id')
-        uomvalue=list(chain(uommasterobj,uomotherdataobj))
-        if uommasterobj and not uomotherdataobj:
+        if uommasterobj:
             return uommasterobj
-        elif not uommasterobj and uomotherdataobj:
-            return uomotherdataobj
-
-        elif uommasterobj and uomotherdataobj:
-            return uomvalue
-
         raise ValidationError({'message': 'UOM Master details not exist', 'status': 204})
 
 
@@ -113,16 +105,8 @@ class DepartmentMasterView(viewsets.ModelViewSet):
     def get_queryset(self):
         # overriding get_queryset by passing user_id. Here user_id is nothing but updated_by
         departmentmasterobj = DepartmentMaster.objects.filter(updated_by=self.request.GET.get('updated_by')).order_by('department_id')
-        departmentotherdataobj = DepartmentMaster.objects.filter(admins=1).order_by('department_id')
-        departmentvalue = list(chain(departmentmasterobj, departmentotherdataobj))
-        if departmentmasterobj and not departmentotherdataobj:
-            return departmentmasterobj
-        elif not departmentmasterobj and departmentotherdataobj:
-            return departmentotherdataobj
-
-        elif departmentmasterobj and departmentotherdataobj:
-            return departmentvalue
-
+        if departmentmasterobj:
+            return  departmentmasterobj
         raise ValidationError({'message': 'Department Master details not exist', 'status': 204})
 
 class DesignationMasterView(viewsets.ModelViewSet):
@@ -135,16 +119,8 @@ class DesignationMasterView(viewsets.ModelViewSet):
         # overriding get_queryset by passing user_id. Here user_id is nothing but updated_by
         designationmasterobj = DesignationMaster.objects.filter(updated_by=self.request.GET.get('updated_by')).order_by(
             'designation_id')
-        designationotherdataobj = DesignationMaster.objects.filter(admins=1).order_by('designation_id')
-        designationval = list(chain(designationmasterobj, designationotherdataobj))
-        if designationmasterobj and not designationotherdataobj:
+        if designationmasterobj:
             return designationmasterobj
-        elif not designationmasterobj and designationotherdataobj:
-            return designationotherdataobj
-
-        elif designationmasterobj and designationotherdataobj:
-            return designationval
-
         raise ValidationError({'message': 'Designation Master details not exist', 'status': 204})
 
 class TaxMasterView(viewsets.ModelViewSet):
@@ -157,16 +133,8 @@ class TaxMasterView(viewsets.ModelViewSet):
         # overriding get_queryset by passing user_id. Here user_id is nothing but updated_by
         taxmasterobj = TaxMaster.objects.filter(updated_by=self.request.GET.get('updated_by')).order_by(
             'tax_id')
-        taxotherdataobj = TaxMaster.objects.filter(admins=1).order_by('tax_id')
-        taxvalue = list(chain(taxmasterobj, taxotherdataobj))
-        if taxmasterobj and not taxotherdataobj:
+        if taxmasterobj:
             return taxmasterobj
-        elif not taxmasterobj and taxotherdataobj:
-            return taxotherdataobj
-
-        elif taxmasterobj and taxotherdataobj:
-            return taxvalue
-
         raise ValidationError({'message': 'Tax Master details not exist', 'status': 204})
 
 
@@ -179,11 +147,8 @@ class HSNMasterSerializerView(viewsets.ModelViewSet):
     def get_queryset(self):
         # overriding get_queryset by passing user_id. Here user_id is nothing but updated_by
         hsnmasterobj = HSNMaster.objects.filter(updated_by=self.request.GET.get('updated_by')).order_by('hsn_id')
-        hsnotherdataobj = HSNMaster.objects.filter(admins=1).order_by('hsn_id')
-        hsnvalue = list(chain(hsnmasterobj, hsnotherdataobj))
         if hsnmasterobj:
-            return hsnvalue
-
+            return hsnmasterobj
         raise ValidationError({'message': 'HSN Master details not exist', 'status': 204})
 
 
@@ -196,10 +161,8 @@ class SACMasterView(viewsets.ModelViewSet):
     def get_queryset(self):
         # overriding get_queryset by passing user_id. Here user_id is nothing but updated_by
         sacmasterobj = SACMaster.objects.filter(updated_by=self.request.GET.get('updated_by')).order_by('sac_id')
-        sacotherdataobj = SACMaster.objects.filter(admins=1).order_by('sac_id')
-        sacvalue = list(chain(sacmasterobj,sacotherdataobj))
         if sacmasterobj:
-            return sacvalue
+            return sacmasterobj
 
         raise ValidationError({'message': 'SAC Master details not exist', 'status': 204})
 
@@ -213,10 +176,8 @@ class CurrencyMasterView(viewsets.ModelViewSet):
         # overriding get_queryset by passing user_id. Here user_id is nothing but updated_by
         currencymasterobj = CurrencyMaster.objects.filter(updated_by=self.request.GET.get('updated_by')).order_by(
             'currency_id')
-        currencyotherdataobj = CurrencyMaster.objects.filter(admins=1).order_by('currency_id')
-        currencyval = list(chain(currencymasterobj, currencyotherdataobj))
-        if currencymasterobj and currencyotherdataobj:
-            return currencyval
+        if currencymasterobj:
+            return  currencymasterobj
 
         raise ValidationError({'message': 'Currency Master details not exist', 'status': 204})
 
@@ -228,13 +189,9 @@ class PFChargesMasterView(viewsets.ModelViewSet):
 
     def get_queryset(self):
         # overriding get_queryset by passing user_id. Here user_id is nothing but updated_by
-        pfmasterobj = PFChargesMaster.objects.filter(updated_by=self.request.GET.get('updated_by')).order_by(
-            'pf_charge_id')
-        pfmasterotherobj = PFChargesMaster.objects.filter(admins=1).order_by('pf_charge_id')
-        pfval = list(chain(pfmasterobj, pfmasterotherobj))
-        if pfmasterobj and pfmasterotherobj:
-            return pfval
-
+        pfmasterobj = PFChargesMaster.objects.filter(updated_by=self.request.GET.get('updated_by')).order_by('pf_charge_id')
+        if pfmasterobj:
+            return pfmasterobj
         raise ValidationError({'message': 'PF Charges Master details not exist', 'status': 204})
 
 class FrieghtChargesMasterView(viewsets.ModelViewSet):
@@ -245,13 +202,9 @@ class FrieghtChargesMasterView(viewsets.ModelViewSet):
 
     def get_queryset(self):
         # overriding get_queryset by passing user_id. Here user_id is nothing but updated_by
-        frieghtmasterobj = FrieghtChargesMaster.objects.filter(updated_by=self.request.GET.get('updated_by')).order_by(
-            'frieght_id')
-        frieghtmasterotherobj = FrieghtChargesMaster.objects.filter(admins=1).order_by('frieght_id')
-        frieghtval = list(chain(frieghtmasterobj, frieghtmasterotherobj))
-        if frieghtmasterobj and frieghtmasterotherobj:
-            return frieghtval
-
+        frieghtmasterobj = FrieghtChargesMaster.objects.filter(updated_by=self.request.GET.get('updated_by')).order_by('frieght_id')
+        if frieghtmasterobj:
+            return  frieghtmasterobj
         raise ValidationError({'message': 'Frieght Master details not exist', 'status': 204})
 
 class WarrantyMasterView(viewsets.ModelViewSet):
@@ -264,10 +217,8 @@ class WarrantyMasterView(viewsets.ModelViewSet):
         # overriding get_queryset by passing user_id. Here user_id is nothing but updated_by
         warrantymasterobj = WarrantyMaster.objects.filter(updated_by=self.request.GET.get('updated_by')).order_by(
             'warranty_id')
-        warrantyotherobj = WarrantyMaster.objects.filter(admins=1).order_by('warranty_id')
-        warrantyval = list(chain(warrantymasterobj, warrantyotherobj))
-        if warrantymasterobj and warrantyotherobj:
-            return warrantyval
+        if warrantymasterobj:
+            return warrantymasterobj
 
         raise ValidationError({'message': 'Warranty Master details not exist', 'status': 204})
 
@@ -281,15 +232,8 @@ class GuaranteeMasterView(viewsets.ModelViewSet):
         # overriding get_queryset by passing user_id. Here user_id is nothing but updated_by
         guaranteemasterobj = GuaranteeMaster.objects.filter(updated_by=self.request.GET.get('updated_by')).order_by(
             'guarantee_id')
-        guaranteeotherobj = GuaranteeMaster.objects.filter(admins=1).order_by('guarantee_id')
-        guaranteeval = list(chain(guaranteemasterobj, guaranteeotherobj))
-        if guaranteemasterobj and not guaranteeotherobj:
-            return guaranteemasterobj
-        elif not guaranteemasterobj and guaranteeotherobj:
-            return guaranteeotherobj
-
-        elif guaranteemasterobj and guaranteeotherobj:
-            return guaranteeval
+        if guaranteemasterobj:
+            return  guaranteemasterobj
 
         raise ValidationError({'message': 'Guarantee Master details not exist', 'status': 204})
 
@@ -303,15 +247,8 @@ class DeliveryMasterView(viewsets.ModelViewSet):
         # overriding get_queryset by passing user_id. Here user_id is nothing but updated_by
         deliverymasterobj = DeliveryMaster.objects.filter(updated_by=self.request.GET.get('updated_by')).order_by(
             'delivery_id')
-        deliveryotherobj = DeliveryMaster.objects.filter(admins=1).order_by('delivery_id')
-        deliveryval = list(chain(deliverymasterobj, deliveryotherobj))
-        if deliverymasterobj and not deliveryotherobj:
-            return deliverymasterobj
-        elif not deliverymasterobj and deliveryotherobj:
-            return deliveryotherobj
-
-        elif deliverymasterobj and deliveryotherobj:
-            return deliveryval
+        if deliverymasterobj:
+            return  deliverymasterobj
 
         raise ValidationError({'message': 'Delivery Master details not exist', 'status': 204})
 
@@ -325,15 +262,8 @@ class CountryMasterView(viewsets.ModelViewSet):
         # overriding get_queryset by passing user_id. Here user_id is nothing but updated_by
         countrymasterobj = CountryMaster.objects.filter(updated_by=self.request.GET.get('updated_by')).order_by(
             'country_id')
-        countryotherobj = DepartmentMaster.objects.filter(admins=1).order_by('department_id')
-        countryval = list(chain(countrymasterobj, countryotherobj))
-        if countrymasterobj and not countryotherobj:
-            return countrymasterobj
-        elif not countrymasterobj and countryotherobj:
-            return countryotherobj
-
-        elif countrymasterobj and countryotherobj:
-            return countryval
+        if countrymasterobj:
+            return  countrymasterobj
 
         raise ValidationError({'message': 'Country Master details not exist', 'status': 204})
 
@@ -1471,6 +1401,107 @@ def currency_master_history(request):
 
 
 
+
+
+@api_view(['put'])
+@permission_classes([AllowAny,])
+def enable_frieght_charges_master(request):
+    # enable frieght by changing status from Active to Disabled by passing primary key(freightid)
+    data=request.data
+    frieght_id=data['frieght_id']
+    try:
+        frieghtobj=FrieghtChargesMaster.objects.filter(frieght_id__in=frieght_id).values()
+        if frieghtobj:
+            for i in range(0,len(frieghtobj)):
+                freightobjget=FrieghtChargesMaster.objects.get(frieght_id=frieghtobj[i].get('frieght_id'))
+                if freightobjget.status=='Disabled':
+                    freightobjget.status='Active'
+                    freightobjget.save()
+                else:
+                    return Response({'status': 202, 'message': 'Already status enabled'}, status=202)
+            return Response({'status':200,'message':'Frieght Charges Master status changed to enabled'},status=200)
+        else:
+            return Response({'status': 204, 'message': 'Not exist'}, status=204)
+    except Exception as e:
+        return Response({'status':500,'error':str(e)},status=500)
+
+
+@api_view(['put'])
+@permission_classes([AllowAny,])
+def disable_frieght_charges_master(request):
+    # disable frieght by changing status from Active to Disabled by passing primary key(freightid)
+    data=request.data
+    frieght_id=data['frieght_id']
+    try:
+        frieghtobj=FrieghtChargesMaster.objects.filter(frieght_id__in=frieght_id).values()
+        if frieghtobj:
+            for i in range(0,len(frieghtobj)):
+                freightobjget=FrieghtChargesMaster.objects.get(frieght_id=frieghtobj[i].get('frieght_id'))
+                if freightobjget.status=='Active':
+                    freightobjget.status='Disabled'
+                    freightobjget.save()
+                else:
+                    return Response({'status': 202, 'message': 'Already status disabled'}, status=202)
+            return Response({'status':200,'message':'Frieght Charges Master status changed to disabled'},status=200)
+        else:
+            return Response({'status': 204, 'message': 'Not exist'}, status=204)
+    except Exception as e:
+        return Response({'status':500,'error':str(e)},status=500)
+
+@api_view(['post'])
+@permission_classes([AllowAny,])
+def delete_freight_master(request):
+    # delete frieght_master by passing primary key(frieghtid)
+    data=request.data
+    frieght_id = data['frieght_id']
+    try:
+        freightobj = FrieghtChargesMaster.objects.filter(frieght_id__in=frieght_id).values()
+        if freightobj:
+            for i in range(0, len(freightobj)):
+                frieghtobjget = FrieghtChargesMaster.objects.get(frieght_id=freightobj[i].get('frieght_id'))
+                if frieghtobjget:
+                    frieghtobjget.delete()
+
+            return Response({'status': 204, 'message': 'Frieght Master data deleted'}, status=204)
+        return Response({'status':200,'message':'Frieght Master data not present or already deleted'},status=200)
+
+    except Exception as e:
+        return Response({'status':500,'error':str(e)},status=500)
+
+@api_view(['get'])
+@permission_classes([AllowAny,])
+def frieght_master_history(request):
+    try:
+        frieghthistoryobj=FrieghtChargesMaster.history.filter().values()
+        if frieghthistoryobj:
+            return Response({'status':200,'message':'Frieght Master history','data':frieghthistoryobj},status=200)
+        else:
+            return Response({'status': 204, 'message': 'Frieght History Master data not persent'},
+                            status=204)
+
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)
+
+# @api_view(['post'])
+# @permission_classes([AllowAny,])
+# def frieght_master_get_by_pk(request):
+#     data=request.data
+#     frieght_id=data['frieght_id']
+#     try:
+#         freightobj = FrieghtChargesMaster.objects.filter(frieght_id=frieght_id).values()
+#         if freightobj:
+#             return Response({'status':200,'message':'Frieght Master','data':freightobj},status=200)
+#         else:
+#             return Response({'status': 204, 'message': 'Frieght Master data not persent'},
+#                             status=204)
+#
+#     except Exception as e:
+#         return Response({'status': 500, 'error': str(e)}, status=500)
+
+
+
+
+
 @api_view(['put'])
 @permission_classes([AllowAny,])
 def disable_pf_charge_master(request):
@@ -1495,7 +1526,6 @@ def disable_pf_charge_master(request):
 
 
 @api_view(['put'])
-@api_view(['put'])
 @permission_classes([AllowAny,])
 def enable_pf_charge_master(request):
     # enable pf_charge master by changing status from Active to Disabled by passing primary key(pfchargeid)
@@ -1519,34 +1549,56 @@ def enable_pf_charge_master(request):
 
 @api_view(['post'])
 @permission_classes([AllowAny,])
-def delete_currency_master(request):
+def delete_pf_charge_master(request):
     # delete pf_charge_master by passing primary key(pfchargeid)
     data=request.data
-    currencyid=data['currencyid']
+    pfchargeid=data['pfchargeid']
     try:
-        currencyobj = CurrencyMaster.objects.filter(currency_id__in=currencyid).values()
-        if currencyobj:
-            for i in range(0, len(currencyobj)):
-                currencyobjget = CurrencyMaster.objects.get(currency_id=currencyobj[i].get('currency_id'))
-                if currencyobjget:
-                    currencyobjget.delete()
+        pfchargeobj = PFChargesMaster.objects.filter(pf_charge_id__in=pfchargeid).values()
+        if pfchargeobj:
+            for i in range(0, len(pfchargeobj)):
+                pfchargeobjget = PFChargesMaster.objects.get(pf_charge_id=pfchargeobj[i].get('pf_charge_id'))
+                if pfchargeobjget:
+                    pfchargeobjget.delete()
 
-            return Response({'status': 204, 'message': 'Currency Master data deleted'}, status=204)
-        return Response({'status':200,'message':'Currency Master data not present or already deleted'},status=200)
+            return Response({'status': 204, 'message': 'PF Charges Master data deleted'}, status=204)
+        return Response({'status':200,'message':'PF Charges Master data not present or already deleted'},status=200)
 
     except Exception as e:
         return Response({'status':500,'error':str(e)},status=500)
 
 @api_view(['get'])
 @permission_classes([AllowAny,])
-def currency_master_history(request):
+def pf_charges_master_history(request):
     try:
-        currencyhistoryobj=CurrencyMaster.history.filter().values()
-        if currencyhistoryobj:
-            return Response({'status':200,'message':'Currency Master history','data':currencyhistoryobj},status=200)
+        pfchargemasterhistory=PFChargesMaster.history.filter().values()
+        if pfchargemasterhistory:
+            return Response({'status':200,'message':'PF Charges Master history','data':pfchargemasterhistory},status=200)
         else:
-            return Response({'status': 204, 'message': 'Currency History Master data not persent'},
+            return Response({'status': 204, 'message': 'PF Charges History Master data not persent'},
                             status=204)
 
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)
+
+
+# @api_view(['post'])
+# @permission_classes([AllowAny,])
+# def pf_charges_master_get_by_pk(request):
+#     data=request.data
+#     userid = data['userid']
+#     try:
+#         pfchargeobj = PFChargesMaster.objects.filter(updated_by=userid).values()
+#         pfchargeadmin=PFChargesMaster.objects.filter(admins=1).values()
+#         if len(pfchargeobj)!=0:
+#             return Response({'status':200,'message':'PF Charges Master','data':pfchargeobj},status=200)
+#         if len(pfchargeobj)==0 and len(pfchargeadmin)!=0:
+#             return Response({'status': 200, 'message': 'PF Charges Master', 'data': pfchargeadmin}, status=200)
+#         if len(pfchargeobj)!=0 and len(pfchargeadmin)!=
+#
+#         else:
+#             return Response({'status': 204, 'message': 'PF Charges Master data not persent'},
+#                             status=204)
+#
+#     except Exception as e:
+#         return Response({'status': 500, 'error': str(e)}, status=500)

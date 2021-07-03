@@ -93,10 +93,15 @@ class UOMMasterView(viewsets.ModelViewSet):
         uommasterobj = UOMMaster.objects.filter(updated_by=self.request.GET.get('updated_by')).order_by('uom_id')
         uomotherdataobj=UOMMaster.objects.filter(admins=1).values().order_by('uom_id')
         uomvalue=list(chain(uommasterobj,uomotherdataobj))
-        if uommasterobj:
-            return uomvalue
-        raise ValidationError({'message': 'UOM Master details not exist','status': 204})
+        if uommasterobj and not uomotherdataobj:
+            return uommasterobj
+        elif not uommasterobj and uomotherdataobj:
+            return uomotherdataobj
 
+        elif uommasterobj and uomotherdataobj:
+            return uomvalue
+
+        raise ValidationError({'message': 'UOM Master details not exist', 'status': 204})
 
 
 class DepartmentMasterView(viewsets.ModelViewSet):
@@ -110,10 +115,15 @@ class DepartmentMasterView(viewsets.ModelViewSet):
         departmentmasterobj = DepartmentMaster.objects.filter(updated_by=self.request.GET.get('updated_by')).order_by('department_id')
         departmentotherdataobj = DepartmentMaster.objects.filter(admins=1).order_by('department_id')
         departmentvalue = list(chain(departmentmasterobj, departmentotherdataobj))
-        if not departmentmasterobj:
-            raise ValidationError({'message': 'Department Master details not exist', 'status': 204})
-        return departmentvalue
+        if departmentmasterobj and not departmentotherdataobj:
+            return departmentmasterobj
+        elif not departmentmasterobj and departmentotherdataobj:
+            return departmentotherdataobj
 
+        elif departmentmasterobj and departmentotherdataobj:
+            return departmentvalue
+
+        raise ValidationError({'message': 'Department Master details not exist', 'status': 204})
 
 class DesignationMasterView(viewsets.ModelViewSet):
     # designation_master viewsets
@@ -121,6 +131,21 @@ class DesignationMasterView(viewsets.ModelViewSet):
     queryset = DesignationMaster.objects.all()
     serializer_class = DesignationMasterSerializer
 
+    def get_queryset(self):
+        # overriding get_queryset by passing user_id. Here user_id is nothing but updated_by
+        designationmasterobj = DesignationMaster.objects.filter(updated_by=self.request.GET.get('updated_by')).order_by(
+            'designation_id')
+        designationotherdataobj = DesignationMaster.objects.filter(admins=1).order_by('designation_id')
+        designationval = list(chain(designationmasterobj, designationotherdataobj))
+        if designationmasterobj and not designationotherdataobj:
+            return designationmasterobj
+        elif not designationmasterobj and designationotherdataobj:
+            return designationotherdataobj
+
+        elif designationmasterobj and designationotherdataobj:
+            return designationval
+
+        raise ValidationError({'message': 'Designation Master details not exist', 'status': 204})
 
 class TaxMasterView(viewsets.ModelViewSet):
     # tax_master  viewsets
@@ -128,6 +153,21 @@ class TaxMasterView(viewsets.ModelViewSet):
     queryset = TaxMaster.objects.all()
     serializer_class = TaxMasterSerializer
 
+    def get_queryset(self):
+        # overriding get_queryset by passing user_id. Here user_id is nothing but updated_by
+        taxmasterobj = TaxMaster.objects.filter(updated_by=self.request.GET.get('updated_by')).order_by(
+            'tax_id')
+        taxotherdataobj = TaxMaster.objects.filter(admins=1).order_by('tax_id')
+        taxvalue = list(chain(taxmasterobj, taxotherdataobj))
+        if taxmasterobj and not taxotherdataobj:
+            return taxmasterobj
+        elif not taxmasterobj and taxotherdataobj:
+            return taxotherdataobj
+
+        elif taxmasterobj and taxotherdataobj:
+            return taxvalue
+
+        raise ValidationError({'message': 'Tax Master details not exist', 'status': 204})
 
 
 class HSNMasterSerializerView(viewsets.ModelViewSet):
@@ -141,13 +181,8 @@ class HSNMasterSerializerView(viewsets.ModelViewSet):
         hsnmasterobj = HSNMaster.objects.filter(updated_by=self.request.GET.get('updated_by')).order_by('hsn_id')
         hsnotherdataobj = HSNMaster.objects.filter(admins=1).order_by('hsn_id')
         hsnvalue = list(chain(hsnmasterobj, hsnotherdataobj))
-        if hsnmasterobj and not hsnotherdataobj:
-            return hsnmasterobj
-        elif not hsnmasterobj or hsnotherdataobj:
-            return hsnotherdataobj
-
-        elif hsnmasterobj and hsnotherdataobj:
-            return  hsnvalue
+        if hsnmasterobj:
+            return hsnvalue
 
         raise ValidationError({'message': 'HSN Master details not exist', 'status': 204})
 
@@ -162,17 +197,11 @@ class SACMasterView(viewsets.ModelViewSet):
         # overriding get_queryset by passing user_id. Here user_id is nothing but updated_by
         sacmasterobj = SACMaster.objects.filter(updated_by=self.request.GET.get('updated_by')).order_by('sac_id')
         sacotherdataobj = SACMaster.objects.filter(admins=1).order_by('sac_id')
-        sacval = list(chain(sacmasterobj, sacotherdataobj))
-        if sacmasterobj and not sacotherdataobj:
-            return sacmasterobj
-        elif not sacmasterobj or sacotherdataobj :
-            return sacotherdataobj
-
-        if sacmasterobj and sacotherdataobj:
-            return sacval
+        sacvalue = list(chain(sacmasterobj,sacotherdataobj))
+        if sacmasterobj:
+            return sacvalue
 
         raise ValidationError({'message': 'SAC Master details not exist', 'status': 204})
-
 
 class CurrencyMasterView(viewsets.ModelViewSet):
     # currency_master viewsets
@@ -180,6 +209,21 @@ class CurrencyMasterView(viewsets.ModelViewSet):
     queryset = CurrencyMaster.objects.all()
     serializer_class = CurrencyMasterSerializer
 
+    def get_queryset(self):
+        # overriding get_queryset by passing user_id. Here user_id is nothing but updated_by
+        currencymasterobj = CurrencyMaster.objects.filter(updated_by=self.request.GET.get('updated_by')).order_by(
+            'currency_id')
+        currencyotherdataobj = CurrencyMaster.objects.filter(admins=1).order_by('currency_id')
+        currencyval = list(chain(currencymasterobj, currencyotherdataobj))
+        if currencymasterobj and not currencyotherdataobj:
+            return currencyval
+        elif not currencymasterobj and currencyotherdataobj:
+            return currencyotherdataobj
+
+        elif currencymasterobj and currencyotherdataobj:
+            return currencyval
+
+        raise ValidationError({'message': 'Currency Master details not exist', 'status': 204})
 
 class PFChargesMasterView(viewsets.ModelViewSet):
     # pf_charges master viewsets
@@ -187,11 +231,43 @@ class PFChargesMasterView(viewsets.ModelViewSet):
     queryset = PFChargesMaster.objects.all()
     serializer_class = PFChargesMasterSerializer
 
+    def get_queryset(self):
+        # overriding get_queryset by passing user_id. Here user_id is nothing but updated_by
+        pfmasterobj = PFChargesMaster.objects.filter(updated_by=self.request.GET.get('updated_by')).order_by(
+            'pf_charge_id')
+        pfmasterotherobj = PFChargesMaster.objects.filter(admins=1).order_by('pf_charge_id')
+        pfval = list(chain(pfmasterobj, pfmasterotherobj))
+        if pfmasterobj and not pfmasterotherobj:
+            return pfmasterobj
+        elif not pfmasterobj and pfmasterotherobj:
+            return pfmasterotherobj
+
+        elif pfmasterobj and pfmasterotherobj:
+            return pfval
+
+        raise ValidationError({'message': 'PF Charges Master details not exist', 'status': 204})
+
 class FrieghtChargesMasterView(viewsets.ModelViewSet):
     # frieght_charges master viewsets
     permission_classes = (AllowAny,)
     queryset = FrieghtChargesMaster.objects.all()
     serializer_class = FrieghtChargesMasterSerializer
+
+    def get_queryset(self):
+        # overriding get_queryset by passing user_id. Here user_id is nothing but updated_by
+        frieghtmasterobj = FrieghtChargesMaster.objects.filter(updated_by=self.request.GET.get('updated_by')).order_by(
+            'frieght_id')
+        frieghtmasterotherobj = FrieghtChargesMaster.objects.filter(admins=1).order_by('frieght_id')
+        frieghtval = list(chain(frieghtmasterobj, frieghtmasterotherobj))
+        if frieghtmasterobj and not frieghtmasterotherobj:
+            return frieghtmasterobj
+        elif not frieghtmasterobj and frieghtmasterotherobj:
+            return frieghtmasterotherobj
+
+        elif frieghtmasterobj and frieghtmasterotherobj:
+            return frieghtval
+
+        raise ValidationError({'message': 'Frieght Master details not exist', 'status': 204})
 
 class WarrantyMasterView(viewsets.ModelViewSet):
     # warranty_master viewsets
@@ -199,11 +275,43 @@ class WarrantyMasterView(viewsets.ModelViewSet):
     queryset = WarrantyMaster.objects.all()
     serializer_class = WarrantyMasterSerializer
 
+    def get_queryset(self):
+        # overriding get_queryset by passing user_id. Here user_id is nothing but updated_by
+        warrantymasterobj = WarrantyMaster.objects.filter(updated_by=self.request.GET.get('updated_by')).order_by(
+            'warranty_id')
+        warrantyotherobj = WarrantyMaster.objects.filter(admins=1).order_by('warranty_id')
+        warrantyval = list(chain(warrantymasterobj, warrantyotherobj))
+        if warrantymasterobj and not warrantyotherobj:
+            return warrantymasterobj
+        elif not warrantymasterobj and warrantyotherobj:
+            return warrantyotherobj
+
+        elif warrantymasterobj and warrantyotherobj:
+            return warrantyval
+
+        raise ValidationError({'message': 'Warranty Master details not exist', 'status': 204})
+
 class GuaranteeMasterView(viewsets.ModelViewSet):
     # warranty_master viewsets
     permission_classes = (AllowAny,)
     queryset = GuaranteeMaster.objects.all()
     serializer_class =GuaranteeMasterSerializer
+
+    def get_queryset(self):
+        # overriding get_queryset by passing user_id. Here user_id is nothing but updated_by
+        guaranteemasterobj = GuaranteeMaster.objects.filter(updated_by=self.request.GET.get('updated_by')).order_by(
+            'guarantee_id')
+        guaranteeotherobj = GuaranteeMaster.objects.filter(admins=1).order_by('guarantee_id')
+        guaranteeval = list(chain(guaranteemasterobj, guaranteeotherobj))
+        if guaranteemasterobj and not guaranteeotherobj:
+            return guaranteemasterobj
+        elif not guaranteemasterobj and guaranteeotherobj:
+            return guaranteeotherobj
+
+        elif guaranteemasterobj and guaranteeotherobj:
+            return guaranteeval
+
+        raise ValidationError({'message': 'Guarantee Master details not exist', 'status': 204})
 
 class DeliveryMasterView(viewsets.ModelViewSet):
     # delivery_master viewsets
@@ -211,11 +319,43 @@ class DeliveryMasterView(viewsets.ModelViewSet):
     queryset = DeliveryMaster.objects.all()
     serializer_class = DeliveryMasterSerializer
 
+    def get_queryset(self):
+        # overriding get_queryset by passing user_id. Here user_id is nothing but updated_by
+        deliverymasterobj = DeliveryMaster.objects.filter(updated_by=self.request.GET.get('updated_by')).order_by(
+            'delivery_id')
+        deliveryotherobj = DeliveryMaster.objects.filter(admins=1).order_by('delivery_id')
+        deliveryval = list(chain(deliverymasterobj, deliveryotherobj))
+        if deliverymasterobj and not deliveryotherobj:
+            return deliverymasterobj
+        elif not deliverymasterobj and deliveryotherobj:
+            return deliveryotherobj
+
+        elif deliverymasterobj and deliveryotherobj:
+            return deliveryval
+
+        raise ValidationError({'message': 'Delivery Master details not exist', 'status': 204})
+
 class CountryMasterView(viewsets.ModelViewSet):
     # country_master viewsets
     permission_classes = (AllowAny,)
     queryset = CountryMaster.objects.all()
     serializer_class = CountryMasterSerializer
+
+    def get_queryset(self):
+        # overriding get_queryset by passing user_id. Here user_id is nothing but updated_by
+        countrymasterobj = CountryMaster.objects.filter(updated_by=self.request.GET.get('updated_by')).order_by(
+            'country_id')
+        countryotherobj = DepartmentMaster.objects.filter(admins=1).order_by('department_id')
+        countryval = list(chain(countrymasterobj, countryotherobj))
+        if countrymasterobj and not countryotherobj:
+            return countrymasterobj
+        elif not countrymasterobj and countryotherobj:
+            return countryotherobj
+
+        elif countrymasterobj and countryotherobj:
+            return countryval
+
+        raise ValidationError({'message': 'Country Master details not exist', 'status': 204})
 
 
 @api_view(['post'])
@@ -1106,7 +1246,7 @@ def item_group_master_history(request):
 @api_view(['put'])
 @permission_classes([AllowAny,])
 def disable_hsn_master(request):
-    # disable hsn_master by changing status from Active to Disabled by passing primary key(natureid)
+    # disable hsn_master by changing status from Active to Disabled by passing primary key(hsnid)
     data=request.data
     hsnid=data['hsnid']
     try:
@@ -1130,7 +1270,7 @@ def disable_hsn_master(request):
 @api_view(['put'])
 @permission_classes([AllowAny,])
 def enable_hsn_master(request):
-    # enable hsn_master by changing status from Active to Disabled by passing primary key(natureid)
+    # enable hsn_master by changing status from Active to Disabled by passing primary key(hsnid)
     data=request.data
     hsnid=data['hsnid']
     try:
@@ -1153,7 +1293,7 @@ def enable_hsn_master(request):
 @api_view(['post'])
 @permission_classes([AllowAny,])
 def delete_hsn_master(request):
-    # delete hsn_master by passing primary key(natureid)
+    # delete hsn_master by passing primary key(hsnid)
     data=request.data
     hsnid=data['hsnid']
     try:
@@ -1178,7 +1318,7 @@ def hsn_master_history(request):
         if hsnmasterobj:
             return Response({'status':200,'message':'HSN Master history','data':hsnmasterobj},status=200)
         else:
-            return Response({'status': 204, 'message': 'HSN Master data not persent'},
+            return Response({'status': 204, 'message': 'HSN Master history data not persent'},
                             status=204)
 
     except Exception as e:
@@ -1189,7 +1329,7 @@ def hsn_master_history(request):
 @api_view(['put'])
 @permission_classes([AllowAny,])
 def disable_sac_master(request):
-    # disable sac_master by changing status from Active to Disabled by passing primary key(natureid)
+    # disable sac_master by changing status from Active to Disabled by passing primary key(sacid)
     data=request.data
     sacid=data['sacid']
     try:
@@ -1213,7 +1353,7 @@ def disable_sac_master(request):
 @api_view(['put'])
 @permission_classes([AllowAny,])
 def enable_sac_master(request):
-    # enable sac_master by changing status from Active to Disabled by passing primary key(natureid)
+    # enable sac_master by changing status from Active to Disabled by passing primary key(sacid)
     data=request.data
     sacid=data['sacid']
     try:
@@ -1236,7 +1376,7 @@ def enable_sac_master(request):
 @api_view(['post'])
 @permission_classes([AllowAny,])
 def delete_sac_master(request):
-    # delete hsn_master by passing primary key(natureid)
+    # delete hsn_master by passing primary key(sacid)
     data=request.data
     sacid=data['sacid']
     try:
@@ -1267,3 +1407,166 @@ def sac_master_history(request):
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)
 
+
+
+
+@api_view(['put'])
+@permission_classes([AllowAny,])
+def disable_currency_master(request):
+    # disable currency_master by changing status from Active to Disabled by passing primary key(currencyid)
+    data=request.data
+    currencyid=data['currencyid']
+    try:
+        currencyobj=CurrencyMaster.objects.filter(currency_id__in=currencyid).values()
+        if currencyobj:
+            for i in range(0,len(currencyobj)):
+                currencyobjget=CurrencyMaster.objects.get(currency_id=currencyobj[i].get('currency_id'))
+                if currencyobjget.status=='Active':
+                    currencyobjget.status='Disabled'
+                    currencyobjget.save()
+                else:
+                    return Response({'status': 202, 'message': 'Already status disabled'}, status=202)
+            return Response({'status':200,'message':'Currency Master status changed to disabled'},status=200)
+        else:
+            return Response({'status': 204, 'message': 'Not exist'}, status=204)
+    except Exception as e:
+        return Response({'status':500,'error':str(e)},status=500)
+
+
+@api_view(['put'])
+@permission_classes([AllowAny,])
+def enable_currency_master(request):
+    # enable currency_master by changing status from Active to Disabled by passing primary key(currencyid)
+    data=request.data
+    currencyid=data['currencyid']
+    try:
+        currencyobj=CurrencyMaster.objects.filter(currency_id__in=currencyid).values()
+        if currencyobj:
+            for i in range(0,len(currencyobj)):
+                currencyobjget=CurrencyMaster.objects.get(currency_id=currencyobj[i].get('currency_id'))
+                if currencyobjget.status=='Disabled':
+                    currencyobjget.status='Active'
+                    currencyobjget.save()
+                else:
+                    return Response({'status': 202, 'message': 'Already status enabled'}, status=202)
+            return Response({'status':200,'message':'Currency Master status changed to enabled'},status=200)
+        else:
+            return Response({'status': 204, 'message': 'Not exist'}, status=204)
+    except Exception as e:
+        return Response({'status':500,'error':str(e)},status=500)
+
+@api_view(['post'])
+@permission_classes([AllowAny,])
+def delete_currency_master(request):
+    # delete currency_master by passing primary key(currencyid)
+    data=request.data
+    currencyid=data['currencyid']
+    try:
+        currencyobj = CurrencyMaster.objects.filter(currency_id__in=currencyid).values()
+        if currencyobj:
+            for i in range(0, len(currencyobj)):
+                currencyobjget = CurrencyMaster.objects.get(currency_id=currencyobj[i].get('currency_id'))
+                if currencyobjget:
+                    currencyobjget.delete()
+
+            return Response({'status': 204, 'message': 'Currency Master data deleted'}, status=204)
+        return Response({'status':200,'message':'Currency Master data not present or already deleted'},status=200)
+
+    except Exception as e:
+        return Response({'status':500,'error':str(e)},status=500)
+
+@api_view(['get'])
+@permission_classes([AllowAny,])
+def currency_master_history(request):
+    try:
+        currencyhistoryobj=CurrencyMaster.history.filter().values()
+        if currencyhistoryobj:
+            return Response({'status':200,'message':'Currency Master history','data':currencyhistoryobj},status=200)
+        else:
+            return Response({'status': 204, 'message': 'Currency History Master data not persent'},
+                            status=204)
+
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)
+
+
+
+@api_view(['put'])
+@permission_classes([AllowAny,])
+def disable_pf_charge_master(request):
+    # disable pf_charge_master by changing status from Active to Disabled by passing primary key(pfchargeid)
+    data=request.data
+    pfchargeid=data['pfchargeid']
+    try:
+        pfchargeobj=PFChargesMaster.objects.filter(pf_charge_id__in=pfchargeid).values()
+        if pfchargeobj:
+            for i in range(0,len(pfchargeobj)):
+                pfchargeobjget=PFChargesMaster.objects.get(pf_charge_id=pfchargeobj[i].get('pf_charge_id'))
+                if pfchargeobjget.status=='Active':
+                    pfchargeobjget.status='Disabled'
+                    pfchargeobjget.save()
+                else:
+                    return Response({'status': 202, 'message': 'Already status disabled'}, status=202)
+            return Response({'status':200,'message':'PF Charges Master status changed to disabled'},status=200)
+        else:
+            return Response({'status': 204, 'message': 'Not exist'}, status=204)
+    except Exception as e:
+        return Response({'status':500,'error':str(e)},status=500)
+
+
+@api_view(['put'])
+@api_view(['put'])
+@permission_classes([AllowAny,])
+def enable_pf_charge_master(request):
+    # enable pf_charge master by changing status from Active to Disabled by passing primary key(pfchargeid)
+    data=request.data
+    pfchargeid=data['pfchargeid']
+    try:
+        pfchargeobj=PFChargesMaster.objects.filter(pf_charge_id__in=pfchargeid).values()
+        if pfchargeobj:
+            for i in range(0,len(pfchargeobj)):
+                pfchargeobjget=PFChargesMaster.objects.get(pf_charge_id=pfchargeobj[i].get('pf_charge_id'))
+                if pfchargeobjget.status=='Disabled':
+                    pfchargeobjget.status='Active'
+                    pfchargeobjget.save()
+                else:
+                    return Response({'status': 202, 'message': 'Already status enabled'}, status=202)
+            return Response({'status':200,'message':'PF Charges Master status changed to enabled'},status=200)
+        else:
+            return Response({'status': 204, 'message': 'Not exist'}, status=204)
+    except Exception as e:
+        return Response({'status':500,'error':str(e)},status=500)
+
+@api_view(['post'])
+@permission_classes([AllowAny,])
+def delete_currency_master(request):
+    # delete pf_charge_master by passing primary key(pfchargeid)
+    data=request.data
+    currencyid=data['currencyid']
+    try:
+        currencyobj = CurrencyMaster.objects.filter(currency_id__in=currencyid).values()
+        if currencyobj:
+            for i in range(0, len(currencyobj)):
+                currencyobjget = CurrencyMaster.objects.get(currency_id=currencyobj[i].get('currency_id'))
+                if currencyobjget:
+                    currencyobjget.delete()
+
+            return Response({'status': 204, 'message': 'Currency Master data deleted'}, status=204)
+        return Response({'status':200,'message':'Currency Master data not present or already deleted'},status=200)
+
+    except Exception as e:
+        return Response({'status':500,'error':str(e)},status=500)
+
+@api_view(['get'])
+@permission_classes([AllowAny,])
+def currency_master_history(request):
+    try:
+        currencyhistoryobj=CurrencyMaster.history.filter().values()
+        if currencyhistoryobj:
+            return Response({'status':200,'message':'Currency Master history','data':currencyhistoryobj},status=200)
+        else:
+            return Response({'status': 204, 'message': 'Currency History Master data not persent'},
+                            status=204)
+
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)

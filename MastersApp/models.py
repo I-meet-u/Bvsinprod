@@ -358,7 +358,7 @@ class DeliveryMaster(models.Model):
         db_table = "DeliveryMaster"
 
 class CountryMaster(models.Model):
-    # delivery_master models and fields
+    # country_master models and fields
     country_id = models.BigAutoField(primary_key=True)
     country_code = models.CharField(max_length=30,null=True)
     country_name = models.CharField(max_length=200, unique=True,null=True,blank=True)

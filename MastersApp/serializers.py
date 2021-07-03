@@ -210,11 +210,25 @@ class PFChargesMasterSerializer(serializers.ModelSerializer):
         model=PFChargesMaster
         fields='__all__'
 
+
 class FrieghtChargesMasterSerializer(serializers.ModelSerializer):
     # frieght master serializer
     class Meta:
         model=FrieghtChargesMaster
         fields='__all__'
+
+
+    def create(self, validate_data):
+        # to add any extra details into the object before saving
+        print(validate_data)
+        freightobj = FrieghtChargesMaster.objects.count()
+        if freightobj == 0:
+            frieght_code = '1801'
+        else:
+            freightobj = FrieghtChargesMaster.objects.last()
+            frieght_code = int(freightobj.frieght_code) + 1
+        values = FrieghtChargesMaster.objects.create(frieght_code=frieght_code, **validate_data)
+        return values
 
 class WarrantyMasterSerializer(serializers.ModelSerializer):
     # warranty master serializer

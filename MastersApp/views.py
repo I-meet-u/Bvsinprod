@@ -215,12 +215,7 @@ class CurrencyMasterView(viewsets.ModelViewSet):
             'currency_id')
         currencyotherdataobj = CurrencyMaster.objects.filter(admins=1).order_by('currency_id')
         currencyval = list(chain(currencymasterobj, currencyotherdataobj))
-        if currencymasterobj and not currencyotherdataobj:
-            return currencyval
-        elif not currencymasterobj and currencyotherdataobj:
-            return currencyotherdataobj
-
-        elif currencymasterobj and currencyotherdataobj:
+        if currencymasterobj and currencyotherdataobj:
             return currencyval
 
         raise ValidationError({'message': 'Currency Master details not exist', 'status': 204})
@@ -237,12 +232,7 @@ class PFChargesMasterView(viewsets.ModelViewSet):
             'pf_charge_id')
         pfmasterotherobj = PFChargesMaster.objects.filter(admins=1).order_by('pf_charge_id')
         pfval = list(chain(pfmasterobj, pfmasterotherobj))
-        if pfmasterobj and not pfmasterotherobj:
-            return pfmasterobj
-        elif not pfmasterobj and pfmasterotherobj:
-            return pfmasterotherobj
-
-        elif pfmasterobj and pfmasterotherobj:
+        if pfmasterobj and pfmasterotherobj:
             return pfval
 
         raise ValidationError({'message': 'PF Charges Master details not exist', 'status': 204})
@@ -259,12 +249,7 @@ class FrieghtChargesMasterView(viewsets.ModelViewSet):
             'frieght_id')
         frieghtmasterotherobj = FrieghtChargesMaster.objects.filter(admins=1).order_by('frieght_id')
         frieghtval = list(chain(frieghtmasterobj, frieghtmasterotherobj))
-        if frieghtmasterobj and not frieghtmasterotherobj:
-            return frieghtmasterobj
-        elif not frieghtmasterobj and frieghtmasterotherobj:
-            return frieghtmasterotherobj
-
-        elif frieghtmasterobj and frieghtmasterotherobj:
+        if frieghtmasterobj and frieghtmasterotherobj:
             return frieghtval
 
         raise ValidationError({'message': 'Frieght Master details not exist', 'status': 204})
@@ -281,12 +266,7 @@ class WarrantyMasterView(viewsets.ModelViewSet):
             'warranty_id')
         warrantyotherobj = WarrantyMaster.objects.filter(admins=1).order_by('warranty_id')
         warrantyval = list(chain(warrantymasterobj, warrantyotherobj))
-        if warrantymasterobj and not warrantyotherobj:
-            return warrantymasterobj
-        elif not warrantymasterobj and warrantyotherobj:
-            return warrantyotherobj
-
-        elif warrantymasterobj and warrantyotherobj:
+        if warrantymasterobj and warrantyotherobj:
             return warrantyval
 
         raise ValidationError({'message': 'Warranty Master details not exist', 'status': 204})

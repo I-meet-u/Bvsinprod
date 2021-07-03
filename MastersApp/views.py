@@ -1599,7 +1599,7 @@ def pf_charges_master_get_by_userid(request):
         if len(pfchargeadmin) == 0:
             return Response({'status': 200, 'message': 'pf charge admins datas', 'data': pfchargeobj}, status=200)
         elif len(pfchargeobj)!=0 and len(pfchargeadmin)!=0:
-            return Response({'status': 200, 'message': 'pf charge all datas datas', 'data': pfchargeval}, status=200)
+            return Response({'status': 200, 'message': 'pf charge all datas', 'data': pfchargeval}, status=200)
         else:
             return Response({'status':204,'message':'noo'},status=204)
     except Exception as e:
@@ -1616,11 +1616,55 @@ def frieght_masters_user_id(request):
         freightadmin=FrieghtChargesMaster.objects.filter(admins=1).values()
         frieghtval=list(chain(frieghtobj,freightadmin))
         if len(frieghtobj)==0:
-            return Response({'status': 200, 'message': 'pf charge admins datas', 'data': freightadmin}, status=200)
+            return Response({'status': 200, 'message': 'frieght datas', 'data': freightadmin}, status=200)
         if len(freightadmin) == 0:
-            return Response({'status': 200, 'message': 'pf charge admins datas', 'data': frieghtobj}, status=200)
+            return Response({'status': 200, 'message': 'freight admins datas', 'data': frieghtobj}, status=200)
         elif len(frieghtobj)!=0 and len(freightadmin)!=0:
-            return Response({'status': 200, 'message': 'pf charge all datas datas', 'data':frieghtval}, status=200)
+            return Response({'status': 200, 'message': 'frieght all datas', 'data':frieghtval}, status=200)
+        else:
+            return Response({'status':204,'message':'noo'},status=204)
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)
+
+
+
+@api_view(['post'])
+@permission_classes([AllowAny,])
+def hsn_masters_user_id(request):
+    data=request.data
+    userid = data['userid']
+    try:
+        hsnobj = HSNMaster.objects.filter(updated_by=userid).values()
+        hsnadmin=HSNMaster.objects.filter(admins=1).values()
+        hsnval=list(chain(hsnobj,hsnadmin))
+        if len(hsnobj)==0:
+            return Response({'status': 200, 'message': 'hsn masters data', 'data': hsnadmin}, status=200)
+        if len(hsnadmin) == 0:
+            return Response({'status': 200, 'message': 'hsn master admins datas', 'data': hsnobj}, status=200)
+        elif len(hsnobj)!=0 and len(hsnadmin)!=0:
+            return Response({'status': 200, 'message': 'hsn master all datas', 'data':hsnval}, status=200)
+        else:
+            return Response({'status':204,'message':'noo'},status=204)
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)
+
+
+
+@api_view(['post'])
+@permission_classes([AllowAny,])
+def sac_masters_user_id(request):
+    data=request.data
+    userid = data['userid']
+    try:
+        sacobj = SACMaster.objects.filter(updated_by=userid).values()
+        sacadmin=SACMaster.objects.filter(admins=1).values()
+        sacval=list(chain(sacobj,sacadmin))
+        if len(sacobj)==0:
+            return Response({'status': 200, 'message': 'sac masters data', 'data': sacadmin}, status=200)
+        if len(sacobj) == 0:
+            return Response({'status': 200, 'message': 'sac masters admins datas', 'data': sacobj}, status=200)
+        elif len(sacobj)!=0 and len(sacadmin)!=0:
+            return Response({'status': 200, 'message': 'sac masters all datas', 'data':sacval}, status=200)
         else:
             return Response({'status':204,'message':'noo'},status=204)
     except Exception as e:

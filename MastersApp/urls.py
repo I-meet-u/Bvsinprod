@@ -106,7 +106,13 @@ urlpatterns = [
     path('pf_charge-master-get-by-userid/', views.pf_charges_master_get_by_userid),
 
     path('hsn-master-get-by-userid/', views.hsn_masters_user_id),
-    path('sac-master-get-by-userid/', views.sac_masters_user_id)
+    path('sac-master-get-by-userid/', views.sac_masters_user_id),
+
+    path('disable-guarantee-master/', views.disable_guarantee_master),
+    path('enable-guarantee-master/', views.enable_guarantee_master),
+    path('delete-guarantee-master/', views.delete_guarantee_master),
+    path('history-guarantee-master/', views.guarantee_master_history),
+    path('guarantee-master-get-by-userid/', views.guarantee_masters_user_id),
 
 ]
 

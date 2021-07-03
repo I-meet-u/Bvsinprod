@@ -155,6 +155,19 @@ class DesignationMasterSerializer(serializers.ModelSerializer):
         model=DesignationMaster
         fields='__all__'
 
+
+    def create(self, validate_data):
+        # to add any extra details into the object before saving
+        print(validate_data)
+        designationobj = DesignationMaster.objects.count()
+        if designationobj == 0:
+            designation_code = '2101'
+        else:
+            designationobj = DesignationMaster.objects.last()
+            designation_code = int(designationobj.designation_code) + 1
+        values = DesignationMaster.objects.create(designation_code=designation_code, **validate_data)
+        return values
+
 class TaxMasterSerializer(serializers.ModelSerializer):
     # tax master serializer
     class Meta:
@@ -185,18 +198,6 @@ class SACMasterSerializer(serializers.ModelSerializer):
     class Meta:
         model=SACMaster
         fields='__all__'
-
-    # def create(self, validate_data):
-    #     # to add any extra details into the object before saving
-    #     print(validate_data)
-    #     sacobj = SACMaster.objects.count()
-    #     if sacobj == 0:
-    #         sac_code = '1301'
-    #     else:
-    #         sacobj = SACMaster.objects.last()
-    #         sac_code = int(sacobj.sac_code) + 1
-    #     values = SACMaster.objects.create(sac_code=sac_code, **validate_data)
-    #     return values
 
 class CurrencyMasterSerializer(serializers.ModelSerializer):
     # currency master serializer
@@ -253,6 +254,18 @@ class GuaranteeMasterSerializer(serializers.ModelSerializer):
     class Meta:
         model=GuaranteeMaster
         fields='__all__'
+
+    def create(self, validate_data):
+        # to add any extra details into the object before saving
+        print(validate_data)
+        guaranteeobj = GuaranteeMaster.objects.count()
+        if guaranteeobj == 0:
+            guarantee_code = '2001'
+        else:
+            guaranteeobj = GuaranteeMaster.objects.last()
+            guarantee_code = int(guaranteeobj.guarantee_code) + 1
+        values = GuaranteeMaster.objects.create(guarantee_code=guarantee_code, **validate_data)
+        return values
 
 class DeliveryMasterSerializer(serializers.ModelSerializer):
     # delivery master serializer

@@ -115,13 +115,13 @@ class DesignationMasterView(viewsets.ModelViewSet):
     queryset = DesignationMaster.objects.all()
     serializer_class = DesignationMasterSerializer
 
-    def get_queryset(self):
-        # overriding get_queryset by passing user_id. Here user_id is nothing but updated_by
-        designationmasterobj = DesignationMaster.objects.filter(updated_by=self.request.GET.get('updated_by')).order_by(
-            'designation_id')
-        if designationmasterobj:
-            return designationmasterobj
-        raise ValidationError({'message': 'Designation Master details not exist', 'status': 204})
+    # def get_queryset(self):
+    #     # overriding get_queryset by passing user_id. Here user_id is nothing but updated_by
+    #     designationmasterobj = DesignationMaster.objects.filter(updated_by=self.request.GET.get('updated_by')).order_by(
+    #         'designation_id')
+    #     if designationmasterobj:
+    #         return designationmasterobj
+    #     raise ValidationError({'message': 'Designation Master details not exist', 'status': 204})
 
 class TaxMasterView(viewsets.ModelViewSet):
     # tax_master  viewsets
@@ -230,11 +230,9 @@ class GuaranteeMasterView(viewsets.ModelViewSet):
 
     def get_queryset(self):
         # overriding get_queryset by passing user_id. Here user_id is nothing but updated_by
-        guaranteemasterobj = GuaranteeMaster.objects.filter(updated_by=self.request.GET.get('updated_by')).order_by(
-            'guarantee_id')
+        guaranteemasterobj = GuaranteeMaster.objects.filter(updated_by=self.request.GET.get('updated_by')).order_by('guarantee_id')
         if guaranteemasterobj:
             return  guaranteemasterobj
-
         raise ValidationError({'message': 'Guarantee Master details not exist', 'status': 204})
 
 class DeliveryMasterView(viewsets.ModelViewSet):
@@ -1669,3 +1667,125 @@ def sac_masters_user_id(request):
             return Response({'status':204,'message':'noo'},status=204)
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)
+
+
+
+
+@api_view(['put'])
+@permission_classes([AllowAny,])
+def disable_guarantee_master(request):
+    # disable guarantee master by changing status from Active to Disabled by passing primary key(hsnid)
+    data=request.data
+    guaranteeid=data['guaranteeid']
+    try:
+        guaranteeobj=GuaranteeMaster.objects.filter(guarantee_id__in=guaranteeid).values()
+        if guaranteeobj:
+            for i in range(0,len(guaranteeobj)):
+                guaranteeobjget=HSNMaster.objects.get(guarantee_id=guaranteeobj[i].get('guarantee_id'))
+                print(guaranteeobjget)
+                if guaranteeobjget.status=='Active':
+                    guaranteeobjget.status='Disabled'
+                    guaranteeobjget.save()
+                else:
+                    return Response({'status': 202, 'message': 'Already status disabled'}, status=202)
+            return Response({'status':200,'message':'Guarantee Master status changed to disabled'},status=200)
+        else:
+            return Response({'status': 204, 'message': 'Not exist'}, status=204)
+    except Exception as e:
+        return Response({'status':500,'error':str(e)},status=500)
+
+
+@api_view(['put'])
+@permission_classes([AllowAny,])
+def enable_guarantee_master(request):
+    # disable guarantee master by changing status from Active to Disabled by passing primary key(hsnid)
+    data=request.data
+    guaranteeid=data['guaranteeid']
+    try:
+        guaranteeobj=GuaranteeMaster.objects.filter(guarantee_id__in=guaranteeid).values()
+        if guaranteeobj:
+            for i in range(0,len(guaranteeobj)):
+                guaranteeobjget=HSNMaster.objects.get(guarantee_id=guaranteeobj[i].get('guarantee_id'))
+                print(guaranteeobjget)
+                if guaranteeobjget.status=='Disabled':
+                    guaranteeobjget.status='Active'
+                    guaranteeobjget.save()
+                else:
+                    return Response({'status': 202, 'message': 'Already status enabled'}, status=202)
+            return Response({'status':200,'message':'Guarantee Master status changed to enabled'},status=200)
+        else:
+            return Response({'status': 204, 'message': 'Not exist'}, status=204)
+    except Exception as e:
+        return Response({'status':500,'error':str(e)},status=500)
+
+@api_view(['post'])
+@permission_classes([AllowAny,])
+def delete_guarantee_master(request):
+    # delete guarantee master by passing primary key(hsnid)
+    data=request.data
+    guaranteeid=data['guaranteeid']
+    try:
+        guaranteeobj = GuaranteeMaster.objects.filter(guarantee_id__in=guaranteeid).values()
+        if guaranteeobj:
+            for i in range(0, len(guaranteeobj)):
+                guaranteeobjget = HSNMaster.objects.get(guarantee_id=guaranteeobj[i].get('guarantee_id'))
+                if guaranteeobjget:
+                    guaranteeobjget.delete()
+
+            return Response({'status': 204, 'message': 'Guarantee Master data deleted'}, status=204)
+        return Response({'status':200,'message':'Guarantee Master data not present or already deleted'},status=200)
+
+    except Exception as e:
+        return Response({'status':500,'error':str(e)},status=500)
+
+@api_view(['get'])
+@permission_classes([AllowAny,])
+def guarantee_master_history(request):
+    try:
+        guaranteemasterhistory=GuaranteeMaster.history.filter().values()
+        if guaranteemasterhistory:
+            return Response({'status':200,'message':'Guarantee Master history','data':guaranteemasterhistory},status=200)
+        else:
+            return Response({'status': 204, 'message': 'Guarantee Master history data not persent'},
+                            status=204)
+
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)
+
+
+@api_view(['post'])
+@permission_classes([AllowAny,])
+def guarantee_masters_user_id(request):
+    data=request.data
+    userid = data['userid']
+    try:
+        guaranteeobj = GuaranteeMaster.objects.filter(updated_by=userid).values()
+        guaranteeadmin=GuaranteeMaster.objects.filter(admins=1).values()
+        guarateeval=list(chain(guaranteeobj,guaranteeadmin))
+        if len(guaranteeobj)==0:
+            return Response({'status': 200, 'message': 'sac masters data', 'data': guaranteeadmin}, status=200)
+        if len(guaranteeadmin) == 0:
+            return Response({'status': 200, 'message': 'sac masters admins datas', 'data': guaranteeobj}, status=200)
+        elif len(guaranteeobj)!=0 and len(guaranteeadmin)!=0:
+            return Response({'status': 200, 'message': 'sac masters all datas', 'data':guarateeval}, status=200)
+        else:
+            return Response({'status':204,'message':'noo'},status=204)
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

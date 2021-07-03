@@ -1596,8 +1596,8 @@ def pf_charges_master_get_by_userid(request):
         pfchargeval=list(chain(pfchargeobj,pfchargeadmin))
         if len(pfchargeobj)==0:
             return Response({'status': 200, 'message': 'pf charge admins datas', 'data': pfchargeadmin}, status=200)
-        if len(pfchargeobj) == 0:
-            return Response({'status': 200, 'message': 'pf charge admins datas', 'data': pfchargeadmin}, status=200)
+        if len(pfchargeadmin) == 0:
+            return Response({'status': 200, 'message': 'pf charge admins datas', 'data': pfchargeobj}, status=200)
         elif len(pfchargeobj)!=0 and len(pfchargeadmin)!=0:
             return Response({'status': 200, 'message': 'pf charge all datas datas', 'data': pfchargeval}, status=200)
         else:
@@ -1606,17 +1606,22 @@ def pf_charges_master_get_by_userid(request):
         return Response({'status': 500, 'error': str(e)}, status=500)
 
 
-
-
-        # if len(pfchargeobj)!=0:
-        #     return Response({'status':200,'message':'PF Charges Master','data':pfchargeobj},status=200)
-        # if len(pfchargeobj)==0 and len(pfchargeadmin)!=0:
-        #     return Response({'status': 200, 'message': 'PF Charges Master', 'data': pfchargeadmin}, status=200)
-        # if len(pfchargeobj)!=0 and len(pfchargeadmin)!=
-        #
-        # else:
-        #     return Response({'status': 204, 'message': 'PF Charges Master data not persent'},
-        #                     status=204)
-
-    # except Exception as e:
-    #     return Response({'status': 500, 'error': str(e)}, status=500)
+@api_view(['post'])
+@permission_classes([AllowAny,])
+def frieght_masters_user_id(request):
+    data=request.data
+    userid = data['userid']
+    try:
+        frieghtobj = FrieghtChargesMaster.objects.filter(updated_by=userid).values()
+        freightadmin=FrieghtChargesMaster.objects.filter(admins=1).values()
+        frieghtval=list(chain(frieghtobj,freightadmin))
+        if len(frieghtobj)==0:
+            return Response({'status': 200, 'message': 'pf charge admins datas', 'data': freightadmin}, status=200)
+        if len(freightadmin) == 0:
+            return Response({'status': 200, 'message': 'pf charge admins datas', 'data': frieghtobj}, status=200)
+        elif len(frieghtobj)!=0 and len(freightadmin)!=0:
+            return Response({'status': 200, 'message': 'pf charge all datas datas', 'data':frieghtval}, status=200)
+        else:
+            return Response({'status':204,'message':'noo'},status=204)
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)

@@ -95,7 +95,7 @@ urlpatterns = [
     path('enable-frieght-master/', views.enable_frieght_charges_master),
     path('delete-frieght-master/', views.delete_freight_master),
     path('history-frieght-master/', views.frieght_master_history),
-    # path('frieght-master-get-by-pk/',views.frieght_master_get_by_pk),
+    path('frieght-master-get-by-userid/',views.frieght_masters_user_id),
 
 
 

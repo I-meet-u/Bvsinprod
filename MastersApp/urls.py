@@ -103,7 +103,7 @@ urlpatterns = [
     path('enable-pf_charge-master/', views.enable_pf_charge_master),
     path('delete-pf_charge-master/', views.delete_pf_charge_master),
     path('history-pf_charge-master/', views.pf_charges_master_history),
-    # path('pf_charge-master-get-by-pk/', views.pf_charges_master_get_by_pk)
+    path('pf_charge-master-get-by-userid/', views.pf_charges_master_get_by_userid)
 
 ]
 

@@ -114,5 +114,12 @@ urlpatterns = [
     path('history-guarantee-master/', views.guarantee_master_history),
     path('guarantee-master-get-by-userid/', views.guarantee_masters_user_id),
 
+
+    path('disable-designation-master/', views.disable_designation_master),
+    path('enable-designation-master/', views.enable_designation_master),
+    path('delete-designation-master/', views.delete_designation_master),
+    path('history-designation-master/', views.designation_master_history),
+    path('designation-master-get-by-userid/', views.designation_masters_user_id),
+
 ]
 

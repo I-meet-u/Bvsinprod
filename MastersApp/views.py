@@ -1763,11 +1763,11 @@ def guarantee_masters_user_id(request):
         guaranteeadmin=GuaranteeMaster.objects.filter(admins=1).values()
         guarateeval=list(chain(guaranteeobj,guaranteeadmin))
         if len(guaranteeobj)==0:
-            return Response({'status': 200, 'message': 'sac masters data', 'data': guaranteeadmin}, status=200)
+            return Response({'status': 200, 'message': 'guarantee masters data', 'data': guaranteeadmin}, status=200)
         if len(guaranteeadmin) == 0:
-            return Response({'status': 200, 'message': 'sac masters admins datas', 'data': guaranteeobj}, status=200)
+            return Response({'status': 200, 'message': 'guarantee admins datas', 'data': guaranteeobj}, status=200)
         elif len(guaranteeobj)!=0 and len(guaranteeadmin)!=0:
-            return Response({'status': 200, 'message': 'sac masters all datas', 'data':guarateeval}, status=200)
+            return Response({'status': 200, 'message': 'guarantee all datas', 'data':guarateeval}, status=200)
         else:
             return Response({'status':204,'message':'noo'},status=204)
     except Exception as e:
@@ -1778,6 +1778,109 @@ def guarantee_masters_user_id(request):
 
 
 
+
+@api_view(['put'])
+@permission_classes([AllowAny,])
+def disable_designation_master(request):
+    # disable designation master by changing status from Active to Disabled by passing primary key(hsnid)
+    data=request.data
+    designationid=data['designationid']
+    try:
+        designationobj=DesignationMaster.objects.filter(designation_id__in=designationid).values()
+        if designationobj:
+            for i in range(0,len(designationobj)):
+                designationobjget=DesignationMaster.objects.get(designation_id=designationobj[i].get('designation_id'))
+                print(designationobjget)
+                if designationobjget.status=='Active':
+                    designationobjget.status='Disabled'
+                    designationobjget.save()
+                else:
+                    return Response({'status': 202, 'message': 'Already status disabled'},status=202)
+            return Response({'status':200,'message':'Designation Master status changed to disabled'},status=200)
+        else:
+            return Response({'status': 204, 'message': 'Not exist'}, status=204)
+    except Exception as e:
+        return Response({'status':500,'error':str(e)},status=500)
+
+
+@api_view(['put'])
+@permission_classes([AllowAny,])
+def enable_designation_master(request):
+    # enable designation master by changing status from Active to Disabled by passing primary key(hsnid)
+    data=request.data
+    designationid=data['designationid']
+    try:
+        designationobj=DesignationMaster.objects.filter(designation_id__in=designationid).values()
+        if designationobj:
+            for i in range(0,len(designationobj)):
+                designationobjget=DesignationMaster.objects.get(designation_id=designationobj[i].get('designation_id'))
+                print(designationobjget)
+                if designationobjget.status=='Disabled':
+                    designationobjget.status='Active'
+                    designationobjget.save()
+                else:
+                    return Response({'status': 202, 'message': 'Already status enabled'}, status=202)
+            return Response({'status':200,'message':'Designation Master status changed to enabled'},status=200)
+        else:
+            return Response({'status': 204, 'message': 'Not exist'}, status=204)
+    except Exception as e:
+        return Response({'status':500,'error':str(e)},status=500)
+
+@api_view(['post'])
+@permission_classes([AllowAny,])
+def delete_designation_master(request):
+    # delete designation master by passing primary key(hsnid)
+    data=request.data
+    designationid=data['designationid']
+    try:
+        designationobj = DesignationMaster.objects.filter(designation_id__in=designationid).values()
+        if designationobj:
+            for i in range(0, len(designationobj)):
+                designationobjget = DesignationMaster.objects.get(designation_id=designationobj[i].get('designation_id'))
+                print(designationobjget)
+                if designationobjget:
+                    designationobjget.delete()
+
+            return Response({'status': 204, 'message': 'Designation Master data deleted'}, status=204)
+        return Response({'status':200,'message':'Designation Master data not present or already deleted'},status=200)
+
+    except Exception as e:
+        return Response({'status':500,'error':str(e)},status=500)
+
+@api_view(['get'])
+@permission_classes([AllowAny,])
+def designation_master_history(request):
+    try:
+        designationmasterhistory=DesignationMaster.history.filter().values()
+        if designationmasterhistory:
+            return Response({'status':200,'message':'Designation Master history','data':designationmasterhistory},status=200)
+        else:
+            return Response({'status': 204, 'message': 'Designation Master history data not persent'},
+                            status=204)
+
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)
+
+
+@api_view(['post'])
+@permission_classes([AllowAny,])
+def designation_masters_user_id(request):
+    data=request.data
+    userid = data['userid']
+    try:
+        designationobj = DesignationMaster.objects.filter(updated_by=userid).values()
+        designationadmin=DesignationMaster.objects.filter(admins=1).values()
+        designationval=list(chain(designationobj,designationadmin))
+        if len(designationobj)==0:
+            return Response({'status': 200, 'message': 'Designation masters data', 'data': designationadmin}, status=200)
+        if len(designationadmin) == 0:
+            return Response({'status': 200, 'message': 'Designation admins datas', 'data': designationobj}, status=200)
+        elif len(designationobj)!=0 and len(designationadmin)!=0:
+            return Response({'status': 200, 'message': 'Designation all datas', 'data':designationval}, status=200)
+        else:
+            return Response({'status':204,'message':'noo'},status=204)
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)
 
 
 

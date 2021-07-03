@@ -17,8 +17,8 @@ class IndustryToServeMaster(models.Model):
     created_on = models.DateTimeField(auto_now_add=True)
     updated_on = models.DateTimeField(auto_now=True)
     admins = models.ForeignKey(AdminRegister,on_delete=models.CASCADE,null=True,blank=True)
-    created_by=models.BigIntegerField(null=True)
     updated_by = models.ForeignKey(SelfRegistration, on_delete=models.CASCADE,null=True,blank=True)
+    created_by = models.BigIntegerField(null=True)
     updated_by_name = models.CharField(null=True, blank=True,max_length=100)
     created_by_name=models.CharField(null=True,blank=True,max_length=100)
     status = models.CharField(max_length=30, default='Active')
@@ -44,6 +44,9 @@ class NatureOfBusinessMaster(models.Model):
     csv_nature = models.FileField(upload_to='MasterFile', null=True, blank=True)
     admins = models.ForeignKey(AdminRegister, on_delete=models.CASCADE, null=True)
     updated_by = models.ForeignKey(CreateUser, on_delete=models.CASCADE, null=True)
+    created_by = models.BigIntegerField(null=True)
+    updated_by_name = models.CharField(null=True, blank=True, max_length=100)
+    created_by_name = models.CharField(null=True, blank=True, max_length=100)
     history = HistoricalRecords()
 
     class Meta:
@@ -64,6 +67,9 @@ class SupplyCapabilitiesMaster(models.Model):
     csv_supply = models.FileField(upload_to='MasterFile', null=True, blank=True)
     admins = models.ForeignKey(AdminRegister, on_delete=models.CASCADE, null=True)
     updated_by = models.ForeignKey(CreateUser, on_delete=models.CASCADE, null=True)
+    created_by = models.BigIntegerField(null=True,blank=True)
+    updated_by_name = models.CharField(null=True, blank=True, max_length=100)
+    created_by_name = models.CharField(null=True, blank=True, max_length=100)
     history = HistoricalRecords()
 
     class Meta:
@@ -85,6 +91,9 @@ class MaincoreMaster(models.Model):
     csv_maincore= models.FileField(upload_to='MasterFile', null=True, blank=True)
     admins = models.ForeignKey(AdminRegister, on_delete=models.CASCADE, null=True)
     updated_by = models.ForeignKey(CreateUser, on_delete=models.CASCADE, null=True)
+    created_by = models.BigIntegerField(null=True,blank=True)
+    updated_by_name = models.CharField(null=True, blank=True, max_length=100)
+    created_by_name = models.CharField(null=True, blank=True, max_length=100)
     history = HistoricalRecords()
 
     class Meta:
@@ -106,6 +115,9 @@ class CategoryMaster(models.Model):
     status = models.CharField(max_length=30, default='Active', null=True)
     admins = models.ForeignKey(AdminRegister, on_delete=models.CASCADE, null=True)
     updated_by = models.ForeignKey(CreateUser, on_delete=models.CASCADE, null=True)
+    created_by = models.BigIntegerField(null=True,blank=True)
+    updated_by_name = models.CharField(null=True, blank=True, max_length=100)
+    created_by_name = models.CharField(null=True, blank=True, max_length=100)
     history = HistoricalRecords()
 
     class Meta:
@@ -127,6 +139,9 @@ class SubCategoryMaster(models.Model):
     csv_subcategory = models.FileField(upload_to='MasterFile', null=True, blank=True)
     admins = models.ForeignKey(AdminRegister, on_delete=models.CASCADE, null=True)
     updated_by = models.ForeignKey(CreateUser, on_delete=models.CASCADE, null=True)
+    created_by = models.BigIntegerField(null=True,blank=True)
+    updated_by_name = models.CharField(null=True, blank=True, max_length=100)
+    created_by_name = models.CharField(null=True, blank=True, max_length=100)
     history = HistoricalRecords()
 
     class Meta:
@@ -145,6 +160,9 @@ class PincodeMaster(models.Model):
     status = models.CharField(max_length=30, default='Active')
     admins = models.ForeignKey(AdminRegister, on_delete=models.CASCADE, null=True)
     updated_by = models.ForeignKey(CreateUser, on_delete=models.CASCADE, null=True)
+    created_by = models.BigIntegerField(null=True,blank=True)
+    updated_by_name = models.CharField(null=True, blank=True, max_length=100)
+    created_by_name = models.CharField(null=True, blank=True, max_length=100)
     history = HistoricalRecords()
 
     class Meta:
@@ -163,6 +181,9 @@ class UOMMaster(models.Model):
     status = models.CharField(max_length=30, default='Active')
     admins = models.ForeignKey(AdminRegister, on_delete=models.CASCADE, null=True)
     updated_by = models.ForeignKey(CreateUser, on_delete=models.CASCADE, null=True)
+    created_by = models.BigIntegerField(null=True,blank=True)
+    updated_by_name = models.CharField(null=True, blank=True, max_length=100)
+    created_by_name = models.CharField(null=True, blank=True, max_length=100)
     history = HistoricalRecords()
 
     class Meta:
@@ -181,6 +202,9 @@ class DepartmentMaster(models.Model):
     status = models.CharField(max_length=30, default='Active')
     admins = models.ForeignKey(AdminRegister, on_delete=models.CASCADE, null=True)
     updated_by = models.ForeignKey(CreateUser, on_delete=models.CASCADE, null=True)
+    created_by = models.BigIntegerField(null=True,blank=True)
+    updated_by_name = models.CharField(null=True, blank=True, max_length=100)
+    created_by_name = models.CharField(null=True, blank=True, max_length=100)
     history = HistoricalRecords()
 
     class Meta:
@@ -199,6 +223,9 @@ class DesignationMaster(models.Model):
     status = models.CharField(max_length=30, default='Active')
     admins = models.ForeignKey(AdminRegister, on_delete=models.CASCADE, null=True)
     updated_by = models.ForeignKey(CreateUser, on_delete=models.CASCADE, null=True)
+    created_by = models.BigIntegerField(null=True,blank=True)
+    updated_by_name = models.CharField(null=True, blank=True, max_length=100)
+    created_by_name = models.CharField(null=True, blank=True, max_length=100)
     history = HistoricalRecords()
 
     class Meta:
@@ -218,6 +245,9 @@ class TaxMaster(models.Model):
     status = models.CharField(max_length=30, default='Active')
     admins = models.ForeignKey(AdminRegister, on_delete=models.CASCADE, null=True)
     updated_by = models.ForeignKey(CreateUser, on_delete=models.CASCADE, null=True)
+    created_by = models.BigIntegerField(null=True,blank=True)
+    updated_by_name = models.CharField(null=True, blank=True, max_length=100)
+    created_by_name = models.CharField(null=True, blank=True, max_length=100)
     history = HistoricalRecords()
 
     class Meta:
@@ -236,6 +266,9 @@ class HSNMaster(models.Model):
     status = models.CharField(max_length=30, default='Active')
     admins = models.ForeignKey(AdminRegister, on_delete=models.CASCADE, null=True)
     updated_by = models.ForeignKey(CreateUser, on_delete=models.CASCADE, null=True)
+    created_by = models.BigIntegerField(null=True,blank=True)
+    updated_by_name = models.CharField(null=True, blank=True, max_length=100)
+    created_by_name = models.CharField(null=True, blank=True, max_length=100)
     history = HistoricalRecords()
 
     class Meta:
@@ -254,6 +287,9 @@ class SACMaster(models.Model):
     status = models.CharField(max_length=30, default='Active')
     admins = models.ForeignKey(AdminRegister, on_delete=models.CASCADE,null=True)
     updated_by=models.ForeignKey(CreateUser,on_delete=models.CASCADE,null=True)
+    created_by = models.BigIntegerField(null=True,blank=True)
+    updated_by_name = models.CharField(null=True, blank=True, max_length=100)
+    created_by_name = models.CharField(null=True, blank=True, max_length=100)
     history = HistoricalRecords()
 
     class Meta:
@@ -272,6 +308,9 @@ class CurrencyMaster(models.Model):
     status = models.CharField(max_length=30, default='Active')
     admins = models.ForeignKey(AdminRegister, on_delete=models.CASCADE, null=True)
     updated_by = models.ForeignKey(CreateUser, on_delete=models.CASCADE, null=True)
+    created_by = models.BigIntegerField(null=True,blank=True)
+    updated_by_name = models.CharField(null=True, blank=True, max_length=100)
+    created_by_name = models.CharField(null=True, blank=True, max_length=100)
     history = HistoricalRecords()
 
     class Meta:
@@ -288,6 +327,9 @@ class PFChargesMaster(models.Model):
     status = models.CharField(max_length=30, default='Active')
     admins = models.ForeignKey(AdminRegister, on_delete=models.CASCADE, null=True)
     updated_by = models.ForeignKey(CreateUser, on_delete=models.CASCADE, null=True)
+    created_by = models.BigIntegerField(null=True,blank=True)
+    updated_by_name = models.CharField(null=True, blank=True, max_length=100)
+    created_by_name = models.CharField(null=True, blank=True, max_length=100)
     history = HistoricalRecords()
 
     class Meta:
@@ -304,6 +346,9 @@ class FrieghtChargesMaster(models.Model):
     status = models.CharField(max_length=30, default='Active')
     admins = models.ForeignKey(AdminRegister, on_delete=models.CASCADE, null=True)
     updated_by = models.ForeignKey(CreateUser, on_delete=models.CASCADE, null=True)
+    created_by = models.BigIntegerField(null=True,blank=True)
+    updated_by_name = models.CharField(null=True, blank=True, max_length=100)
+    created_by_name = models.CharField(null=True, blank=True, max_length=100)
     history = HistoricalRecords()
 
     class Meta:
@@ -320,6 +365,9 @@ class WarrantyMaster(models.Model):
     status = models.CharField(max_length=30, default='Active')
     admins = models.ForeignKey(AdminRegister, on_delete=models.CASCADE, null=True)
     updated_by = models.ForeignKey(CreateUser, on_delete=models.CASCADE, null=True)
+    created_by = models.BigIntegerField(null=True,blank=True)
+    updated_by_name = models.CharField(null=True, blank=True, max_length=100)
+    created_by_name = models.CharField(null=True, blank=True, max_length=100)
     history = HistoricalRecords()
 
     class Meta:
@@ -336,6 +384,9 @@ class GuaranteeMaster(models.Model):
     status = models.CharField(max_length=30, default='Active')
     admins = models.ForeignKey(AdminRegister, on_delete=models.CASCADE, null=True)
     updated_by = models.ForeignKey(CreateUser, on_delete=models.CASCADE, null=True)
+    created_by = models.BigIntegerField(null=True,blank=True)
+    updated_by_name = models.CharField(null=True, blank=True, max_length=100)
+    created_by_name = models.CharField(null=True, blank=True, max_length=100)
     history = HistoricalRecords()
 
     class Meta:
@@ -352,6 +403,9 @@ class DeliveryMaster(models.Model):
     status = models.CharField(max_length=30, default='Active')
     admins = models.ForeignKey(AdminRegister, on_delete=models.CASCADE, null=True)
     updated_by = models.ForeignKey(CreateUser, on_delete=models.CASCADE, null=True)
+    created_by = models.BigIntegerField(null=True,blank=True)
+    updated_by_name = models.CharField(null=True, blank=True, max_length=100)
+    created_by_name = models.CharField(null=True, blank=True, max_length=100)
     history = HistoricalRecords()
 
     class Meta:
@@ -370,6 +424,9 @@ class CountryMaster(models.Model):
     status = models.CharField(max_length=30, default='Active')
     admins = models.ForeignKey(AdminRegister, on_delete=models.CASCADE, null=True,blank=True)
     updated_by = models.ForeignKey(CreateUser, on_delete=models.CASCADE, null=True,blank=True)
+    created_by = models.BigIntegerField(null=True,blank=True)
+    updated_by_name = models.CharField(null=True, blank=True, max_length=100)
+    created_by_name = models.CharField(null=True, blank=True, max_length=100)
     history = HistoricalRecords()
 
     class Meta:
@@ -389,6 +446,7 @@ class ItemGroupMaster(models.Model):
     status = models.CharField(max_length=30, default='Active')
     admins = models.ForeignKey(AdminRegister, on_delete=models.CASCADE, null=True,blank=True)
     updated_by = models.ForeignKey(CreateUser, on_delete=models.CASCADE, null=True,blank=True)
+    created_by = models.BigIntegerField(null=True,blank=True)
     history = HistoricalRecords()
 
     class Meta:

@@ -1868,8 +1868,8 @@ def designation_masters_user_id(request):
     data=request.data
     userid = data['userid']
     try:
-        designationobj = DesignationMaster.objects.filter(updated_by=userid).values()
-        designationadmin=DesignationMaster.objects.filter(admins=1).values()
+        designationobj = DesignationMaster.objects.filter(updated_by=userid).values().order_by('designation_id')
+        designationadmin=DesignationMaster.objects.filter(admins=1).values().order_by('designation_id')
         designationval=list(chain(designationobj,designationadmin))
         if len(designationobj)==0:
             return Response({'status': 200, 'message': 'Designation masters data', 'data': designationadmin}, status=200)

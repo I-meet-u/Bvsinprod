@@ -1610,8 +1610,8 @@ def frieght_masters_user_id(request):
     data=request.data
     userid = data['userid']
     try:
-        frieghtobj = FrieghtChargesMaster.objects.filter(updated_by=userid).values()
-        freightadmin=FrieghtChargesMaster.objects.filter(admins=1).values()
+        frieghtobj = FrieghtChargesMaster.objects.filter(updated_by=userid).values().order_by('frieght_id')
+        freightadmin=FrieghtChargesMaster.objects.filter(admins=1).values().order_by('frieght_id')
         frieghtval=list(chain(frieghtobj,freightadmin))
         if len(frieghtobj)==0:
             return Response({'status': 200, 'message': 'frieght datas', 'data': freightadmin}, status=200)
@@ -1681,7 +1681,7 @@ def disable_guarantee_master(request):
         guaranteeobj=GuaranteeMaster.objects.filter(guarantee_id__in=guaranteeid).values()
         if guaranteeobj:
             for i in range(0,len(guaranteeobj)):
-                guaranteeobjget=HSNMaster.objects.get(guarantee_id=guaranteeobj[i].get('guarantee_id'))
+                guaranteeobjget=GuaranteeMaster.objects.get(guarantee_id=guaranteeobj[i].get('guarantee_id'))
                 print(guaranteeobjget)
                 if guaranteeobjget.status=='Active':
                     guaranteeobjget.status='Disabled'
@@ -1705,7 +1705,7 @@ def enable_guarantee_master(request):
         guaranteeobj=GuaranteeMaster.objects.filter(guarantee_id__in=guaranteeid).values()
         if guaranteeobj:
             for i in range(0,len(guaranteeobj)):
-                guaranteeobjget=HSNMaster.objects.get(guarantee_id=guaranteeobj[i].get('guarantee_id'))
+                guaranteeobjget=GuaranteeMaster.objects.get(guarantee_id=guaranteeobj[i].get('guarantee_id'))
                 print(guaranteeobjget)
                 if guaranteeobjget.status=='Disabled':
                     guaranteeobjget.status='Active'
@@ -1728,7 +1728,7 @@ def delete_guarantee_master(request):
         guaranteeobj = GuaranteeMaster.objects.filter(guarantee_id__in=guaranteeid).values()
         if guaranteeobj:
             for i in range(0, len(guaranteeobj)):
-                guaranteeobjget = HSNMaster.objects.get(guarantee_id=guaranteeobj[i].get('guarantee_id'))
+                guaranteeobjget = GuaranteeMaster.objects.get(guarantee_id=guaranteeobj[i].get('guarantee_id'))
                 if guaranteeobjget:
                     guaranteeobjget.delete()
 

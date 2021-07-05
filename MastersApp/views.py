@@ -2240,3 +2240,105 @@ def validity_master_user_id(request):
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)
 
+#------------------------------------------------------------------------------------------------------------------------
+
+@api_view(['put'])
+@permission_classes([AllowAny,])
+def disable_delivery_master(request):
+    # disable delivery master by changing status from Active to Disabled by passing primary key(deliveryid)
+    data=request.data
+    deliveryid=data['deliveryid']
+    try:
+        deliveryobj=DeliveryMaster.objects.filter(delivery_id__in=deliveryid).values()
+        if deliveryobj:
+            for i in range(0,len(deliveryobj)):
+                deliveryobjget=DeliveryMaster.objects.get(delivery_id=deliveryobj[i].get('delivery_id'))
+                if deliveryobjget.status=='Active':
+                    deliveryobjget.status='Disabled'
+                    deliveryobjget.save()
+                else:
+                    return Response({'status': 202, 'message': 'Already status disabled'},status=202)
+            return Response({'status':200,'message':'Delivery Master status changed to disabled'},status=200)
+        else:
+            return Response({'status': 204, 'message': 'Not exist'}, status=204)
+    except Exception as e:
+        return Response({'status':500,'error':str(e)},status=500)
+
+
+@api_view(['put'])
+@permission_classes([AllowAny,])
+def enable_delivery_master(request):
+    # enable delivery master by changing status from Disabled to Active by passing primary key(deliveryid)
+    data=request.data
+    deliveryid=data['deliveryid']
+    try:
+        deliveryobj=DeliveryMaster.objects.filter(delivery_id__in=deliveryid).values()
+        if deliveryobj:
+            for i in range(0,len(deliveryobj)):
+                deliveryobjget=DeliveryMaster.objects.get(delivery_id=deliveryobj[i].get('delivery_id'))
+                if deliveryobjget.status=='Disabled':
+                    deliveryobjget.status='Active'
+                    deliveryobjget.save()
+                else:
+                    return Response({'status': 202, 'message': 'Already status enabled'},status=202)
+            return Response({'status':200,'message':'Delivery Master status changed to enabled'},status=200)
+        else:
+            return Response({'status': 204, 'message': 'Not exist'}, status=204)
+    except Exception as e:
+        return Response({'status':500,'error':str(e)},status=500)
+
+
+@api_view(['post'])
+@permission_classes([AllowAny,])
+def delete_delivery_master(request):
+    # delete delivery master by passing primary key(paymentid)
+    data=request.data
+    deliveryid = data['deliveryid']
+    try:
+        deliveryobj = DeliveryMaster.objects.filter(delivery_id__in=deliveryid).values()
+        if deliveryobj:
+            for i in range(0, len(deliveryobj)):
+                deliveryobjget = DeliveryMaster.objects.get(delivery_id=deliveryobj[i].get('delivery_id'))
+                if deliveryobjget:
+                    deliveryobjget.delete()
+
+            return Response({'status': 204, 'message': 'Delivery Master data deleted'}, status=204)
+        return Response({'status':200,'message':'Delivery Master data not present or already deleted'},status=200)
+
+    except Exception as e:
+        return Response({'status':500,'error':str(e)},status=500)
+
+@api_view(['get'])
+@permission_classes([AllowAny,])
+def delivery_master_history(request):
+    try:
+        deliverymasterhistory=DeliveryMaster.history.filter().values()
+        if deliverymasterhistory:
+            return Response({'status':200,'message':'Delivery Master history','data':deliverymasterhistory},status=200)
+        else:
+            return Response({'status': 204, 'message': 'Delivery Master history data not persent'},status=204)
+
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)
+
+
+@api_view(['post'])
+@permission_classes([AllowAny,])
+def delivery_master_user_id(request):
+    data=request.data
+    userid = data['userid']
+    try:
+        deliveryobj = DeliveryMaster.objects.filter(updated_by=userid).values().order_by('delivery_id')
+        deliveryadmin=DeliveryMaster.objects.filter(admins=1).values().order_by('delivery_id')
+        deliveryval=list(chain(deliveryobj,deliveryadmin))
+        if len(deliveryobj)==0:
+            return Response({'status': 200, 'message': 'Delivery masters data', 'data': deliveryadmin}, status=200)
+        if len(deliveryadmin) == 0:
+            return Response({'status': 200, 'message': 'Delivery admins datas', 'data': deliveryobj}, status=200)
+        elif len(deliveryobj)!=0 and len(deliveryadmin)!=0:
+            return Response({'status': 200, 'message': 'Delivery all datas', 'data':deliveryval}, status=200)
+        else:
+            return Response({'status':204,'message':'noo'},status=204)
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)
+

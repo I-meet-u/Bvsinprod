@@ -274,6 +274,18 @@ class DeliveryMasterSerializer(serializers.ModelSerializer):
         model=DeliveryMaster
         fields='__all__'
 
+    def create(self, validate_data):
+        # to add any extra details into the object before saving
+        deliveryobj = DeliveryMaster.objects.count()
+        if deliveryobj == 0:
+            delivery_code = '3000'
+        else:
+            deliveryobj = DeliveryMaster.objects.last()
+            print(deliveryobj.delivery_code)
+            delivery_code = int(deliveryobj.delivery_code) + 1
+        values = DeliveryMaster.objects.create(delivery_code=delivery_code, **validate_data)
+        return values
+
 class CountryMasterSerializer(serializers.ModelSerializer):
     # country master serializer
     class Meta:

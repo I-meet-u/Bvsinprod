@@ -142,5 +142,11 @@ urlpatterns = [
     path('history-validity-master/', views.validity_master_history),
     path('validity-master-get-by-userid/', views.validity_master_user_id),
 
+    path('disable-delivery-master/', views.disable_delivery_master),
+    path('enable-delivery-master/', views.enable_delivery_master),
+    path('delete-delivery-master/', views.delete_delivery_master),
+    path('history-delivery-master/', views.delivery_master_history),
+    path('delivery-master-get-by-userid/', views.delivery_master_user_id),
+
 ]
 

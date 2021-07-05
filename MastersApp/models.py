@@ -215,6 +215,7 @@ class DesignationMaster(models.Model):
     # designation master models and fields
     designation_id = models.BigAutoField(primary_key=True)
     designation_code = models.CharField(max_length=30, null=True, blank=True)
+    designation_short_text = models.CharField(max_length=70, null=True, blank=True)
     designation_name = models.CharField(max_length=200, unique=True)
     designation_level = models.CharField(max_length=30,null=True)
     is_verified = models.BooleanField(default=False)
@@ -236,8 +237,11 @@ class DesignationMaster(models.Model):
 class TaxMaster(models.Model):
     # tax_master models and fields
     tax_id = models.BigAutoField(primary_key=True)
-    tax_group = models.CharField(max_length=30,null=True,blank=True)
+    tax_code = models.CharField(max_length=30,null=True,blank=True)
     tax_slab_name = models.CharField(max_length=200,null=True)
+    CGST=models.CharField(max_length=80,null=True,blank=True)
+    SGST = models.CharField(max_length=80, null=True, blank=True)
+    IGST= models.CharField(max_length=80, null=True, blank=True)
     tax_percent = models.CharField(max_length=30,null=True)
     is_verified = models.BooleanField(default=False)
     created_on = models.DateTimeField(auto_now_add=True)
@@ -302,6 +306,7 @@ class CurrencyMaster(models.Model):
     currency_code = models.CharField(max_length=30,unique=True)
     currency = models.CharField(max_length=200, unique=True)
     currency_name = models.CharField(max_length=500, unique=True)
+    currency_symbol= models.CharField(max_length=500,null=True)
     is_verified = models.BooleanField(default=False)
     created_on = models.DateTimeField(auto_now_add=True)
     updated_on = models.DateTimeField(auto_now=True)
@@ -451,3 +456,66 @@ class ItemGroupMaster(models.Model):
 
     class Meta:
         db_table = "ItemGroupMaster"
+
+
+
+
+class TransitInsuranceMaster(models.Model):
+    # transit_insurance models and fields
+    transit_id = models.BigAutoField(primary_key=True)
+    transit_code = models.CharField(max_length=30,null=True)
+    transit_name = models.CharField(max_length=200, unique=True,null=True,blank=True)
+    is_verified = models.BooleanField(default=False)
+    created_on = models.DateTimeField(auto_now_add=True)
+    updated_on = models.DateTimeField(auto_now=True)
+    created_by_name=models.CharField(max_length=100,null=True,blank=True)
+    updated_by_name = models.CharField(max_length=100, null=True, blank=True)
+    status = models.CharField(max_length=30, default='Active')
+    admins = models.ForeignKey(AdminRegister, on_delete=models.CASCADE, null=True,blank=True)
+    updated_by = models.ForeignKey(CreateUser, on_delete=models.CASCADE, null=True,blank=True)
+    created_by = models.BigIntegerField(null=True,blank=True)
+    history = HistoricalRecords()
+
+    class Meta:
+        db_table = "TransitInsuranceMaster"
+
+
+class ValidityMaster(models.Model):
+    # validity_master models and fields
+    validity_id = models.BigAutoField(primary_key=True)
+    validity_code = models.CharField(max_length=30,null=True)
+    validity_name = models.CharField(max_length=200, unique=True,null=True,blank=True)
+    is_verified = models.BooleanField(default=False)
+    created_on = models.DateTimeField(auto_now_add=True)
+    updated_on = models.DateTimeField(auto_now=True)
+    created_by_name=models.CharField(max_length=100,null=True,blank=True)
+    updated_by_name = models.CharField(max_length=100, null=True, blank=True)
+    status = models.CharField(max_length=30, default='Active')
+    admins = models.ForeignKey(AdminRegister, on_delete=models.CASCADE, null=True,blank=True)
+    updated_by = models.ForeignKey(CreateUser, on_delete=models.CASCADE, null=True,blank=True)
+    created_by = models.BigIntegerField(null=True,blank=True)
+    history = HistoricalRecords()
+
+    class Meta:
+        db_table = "ValidityMaster"
+
+
+
+class PaymentMaster(models.Model):
+    # payment_master models and fields
+    payment_id = models.BigAutoField(primary_key=True)
+    payment_code = models.CharField(max_length=30,null=True)
+    payment_terms = models.CharField(max_length=200, unique=True,null=True,blank=True)
+    is_verified = models.BooleanField(default=False)
+    created_on = models.DateTimeField(auto_now_add=True)
+    updated_on = models.DateTimeField(auto_now=True)
+    created_by_name=models.CharField(max_length=100,null=True,blank=True)
+    updated_by_name = models.CharField(max_length=100, null=True, blank=True)
+    status = models.CharField(max_length=30, default='Active')
+    admins = models.ForeignKey(AdminRegister, on_delete=models.CASCADE, null=True,blank=True)
+    updated_by = models.ForeignKey(CreateUser, on_delete=models.CASCADE, null=True,blank=True)
+    created_by = models.BigIntegerField(null=True,blank=True)
+    history = HistoricalRecords()
+
+    class Meta:
+        db_table = "PaymentMaster"

@@ -3,7 +3,8 @@ from django.http import request
 from .models import MaincoreMaster, CategoryMaster, SubCategoryMaster, \
     IndustryToServeMaster, NatureOfBusinessMaster, SupplyCapabilitiesMaster, PincodeMaster, UOMMaster, DepartmentMaster, \
     DesignationMaster, TaxMaster, HSNMaster, SACMaster, CurrencyMaster, PFChargesMaster, FrieghtChargesMaster, \
-    DeliveryMaster, CountryMaster, WarrantyMaster, GuaranteeMaster, ItemGroupMaster
+    DeliveryMaster, CountryMaster, WarrantyMaster, GuaranteeMaster, ItemGroupMaster, TransitInsuranceMaster, \
+    PaymentMaster, ValidityMaster
 from rest_framework import serializers
 
 class IndustryToServeMasterSerializer(serializers.ModelSerializer):
@@ -296,4 +297,62 @@ class ItemGroupMasterSerializer(serializers.ModelSerializer):
             print(itemgroupobj.item_group_code)
             item_group_code = int(itemgroupobj.item_group_code) + 1
         values = ItemGroupMaster.objects.create(item_group_code=item_group_code, **validate_data)
+        return values
+
+class TransitInsuranceMasterSerializer(serializers.ModelSerializer):
+    # transit insurance master serializer
+    class Meta:
+        model=TransitInsuranceMaster
+        fields='__all__'
+
+    def create(self, validate_data):
+        # to add any extra details into the object before saving
+        print(validate_data)
+        transitobj = TransitInsuranceMaster.objects.count()
+        if transitobj == 0:
+            transit_code = '1701'
+        else:
+            transitobj = TransitInsuranceMaster.objects.last()
+            print(transitobj.transit_code)
+            transit_code = int(transitobj.transit_code) + 1
+        values = TransitInsuranceMaster.objects.create(transit_code=transit_code, **validate_data)
+        return values
+
+
+
+class PaymentMasterSerializer(serializers.ModelSerializer):
+    # payment master serializer
+    class Meta:
+        model=PaymentMaster
+        fields='__all__'
+
+    def create(self, validate_data):
+        # to add any extra details into the object before saving
+        paymentobj = PaymentMaster.objects.count()
+        if paymentobj == 0:
+            payment_code = '1801'
+        else:
+            paymentobj = PaymentMaster.objects.last()
+            print(paymentobj.payment_code)
+            payment_code = int(paymentobj.payment_code) + 1
+        values = PaymentMaster.objects.create(payment_code=payment_code, **validate_data)
+        return values
+
+
+class ValidityMasterSerializer(serializers.ModelSerializer):
+    # validity master serializer
+    class Meta:
+        model=ValidityMaster
+        fields='__all__'
+
+    def create(self, validate_data):
+        # to add any extra details into the object before saving
+        validityobj = ValidityMaster.objects.count()
+        if validityobj == 0:
+            validity_code = '1901'
+        else:
+            validityobj = ValidityMaster.objects.last()
+            print(validityobj.validity_code)
+            validity_code = int(validityobj.validity_code) + 1
+        values = ValidityMaster.objects.create(validity_code=validity_code, **validate_data)
         return values

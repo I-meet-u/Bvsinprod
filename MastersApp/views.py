@@ -22,11 +22,13 @@ from .serializers import MainCoreMasterSerializer, CategoryMasterSerializer, Sub
     DepartmentMasterSerializer, DesignationMasterSerializer, TaxMasterSerializer, HSNMasterSerializer, \
     SACMasterSerializer, CurrencyMasterSerializer, PFChargesMasterSerializer, FrieghtChargesMasterSerializer, \
     DeliveryMasterSerializer, CountryMasterSerializer, WarrantyMasterSerializer, \
-    GuaranteeMasterSerializer, ItemGroupMasterSerializer
+    GuaranteeMasterSerializer, ItemGroupMasterSerializer, TransitInsuranceMasterSerializer, PaymentMasterSerializer, \
+    ValidityMasterSerializer
 from .models import MaincoreMaster, CategoryMaster, SubCategoryMaster, \
     IndustryToServeMaster, NatureOfBusinessMaster, SupplyCapabilitiesMaster, PincodeMaster, UOMMaster, DepartmentMaster, \
     DesignationMaster, TaxMaster, HSNMaster, SACMaster, CurrencyMaster, PFChargesMaster, FrieghtChargesMaster, \
-    DeliveryMaster, CountryMaster, WarrantyMaster, GuaranteeMaster, ItemGroupMaster
+    DeliveryMaster, CountryMaster, WarrantyMaster, GuaranteeMaster, ItemGroupMaster, TransitInsuranceMaster, \
+    PaymentMaster, ValidityMaster
 
 
 # Create your views here.
@@ -1674,7 +1676,7 @@ def sac_masters_user_id(request):
 @api_view(['put'])
 @permission_classes([AllowAny,])
 def disable_guarantee_master(request):
-    # disable guarantee master by changing status from Active to Disabled by passing primary key(hsnid)
+    # disable guarantee master by changing status from Active to Disabled by passing primary key(guaranteeid)
     data=request.data
     guaranteeid=data['guaranteeid']
     try:
@@ -1698,7 +1700,7 @@ def disable_guarantee_master(request):
 @api_view(['put'])
 @permission_classes([AllowAny,])
 def enable_guarantee_master(request):
-    # disable guarantee master by changing status from Active to Disabled by passing primary key(hsnid)
+    # disable guarantee master by changing status from Active to Disabled by passing primary key(guaranteeid)
     data=request.data
     guaranteeid=data['guaranteeid']
     try:
@@ -1721,7 +1723,7 @@ def enable_guarantee_master(request):
 @api_view(['post'])
 @permission_classes([AllowAny,])
 def delete_guarantee_master(request):
-    # delete guarantee master by passing primary key(hsnid)
+    # delete guarantee master by passing primary key(guaranteeid)
     data=request.data
     guaranteeid=data['guaranteeid']
     try:
@@ -1782,7 +1784,7 @@ def guarantee_masters_user_id(request):
 @api_view(['put'])
 @permission_classes([AllowAny,])
 def disable_designation_master(request):
-    # disable designation master by changing status from Active to Disabled by passing primary key(hsnid)
+    # disable designation master by changing status from Active to Disabled by passing primary key(designationid)
     data=request.data
     designationid=data['designationid']
     try:
@@ -1806,7 +1808,7 @@ def disable_designation_master(request):
 @api_view(['put'])
 @permission_classes([AllowAny,])
 def enable_designation_master(request):
-    # enable designation master by changing status from Active to Disabled by passing primary key(hsnid)
+    # enable designation master by changing status from Active to Disabled by passing primary key(designationid)
     data=request.data
     designationid=data['designationid']
     try:
@@ -1829,7 +1831,7 @@ def enable_designation_master(request):
 @api_view(['post'])
 @permission_classes([AllowAny,])
 def delete_designation_master(request):
-    # delete designation master by passing primary key(hsnid)
+    # delete designation master by passing primary key(designationid)
     data=request.data
     designationid=data['designationid']
     try:
@@ -1883,12 +1885,358 @@ def designation_masters_user_id(request):
         return Response({'status': 500, 'error': str(e)}, status=500)
 
 
+class TransitInsuranceMasterView(viewsets.ModelViewSet):
+    # transit viewsets
+    permission_classes = (AllowAny,)
+    queryset = TransitInsuranceMaster.objects.all()
+    serializer_class = TransitInsuranceMasterSerializer
+
+    # def get_queryset(self):
+    #     # overriding get_queryset by passing user_id. Here user_id is nothing but updated_by
+    #     transitmasterobj = TransitInsuranceMaster.objects.filter(updated_by=self.request.GET.get('updated_by')).order_by(
+    #         'transit_id')
+    #     if transitmasterobj:
+    #         return  transitmasterobj
+    #
+    #     raise ValidationError({'message': 'Transit Master details not exist', 'status': 204})
+
+
+@api_view(['put'])
+@permission_classes([AllowAny,])
+def disable_transit_insurance_master(request):
+    # disable transit master by changing status from Active to Disabled by passing primary key(transitid)
+    data=request.data
+    transitid=data['transitid']
+    try:
+        transitobj=TransitInsuranceMaster.objects.filter(transit_id__in=transitid).values()
+        if transitobj:
+            for i in range(0,len(transitobj)):
+                transitobjget=TransitInsuranceMaster.objects.get(transit_id=transitobj[i].get('transit_id'))
+                if transitobjget.status=='Active':
+                    transitobjget.status='Disabled'
+                    transitobjget.save()
+                else:
+                    return Response({'status': 202, 'message': 'Already status disabled'},status=202)
+            return Response({'status':200,'message':'Transit Master status changed to disabled'},status=200)
+        else:
+            return Response({'status': 204, 'message': 'Not exist'}, status=204)
+    except Exception as e:
+        return Response({'status':500,'error':str(e)},status=500)
+
+
+@api_view(['put'])
+@permission_classes([AllowAny,])
+def enable_transit_insurance_master(request):
+    # enable transit master by changing status from Active to Disabled by passing primary key(transitid)
+    data=request.data
+    transitid=data['transitid']
+    try:
+        transitobj=TransitInsuranceMaster.objects.filter(transit_id__in=transitid).values()
+        if transitobj:
+            for i in range(0,len(transitobj)):
+                transitobjget=TransitInsuranceMaster.objects.get(transit_id=transitobj[i].get('transit_id'))
+                if transitobjget.status=='Disabled':
+                    transitobjget.status='Active'
+                    transitobjget.save()
+                else:
+                    return Response({'status': 202, 'message': 'Already status enabled'},status=202)
+            return Response({'status':200,'message':'Transit Master status changed to enabled'},status=200)
+        else:
+            return Response({'status': 204, 'message': 'Not exist'}, status=204)
+    except Exception as e:
+        return Response({'status':500,'error':str(e)},status=500)
+
+
+@api_view(['post'])
+@permission_classes([AllowAny,])
+def delete_transit_insurance_master(request):
+    # delete transit master by passing primary key(transitid)
+    data=request.data
+    transitid = data['transitid']
+    try:
+        transitobj = TransitInsuranceMaster.objects.filter(transit_id__in=transitid).values()
+        if transitobj:
+            for i in range(0, len(transitobj)):
+                transitobjget = TransitInsuranceMaster.objects.get(transit_id=transitobj[i].get('transit_id'))
+                if transitobjget:
+                    transitobjget.delete()
+
+            return Response({'status': 204, 'message': 'Transit Master data deleted'}, status=204)
+        return Response({'status':200,'message':'Transit Master data not present or already deleted'},status=200)
+
+    except Exception as e:
+        return Response({'status':500,'error':str(e)},status=500)
+
+@api_view(['get'])
+@permission_classes([AllowAny,])
+def transit_insurance_master_history(request):
+    try:
+        transitmasterhistory=TransitInsuranceMaster.history.filter().values()
+        if transitmasterhistory:
+            return Response({'status':200,'message':'Transit Master history','data':transitmasterhistory},status=200)
+        else:
+            return Response({'status': 204, 'message': 'Transit Master history data not persent'},status=204)
+
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)
+
+
+@api_view(['post'])
+@permission_classes([AllowAny,])
+def transit_insurance_master_user_id(request):
+    data=request.data
+    userid = data['userid']
+    try:
+        transitobj = TransitInsuranceMaster.objects.filter(updated_by=userid).values().order_by('transit_id')
+        transitadmin=TransitInsuranceMaster.objects.filter(admins=1).values().order_by('transit_id')
+        transitval=list(chain(transitobj,transitadmin))
+        if len(transitobj)==0:
+            return Response({'status': 200, 'message': 'Transit masters data', 'data': transitadmin}, status=200)
+        if len(transitadmin) == 0:
+            return Response({'status': 200, 'message': 'Transit admins datas', 'data': transitobj}, status=200)
+        elif len(transitobj)!=0 and len(transitadmin)!=0:
+            return Response({'status': 200, 'message': 'Transit all datas', 'data':transitval}, status=200)
+        else:
+            return Response({'status':204,'message':'noo'},status=204)
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)
 
 
 
 
+#----------------------------------------------------------------------------------------------
+class PaymentMasterView(viewsets.ModelViewSet):
+    # transit viewsets
+    permission_classes = (AllowAny,)
+    queryset = PaymentMaster.objects.all()
+    serializer_class = PaymentMasterSerializer
+
+    # def get_queryset(self):
+    #     # overriding get_queryset by passing user_id. Here user_id is nothing but updated_by
+    #     paymentmasterobj = PaymentMaster.objects.filter(updated_by=self.request.GET.get('updated_by')).order_by(
+    #         'payment_id')
+    #     if paymentmasterobj:
+    #         return paymentmasterobj
+    #
+    #     raise ValidationError({'message': 'Payment Master details not exist', 'status': 204})
 
 
 
+@api_view(['put'])
+@permission_classes([AllowAny,])
+def disable_payment_master(request):
+    # disable payment master by changing status from Active to Disabled by passing primary key(paymentid)
+    data=request.data
+    paymentid=data['paymentid']
+    try:
+        paymentobj=PaymentMaster.objects.filter(payment_id__in=paymentid).values()
+        if paymentobj:
+            for i in range(0,len(paymentobj)):
+                paymentobjget=PaymentMaster.objects.get(payment_id=paymentobj[i].get('payment_id'))
+                if paymentobjget.status=='Active':
+                    paymentobjget.status='Disabled'
+                    paymentobjget.save()
+                else:
+                    return Response({'status': 202, 'message': 'Already status disabled'},status=202)
+            return Response({'status':200,'message':'Payment Master status changed to disabled'},status=200)
+        else:
+            return Response({'status': 204, 'message': 'Not exist'}, status=204)
+    except Exception as e:
+        return Response({'status':500,'error':str(e)},status=500)
 
+@api_view(['put'])
+@permission_classes([AllowAny,])
+def enable_payment_master(request):
+    # enable payment master by changing status from Active to Disabled by passing primary key(paymentid)
+    data=request.data
+    paymentid=data['paymentid']
+    try:
+        paymentobj=PaymentMaster.objects.filter(payment_id__in=paymentid).values()
+        if paymentobj:
+            for i in range(0,len(paymentobj)):
+                paymentobjget=PaymentMaster.objects.get(payment_id=paymentobj[i].get('payment_id'))
+                if paymentobjget.status=='Disabled':
+                    paymentobjget.status='Active'
+                    paymentobjget.save()
+                else:
+                    return Response({'status': 202, 'message': 'Already status enabled'},status=202)
+            return Response({'status':200,'message':'Payment Master status changed to enabled'},status=200)
+        else:
+            return Response({'status': 204, 'message': 'Not exist'}, status=204)
+    except Exception as e:
+        return Response({'status':500,'error':str(e)},status=500)
+
+
+@api_view(['post'])
+@permission_classes([AllowAny,])
+def delete_payment_master(request):
+    # delete payment master by passing primary key(paymentid)
+    data=request.data
+    paymentid = data['paymentid']
+    try:
+        paymentobj = PaymentMaster.objects.filter(payment_id__in=paymentid).values()
+        if paymentobj:
+            for i in range(0, len(paymentobj)):
+                paymentobjget = PaymentMaster.objects.get(payment_id=paymentobj[i].get('payment_id'))
+                if paymentobjget:
+                    paymentobjget.delete()
+
+            return Response({'status': 204, 'message': 'Payment Master data deleted'}, status=204)
+        return Response({'status':200,'message':'Payment Master data not present or already deleted'},status=200)
+
+    except Exception as e:
+        return Response({'status':500,'error':str(e)},status=500)
+
+@api_view(['get'])
+@permission_classes([AllowAny,])
+def payment_master_history(request):
+    try:
+        paymentmasterhistory=PaymentMaster.history.filter().values()
+        if paymentmasterhistory:
+            return Response({'status':200,'message':'Payment Master history','data':paymentmasterhistory},status=200)
+        else:
+            return Response({'status': 204, 'message': 'Payment Master history data not persent'},status=204)
+
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)
+
+
+@api_view(['post'])
+@permission_classes([AllowAny,])
+def payment_master_user_id(request):
+    data=request.data
+    userid = data['userid']
+    try:
+        paymentobj = PaymentMaster.objects.filter(updated_by=userid).values().order_by('payment_id')
+        paymentadmin=PaymentMaster.objects.filter(admins=1).values().order_by('payment_id')
+        paymentval=list(chain(paymentobj,paymentadmin))
+        if len(paymentobj)==0:
+            return Response({'status': 200, 'message': 'Payment masters data', 'data': paymentadmin}, status=200)
+        if len(paymentadmin) == 0:
+            return Response({'status': 200, 'message': 'Payment admins datas', 'data': paymentobj}, status=200)
+        elif len(paymentobj)!=0 and len(paymentadmin)!=0:
+            return Response({'status': 200, 'message': 'Payment all datas', 'data':paymentval}, status=200)
+        else:
+            return Response({'status':204,'message':'noo'},status=204)
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)
+
+
+#------------------------------------------------------------------------------------------------------------------------
+class ValidityMasterView(viewsets.ModelViewSet):
+    # validity viewsets
+    permission_classes = (AllowAny,)
+    queryset = ValidityMaster.objects.all()
+    serializer_class = ValidityMasterSerializer
+
+    # def get_queryset(self):
+    #     # overriding get_queryset by passing user_id. Here user_id is nothing but updated_by
+    #     validitymasterobj = ValidityMaster.objects.filter(updated_by=self.request.GET.get('updated_by')).order_by(
+    #         'validity_id')
+    #     if validitymasterobj:
+    #         return validitymasterobj
+    #
+    #     raise ValidationError({'message': 'Validity Master details not exist', 'status': 204})
+
+
+
+@api_view(['put'])
+@permission_classes([AllowAny,])
+def disable_validity_master(request):
+    # disable validity master by changing status from Active to Disabled by passing primary key(paymentid)
+    data=request.data
+    validityid=data['validityid']
+    try:
+        validityobj=ValidityMaster.objects.filter(validity_id__in=validityid).values()
+        if validityobj:
+            for i in range(0,len(validityobj)):
+                validityobjget=ValidityMaster.objects.get(validity_id=validityobj[i].get('validity_id'))
+                if validityobjget.status=='Active':
+                    validityobjget.status='Disabled'
+                    validityobjget.save()
+                else:
+                    return Response({'status': 202, 'message': 'Already status disabled'},status=202)
+            return Response({'status':200,'message':'Validity Master status changed to disabled'},status=200)
+        else:
+            return Response({'status': 204, 'message': 'Not exist'}, status=204)
+    except Exception as e:
+        return Response({'status':500,'error':str(e)},status=500)
+
+
+@api_view(['put'])
+@permission_classes([AllowAny,])
+def enable_validity_master(request):
+    # enable validity master by changing status from Disabled to Active by passing primary key(paymentid)
+    data=request.data
+    validityid=data['validityid']
+    try:
+        validityobj=ValidityMaster.objects.filter(validity_id__in=validityid).values()
+        if validityobj:
+            for i in range(0,len(validityobj)):
+                validityobjget=ValidityMaster.objects.get(validity_id=validityobj[i].get('validity_id'))
+                if validityobjget.status=='Disabled':
+                    validityobjget.status='Active'
+                    validityobjget.save()
+                else:
+                    return Response({'status': 202, 'message': 'Already status enabled'},status=202)
+            return Response({'status':200,'message':'Validity Master status changed to enabled'},status=200)
+        else:
+            return Response({'status': 204, 'message': 'Not exist'}, status=204)
+    except Exception as e:
+        return Response({'status':500,'error':str(e)},status=500)
+
+
+@api_view(['post'])
+@permission_classes([AllowAny,])
+def delete_validity_master(request):
+    # delete validity master by passing primary key(paymentid)
+    data=request.data
+    validityid = data['validityid']
+    try:
+        validityobj = ValidityMaster.objects.filter(validity_id__in=validityid).values()
+        if validityobj:
+            for i in range(0, len(validityobj)):
+                validityobjget = ValidityMaster.objects.get(validity_id=validityobj[i].get('validity_id'))
+                if validityobjget:
+                    validityobjget.delete()
+
+            return Response({'status': 204, 'message': 'Validity Master data deleted'}, status=204)
+        return Response({'status':200,'message':'Validity Master data not present or already deleted'},status=200)
+
+    except Exception as e:
+        return Response({'status':500,'error':str(e)},status=500)
+
+@api_view(['get'])
+@permission_classes([AllowAny,])
+def validity_master_history(request):
+    try:
+        validitymasterhistory=ValidityMaster.history.filter().values()
+        if validitymasterhistory:
+            return Response({'status':200,'message':'Validity Master history','data':validitymasterhistory},status=200)
+        else:
+            return Response({'status': 204, 'message': 'Validity Master history data not persent'},status=204)
+
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)
+
+
+@api_view(['post'])
+@permission_classes([AllowAny,])
+def validity_master_user_id(request):
+    data=request.data
+    userid = data['userid']
+    try:
+        validityobj = ValidityMaster.objects.filter(updated_by=userid).values().order_by('validity_id')
+        validityadmin=ValidityMaster.objects.filter(admins=1).values().order_by('validity_id')
+        validityval=list(chain(validityobj,validityadmin))
+        if len(validityobj)==0:
+            return Response({'status': 200, 'message': 'Validity masters data', 'data': validityadmin}, status=200)
+        if len(validityadmin) == 0:
+            return Response({'status': 200, 'message': 'Validity admins datas', 'data': validityobj}, status=200)
+        elif len(validityobj)!=0 and len(validityadmin)!=0:
+            return Response({'status': 200, 'message': 'Validity all datas', 'data':validityval}, status=200)
+        else:
+            return Response({'status':204,'message':'noo'},status=204)
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)
 

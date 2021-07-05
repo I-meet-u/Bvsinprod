@@ -26,6 +26,9 @@ router.register('guarantee-master',views.GuaranteeMasterView)
 router.register('delivery-master',views.DeliveryMasterView)
 router.register('country-master',views.CountryMasterView)
 router.register('item-group-master',views.ItemGroupMasterView)
+router.register('transit-insurance-master',views.TransitInsuranceMasterView)
+router.register('payment-master',views.PaymentMasterView)
+router.register('validity-master',views.ValidityMasterView)
 urlpatterns = [
     path('masters-router-urls/',include(router.urls)), #router urls are included
 
@@ -120,6 +123,24 @@ urlpatterns = [
     path('delete-designation-master/', views.delete_designation_master),
     path('history-designation-master/', views.designation_master_history),
     path('designation-master-get-by-userid/', views.designation_masters_user_id),
+
+    path('disable-transit-insurance-master/', views.disable_transit_insurance_master),
+    path('enable-transit-insurance-master/', views.enable_transit_insurance_master),
+    path('delete-transit-insurance-master/', views.delete_transit_insurance_master),
+    path('history-transit-insurance-master/', views.transit_insurance_master_history),
+    path('transit-insurance-master-get-by-userid/', views.transit_insurance_master_user_id),
+
+    path('disable-payment-master/', views.disable_payment_master),
+    path('enable-payment-master/', views.enable_payment_master),
+    path('delete-payment-master/', views.delete_payment_master),
+    path('history-payment-master/', views.payment_master_history),
+    path('payment-master-get-by-userid/', views.payment_master_user_id),
+
+    path('disable-validity-master/', views.disable_validity_master),
+    path('enable-validity-master/', views.enable_validity_master),
+    path('delete-validity-master/', views.delete_validity_master),
+    path('history-validity-master/', views.validity_master_history),
+    path('validity-master-get-by-userid/', views.validity_master_user_id),
 
 ]
 

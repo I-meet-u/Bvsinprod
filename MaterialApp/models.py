@@ -166,6 +166,7 @@ class BuyerProductDetails(models.Model):
     buyer_uom = models.CharField(max_length=100, blank=True)
     buyer_hsn_sac = models.CharField(max_length=100, blank=True)
     buyer_unit_price = models.CharField(max_length=100, blank=True)
+    # code_format = models.CharField(max_length=120, null=True, blank=True)
     # buyer_currency = models.CharField(max_length=50, blank=True)
     # buyer_country_of_origin = models.CharField(max_length=50, blank=True)
     buyer_category=models.CharField(max_length=500,null=True)
@@ -187,3 +188,16 @@ class BuyerProductDetails(models.Model):
         db_table = "BuyerProductDetails"
 
 
+class ItemCodeSettings(models.Model):
+    item_type=models.CharField(max_length=200)
+    prefix=models.CharField(max_length=70,null=True,blank=True)
+    numeric=models.CharField(max_length=30)
+    suffix=models.CharField(max_length=70,null=True,blank=True)
+    code_format=models.CharField(max_length=120,null=True,blank=True)
+    created_on = models.DateTimeField(auto_now_add=True)
+    updated_on = models.DateTimeField(auto_now=True)
+    created_by = models.BigIntegerField()
+    updated_by = models.ForeignKey(SelfRegistration, on_delete=models.CASCADE)
+
+    class Meta:
+        db_table = "ItemCodeSettings"

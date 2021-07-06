@@ -2,7 +2,7 @@ from rest_framework import  serializers
 from rest_framework.exceptions import ValidationError
 
 from .models import VendorProduct_BasicDetails, VendorProduct_GeneralDetails, VendorProduct_TechnicalSpecifications, \
-    VendorProduct_ProductFeatures, VendorProduct_Documents, BuyerProductDetails
+    VendorProduct_ProductFeatures, VendorProduct_Documents, BuyerProductDetails, ItemCodeSettings
 
 
 class VendorProduct_BasicDetailsSerializer(serializers.ModelSerializer):
@@ -49,3 +49,9 @@ class BuyerProductDetailsSerializer(serializers.ModelSerializer):
         if buyerproductobj:
             return buyerproductobj
         raise  ValidationError({'message':"Buyer Product Details not exist",'status':204})
+
+class ItemCodeSettingsSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model=ItemCodeSettings
+        fields='__all__'

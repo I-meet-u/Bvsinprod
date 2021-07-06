@@ -245,3 +245,20 @@ def company_details_by_subcategory_id(request):
         return Response({'status':200,'message':'ok','data':companycodearray},status=200)
     except Exception as e:
         return Response({'status':500,'error':str(e)},status=500)
+
+
+@api_view(['post'])
+@permission_classes([AllowAny])
+def category_list_by_maincore(request):
+    # category master all data by using filter and passing maincore_id
+    data = request.data
+    maincoreid = data['maincoreid']
+    try:
+        catobj = CategoryMaster.objects.filter(maincore__in=maincoreid).values()
+        print(len(catobj))
+        if catobj:
+            return Response({'status': 200, 'message': 'category list', 'data': catobj}, status=200)
+        else:
+            return Response({'status': 204, 'message': 'not found'}, status=204)
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)

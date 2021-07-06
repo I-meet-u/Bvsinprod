@@ -171,8 +171,8 @@ class BankDetails(models.Model):
 
 class LegalDocuments(models.Model):
     # legal documents model fields
-    document_name = models.CharField(max_length=100, null=True, blank=True)
-    document = models.FileField(upload_to='static/legalfiles', blank=True, null=True)
+    document_name = models.CharField(max_length=100)
+    document = models.FileField(upload_to='static/legalfiles')
     created_on = models.DateTimeField(auto_now_add=True)
     updated_on = models.DateTimeField(auto_now=True)
     created_by = models.BigIntegerField()

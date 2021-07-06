@@ -1107,7 +1107,3 @@ def getcompanycode(request):
                             status=202)
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)
-
-
-
-

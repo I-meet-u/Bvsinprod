@@ -8,6 +8,8 @@ router.register('admin-invite', views.AdminInviteView)
 router.register('create-user', views.CreateUserView)
 router.register('admin-register',views.AdminRegisterView)
 router.register('permissions',views.PermissionsView)
+router.register('image-model',views.ImageModelView)
+
 
 urlpatterns = [
     path('admin-router-urls/',include(router.urls)),
@@ -16,6 +18,7 @@ urlpatterns = [
     path('admin-email-otp-verify/',views.admin_email_otp_verify),
     path('registration-list/', views.registration_list),
     path('admin-approval/',views.admin_approval),
-    path('admin-approve-pending-list/',views.admin_approve_pending_list)
+    path('admin-approve-pending-list/',views.admin_approve_pending_list),
+    # path('image_add/', views.image_add),
 
-    ]
+]

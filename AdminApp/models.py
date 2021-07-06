@@ -117,3 +117,10 @@ class Permissions(models.Model):
 #
 #     class Meta:
 #         db_table = "BusinessRequest"
+
+class ImageModel(models.Model):
+    image_1=models.BinaryField(editable=True)
+    userid=models.ForeignKey(SelfRegistration,on_delete=models.CASCADE,null=True)
+
+    class Meta:
+        db_table="ImageModel"

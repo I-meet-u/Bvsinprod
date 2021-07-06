@@ -148,5 +148,11 @@ urlpatterns = [
     path('history-delivery-master/', views.delivery_master_history),
     path('delivery-master-get-by-userid/', views.delivery_master_user_id),
 
+    path('disable-country-master/', views.disable_country_master),
+    path('enable-country-master/', views.enable_country_master),
+    path('delete-country-master/', views.delete_country_master),
+    path('history-country-master/', views.country_master_history),
+    path('country-master-get-by-userid/', views.country_master_user_id),
+
 ]
 

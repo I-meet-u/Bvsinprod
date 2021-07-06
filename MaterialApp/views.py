@@ -4,6 +4,7 @@ from django.shortcuts import render
 
 from rest_framework import viewsets, permissions
 from rest_framework.decorators import api_view, permission_classes
+from rest_framework.exceptions import ValidationError
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 
@@ -277,6 +278,12 @@ class BuyerProductDetailsView(viewsets.ModelViewSet):
     permission_classes = [permissions.AllowAny]
     queryset = BuyerProductDetails.objects.all()
     serializer_class = BuyerProductDetailsSerializer
+
+    def get_queryset(self):
+        buyerproductobj=BuyerProductDetails.objects.filter(updated_by=self.request.GET.get('updated_by')).order_by('buyer_product_id')
+        if buyerproductobj:
+            return buyerproductobj
+        raise ValidationError({'message':'Buyer Product Details Not Present','status':204})
 
 @api_view(['post'])
 @permission_classes((AllowAny,))

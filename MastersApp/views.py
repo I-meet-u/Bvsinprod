@@ -2648,3 +2648,141 @@ def currency_master_user_id(request):
             return Response({'status':204,'message':'noo'},status=204)
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)
+
+#--------------------------------------------------------------------------------------------------------------
+@api_view(['get'])
+@permission_classes([AllowAny,])
+def uom_master_history(request):
+    try:
+        uommasterhistory=UOMMaster.history.filter().values()
+        if uommasterhistory:
+            return Response({'status':200,'message':'UOM Master history','data':uommasterhistory},status=200)
+        else:
+            return Response({'status': 204, 'message': 'UOM Master history data not persent'},status=204)
+
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)
+
+
+@api_view(['post'])
+@permission_classes([AllowAny,])
+def uom_master_user_id(request):
+    data=request.data
+    userid = data['userid']
+    try:
+        uomobj = UOMMaster.objects.filter(updated_by=userid).values().order_by('uom_id')
+        uomadmin=UOMMaster.objects.filter(admins=1).values().order_by('uom_id')
+        uomval=list(chain(uomobj,uomadmin))
+        if len(uomobj)==0:
+            return Response({'status': 200, 'message': 'UOM masters data', 'data': uomadmin}, status=200)
+        if len(uomadmin) == 0:
+            return Response({'status': 200, 'message': 'UOM admins datas', 'data': uomobj}, status=200)
+        elif len(uomobj)!=0 and len(uomadmin)!=0:
+            return Response({'status': 200, 'message': 'UOM all datas', 'data':uomval}, status=200)
+        else:
+            return Response({'status':204,'message':'noo'},status=204)
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)
+
+#----------------------------------------------------------------------------------------------------
+@api_view(['put'])
+@permission_classes([AllowAny,])
+def disable_department_master(request):
+    # disable department master by changing status from Active to Disabled by passing primary key(departmentid)
+    data=request.data
+    departmentid=data['departmentid']
+    try:
+        departmentobj=DepartmentMaster.objects.filter(department_id__in=departmentid).values()
+        if departmentobj:
+            for i in range(0,len(departmentobj)):
+                departmentobjget=DepartmentMaster.objects.get(department_id=departmentobj[i].get('department_id'))
+                if departmentobjget.status=='Active':
+                    departmentobjget.status='Disabled'
+                    departmentobjget.save()
+                else:
+                    return Response({'status': 202, 'message': 'Already status disabled'},status=202)
+            return Response({'status':200,'message':'Department Master status changed to disabled'},status=200)
+        else:
+            return Response({'status': 204, 'message': 'Not exist'}, status=204)
+    except Exception as e:
+        return Response({'status':500,'error':str(e)},status=500)
+
+
+@api_view(['put'])
+@permission_classes([AllowAny,])
+def enable_department_master(request):
+    # enable department master by changing status from Disabled to Active by passing primary key(departmentid)
+    data=request.data
+    departmentid=data['departmentid']
+    try:
+        departmentobj=DepartmentMaster.objects.filter(department_id__in=departmentid).values()
+        if departmentobj:
+            for i in range(0,len(departmentobj)):
+                departmentobjget=DepartmentMaster.objects.get(department_id=departmentobj[i].get('department_id'))
+                if departmentobjget.status=='Disabled':
+                    departmentobjget.status='Active'
+                    departmentobjget.save()
+                else:
+                    return Response({'status': 202, 'message': 'Already status enabled'},status=202)
+            return Response({'status':200,'message':'Department Master status changed to enabled'},status=200)
+        else:
+            return Response({'status': 204, 'message': 'Not exist'}, status=204)
+    except Exception as e:
+        return Response({'status':500,'error':str(e)},status=500)
+
+
+
+
+@api_view(['post'])
+@permission_classes([AllowAny,])
+def delete_department_master(request):
+    # delete department master by passing primary key(taxid)
+    data=request.data
+    departmentid = data['departmentid']
+    try:
+        departmentobj = DepartmentMaster.objects.filter(department_id__in=departmentid).values()
+        if departmentobj:
+            for i in range(0, len(departmentobj)):
+                departmentobjget = DepartmentMaster.objects.get(department_id=departmentobj[i].get('department_id'))
+                if departmentobjget:
+                    departmentobjget.delete()
+
+            return Response({'status': 204, 'message': 'Department Master data deleted'}, status=204)
+        return Response({'status':200,'message':'Department Master data not present or already deleted'},status=200)
+
+    except Exception as e:
+        return Response({'status':500,'error':str(e)},status=500)
+
+@api_view(['get'])
+@permission_classes([AllowAny,])
+def department_master_history(request):
+    try:
+        departmentmasterhistory=DepartmentMaster.history.filter().values()
+        if departmentmasterhistory:
+            return Response({'status':200,'message':'Department Master history','data':departmentmasterhistory},status=200)
+        else:
+            return Response({'status': 204, 'message': 'Department Master history data not persent'},status=204)
+
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)
+
+
+@api_view(['post'])
+@permission_classes([AllowAny,])
+def department_master_user_id(request):
+    data=request.data
+    userid=data['userid']
+    try:
+        departmentobj = DepartmentMaster.objects.filter(updated_by=userid).values().order_by('department_id')
+        departmentadmin=DepartmentMaster.objects.filter(admins=1).values().order_by('department_id')
+        departmentval=list(chain(departmentobj,departmentadmin))
+        if len(departmentobj)==0:
+            return Response({'status': 200, 'message': 'Department masters data', 'data': departmentadmin}, status=200)
+        if len(departmentadmin) == 0:
+            return Response({'status': 200, 'message': 'Department admins datas', 'data': departmentobj}, status=200)
+        elif len(departmentobj)!=0 and len(departmentadmin)!=0:
+            return Response({'status': 200, 'message': 'Department all datas', 'data':departmentval}, status=200)
+        else:
+            return Response({'status':204,'message':'noo'},status=204)
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)

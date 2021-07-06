@@ -55,6 +55,15 @@ urlpatterns = [
     path('enable-uom-master/',views.enable_uom_master),
     path('all-masters/',views.all_masters),
     path('delete-uom-masters/',views.delete_uom_master),
+    path('uom-master-history/',views.uom_master_history),
+    path('uom-master-user-id/',views. uom_master_user_id),
+
+    path('disable-department-master/', views.disable_department_master),
+    path('enable-department-master/', views.enable_department_master),
+    path('delete-department-master/', views.delete_department_master),
+    path('history-department-master/', views.department_master_history),
+    path('department-master-get-by-userid/', views.department_master_user_id),
+
 
     path('industry-to-serve-master-history/', views.industry_to_serve_master_history),
     path('nature-of-business-master-history/',views.nature_of_business_master_history),

@@ -143,11 +143,37 @@ class UOMMasterSerializer(serializers.ModelSerializer):
         model=UOMMaster
         fields='__all__'
 
+    def create(self, validate_data):
+        # to add any extra details into the object before saving
+        print(validate_data)
+        uomobj = UOMMaster.objects.count()
+        if uomobj == 0:
+            uom_code = '7001'
+        else:
+            uomobj = UOMMaster.objects.last()
+            uom_code = int(uomobj.uom_code) + 1
+        values = UOMMaster.objects.create(uom_code=uom_code, **validate_data)
+        return values
+
+
 class DepartmentMasterSerializer(serializers.ModelSerializer):
     # department master serializer
     class Meta:
         model=DepartmentMaster
         fields='__all__'
+
+
+    def create(self, validate_data):
+        # to add any extra details into the object before saving
+        print(validate_data)
+        departmentobj = DepartmentMaster.objects.count()
+        if departmentobj == 0:
+            department_code = '2201'
+        else:
+            departmentobj = DepartmentMaster.objects.last()
+            department_code = int(departmentobj.department_code) + 1
+        values = DepartmentMaster.objects.create(department_code=department_code, **validate_data)
+        return values
 
 
 class DesignationMasterSerializer(serializers.ModelSerializer):

@@ -2443,3 +2443,104 @@ def country_master_user_id(request):
             return Response({'status':204,'message':'noo'},status=204)
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)
+
+#-------------------------------------------------------------------------------------------------------
+@api_view(['put'])
+@permission_classes([AllowAny,])
+def disable_country_master(request):
+    # disable country master by changing status from Active to Disabled by passing primary key(deliveryid)
+    data=request.data
+    countryid=data['countryid']
+    try:
+        countryobj=CountryMaster.objects.filter(country_id__in=countryid).values()
+        if countryobj:
+            for i in range(0,len(countryobj)):
+                countryobjget=CountryMaster.objects.get(country_id=countryobj[i].get('country_id'))
+                if countryobjget.status=='Active':
+                    countryobjget.status='Disabled'
+                    countryobjget.save()
+                else:
+                    return Response({'status': 202, 'message': 'Already status disabled'},status=202)
+            return Response({'status':200,'message':'Country Master status changed to disabled'},status=200)
+        else:
+            return Response({'status': 204, 'message': 'Not exist'}, status=204)
+    except Exception as e:
+        return Response({'status':500,'error':str(e)},status=500)
+
+
+@api_view(['put'])
+@permission_classes([AllowAny,])
+def enable_country_master(request):
+    # enable country master by changing status from Active to Disabled by passing primary key(deliveryid)
+    data=request.data
+    countryid=data['countryid']
+    try:
+        countryobj=CountryMaster.objects.filter(country_id__in=countryid).values()
+        if countryobj:
+            for i in range(0,len(countryobj)):
+                countryobjget=CountryMaster.objects.get(country_id=countryobj[i].get('country_id'))
+                if countryobjget.status=='Disabled':
+                    countryobjget.status='Active'
+                    countryobjget.save()
+                else:
+                    return Response({'status': 202, 'message': 'Already status enabled'},status=202)
+            return Response({'status':200,'message':'Country Master status changed to enabled'},status=200)
+        else:
+            return Response({'status': 204, 'message': 'Not exist'}, status=204)
+    except Exception as e:
+        return Response({'status':500,'error':str(e)},status=500)
+
+
+@api_view(['post'])
+@permission_classes([AllowAny,])
+def delete_country_master(request):
+    # delete country master by passing primary key(paymentid)
+    data=request.data
+    countryid = data['countryid']
+    try:
+        countryobj = CountryMaster.objects.filter(country_id__in=countryid).values()
+        if countryobj:
+            for i in range(0, len(countryobj)):
+                countryobjget = CountryMaster.objects.get(country_id=countryobj[i].get('country_id'))
+                if countryobjget:
+                    countryobjget.delete()
+
+            return Response({'status': 204, 'message': 'Country Master data deleted'}, status=204)
+        return Response({'status':200,'message':'Country Master data not present or already deleted'},status=200)
+
+    except Exception as e:
+        return Response({'status':500,'error':str(e)},status=500)
+
+@api_view(['get'])
+@permission_classes([AllowAny,])
+def country_master_history(request):
+    try:
+        countrymasterhistory=CountryMaster.history.filter().values()
+        if countrymasterhistory:
+            return Response({'status':200,'message':'Country Master history','data':countrymasterhistory},status=200)
+        else:
+            return Response({'status': 204, 'message': 'Country Master history data not persent'},status=204)
+
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)
+
+
+@api_view(['post'])
+@permission_classes([AllowAny,])
+def country_master_user_id(request):
+    data=request.data
+    userid = data['userid']
+    try:
+        countryobj = CountryMaster.objects.filter(updated_by=userid).values().order_by('country_id')
+        countryadmin=CountryMaster.objects.filter(admins=1).values().order_by('country_id')
+        countryval=list(chain(countryobj,countryadmin))
+        if len(countryobj)==0:
+            return Response({'status': 200, 'message': 'Country masters data', 'data': countryadmin}, status=200)
+        if len(countryadmin) == 0:
+            return Response({'status': 200, 'message': 'Country admins datas', 'data': countryobj}, status=200)
+        elif len(countryobj)!=0 and len(countryadmin)!=0:
+            return Response({'status': 200, 'message': 'Country all datas', 'data':countryval}, status=200)
+        else:
+            return Response({'status':204,'message':'noo'},status=204)
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)

@@ -90,12 +90,12 @@ class UOMMasterView(viewsets.ModelViewSet):
     queryset = UOMMaster.objects.all()
     serializer_class= UOMMasterSerializer
 
-    def get_queryset(self):
-        # overriding get_queryset by passing user_id. Here user_id is nothing but updated_by
-        uommasterobj = UOMMaster.objects.filter(updated_by=self.request.GET.get('updated_by')).order_by('uom_id')
-        if uommasterobj:
-            return uommasterobj
-        raise ValidationError({'message': 'UOM Master details not exist', 'status': 204})
+    # def get_queryset(self):
+    #     # overriding get_queryset by passing user_id. Here user_id is nothing but updated_by
+    #     uommasterobj = UOMMaster.objects.filter(updated_by=self.request.GET.get('updated_by')).order_by('uom_id')
+    #     if uommasterobj:
+    #         return uommasterobj
+    #     raise ValidationError({'message': 'UOM Master details not exist', 'status': 204})
 
 
 class DepartmentMasterView(viewsets.ModelViewSet):
@@ -104,12 +104,12 @@ class DepartmentMasterView(viewsets.ModelViewSet):
     queryset = DepartmentMaster.objects.all()
     serializer_class = DepartmentMasterSerializer
 
-    def get_queryset(self):
-        # overriding get_queryset by passing user_id. Here user_id is nothing but updated_by
-        departmentmasterobj = DepartmentMaster.objects.filter(updated_by=self.request.GET.get('updated_by')).order_by('department_id')
-        if departmentmasterobj:
-            return  departmentmasterobj
-        raise ValidationError({'message': 'Department Master details not exist', 'status': 204})
+    # def get_queryset(self):
+    #     # overriding get_queryset by passing user_id. Here user_id is nothing but updated_by
+    #     departmentmasterobj = DepartmentMaster.objects.filter(updated_by=self.request.GET.get('updated_by')).order_by('department_id')
+    #     if departmentmasterobj:
+    #         return  departmentmasterobj
+    #     raise ValidationError({'message': 'Department Master details not exist', 'status': 204})
 
 class DesignationMasterView(viewsets.ModelViewSet):
     # designation_master viewsets
@@ -174,14 +174,14 @@ class CurrencyMasterView(viewsets.ModelViewSet):
     queryset = CurrencyMaster.objects.all()
     serializer_class = CurrencyMasterSerializer
 
-    def get_queryset(self):
-        # overriding get_queryset by passing user_id. Here user_id is nothing but updated_by
-        currencymasterobj = CurrencyMaster.objects.filter(updated_by=self.request.GET.get('updated_by')).order_by(
-            'currency_id')
-        if currencymasterobj:
-            return  currencymasterobj
-
-        raise ValidationError({'message': 'Currency Master details not exist', 'status': 204})
+    # def get_queryset(self):
+    #     # overriding get_queryset by passing user_id. Here user_id is nothing but updated_by
+    #     currencymasterobj = CurrencyMaster.objects.filter(updated_by=self.request.GET.get('updated_by')).order_by(
+    #         'currency_id')
+    #     if currencymasterobj:
+    #         return  currencymasterobj
+    #
+    #     raise ValidationError({'message': 'Currency Master details not exist', 'status': 204})
 
 class PFChargesMasterView(viewsets.ModelViewSet):
     # pf_charges master viewsets
@@ -2445,3 +2445,206 @@ def country_master_user_id(request):
         return Response({'status': 500, 'error': str(e)}, status=500)
 
 #-------------------------------------------------------------------------------------------------------
+@api_view(['put'])
+@permission_classes([AllowAny,])
+def disable_tax_master(request):
+    # disable tax master by changing status from Active to Disabled by passing primary key(taxid)
+    data=request.data
+    taxid=data['taxid']
+    try:
+        taxobj=TaxMaster.objects.filter(tax_id__in=taxid).values()
+        if taxobj:
+            for i in range(0,len(taxobj)):
+                taxobjget=TaxMaster.objects.get(tax_id=taxobj[i].get('tax_id'))
+                if taxobjget.status=='Active':
+                    taxobjget.status='Disabled'
+                    taxobjget.save()
+                else:
+                    return Response({'status': 202, 'message': 'Already status disabled'},status=202)
+            return Response({'status':200,'message':'Tax Master status changed to disabled'},status=200)
+        else:
+            return Response({'status': 204, 'message': 'Not exist'}, status=204)
+    except Exception as e:
+        return Response({'status':500,'error':str(e)},status=500)
+
+
+@api_view(['put'])
+@permission_classes([AllowAny,])
+def enable_tax_master(request):
+    # enable tax master by changing status from Active to Disabled by passing primary key(taxid)
+    data=request.data
+    taxid=data['taxid']
+    try:
+        taxobj=TaxMaster.objects.filter(tax_id__in=taxid).values()
+        if taxobj:
+            for i in range(0,len(taxobj)):
+                taxobjget=TaxMaster.objects.get(tax_id=taxobj[i].get('tax_id'))
+                if taxobjget.status=='Disabled':
+                    taxobjget.status='Active'
+                    taxobjget.save()
+                else:
+                    return Response({'status': 202, 'message': 'Already status enabled'},status=202)
+            return Response({'status':200,'message':'Tax Master status changed to enabled'},status=200)
+        else:
+            return Response({'status': 204, 'message': 'Not exist'}, status=204)
+    except Exception as e:
+        return Response({'status':500,'error':str(e)},status=500)
+
+
+@api_view(['post'])
+@permission_classes([AllowAny,])
+def delete_tax_master(request):
+    # delete tax master by passing primary key(taxid)
+    data=request.data
+    taxid = data['taxid']
+    try:
+        taxobj = TaxMaster.objects.filter(tax_id__in=taxid).values()
+        if taxobj:
+            for i in range(0, len(taxobj)):
+                taxobjget = TaxMaster.objects.get(tax_id=taxobj[i].get('tax_id'))
+                if taxobjget:
+                    taxobjget.delete()
+
+            return Response({'status': 204, 'message': 'Tax Master data deleted'}, status=204)
+        return Response({'status':200,'message':'Tax Master data not present or already deleted'},status=200)
+
+    except Exception as e:
+        return Response({'status':500,'error':str(e)},status=500)
+
+@api_view(['get'])
+@permission_classes([AllowAny,])
+def tax_master_history(request):
+    try:
+        taxmasterhistory=TaxMaster.history.filter().values()
+        if taxmasterhistory:
+            return Response({'status':200,'message':'Tax Master history','data':taxmasterhistory},status=200)
+        else:
+            return Response({'status': 204, 'message': 'Tax Master history data not persent'},status=204)
+
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)
+
+
+@api_view(['post'])
+@permission_classes([AllowAny,])
+def tax_master_user_id(request):
+    data=request.data
+    userid = data['userid']
+    try:
+        taxobj = TaxMaster.objects.filter(updated_by=userid).values().order_by('tax_id')
+        taxadmin=TaxMaster.objects.filter(admins=1).values().order_by('tax_id')
+        taxval=list(chain(taxobj,taxadmin))
+        if len(taxobj)==0:
+            return Response({'status': 200, 'message': 'Tax masters data', 'data': taxadmin}, status=200)
+        if len(taxadmin) == 0:
+            return Response({'status': 200, 'message': 'Tax admins datas', 'data': taxobj}, status=200)
+        elif len(taxobj)!=0 and len(taxadmin)!=0:
+            return Response({'status': 200, 'message': 'Tax all datas', 'data':taxval}, status=200)
+        else:
+            return Response({'status':204,'message':'noo'},status=204)
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)
+
+
+
+#-------------------------------------------------------------------------------------------------------
+@api_view(['put'])
+@permission_classes([AllowAny,])
+def disable_currency_master(request):
+    # disable currency master by changing status from Active to Disabled by passing primary key(currencyid)
+    data=request.data
+    currencyid=data['currencyid']
+    try:
+        currencyobj=CurrencyMaster.objects.filter(currency_id__in=currencyid).values()
+        if currencyobj:
+            for i in range(0,len(currencyobj)):
+                currencyobjget=CurrencyMaster.objects.get(currency_id=currencyobj[i].get('currency_id'))
+                if currencyobjget.status=='Active':
+                    currencyobjget.status='Disabled'
+                    currencyobjget.save()
+                else:
+                    return Response({'status': 202, 'message': 'Already status disabled'},status=202)
+            return Response({'status':200,'message':'Currency Master status changed to disabled'},status=200)
+        else:
+            return Response({'status': 204, 'message': 'Not exist'}, status=204)
+    except Exception as e:
+        return Response({'status':500,'error':str(e)},status=500)
+
+
+@api_view(['put'])
+@permission_classes([AllowAny,])
+def enable_currency_master(request):
+    # disable currency master by changing status from Disabled to Active by passing primary key(currencyid)
+    data=request.data
+    currencyid=data['currencyid']
+    try:
+        currencyobj=CurrencyMaster.objects.filter(currency_id__in=currencyid).values()
+        if currencyobj:
+            for i in range(0,len(currencyobj)):
+                currencyobjget=CurrencyMaster.objects.get(currency_id=currencyobj[i].get('currency_id'))
+                if currencyobjget.status=='Disabled':
+                    currencyobjget.status='Active'
+                    currencyobjget.save()
+                else:
+                    return Response({'status': 202, 'message': 'Already status enabled'},status=202)
+            return Response({'status':200,'message':'Currency Master status changed to enabled'},status=200)
+        else:
+            return Response({'status': 204, 'message': 'Not exist'}, status=204)
+    except Exception as e:
+        return Response({'status':500,'error':str(e)},status=500)
+
+
+
+@api_view(['post'])
+@permission_classes([AllowAny,])
+def delete_currency_master(request):
+    # delete currency master by passing primary key(taxid)
+    data=request.data
+    currencyid = data['currencyid']
+    try:
+        currencyobj = CurrencyMaster.objects.filter(currency_id__in=currencyid).values()
+        if currencyobj:
+            for i in range(0, len(currencyobj)):
+                currencyobjget = CurrencyMaster.objects.get(currency_id=currencyobj[i].get('currency_id'))
+                if currencyobjget:
+                    currencyobjget.delete()
+
+            return Response({'status': 204, 'message': 'Currency Master data deleted'}, status=204)
+        return Response({'status':200,'message':'Currency Master data not present or already deleted'},status=200)
+
+    except Exception as e:
+        return Response({'status':500,'error':str(e)},status=500)
+
+@api_view(['get'])
+@permission_classes([AllowAny,])
+def currency_master_history(request):
+    try:
+        currencymasterhistory=CurrencyMaster.history.filter().values()
+        if currencymasterhistory:
+            return Response({'status':200,'message':'Currency Master history','data':currencymasterhistory},status=200)
+        else:
+            return Response({'status': 204, 'message': 'Currency Master history data not persent'},status=204)
+
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)
+
+
+@api_view(['post'])
+@permission_classes([AllowAny,])
+def currency_master_user_id(request):
+    data=request.data
+    userid = data['userid']
+    try:
+        currencyobj = CurrencyMaster.objects.filter(updated_by=userid).values().order_by('currency_id')
+        currencyadmin=CurrencyMaster.objects.filter(admins=1).values().order_by('currency_id')
+        currencyval=list(chain(currencyobj,currencyadmin))
+        if len(currencyobj)==0:
+            return Response({'status': 200, 'message': 'Currency masters data', 'data': currencyadmin}, status=200)
+        if len(currencyadmin) == 0:
+            return Response({'status': 200, 'message': 'Currency admins datas', 'data': currencyobj}, status=200)
+        elif len(currencyobj)!=0 and len(currencyadmin)!=0:
+            return Response({'status': 200, 'message': 'Currency all datas', 'data':currencyval}, status=200)
+        else:
+            return Response({'status':204,'message':'noo'},status=204)
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)

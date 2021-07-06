@@ -156,7 +156,6 @@ class DesignationMasterSerializer(serializers.ModelSerializer):
         model=DesignationMaster
         fields='__all__'
 
-
     def create(self, validate_data):
         # to add any extra details into the object before saving
         print(validate_data)
@@ -174,6 +173,19 @@ class TaxMasterSerializer(serializers.ModelSerializer):
     class Meta:
         model=TaxMaster
         fields='__all__'
+
+    def create(self, validate_data):
+        # to add any extra details into the object before saving
+        print(validate_data)
+        taxobj = TaxMaster.objects.count()
+        if taxobj == 0:
+            tax_code = '2201'
+        else:
+            taxobj = TaxMaster.objects.last()
+            tax_code = int(taxobj.tax_code) + 1
+        values = TaxMaster.objects.create(tax_code=tax_code, **validate_data)
+        return values
+
 
 class HSNMasterSerializer(serializers.ModelSerializer):
     # hsn_master  serializer

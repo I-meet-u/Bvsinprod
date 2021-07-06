@@ -154,5 +154,17 @@ urlpatterns = [
     path('history-country-master/', views.country_master_history),
     path('country-master-get-by-userid/', views.country_master_user_id),
 
+    path('disable-tax-master/', views.disable_tax_master),
+    path('enable-tax-master/', views.enable_tax_master),
+    path('delete-tax-master/', views.delete_tax_master),
+    path('history-tax-master/', views.tax_master_history),
+    path('tax-master-get-by-userid/', views.tax_master_user_id),
+
+    path('disable-currency-master/', views.disable_currency_master),
+    path('enable-currency-master/', views.enable_currency_master),
+    path('delete-currency-master/', views.delete_currency_master),
+    path('history-currency-master/', views.currency_master_history),
+    path('currency-master-get-by-userid/', views.currency_master_user_id),
+
 ]
 

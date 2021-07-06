@@ -20,6 +20,7 @@ urlpatterns = [
     path('get-all-billing-cities/',views.get_all_billing_cities),
     path('get-all_company-details-company_code/',views.get_all_company_details_company_code),
     # path('getallcompanydetails_companycode/',views.getallcompanydetails_companycode)
-    path('category-list-by-maincore/',views.category_list_by_maincore)
+    path('category-list-by-maincore/',views.category_list_by_maincore),
+    path('basic-details-by-company_name/',views.basic_details_by_company_name)
 
 ]

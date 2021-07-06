@@ -1,10 +1,13 @@
+from itertools import chain
+
 from django.shortcuts import render
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 # Create your views here.
 from MastersApp.models import MaincoreMaster, CategoryMaster, SubCategoryMaster
-from RegistrationApp.models import SelfRegistration, BasicCompanyDetails, IndustrialHierarchy, BillingAddress
+from RegistrationApp.models import SelfRegistration, BasicCompanyDetails, IndustrialHierarchy, BillingAddress, \
+    IndustrialInfo
 
 
 @api_view(['get'])
@@ -260,5 +263,26 @@ def category_list_by_maincore(request):
             return Response({'status': 200, 'message': 'category list', 'data': catobj}, status=200)
         else:
             return Response({'status': 204, 'message': 'not found'}, status=204)
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)
+
+
+@api_view(['post'])
+@permission_classes([AllowAny])
+def basic_details_by_company_name(request):
+    data=request.data
+    company_name=data['company_name']
+    basicarray=[]
+    try:
+        basicobj=BasicCompanyDetails.objects.filter(company_name__icontains=company_name).values().order_by('company_code')
+        for i in range(0,len(basicobj)):
+            basicarray.append(basicobj[i].get('company_code'))
+        if len(basicobj)!=0:
+            industryinfoobj=IndustrialInfo.objects.filter(company_code__in=basicarray).values().order_by('company_code')
+            industryhierarchyobj = IndustrialHierarchy.objects.filter(company_code__in=basicarray).values().order_by('company_code')
+            basicdetailsall = chain(basicobj,industryinfoobj, industryhierarchyobj)
+            return Response({'status': 200, 'message': 'company list', 'data': basicdetailsall}, status=200)
+        else:
+            return Response({'status': 204, 'message': 'basic company details not present for this company name'}, status=204)
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)

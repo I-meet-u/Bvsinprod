@@ -561,9 +561,8 @@ def delete_supply_capabilities_master(request):
 def delete_uom_master(request):
     data=request.data
     uomid=data['uomid']
-    userid = data['userid']
     try:
-        uomobj=UOMMaster.objects.filter(uom_id__in=uomid,updated_by=userid).values()
+        uomobj=UOMMaster.objects.filter(uom_id__in=uomid).values()
         if len(uomobj)>0:
             for i in range(0,len(uomobj)):
                 uomget=UOMMaster.objects.get(uom_id=uomobj[i].get('uom_id'))
@@ -580,9 +579,8 @@ def delete_uom_master(request):
 def disable_uom_master(request):
     data=request.data
     uomid=data['uomid']
-    userid=data['userid']
     try:
-        uomobj=UOMMaster.objects.filter(uom_id__in=uomid,updated_by=userid).values()
+        uomobj=UOMMaster.objects.filter(uom_id__in=uomid).values()
         if len(uomobj)>0:
             for i in range(0,len(uomobj)):
                 uomget=UOMMaster.objects.get(uom_id=uomobj[i].get('uom_id'))
@@ -602,9 +600,8 @@ def disable_uom_master(request):
 def enable_uom_master(request):
     data=request.data
     uomid=data['uomid']
-    userid = data['userid']
     try:
-        uomobj=UOMMaster.objects.filter(uom_id__in=uomid,updated_by=userid).values()
+        uomobj=UOMMaster.objects.filter(uom_id__in=uomid).values()
         if len(uomobj)>0:
             for i in range(0,len(uomobj)):
                 uomget=UOMMaster.objects.get(uom_id=uomobj[i].get('uom_id'))
@@ -612,7 +609,7 @@ def enable_uom_master(request):
                     uomget.status='Active'
                     uomget.save()
                 else:
-                    return Response({'status':202,'message':'UOM masters already enabled or it is not in disable state'},status=202)
+                    return Response({'status':202,'message':'UOM masters already enabled'},status=202)
             return Response({'status': 202, 'message': 'UOM status changed to enable'}, status=202)
         return Response({'status': 204, 'message': 'UOM data not present'}, status=204)
     except Exception as e:

@@ -242,15 +242,15 @@ class DeliveryMasterView(viewsets.ModelViewSet):
     permission_classes = (AllowAny,)
     queryset = DeliveryMaster.objects.all()
     serializer_class = DeliveryMasterSerializer
-
-    def get_queryset(self):
-        # overriding get_queryset by passing user_id. Here user_id is nothing but updated_by
-        deliverymasterobj = DeliveryMaster.objects.filter(updated_by=self.request.GET.get('updated_by')).order_by(
-            'delivery_id')
-        if deliverymasterobj:
-            return  deliverymasterobj
-
-        raise ValidationError({'message': 'Delivery Master details not exist', 'status': 204})
+    #
+    # def get_queryset(self):
+    #     # overriding get_queryset by passing user_id. Here user_id is nothing but updated_by
+    #     deliverymasterobj = DeliveryMaster.objects.filter(updated_by=self.request.GET.get('updated_by')).order_by(
+    #         'delivery_id')
+    #     if deliverymasterobj:
+    #         return  deliverymasterobj
+    #
+    #     raise ValidationError({'message': 'Delivery Master details not exist', 'status': 204})
 
 class CountryMasterView(viewsets.ModelViewSet):
     # country_master viewsets

@@ -381,7 +381,7 @@ def get_itemtype_based_on_userid(request):
                 productobjservice = BuyerProductDetails.objects.filter(updated_by=userid,
                                                                 buyer_item_type__icontains=itemtype).values()
                 return Response({'status': 200, 'message': 'Buyer Service List', 'data': productobjservice}, status=200)
-            elif itemtype == 'Machinery Equipments':
+            elif itemtype == 'Machinery_and_Equipments':
                 productobjmachinary = BuyerProductDetails.objects.filter(updated_by=userid,
                                                                        buyer_item_type__icontains=itemtype).values()
                 return Response({'status': 200, 'message': 'Buyer Service List', 'data': productobjmachinary}, status=200)

@@ -363,6 +363,13 @@ class ItemCodeSettingsView(viewsets.ModelViewSet):
         except Exception as e:
             return Response({'status': 500, 'error': str(e)}, status=500)
 
+    def get_queryset(self):
+        itemcodeobj=ItemCodeSettings.objects.filter(updated_by=self.request.GET.get('updated_by')).order_by('id')
+        if itemcodeobj:
+            return itemcodeobj
+        raise ValidationError({'message':'Item Code details of particular user id is not exist','status':204})
+
+
 
 @api_view(['post'])
 @permission_classes((AllowAny,))
@@ -371,19 +378,19 @@ def get_itemtype_based_on_userid(request):
     userid=data['userid']
     itemtype=data['itemtype']
     try:
-        buyerobj = BuyerProductDetails.objects.filter(updated_by=userid).values()
+        buyerobj = BuyerProductDetails.objects.filter(updated_by=userid).values().order_by('buyer_product_id')
         if len(buyerobj)>0:
             if itemtype=='Product':
-                productobj=BuyerProductDetails.objects.filter(updated_by=userid,buyer_item_type__icontains=itemtype).values()
+                productobj=BuyerProductDetails.objects.filter(updated_by=userid,buyer_item_type=itemtype).values().order_by('buyer_product_id')
                 return Response({'status': 200, 'message': 'Buyer Product List','data':productobj}, status=200)
 
             elif itemtype == 'Service':
                 productobjservice = BuyerProductDetails.objects.filter(updated_by=userid,
-                                                                buyer_item_type__icontains=itemtype).values()
+                                                                buyer_item_type=itemtype).values().order_by('buyer_product_id')
                 return Response({'status': 200, 'message': 'Buyer Service List', 'data': productobjservice}, status=200)
             elif itemtype == 'Machinery_and_Equipments':
                 productobjmachinary = BuyerProductDetails.objects.filter(updated_by=userid,
-                                                                       buyer_item_type__icontains=itemtype).values()
+                                                                       buyer_item_type=itemtype).values().order_by('buyer_product_id')
                 return Response({'status': 200, 'message': 'Buyer Service List', 'data': productobjmachinary}, status=200)
             else:
                 return Response({'status': 204, 'error':'Not present or itemtype is wrong','data':[]}, status=204)
@@ -393,3 +400,31 @@ def get_itemtype_based_on_userid(request):
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)
 
+@api_view(['post'])
+@permission_classes((AllowAny,))
+def item_code_settings_list(request):
+    data=request.data
+    userid=data['userid']
+    itemtype=data['itemtype']
+    try:
+        itemcodeobj=ItemCodeSettings.objects.filter(updated_by=userid).values().order_by('id')
+        if len(itemcodeobj)>0:
+            if itemtype == 'Product':
+                itemcodeobjproduct= ItemCodeSettings.objects.filter(updated_by=userid, item_type=itemtype).values().order_by('id')
+                return Response({'status': 200, 'message': 'Product Item Code', 'data':itemcodeobjproduct}, status=200)
+            elif itemtype=='Service':
+                itemcodeobjservice = ItemCodeSettings.objects.filter(updated_by=userid, item_type=itemtype).values().order_by('id')
+                return Response({'status': 200, 'message': 'Service Item Code', 'data': itemcodeobjservice}, status=200)
+
+            elif itemtype=='Machinery_and_Equipments':
+                itemcodeobjmachinary = ItemCodeSettings.objects.filter(updated_by=userid, item_type=itemtype).values().order_by('id')
+                return Response({'status': 200, 'message': 'Machinary Item Code', 'data': itemcodeobjmachinary}, status=200)
+
+            else:
+                return Response({'status': 204, 'error':'Not present or itemtype is wrong','data':[]}, status=204)
+        else:
+            return Response({'status': 202, 'error': 'Data Not Present For this user id'}, status=202)
+
+
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)

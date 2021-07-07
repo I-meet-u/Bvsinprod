@@ -14,5 +14,6 @@ router.register('item-code-settings', views.ItemCodeSettingsView)
 urlpatterns = [
     path('vendor-product-router-urls/',include(router.urls)),
     path('buyer-product-create/',views.buyer_product_create),
-    path('get-itemtype-based-on-userid/',views.get_itemtype_based_on_userid)
+    path('get-itemtype-based-on-userid/',views.get_itemtype_based_on_userid),
+    path('item-code-settings-list/',views.item_code_settings_list)
     ]

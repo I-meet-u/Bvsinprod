@@ -280,11 +280,18 @@ class BuyerProductDetailsView(viewsets.ModelViewSet):
     queryset = BuyerProductDetails.objects.all()
     serializer_class = BuyerProductDetailsSerializer
 
-    # def get_queryset(self):
-    #     buyerproductobj=BuyerProductDetails.objects.filter(updated_by=self.request.GET.get('updated_by')).order_by('buyer_product_id')
-    #     if buyerproductobj:
-    #         return buyerproductobj
-    #     raise ValidationError({'message':'Buyer Product Details Not Present','status':204})
+    def get_queryset(self):
+        buyerproductobj=BuyerProductDetails.objects.filter(updated_by=self.request.GET.get('updated_by')).order_by('buyer_product_id')
+        if buyerproductobj:
+            return buyerproductobj
+        raise ValidationError({'message':'Buyer Product Details Not Present','status':204})
+
+
+
+
+
+
+
 
 # @api_view(['post'])
 # @permission_classes((AllowAny,))
@@ -318,10 +325,9 @@ class BuyerProductDetailsView(viewsets.ModelViewSet):
 def buyer_product_create(request):
     data=request.data
     userid=data['userid']
-    ccode=data['ccode']
     buyerdetailsobj=BuyerProductDetails.objects.filter(updated_by=userid).order_by('-buyer_numeric').values()
     if buyerdetailsobj:
-        buyerobj=BuyerProductDetails.objects.create(buyer_item_type=data['buyer_item_type'],buyer_numeric=buyerdetailsobj[0].get('buyer_numeric')+1,buyer_item_code=str(ccode)+"-"+str(buyerdetailsobj[0].get('buyer_numeric')),buyer_item_name=data['buyer_item_name'],buyer_item_description=data['buyer_item_description'],
+        buyerobj=BuyerProductDetails.objects.create(buyer_item_type=data['buyer_item_type'],buyer_numeric=buyerdetailsobj[0].get('buyer_numeric')+1,buyer_item_code=str(buyerdetailsobj[0].get('buyer_numeric')),buyer_item_name=data['buyer_item_name'],buyer_item_description=data['buyer_item_description'],
                                                     buyer_uom=data['buyer_uom'],buyer_hsn_sac=data['buyer_hsn_sac'],buyer_unit_price=data['buyer_unit_price'],
                                                     buyer_category=data['buyer_category'],buyer_department=data['buyer_department'],buyer_item_group=data['buyer_item_group'],
                                                     buyer_annual_consumption=data['buyer_annual_consumption'],buyer_safety_stock=data['buyer_safety_stock'],buyer_model_no=data['buyer_model_no'],buyer_document=data['buyer_document'],
@@ -331,13 +337,12 @@ def buyer_product_create(request):
     else:
         print("data not exist")
         buyerobj = BuyerProductDetails.objects.create(buyer_item_type=data['buyer_item_type'],
-                                               buyer_numeric=1002,buyer_item_code=str(ccode)+"-"+"1001",buyer_item_name=data['buyer_item_name'],buyer_item_description=data['buyer_item_description'],
+                                               buyer_numeric=1002,buyer_item_code=1001,buyer_item_name=data['buyer_item_name'],buyer_item_description=data['buyer_item_description'],
                                                buyer_uom=data['buyer_uom'], buyer_hsn_sac=data['buyer_hsn_sac'],buyer_unit_price=data['buyer_unit_price'],buyer_category=data['buyer_category'], buyer_department=data['buyer_department'],
                                                buyer_item_group=data['buyer_item_group'],buyer_annual_consumption=data['buyer_annual_consumption'],buyer_safety_stock=data['buyer_safety_stock'],buyer_model_no=data['buyer_model_no'],
                                                buyer_document=data['buyer_document'],buyer_additional_specifications=data['buyer_additional_specifications'],buyer_add_product_supplies=data['buyer_add_product_supplies'],
                                                updated_by=SelfRegistration.objects.get(id=userid),created_by=userid)
 
-    # productbuyer=BuyerProductDetails.objects.filter(buyer_product_id=buyerobj.buyer_product_id).values()
     return Response({'status':201,'message':'Buyer Product Created'},status=201)
 
 class ItemCodeSettingsView(viewsets.ModelViewSet):
@@ -367,7 +372,7 @@ def get_itemtype_based_on_userid(request):
     itemtype=data['itemtype']
     try:
         if itemtype=='Product':
-            productobj=BuyerProductDetails.objects.filter(updated_by=userid).values()
+            productobj=BuyerProductDetails.objects.filter(updated_by=userid,buyer_item_type__icontains=itemtype).values()
             return Response({'status': 200, 'message': 'Buyer Product List','data':productobj}, status=200)
         else:
             return Response({'status': 204, 'error':'Not present or itemtype is wrong'}, status=204)

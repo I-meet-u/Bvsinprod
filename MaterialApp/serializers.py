@@ -42,13 +42,13 @@ class BuyerProductDetailsSerializer(serializers.ModelSerializer):
     class Meta:
         model=BuyerProductDetails
         fields='__all__'
-
-    def get_queryset(self):
-        # overriding get_queryset by passing user_id. Here user_id is nothing but updated_by
-        buyerproductobj = BuyerProductDetails.objects.filter(updated_by=self.request.GET.get('updated_by')).order_by('buyer_product_id')
-        if buyerproductobj:
-            return buyerproductobj
-        raise  ValidationError({'message':"Buyer Product Details not exist",'status':204})
+    #
+    # def get_queryset(self):
+    #     # overriding get_queryset by passing user_id. Here user_id is nothing but updated_by
+    #     buyerproductobj = BuyerProductDetails.objects.filter(updated_by=self.request.GET.get('updated_by')).order_by('buyer_product_id')
+    #     if buyerproductobj:
+    #         return buyerproductobj
+    #     raise  ValidationError({'message':"Buyer Product Details not exist",'status':204})
 
 class ItemCodeSettingsSerializer(serializers.ModelSerializer):
 

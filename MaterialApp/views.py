@@ -280,11 +280,11 @@ class BuyerProductDetailsView(viewsets.ModelViewSet):
     queryset = BuyerProductDetails.objects.all()
     serializer_class = BuyerProductDetailsSerializer
 
-    def get_queryset(self):
-        buyerproductobj=BuyerProductDetails.objects.filter(updated_by=self.request.GET.get('updated_by')).order_by('buyer_product_id')
-        if buyerproductobj:
-            return buyerproductobj
-        raise ValidationError({'message':'Buyer Product Details Not Present','status':204})
+    # def get_queryset(self):
+    #     buyerproductobj=BuyerProductDetails.objects.filter(updated_by=self.request.GET.get('updated_by')).order_by('buyer_product_id')
+    #     if buyerproductobj:
+    #         return buyerproductobj
+    #     raise ValidationError({'message':'Buyer Product Details Not Present','status':204})
 
 # @api_view(['post'])
 # @permission_classes((AllowAny,))
@@ -357,3 +357,20 @@ class ItemCodeSettingsView(viewsets.ModelViewSet):
 
         except Exception as e:
             return Response({'status': 500, 'error': str(e)}, status=500)
+
+
+@api_view(['post'])
+@permission_classes((AllowAny,))
+def get_itemtype_based_on_userid(request):
+    data=request.data
+    userid=data['userid']
+    itemtype=data['itemtype']
+    try:
+        if itemtype=='Product':
+            productobj=BuyerProductDetails.objects.filter(updated_by=userid).values()
+            return Response({'status': 200, 'message': 'Buyer Product List','data':productobj}, status=200)
+        else:
+            return Response({'status': 204, 'error':'Not present or itemtype is wrong'}, status=204)
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)
+

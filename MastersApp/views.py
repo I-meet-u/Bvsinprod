@@ -131,13 +131,13 @@ class TaxMasterView(viewsets.ModelViewSet):
     queryset = TaxMaster.objects.all()
     serializer_class = TaxMasterSerializer
 
-    def get_queryset(self):
-        # overriding get_queryset by passing user_id. Here user_id is nothing but updated_by
-        taxmasterobj = TaxMaster.objects.filter(updated_by=self.request.GET.get('updated_by')).order_by(
-            'tax_id')
-        if taxmasterobj:
-            return taxmasterobj
-        raise ValidationError({'message': 'Tax Master details not exist', 'status': 204})
+    # def get_queryset(self):
+    #     # overriding get_queryset by passing user_id. Here user_id is nothing but updated_by
+    #     taxmasterobj = TaxMaster.objects.filter(updated_by=self.request.GET.get('updated_by')).order_by(
+    #         'tax_id')
+    #     if taxmasterobj:
+    #         return taxmasterobj
+    #     raise ValidationError({'message': 'Tax Master details not exist', 'status': 204})
 
 
 class HSNMasterSerializerView(viewsets.ModelViewSet):

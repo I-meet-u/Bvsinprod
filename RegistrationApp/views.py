@@ -851,7 +851,7 @@ def sendbluemail(request):
                 'content-type': 'application/json',
             }
             data = '{ "sender":{ "name":"VENDORSIN COMMERCE PVT LTD", "email":"admin@vendorsin.com" }, "to":[ { "email":"' + email + '' \
-                                                                                                                                 '", "name":"Harish" } ], "subject":"OTP Confirmation", "templateId":1 ,"params":{"OTP":' + OTP + '}''}'
+                                                                                                                                 '", "name":"Harish" } ], "subject":"VENDORSIN Registration OTP", "templateId":6 ,"params":{"OTP":' + OTP + '}''}'
 
         # data = '{ "sender":{ "name":"VENDORSIN COMMERCE PVT LTD", "email":"admin@vendorsin.com" },"subject":"This is my default subject line","templateId":96,"to":[ { "email":"harishshetty7459@gmail.com", "name":"harish" } ]'
 

@@ -132,6 +132,7 @@ class SubCategoryMaster(models.Model):
     sub_category_name = models.CharField(max_length=100, unique=True, blank=True)
     is_verified = models.BooleanField(default=False)
     category = models.ForeignKey(CategoryMaster, on_delete=models.CASCADE)
+    maincore = models.ForeignKey(MaincoreMaster, on_delete=models.CASCADE)
     created_on = models.DateTimeField(auto_now_add=True)
     updated_on = models.DateTimeField(auto_now=True)
     admin_order = models.CharField(max_length=50, null=True)

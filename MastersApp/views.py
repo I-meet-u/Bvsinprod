@@ -78,8 +78,8 @@ class CategoryMasterView(viewsets.ModelViewSet):
     permission_classes = (AllowAny,)
     queryset =CategoryMaster.objects.all()
     serializer_class=CategoryMasterSerializer
-    ordering_fields=['category_id']
-    ordering = ['category_id']
+    ordering_fields=['category_code']
+    ordering = ['category_code']
 
 class SubCategoryMasterView(viewsets.ModelViewSet):
     # sub_category_master  viewsets

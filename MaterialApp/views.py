@@ -5,6 +5,7 @@ from django.shortcuts import render
 from rest_framework import viewsets, permissions
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.exceptions import ValidationError
+from rest_framework.parsers import MultiPartParser
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 
@@ -157,6 +158,7 @@ class VendorProduct_DocumentsView(viewsets.ModelViewSet):
     permission_classes = [permissions.AllowAny]
     queryset = VendorProduct_Documents.objects.all()
     serializer_class = VendorProduct_DocumentsSerializer
+    parser_classes = [MultiPartParser]
     ordering_fields = ['id']
     ordering = ['id']
 
@@ -214,6 +216,7 @@ class VendorProduct_BasicDetailsView(viewsets.ModelViewSet):
     permission_classes = [permissions.AllowAny]
     queryset = VendorProduct_BasicDetails.objects.all()
     serializer_class = VendorProduct_BasicDetailsSerializer
+    parser_classes = [MultiPartParser]
     ordering_fields = ['vendor_product_id']
     ordering = ['vendor_product_id']
 
@@ -289,6 +292,7 @@ class BuyerProductDetailsView(viewsets.ModelViewSet):
     permission_classes = [permissions.AllowAny]
     queryset = BuyerProductDetails.objects.all()
     serializer_class = BuyerProductDetailsSerializer
+    parser_classes = [MultiPartParser]
     ordering_fields = ['buyer_product_id']
     ordering = ['buyer_product_id']
 

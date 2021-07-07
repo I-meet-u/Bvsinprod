@@ -86,6 +86,11 @@ class LegalDocumentsView(viewsets.ModelViewSet):
             raise ValidationError({'message': 'Legal Documentss details not exist', 'status': 204})
         return legalobj
 
+    def destroy(self, request, *args, **kwargs):
+        instance = self.get_object()
+        self.perform_destroy(instance)
+        return Response({'status':status.HTTP_204_NO_CONTENT, 'data':"Legal Documnent is deleted"})
+
 
 class Logout(APIView):
     permission_classes = [permissions.AllowAny]

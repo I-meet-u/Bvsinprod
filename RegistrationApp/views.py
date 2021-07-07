@@ -51,12 +51,16 @@ class SelfRegisterView(viewsets.ModelViewSet):
     queryset = SelfRegistration.objects.all()
     serializer_class = SelfRegistrationSerializer
     permission_classes = (AllowAny,)
+    ordering_fields = ['id']
+    ordering = ['id']
 
 class SelfRegistrationSampleView(viewsets.ModelViewSet):
     # registration user information sample view
     queryset= SelfRegistration_Sample.objects.all()
     serializer_class = SelfRegistrationSerializerSample
     permission_classes = (AllowAny,)
+    ordering_fields = ['id']
+    ordering = ['id']
 
     def perform_create(self, serializer):
         # Hash password but passwords are not required
@@ -72,6 +76,8 @@ class LegalDocumentsView(viewsets.ModelViewSet):
     queryset = LegalDocuments.objects.all()
     serializer_class = LegalDocumentsSerializers
     parser_classes = [MultiPartParser]
+    ordering_fields = ['id']
+    ordering = ['id']
 
     def get_queryset(self):
         # overriding get_queryset by passing user_id. Here user_id is nothing but updated_by
@@ -391,6 +397,8 @@ class BasicCompanyDetailsView(viewsets.ModelViewSet):
     permission_classes = [permissions.AllowAny]
     queryset = BasicCompanyDetails.objects.all()
     serializer_class = BasicCompanyDetailsSerializers
+    ordering_fields = ['id']
+    ordering = ['id']
 
     def get_queryset(self):
         # overriding get_queryset by passing user_id. Here user_id is nothing but updated_by
@@ -405,6 +413,8 @@ class BillingAddressView(viewsets.ModelViewSet):
     permission_classes = (AllowAny,)
     queryset = BillingAddress.objects.all()
     serializer_class = BillingAddressSerializer
+    ordering_fields = ['id']
+    ordering = ['id']
 
     def get_queryset(self):
         # overriding get_queryset by passing user_id. Here user_id is nothing but updated_by
@@ -420,6 +430,8 @@ class ShippingAddressView(viewsets.ModelViewSet):
     permission_classes = (AllowAny,)
     queryset = ShippingAddress.objects.all()
     serializer_class = ShippingAddressSerializer
+    ordering_fields = ['id']
+    ordering = ['id']
 
     def get_queryset(self):
         # overriding get_queryset by passing user_id. Here user_id is nothing but updated_by
@@ -434,6 +446,8 @@ class IndustrialInfoView(viewsets.ModelViewSet):
     permission_classes = (AllowAny,)
     queryset =IndustrialInfo.objects.all()
     serializer_class=IndustrialInfoSerializer
+    ordering_fields = ['id']
+    ordering = ['id']
 
     def get_queryset(self):
         # it determines the list of objects that you want to display by passing userid(updated_by)
@@ -448,6 +462,8 @@ class IndustrialHierarchyView(viewsets.ModelViewSet):
     permission_classes = (AllowAny,)
     queryset =IndustrialHierarchy.objects.all()
     serializer_class=IndustrialHierarchySerializer
+    ordering_fields = ['id']
+    ordering = ['id']
 
     def get_queryset(self):
         # it determines the list of objects that you want to display by passing userid(updated_by)
@@ -461,6 +477,8 @@ class BankDetailsView(viewsets.ModelViewSet):
     permission_classes = (AllowAny,)
     queryset =BankDetails.objects.all()
     serializer_class=BankDetailsSerializer
+    ordering_fields = ['id']
+    ordering = ['id']
 
     def get_queryset(self):
         # it determines the list of objects that you want to display by passing userid(updated_by)
@@ -512,6 +530,8 @@ class BasicCompanyDetailsOthersView(viewsets.ModelViewSet):
     permission_classes = (AllowAny,)
     queryset = BasicCompanyDetails_Others.objects.all()
     serializer_class = BasicCompanyDetailsOthersSerializers
+    ordering_fields = ['id']
+    ordering = ['id']
 
     def get_queryset(self):
         # overriding get_queryset by passing user_id. Here user_id is nothing but updated_by
@@ -580,6 +600,8 @@ class EmployeeRegistrationView(viewsets.ModelViewSet):
     permission_classes = (AllowAny,)
     queryset = EmployeeRegistration.objects.all()
     serializer_class = EmployeeRegistrationSerializer
+    ordering_fields = ['emp_id']
+    ordering = ['emp_id']
 
     def perform_create(self, serializer):
         # Hash password but passwords are not required
@@ -602,10 +624,12 @@ class Employee_CompanyDetailsView(viewsets.ModelViewSet):
     permission_classes = (AllowAny,)
     queryset = Employee_CompanyDetails.objects.all()
     serializer_class = Employee_CompanyDetailsSerializers
+    ordering_fields = ['emp_company_id']
+    ordering = ['emp_company_id']
 
     def get_queryset(self):
         # overriding get_queryset by passing user_id. Here user_id is nothing but updated_by
-        employeeobj = Employee_CompanyDetails.objects.filter(emp_updated_by=self.request.GET.get('emp_updated_by')).order_by('emp_company_id')
+        employeeobj = Employee_CompanyDetails.objects.filter(emp_updated_by=self.request.GET.get('emp_updated_by'))
         if not employeeobj:
             raise ValidationError({'message': 'Employee Basic Details not exist','status':204})
         return employeeobj
@@ -615,10 +639,12 @@ class EmployeeIndustrialInfoView(viewsets.ModelViewSet):
     permission_classes = (AllowAny,)
     queryset =Employee_IndustryInfo.objects.all()
     serializer_class=Employee_IndustryInfoSerializer
+    ordering_fields = ['id']
+    ordering = ['id']
 
     def get_queryset(self):
         # it determines the list of objects that you want to display by passing userid(updated_by)
-        employee_industry = Employee_IndustryInfo.objects.filter(emp_updated_by=self.request.GET.get('emp_updated_by')).order_by('id')
+        employee_industry = Employee_IndustryInfo.objects.filter(emp_updated_by=self.request.GET.get('emp_updated_by'))
         if not employee_industry:
             raise ValidationError({'message': ' Employee Industry info details not exist','status':204})
         return employee_industry

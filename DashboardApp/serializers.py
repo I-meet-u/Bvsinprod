@@ -1,9 +1,9 @@
 from rest_framework import  serializers
 
-from DashboardApp.models import InternalVendor
+from .models import *
 
 
-class InternalVendorSerializer(serializers.ModelSerializer):
+class InviteVendorSerializer(serializers.ModelSerializer):
     class Meta:
-        model=InternalVendor
+        model=InviteVendor
         fields="__all__"

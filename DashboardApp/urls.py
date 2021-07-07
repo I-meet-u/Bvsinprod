@@ -5,7 +5,7 @@ from . import views
 
 router=routers.DefaultRouter()
 
-router.register('internal-vendor', views.InternalVendorView)
+router.register('invite-vendor', views.InviteVendorView)
 
 urlpatterns = [
     path('dashboard-router-urls/',include(router.urls))

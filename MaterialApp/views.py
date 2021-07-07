@@ -95,12 +95,16 @@ class VendorProduct_GeneralDetailsView(viewsets.ModelViewSet):
     permission_classes = [permissions.AllowAny]
     queryset = VendorProduct_GeneralDetails.objects.all()
     serializer_class = VendorProduct_GeneralDetailsSerializer
+    ordering_fields = ['id']
+    ordering = ['id']
 
 
 class VendorProduct_TechnicalSpecificationsView(viewsets.ModelViewSet):
     permission_classes = [permissions.AllowAny]
     queryset = VendorProduct_TechnicalSpecifications.objects.all()
     serializer_class = VendorProduct_TechnicalSpecificationsSerialzer
+    ordering_fields = ['id']
+    ordering = ['id']
 
 
     def create(self, request, *args, **kwargs):
@@ -125,6 +129,8 @@ class VendorProduct_ProductFeaturesView(viewsets.ModelViewSet):
     permission_classes = [permissions.AllowAny]
     queryset = VendorProduct_ProductFeatures.objects.all()
     serializer_class = VendorProduct_ProductFeaturesSerializer
+    ordering_fields = ['id']
+    ordering = ['id']
 
     def create(self, request, *args, **kwargs):
         productfeatureslist = request.data['productfeatureslist']
@@ -151,6 +157,8 @@ class VendorProduct_DocumentsView(viewsets.ModelViewSet):
     permission_classes = [permissions.AllowAny]
     queryset = VendorProduct_Documents.objects.all()
     serializer_class = VendorProduct_DocumentsSerializer
+    ordering_fields = ['id']
+    ordering = ['id']
 
 
     # def create(self, request, *args, **kwargs):
@@ -206,6 +214,8 @@ class VendorProduct_BasicDetailsView(viewsets.ModelViewSet):
     permission_classes = [permissions.AllowAny]
     queryset = VendorProduct_BasicDetails.objects.all()
     serializer_class = VendorProduct_BasicDetailsSerializer
+    ordering_fields = ['vendor_product_id']
+    ordering = ['vendor_product_id']
 
     def create(self, request, *args, **kwargs):
         data=request.data
@@ -279,9 +289,11 @@ class BuyerProductDetailsView(viewsets.ModelViewSet):
     permission_classes = [permissions.AllowAny]
     queryset = BuyerProductDetails.objects.all()
     serializer_class = BuyerProductDetailsSerializer
+    ordering_fields = ['buyer_product_id']
+    ordering = ['buyer_product_id']
 
     def get_queryset(self):
-        buyerproductobj=BuyerProductDetails.objects.filter(updated_by=self.request.GET.get('updated_by')).order_by('buyer_product_id')
+        buyerproductobj=BuyerProductDetails.objects.filter(updated_by=self.request.GET.get('updated_by'))
         if buyerproductobj:
             return buyerproductobj
         raise ValidationError({'message':'Buyer Product Details Not Present','status':204})
@@ -349,6 +361,7 @@ class ItemCodeSettingsView(viewsets.ModelViewSet):
     permission_classes = [permissions.AllowAny]
     queryset = ItemCodeSettings.objects.all()
     serializer_class = ItemCodeSettingsSerializer
+    ordering = ['id']
 
     def create(self, request, *args, **kwargs):
         item_type = request.data.get('item_type',None)
@@ -364,7 +377,7 @@ class ItemCodeSettingsView(viewsets.ModelViewSet):
             return Response({'status': 500, 'error': str(e)}, status=500)
 
     def get_queryset(self):
-        itemcodeobj=ItemCodeSettings.objects.filter(updated_by=self.request.GET.get('updated_by')).order_by('id')
+        itemcodeobj=ItemCodeSettings.objects.filter(updated_by=self.request.GET.get('updated_by'))
         if itemcodeobj:
             return itemcodeobj
         raise ValidationError({'message':'Item Code details of particular user id is not exist','status':204})

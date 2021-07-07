@@ -44,6 +44,8 @@ class IndustryToServeMasterView(viewsets.ModelViewSet):
     permission_classes = (AllowAny,)
     queryset = IndustryToServeMaster.objects.all()
     serializer_class = IndustryToServeMasterSerializer
+    ordering_fields = ['industry_id']
+    ordering = ['industry_id']
     # pagination_class = StandardResultsSetPagination
 
 class NatureOfBusinessMasterView(viewsets.ModelViewSet):
@@ -51,6 +53,8 @@ class NatureOfBusinessMasterView(viewsets.ModelViewSet):
     permission_classes = (AllowAny,)
     queryset = NatureOfBusinessMaster.objects.all()
     serializer_class =NatureOfBusinessMasterSerializer
+    ordering_fields = ['nature_of_business_id']
+    ordering = ['nature_of_business_id']
 
 
 class SupplyCapabilitiesMasterView(viewsets.ModelViewSet):
@@ -58,24 +62,32 @@ class SupplyCapabilitiesMasterView(viewsets.ModelViewSet):
     permission_classes = (AllowAny,)
     queryset = SupplyCapabilitiesMaster.objects.all()
     serializer_class =SupplyCapabilitiesMasterSerializer
+    ordering_fields = ['supply_capability_id']
+    ordering = ['supply_capability_id']
 
 class MaincoreMasterView(viewsets.ModelViewSet):
     # maincore_master  master viewsets
     permission_classes = (AllowAny,)
     queryset = MaincoreMaster.objects.all()
     serializer_class = MainCoreMasterSerializer
+    ordering_fields = ['maincore_id']
+    ordering = ['maincore_id']
 
 class CategoryMasterView(viewsets.ModelViewSet):
     # category_master  viewsets
     permission_classes = (AllowAny,)
     queryset =CategoryMaster.objects.all()
     serializer_class=CategoryMasterSerializer
+    ordering_fields=['category_id']
+    ordering = ['category_id']
 
 class SubCategoryMasterView(viewsets.ModelViewSet):
     # sub_category_master  viewsets
     permission_classes = (AllowAny,)
     queryset = SubCategoryMaster.objects.all()
     serializer_class = SubcategoryMasterSerializer
+    ordering_fields = ['sub_category_id']
+    ordering = ['sub_category_id']
 
 
 class PincodeMasterView(viewsets.ModelViewSet):
@@ -83,14 +95,19 @@ class PincodeMasterView(viewsets.ModelViewSet):
     permission_classes = (AllowAny,)
     queryset = PincodeMaster.objects.all()
     serializer_class = PincodeMasterSerializer
+    ordering_fields = ['pincode_id']
+    ordering = ['pincode_id']
 
 class UOMMasterView(viewsets.ModelViewSet):
     # UOM_master = viewsets
     permission_classes = (AllowAny,)
     queryset = UOMMaster.objects.all()
     serializer_class= UOMMasterSerializer
+    ordering_fields = ['uom_id']
+    ordering = ['uom_id']
 
-    # def get_queryset(self):
+
+# def get_queryset(self):
     #     # overriding get_queryset by passing user_id. Here user_id is nothing but updated_by
     #     uommasterobj = UOMMaster.objects.filter(updated_by=self.request.GET.get('updated_by')).order_by('uom_id')
     #     if uommasterobj:
@@ -103,6 +120,8 @@ class DepartmentMasterView(viewsets.ModelViewSet):
     permission_classes = (AllowAny,)
     queryset = DepartmentMaster.objects.all()
     serializer_class = DepartmentMasterSerializer
+    ordering_fields = ['department_id']
+    ordering  = ['department_id']
 
     # def get_queryset(self):
     #     # overriding get_queryset by passing user_id. Here user_id is nothing but updated_by
@@ -116,6 +135,9 @@ class DesignationMasterView(viewsets.ModelViewSet):
     permission_classes = (AllowAny,)
     queryset = DesignationMaster.objects.all()
     serializer_class = DesignationMasterSerializer
+    ordering_fields = ['designation_id']
+    ordering = ['designation_id']
+
 
     # def get_queryset(self):
     #     # overriding get_queryset by passing user_id. Here user_id is nothing but updated_by
@@ -130,6 +152,8 @@ class TaxMasterView(viewsets.ModelViewSet):
     permission_classes = (AllowAny,)
     queryset = TaxMaster.objects.all()
     serializer_class = TaxMasterSerializer
+    ordering_fields = ['tax_id']
+    ordering = ['tax_id']
 
     # def get_queryset(self):
     #     # overriding get_queryset by passing user_id. Here user_id is nothing but updated_by
@@ -145,10 +169,12 @@ class HSNMasterSerializerView(viewsets.ModelViewSet):
     permission_classes = (AllowAny,)
     queryset = HSNMaster.objects.all()
     serializer_class = HSNMasterSerializer
+    ordering_fields = ['hsn_id']
+    ordering = ['hsn_id']
 
     def get_queryset(self):
         # overriding get_queryset by passing user_id. Here user_id is nothing but updated_by
-        hsnmasterobj = HSNMaster.objects.filter(updated_by=self.request.GET.get('updated_by')).order_by('hsn_id')
+        hsnmasterobj = HSNMaster.objects.filter(updated_by=self.request.GET.get('updated_by'))
         if hsnmasterobj:
             return hsnmasterobj
         raise ValidationError({'message': 'HSN Master details not exist', 'status': 204})
@@ -159,10 +185,12 @@ class SACMasterView(viewsets.ModelViewSet):
     permission_classes = (AllowAny,)
     queryset = SACMaster.objects.all()
     serializer_class = SACMasterSerializer
+    ordering_fields = ['sac_id']
+    ordering = ['sac_id']
 
     def get_queryset(self):
         # overriding get_queryset by passing user_id. Here user_id is nothing but updated_by
-        sacmasterobj = SACMaster.objects.filter(updated_by=self.request.GET.get('updated_by')).order_by('sac_id')
+        sacmasterobj = SACMaster.objects.filter(updated_by=self.request.GET.get('updated_by'))
         if sacmasterobj:
             return sacmasterobj
 
@@ -173,6 +201,8 @@ class CurrencyMasterView(viewsets.ModelViewSet):
     permission_classes = (AllowAny,)
     queryset = CurrencyMaster.objects.all()
     serializer_class = CurrencyMasterSerializer
+    ordering_fields = ['currency_id']
+    ordering = ['currency_id']
 
     # def get_queryset(self):
     #     # overriding get_queryset by passing user_id. Here user_id is nothing but updated_by
@@ -188,10 +218,12 @@ class PFChargesMasterView(viewsets.ModelViewSet):
     permission_classes = (AllowAny,)
     queryset = PFChargesMaster.objects.all()
     serializer_class = PFChargesMasterSerializer
+    ordering_fields = ['pf_charge_id']
+    ordering = ['pf_charge_id']
 
     def get_queryset(self):
         # overriding get_queryset by passing user_id. Here user_id is nothing but updated_by
-        pfmasterobj = PFChargesMaster.objects.filter(updated_by=self.request.GET.get('updated_by')).order_by('pf_charge_id')
+        pfmasterobj = PFChargesMaster.objects.filter(updated_by=self.request.GET.get('updated_by'))
         if pfmasterobj:
             return pfmasterobj
         raise ValidationError({'message': 'PF Charges Master details not exist', 'status': 204})
@@ -201,10 +233,12 @@ class FrieghtChargesMasterView(viewsets.ModelViewSet):
     permission_classes = (AllowAny,)
     queryset = FrieghtChargesMaster.objects.all()
     serializer_class = FrieghtChargesMasterSerializer
+    ordering_fields = ['frieght_id']
+    ordering = ['frieght_id']
 
     def get_queryset(self):
         # overriding get_queryset by passing user_id. Here user_id is nothing but updated_by
-        frieghtmasterobj = FrieghtChargesMaster.objects.filter(updated_by=self.request.GET.get('updated_by')).order_by('frieght_id')
+        frieghtmasterobj = FrieghtChargesMaster.objects.filter(updated_by=self.request.GET.get('updated_by'))
         if frieghtmasterobj:
             return  frieghtmasterobj
         raise ValidationError({'message': 'Frieght Master details not exist', 'status': 204})
@@ -214,11 +248,12 @@ class WarrantyMasterView(viewsets.ModelViewSet):
     permission_classes = (AllowAny,)
     queryset = WarrantyMaster.objects.all()
     serializer_class = WarrantyMasterSerializer
+    ordering_fields = ['warranty_id']
+    ordering = ['warranty_id']
 
     def get_queryset(self):
         # overriding get_queryset by passing user_id. Here user_id is nothing but updated_by
-        warrantymasterobj = WarrantyMaster.objects.filter(updated_by=self.request.GET.get('updated_by')).order_by(
-            'warranty_id')
+        warrantymasterobj = WarrantyMaster.objects.filter(updated_by=self.request.GET.get('updated_by'))
         if warrantymasterobj:
             return warrantymasterobj
 
@@ -229,10 +264,12 @@ class GuaranteeMasterView(viewsets.ModelViewSet):
     permission_classes = (AllowAny,)
     queryset = GuaranteeMaster.objects.all()
     serializer_class =GuaranteeMasterSerializer
+    ordering_fields = ['guarantee_id']
+    ordering = ['guarantee_id']
 
     def get_queryset(self):
         # overriding get_queryset by passing user_id. Here user_id is nothing but updated_by
-        guaranteemasterobj = GuaranteeMaster.objects.filter(updated_by=self.request.GET.get('updated_by')).order_by('guarantee_id')
+        guaranteemasterobj = GuaranteeMaster.objects.filter(updated_by=self.request.GET.get('updated_by'))
         if guaranteemasterobj:
             return  guaranteemasterobj
         raise ValidationError({'message': 'Guarantee Master details not exist', 'status': 204})
@@ -242,6 +279,8 @@ class DeliveryMasterView(viewsets.ModelViewSet):
     permission_classes = (AllowAny,)
     queryset = DeliveryMaster.objects.all()
     serializer_class = DeliveryMasterSerializer
+    ordering_fields = ['delivery_id']
+    ordering = ['delivery_id']
     #
     # def get_queryset(self):
     #     # overriding get_queryset by passing user_id. Here user_id is nothing but updated_by
@@ -257,6 +296,8 @@ class CountryMasterView(viewsets.ModelViewSet):
     permission_classes = (AllowAny,)
     queryset = CountryMaster.objects.all()
     serializer_class = CountryMasterSerializer
+    ordering_fields = ['country_id']
+    ordering = ['country_id']
 
     # def get_queryset(self):
     #     # overriding get_queryset by passing user_id. Here user_id is nothing but updated_by
@@ -1048,11 +1089,13 @@ class ItemGroupMasterView(viewsets.ModelViewSet):
     permission_classes = (AllowAny,)
     queryset = ItemGroupMaster.objects.all()
     serializer_class= ItemGroupMasterSerializer
+    ordering_fields = ['item_group_id']
+    ordering = ['item_group_id']
 
     def get_queryset(self):
         # overriding get_queryset by passing user_id. Here user_id is nothing but updated_by
-        itemgroupobj = ItemGroupMaster.objects.filter(updated_by=self.request.GET.get('updated_by')).order_by('item_group_id')
-        itemgroupdataobj=ItemGroupMaster.objects.filter(admins=1).values().order_by('item_group_id')
+        itemgroupobj = ItemGroupMaster.objects.filter(updated_by=self.request.GET.get('updated_by'))
+        itemgroupdataobj=ItemGroupMaster.objects.filter(admins=1).values()
         itemgroupval=list(chain(itemgroupobj,itemgroupdataobj))
         if itemgroupobj:
             return itemgroupobj
@@ -1887,6 +1930,8 @@ class TransitInsuranceMasterView(viewsets.ModelViewSet):
     permission_classes = (AllowAny,)
     queryset = TransitInsuranceMaster.objects.all()
     serializer_class = TransitInsuranceMasterSerializer
+    ordering_fields = ['transit_id']
+    ordering = ['transit_id']
 
     # def get_queryset(self):
     #     # overriding get_queryset by passing user_id. Here user_id is nothing but updated_by
@@ -2007,6 +2052,8 @@ class PaymentMasterView(viewsets.ModelViewSet):
     permission_classes = (AllowAny,)
     queryset = PaymentMaster.objects.all()
     serializer_class = PaymentMasterSerializer
+    ordering_fields = ['payment_id']
+    ordering = ['payment_id']
 
     # def get_queryset(self):
     #     # overriding get_queryset by passing user_id. Here user_id is nothing but updated_by
@@ -2125,6 +2172,8 @@ class ValidityMasterView(viewsets.ModelViewSet):
     permission_classes = (AllowAny,)
     queryset = ValidityMaster.objects.all()
     serializer_class = ValidityMasterSerializer
+    ordering_fields = ['validity_id']
+    ordering = ['validity_id']
 
     # def get_queryset(self):
     #     # overriding get_queryset by passing user_id. Here user_id is nothing but updated_by

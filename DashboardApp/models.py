@@ -1,17 +1,34 @@
 from django.db import models
 
 # Create your models here.
-class InternalVendor(models.Model):
-    company_name=models.CharField(max_length=200)
-    internal_email=models.CharField(max_length=100)
-    internal_phone=models.CharField(max_length=15)
-    city=models.CharField(max_length=200)
-    state=models.CharField(max_length=200)
-    location=models.CharField(max_length=500)
-    nature_of_business=models.CharField(max_length=100)
-    internal_status=models.CharField(default='Pending',max_length=30)
-    group=models.CharField(max_length=100)
+from RegistrationApp.models import SelfRegistration
+
+
+class InviteVendor(models.Model):
+    invite_id=models.BigAutoField(primary_key=True)
+    company_name=models.CharField(max_length=200,null=True,blank=True)
+    contact_name=models.CharField(max_length=100,null=True,blank=True)
+    email_id=models.CharField(max_length=200)
+    phone_number=models.CharField(max_length=20)
+    registration_status=models.CharField(max_length=200,default='Not Registered')
+    approval_status=models.CharField(max_length=500,default='Pending')
+    created_on = models.DateTimeField(auto_now_add=True)
+    updated_on = models.DateTimeField(auto_now=True)
+    created_by = models.BigIntegerField()
+    updated_by_invites = models.ForeignKey(SelfRegistration, on_delete=models.CASCADE,null=True,blank=True)
 
     class Meta:
-        db_table="InternalVendor"
+        db_table="InviteVendor"
 
+
+# class InternalVendor(models.Model):
+#     company_code=models.CharField(max_length=50)
+#     company_name=models.CharField(max_length=200)
+#     contact_name=models.CharField(max_length=100,null=True,blank=True)
+#     email_id=models.CharField(max_length=200)
+#     phone_number=models.CharField(max_length=20)
+#     registration_status=models.CharField(max_length=200,default='Not Registered')
+#     approval_status=models.CharField(max_length=500,default='Pending')
+#
+#     class Meta:
+#         db_table="InternalVendor"

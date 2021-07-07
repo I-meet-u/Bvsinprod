@@ -371,11 +371,25 @@ def get_itemtype_based_on_userid(request):
     userid=data['userid']
     itemtype=data['itemtype']
     try:
-        if itemtype=='Product':
-            productobj=BuyerProductDetails.objects.filter(updated_by=userid,buyer_item_type__icontains=itemtype).values()
-            return Response({'status': 200, 'message': 'Buyer Product List','data':productobj}, status=200)
+        buyerobj = BuyerProductDetails.objects.filter(updated_by=userid).values()
+        if len(buyerobj)>0:
+            if itemtype=='Product':
+                productobj=BuyerProductDetails.objects.filter(updated_by=userid,buyer_item_type__icontains=itemtype).values()
+                return Response({'status': 200, 'message': 'Buyer Product List','data':productobj}, status=200)
+
+            elif itemtype == 'Service':
+                productobjservice = BuyerProductDetails.objects.filter(updated_by=userid,
+                                                                buyer_item_type__icontains=itemtype).values()
+                return Response({'status': 200, 'message': 'Buyer Service List', 'data': productobjservice}, status=200)
+            elif itemtype == 'Machinery Equipments':
+                productobjmachinary = BuyerProductDetails.objects.filter(updated_by=userid,
+                                                                       buyer_item_type__icontains=itemtype).values()
+                return Response({'status': 200, 'message': 'Buyer Service List', 'data': productobjmachinary}, status=200)
+            else:
+                return Response({'status': 204, 'error':'Not present or itemtype is wrong','data':[]}, status=204)
         else:
-            return Response({'status': 204, 'error':'Not present or itemtype is wrong'}, status=204)
+            return Response({'status': 202, 'error': 'Data Not Present For this user id'}, status=202)
+
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)
 

@@ -178,6 +178,7 @@ class BuyerProductDetails(models.Model):
     buyer_document=models.FileField(upload_to='BuyerProductFiles',null=True,blank=True)
     buyer_additional_specifications=models.TextField(null=True,blank=True)
     buyer_add_product_supplies=models.CharField(max_length=200,null=True,blank=True)
+    buyer_product_status=models.CharField(max_length=50,default='Active')
     created_on = models.DateTimeField(auto_now_add=True)
     updated_on = models.DateTimeField(auto_now=True)
     created_by = models.BigIntegerField()

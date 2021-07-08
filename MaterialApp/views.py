@@ -445,3 +445,73 @@ def item_code_settings_list(request):
 
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)
+
+#-----------------------------------------------------------------------
+@api_view(['put'])
+@permission_classes([AllowAny,])
+def disable_buyer_product(request):
+    # disable buyer product by changing status from Active to Disabled by passing primary key(buyerproductid)
+    data=request.data
+    buyerproductid=data['buyerproductid']
+    try:
+        buyerproductobj=BuyerProductDetails.objects.filter(buyer_product_id__in=buyerproductid).values()
+        if buyerproductobj:
+            for i in range(0,len(buyerproductobj)):
+                buyerproductobjget=BuyerProductDetails.objects.get(buyer_product_id=buyerproductobj[i].get('buyer_product_id'))
+                if buyerproductobjget.buyer_product_status=='Active':
+                    buyerproductobjget.buyer_product_status='Disabled'
+                    buyerproductobjget.save()
+                else:
+                    return Response({'status': 202, 'message': 'Already status disabled'},status=202)
+            return Response({'status':200,'message':'Buyer Product Master status changed to disabled'},status=200)
+        else:
+            return Response({'status': 204, 'message': 'Not exist'}, status=204)
+    except Exception as e:
+        return Response({'status':500,'error':str(e)},status=500)
+
+
+
+@api_view(['put'])
+@permission_classes([AllowAny,])
+def enable_buyer_product(request):
+    # enable buyer product by changing status from Disabled to Active by passing primary key(buyerproductid)
+    data=request.data
+    buyerproductid=data['buyerproductid']
+    try:
+        buyerproductobj=BuyerProductDetails.objects.filter(buyer_product_id__in=buyerproductid).values()
+        if buyerproductobj:
+            for i in range(0,len(buyerproductobj)):
+                buyerproductobjget=BuyerProductDetails.objects.get(buyer_product_id=buyerproductobj[i].get('buyer_product_id'))
+                if buyerproductobjget.buyer_product_status=='Disabled':
+                    buyerproductobjget.buyer_product_status='Active'
+                    buyerproductobjget.save()
+                else:
+                    return Response({'status': 202, 'message': 'Already status enabled'},status=202)
+            return Response({'status':200,'message':'Buyer Product Master status changed to enabled'},status=200)
+        else:
+            return Response({'status': 204, 'message': 'Not exist'}, status=204)
+    except Exception as e:
+        return Response({'status':500,'error':str(e)},status=500)
+
+
+
+
+@api_view(['post'])
+@permission_classes([AllowAny,])
+def delete_buyer_product(request):
+    # delete buyer_product  by passing primary key(buyerproductid)
+    data = request.data
+    buyerproductid = data['buyerproductid']
+    try:
+        buyerproductobj = BuyerProductDetails.objects.filter(buyer_product_id__in=buyerproductid).values()
+        if buyerproductobj:
+            for i in range(0, len(buyerproductobj)):
+                buyerproductobjget = BuyerProductDetails.objects.get(buyer_product_id=buyerproductobj[i].get('buyer_product_id'))
+                if buyerproductobjget:
+                    buyerproductobjget.delete()
+
+            return Response({'status': 204, 'message': 'Buyer Product Master data deleted'}, status=204)
+        return Response({'status':200,'message':'Buyer Product Master data not present or already deleted'},status=200)
+
+    except Exception as e:
+        return Response({'status':500,'error':str(e)},status=500)

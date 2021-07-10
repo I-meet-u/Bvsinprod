@@ -54,7 +54,7 @@ class BuyerProductBiddingView(viewsets.ModelViewSet):
 
             return super().create(request, *args, **kwargs)
         else:
-            return Response({'status':204,'message':'Rfq Code Settings Not Present'},status=204)
+            return Response({'status':204,'message':'Rfq Code Settings Not Present,Please Create Rfq in Settings'},status=204)
 
 
 class BiddingBuyerProductDetailsView(viewsets.ModelViewSet):

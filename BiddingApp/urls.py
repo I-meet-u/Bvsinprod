@@ -6,7 +6,7 @@ router=routers.DefaultRouter()
 
 router.register('buyer-product-bidding',views.BuyerProductBiddingView)
 router.register('buyer-product-details',views.BiddingBuyerProductDetailsView)
-# router.register('buyer-product-details',views.BiddingBuyerProductDetailsView)
+router.register('rfq-code-settings',views.RfqCodeSettingsView)
 
 urlpatterns = [
     path('bidding-router-urls/',include(router.urls)),

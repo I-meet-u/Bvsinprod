@@ -57,6 +57,7 @@ class RfqCodeSettingsView(viewsets.ModelViewSet):
     permission_classes = [permissions.AllowAny]
     queryset = RfqCodeSettings.objects.all()
     serializer_class = RfqCodeSettingsSerializer
+    ordering_fields = ['id']
     ordering = ['id']
 
     def create(self, request, *args, **kwargs):
@@ -64,8 +65,8 @@ class RfqCodeSettingsView(viewsets.ModelViewSet):
         numeric = request.data.get('numeric',None)
         suffix = request.data.get('suffix',None)
         try:
-            buyer_rfq_number=prefix+suffix+numeric
-            request.data['buyer_rfq_number']=buyer_rfq_number
+            rfq_number=prefix+suffix+numeric
+            request.data['rfq_number']=rfq_number
             return super().create(request, *args, **kwargs)
 
         except Exception as e:

@@ -4,7 +4,7 @@ from .models import MaincoreMaster, CategoryMaster, SubCategoryMaster, \
     IndustryToServeMaster, NatureOfBusinessMaster, SupplyCapabilitiesMaster, PincodeMaster, UOMMaster, DepartmentMaster, \
     DesignationMaster, TaxMaster, HSNMaster, SACMaster, CurrencyMaster, PFChargesMaster, FrieghtChargesMaster, \
     DeliveryMaster, CountryMaster, WarrantyMaster, GuaranteeMaster, ItemGroupMaster, TransitInsuranceMaster, \
-    PaymentMaster, ValidityMaster
+    PaymentMaster, ValidityMaster, RfqCategoryMaster
 from rest_framework import serializers
 
 class IndustryToServeMasterSerializer(serializers.ModelSerializer):
@@ -405,4 +405,24 @@ class ValidityMasterSerializer(serializers.ModelSerializer):
             print(validityobj.validity_code)
             validity_code = int(validityobj.validity_code) + 1
         values = ValidityMaster.objects.create(validity_code=validity_code, **validate_data)
+        return values
+
+
+class RfqCategoryMasterSerializer(serializers.ModelSerializer):
+    # rfq_category master serializer
+    class Meta:
+        model=RfqCategoryMaster
+        fields='__all__'
+
+    def create(self, validate_data):
+        # to add any extra details into the object before saving
+        print(validate_data)
+        rfqcategoryobj = RfqCategoryMaster.objects.count()
+        if rfqcategoryobj == 0:
+            rfq_category_code = '3201'
+        else:
+            rfqcategoryobj = RfqCategoryMaster.objects.last()
+            print(rfqcategoryobj.rfq_category_code)
+            rfq_category_code = int(rfqcategoryobj.rfq_category_code) + 1
+        values = RfqCategoryMaster.objects.create(rfq_category_code=rfq_category_code, **validate_data)
         return values

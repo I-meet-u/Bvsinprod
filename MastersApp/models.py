@@ -136,7 +136,7 @@ class SubCategoryMaster(models.Model):
     created_on = models.DateTimeField(auto_now_add=True)
     updated_on = models.DateTimeField(auto_now=True)
     admin_order = models.CharField(max_length=50, null=True)
-    status = models.CharField(max_length=30, default='Active', null=True)
+    status = models.CharField(max_length=30, default='Active',null=True)
     csv_subcategory = models.FileField(upload_to='MasterFile', null=True, blank=True)
     admins = models.ForeignKey(AdminRegister, on_delete=models.CASCADE, null=True)
     updated_by = models.ForeignKey(CreateUser, on_delete=models.CASCADE, null=True)
@@ -520,3 +520,23 @@ class PaymentMaster(models.Model):
 
     class Meta:
         db_table = "PaymentMaster"
+
+
+class RfqCategoryMaster(models.Model):
+    # rfq category master model and fields
+    rfq_category_id = models.BigAutoField(primary_key=True)
+    rfq_category_code = models.CharField(max_length=40, null=True, blank=True)
+    rfq_category_name = models.CharField(max_length=100, unique=True, blank=True)
+    is_verified = models.BooleanField(default=False)
+    created_on = models.DateTimeField(auto_now_add=True)
+    updated_on = models.DateTimeField(auto_now=True)
+    admin_order = models.CharField(max_length=50, null=True)
+    status = models.CharField(max_length=30, default='Active', null=True)
+    admins = models.ForeignKey(AdminRegister, on_delete=models.CASCADE, null=True)
+    updated_by = models.ForeignKey(CreateUser, on_delete=models.CASCADE, null=True)
+    created_by = models.BigIntegerField(null=True,blank=True)
+    updated_by_name = models.CharField(null=True, blank=True, max_length=100)
+    created_by_name = models.CharField(null=True, blank=True, max_length=100)
+
+    class Meta:
+        db_table = "RfqCategoryMaster"

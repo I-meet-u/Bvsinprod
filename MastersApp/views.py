@@ -5,7 +5,7 @@ from django.shortcuts import render
 from rest_framework import viewsets, status, generics, permissions
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.exceptions import ValidationError
-from rest_framework.pagination import PageNumberPagination
+# from rest_framework.pagination import PageNumberPagination
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from django.http import HttpResponse, JsonResponse
@@ -23,20 +23,21 @@ from .serializers import MainCoreMasterSerializer, CategoryMasterSerializer, Sub
     SACMasterSerializer, CurrencyMasterSerializer, PFChargesMasterSerializer, FrieghtChargesMasterSerializer, \
     DeliveryMasterSerializer, CountryMasterSerializer, WarrantyMasterSerializer, \
     GuaranteeMasterSerializer, ItemGroupMasterSerializer, TransitInsuranceMasterSerializer, PaymentMasterSerializer, \
-    ValidityMasterSerializer
+    ValidityMasterSerializer, RfqCategoryMasterSerializer
 from .models import MaincoreMaster, CategoryMaster, SubCategoryMaster, \
     IndustryToServeMaster, NatureOfBusinessMaster, SupplyCapabilitiesMaster, PincodeMaster, UOMMaster, DepartmentMaster, \
     DesignationMaster, TaxMaster, HSNMaster, SACMaster, CurrencyMaster, PFChargesMaster, FrieghtChargesMaster, \
     DeliveryMaster, CountryMaster, WarrantyMaster, GuaranteeMaster, ItemGroupMaster, TransitInsuranceMaster, \
-    PaymentMaster, ValidityMaster
+    PaymentMaster, ValidityMaster, RfqCategoryMaster
 
+# from .paginations import CustomPagination
 
 # Create your views here.
-# class StandardResultsSetPagination(PageNumberPagination):
-#     page_size = 20
-#     page_size_query_param = 'page_size'
-#     max_page_size = 1000
-
+# class LimitOffsetPagination(PageNumberPagination):
+#     default_limit=5
+#     limit=5
+#     offset=5
+#     max_limit=1000
 
 
 class IndustryToServeMasterView(viewsets.ModelViewSet):
@@ -46,7 +47,7 @@ class IndustryToServeMasterView(viewsets.ModelViewSet):
     serializer_class = IndustryToServeMasterSerializer
     ordering_fields = ['industry_id']
     ordering = ['industry_id']
-    # pagination_class = StandardResultsSetPagination
+    # pagination_class  = CustomPagination
 
 class NatureOfBusinessMasterView(viewsets.ModelViewSet):
     # nature_of_business mster viewsets
@@ -88,6 +89,7 @@ class SubCategoryMasterView(viewsets.ModelViewSet):
     serializer_class = SubcategoryMasterSerializer
     ordering_fields = ['sub_category_id']
     ordering = ['sub_category_id']
+    # pagination_class = CustomPagination
 
 
 class PincodeMasterView(viewsets.ModelViewSet):
@@ -2832,3 +2834,21 @@ def department_master_user_id(request):
             return Response({'status':204,'message':'noo'},status=204)
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)
+
+
+# class SubCategoryMasterPaginationView(viewsets.ModelViewSet):
+#     # sub_category_master  viewsets
+#     permission_classes = (AllowAny,)
+#     queryset = SubCategoryMaster.objects.all()
+#     serializer_class = SubcategoryMasterSerializer
+#     ordering_fields = ['sub_category_id']
+#     ordering = ['sub_category_id']
+#     pagination_class = CustomPagination
+
+class RfqCategoryMasterView(viewsets.ModelViewSet):
+    # rfq_category master viewsets
+    permission_classes = (AllowAny,)
+    queryset = RfqCategoryMaster.objects.all()
+    serializer_class = RfqCategoryMasterSerializer
+    ordering_fields = ['rfq_category_id']
+    ordering = ['rfq_category_id']

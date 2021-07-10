@@ -29,6 +29,10 @@ router.register('item-group-master',views.ItemGroupMasterView)
 router.register('transit-insurance-master',views.TransitInsuranceMasterView)
 router.register('payment-master',views.PaymentMasterView)
 router.register('validity-master',views.ValidityMasterView)
+router.register('rfq-category-master',views.RfqCategoryMasterView)
+
+
+# router.register('SubCategoryMasterPaginationView',views.SubCategoryMasterPaginationView)
 urlpatterns = [
     path('masters-router-urls/',include(router.urls)), #router urls are included
 

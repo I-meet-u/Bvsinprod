@@ -6,7 +6,10 @@ from RegistrationApp.models import SelfRegistration
 
 class BuyerProductBidding(models.Model):
     product_bidding_id=models.BigAutoField(primary_key=True)
-    product_rfq_number=models.CharField(max_length=40,unique=True)
+    product_rfq_number=models.CharField(max_length=40,unique=True,null=True,blank=True)
+    user_rfq_number=models.CharField(max_length=50,null=True,blank=True)
+    user_bidding_numeric = models.CharField(max_length=30,null=True)
+    user_prefix=models.CharField(max_length=50,null=True,blank=True)
     product_rfq_type=models.CharField(max_length=400)
     product_rfq_status=models.CharField(max_length=50,default='Pending')
     product_publish_date=models.CharField(max_length=100)
@@ -18,7 +21,6 @@ class BuyerProductBidding(models.Model):
     product_bill_address=models.TextField()
     product_ship_address=models.TextField()
     product_rfq_title = models.CharField(max_length=600)
-    bidding_numeric=models.CharField(max_length=30)
     created_on = models.DateTimeField(auto_now_add=True)
     updated_on = models.DateTimeField(auto_now=True)
     created_by = models.BigIntegerField()

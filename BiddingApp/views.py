@@ -18,32 +18,42 @@ class BuyerProductBiddingView(viewsets.ModelViewSet):
     ordering_fields = ['product_bidding_id']
     ordering = ['product_bidding_id']
 
-    # def create(self, request, *args, **kwargs):
-    #     userid = request.data.get('userid',None)
-    #     product_rfq_type=request.data.get('product_rfq_type',None)
-    #     product_publish_date=request.data.get('product_publish_date',None)
-    #     product_deadline_date=request.data.get('product_deadline_date',None)
-    #     product_delivery_date=request.data.get('product_delivery_date',None)
-    #     product_department=request.data.get('product_department',None)
-    #     product_rfq_currency = request.data.get('product_rfq_currency', None)
-    #     product_rfq_category = request.data.get('product_rfq_category', None)
-    #     product_bill_address=request.data.get('product_bill_address',None)
-    #     product_ship_address=request.data.get('product_ship_address',None)
-    #     product_rfq_title=request.data.get('product_rfq_title',None)
-    #
-    #     buyerbiddingobj = BuyerProductBidding.objects.filter(updated_by=userid).order_by('-bidding_numeric').values()
-    #     if buyerbiddingobj:
-    #         numeric=buyerbiddingobj[0].get('buyer_numeric')+1
-    #         buyer_rfq_number=str(buyerbiddingobj[0].get('buyer_numeric'))
-    #         request.data['buyer_rfq_number'] = buyer_rfq_number
-    #         request.data['numeric'] = numeric
-    #
-    #     else:
-    #         numeric =40002
-    #         buyer_rfq_number =40001
-    #         request.data['buyer_rfq_number'] = buyer_rfq_number
-    #         request.data['numeric'] = numeric
-    #         return super().create(request, *args, **kwargs)
+    def create(self, request, *args, **kwargs):
+        created_by = request.data.get('created_by',None)
+        updated_by = request.data.get('updated_by', None)
+        product_rfq_type=request.data.get('product_rfq_type',None)
+        product_publish_date=request.data.get('product_publish_date',None)
+        product_deadline_date=request.data.get('product_deadline_date',None)
+        product_delivery_date=request.data.get('product_delivery_date',None)
+        product_department=request.data.get('product_department',None)
+        product_rfq_currency = request.data.get('product_rfq_currency', None)
+        product_rfq_category = request.data.get('product_rfq_category', None)
+        product_bill_address=request.data.get('product_bill_address',None)
+        product_ship_address=request.data.get('product_ship_address',None)
+        product_rfq_title=request.data.get('product_rfq_title',None)
+        rfqcodesettingsobj = RfqCodeSettings.objects.filter(updated_by=updated_by).order_by('-id').values()
+        print(rfqcodesettingsobj)
+        print(len(rfqcodesettingsobj))
+
+        if len(rfqcodesettingsobj)>0:
+
+            buyerbid = BuyerProductBidding.objects.filter(updated_by=updated_by).values()
+            if len(buyerbid)==0:
+                request.data['user_prefix'] = rfqcodesettingsobj[0].get('prefix')
+                request.data['user_rfq_number'] =rfqcodesettingsobj[0].get('prefix')+str(int(rfqcodesettingsobj[0].get('numeric')))
+                request.data['user_bidding_numeric'] = int(rfqcodesettingsobj[0].get('numeric'))+1
+            else:
+                buyerbid = BuyerProductBidding.objects.filter(updated_by=updated_by).order_by('-product_bidding_id').values()
+                print(buyerbid)
+                request.data['user_prefix'] = buyerbid[0].get('user_prefix')
+                bidding_numeric =int(buyerbid[0].get('user_bidding_numeric'))+1
+                user_rfq_number =buyerbid[0].get('user_prefix')+str(int(buyerbid[0].get('user_bidding_numeric')))
+                request.data['user_rfq_number'] = user_rfq_number
+                request.data['user_bidding_numeric'] = bidding_numeric
+
+
+            return super().create(request, *args, **kwargs)
+
 
 class BiddingBuyerProductDetailsView(viewsets.ModelViewSet):
     queryset = BiddingBuyerProductDetails.objects.all()

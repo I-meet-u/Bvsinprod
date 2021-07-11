@@ -44,7 +44,6 @@ class BiddingBuyerProductDetails(models.Model):
     created_by = models.BigIntegerField()
     buyer_rfq_number=models.CharField(max_length=100)
     updated_by = models.ForeignKey(SelfRegistration, on_delete=models.CASCADE)
-    product_biddings = models.ForeignKey(BuyerProductBidding, on_delete=models.CASCADE)
 
     class Meta:
         db_table='BiddingBuyerProductDetails'

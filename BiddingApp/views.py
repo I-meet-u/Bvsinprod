@@ -56,6 +56,12 @@ class BuyerProductBiddingView(viewsets.ModelViewSet):
         else:
             return Response({'status':204,'message':'Rfq Code Settings Not Present,Please Create Rfq in Settings'},status=204)
 
+    def get_queryset(self):
+        buyerproductbiddingobj=BuyerProductBidding.objects.filter(updated_by=self.request.GET.get('updated_by'))
+        if buyerproductbiddingobj:
+            return buyerproductbiddingobj
+        raise ValidationError({'message':'Buyer Product Bidding details of particular user id is not exist','status':204})
+
 
 class BiddingBuyerProductDetailsView(viewsets.ModelViewSet):
     queryset = BiddingBuyerProductDetails.objects.all()
@@ -64,6 +70,34 @@ class BiddingBuyerProductDetailsView(viewsets.ModelViewSet):
     ordering_fields = ['id']
     ordering = ['id']
 
+    def create(self, request, *args, **kwargs):
+        productdetails = request.data['productdetails']
+        buyer_rfq_number = request.data.get('buyer_rfq_number', None)
+        userid = request.data.get('userid', None)
+        try:
+            for i in range(0, len(productdetails)):
+                BiddingBuyerProductDetails.objects.create(buyer_rfq_number=buyer_rfq_number,
+                                                          buyer_item_code=productdetails[i].get('buyer_item_code'),
+                                                          buyer_item_name=productdetails[i].get('buyer_item_name'),
+                                                          buyer_item_description=productdetails[i].get(
+                                                              'buyer_item_description'),
+                                                          buyer_uom=productdetails[i].get('buyer_uom'),
+                                                          buyer_category=productdetails[i].get('buyer_category'),
+                                                          buyer_quantity=productdetails[i].get('buyer_quantity'),
+                                                          buyer_document=productdetails[i].get('buyer_document'),
+                                                          updated_by=SelfRegistration.objects.get(id=userid),
+                                                          created_by=userid)
+
+            return Response({'status': 200, 'message': 'Product Details Are Added'}, status=200)
+        except Exception as e:
+            return Response({'status': 500, 'error': str(e)}, status=500)
+
+    def get_queryset(self):
+        buyerproductdetailsobj = BiddingBuyerProductDetails.objects.filter(updated_by=self.request.GET.get('updated_by'))
+        if buyerproductdetailsobj:
+            return buyerproductdetailsobj
+        raise ValidationError(
+            {'message': 'Buyer Bidding Product details of particular user id is not exist', 'status': 204})
 
 class RfqCodeSettingsView(viewsets.ModelViewSet):
     permission_classes = [permissions.AllowAny]

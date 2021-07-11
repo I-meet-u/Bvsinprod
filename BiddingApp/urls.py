@@ -10,6 +10,7 @@ router.register('rfq-code-settings',views.RfqCodeSettingsView)
 
 urlpatterns = [
     path('bidding-router-urls/',include(router.urls)),
-    path('get-buyer-product-details/',views.get_buyer_product_based_on_userid_pk)
+    path('get-buyer-product-details/',views.get_buyer_product_based_on_userid_pk),
+    path('updated-rfq-code-settings-and-rfq-number/',views.updated_rfq_code_settings_and_rfq_number)
 
 ]

@@ -105,3 +105,56 @@ def get_buyer_product_based_on_userid_pk(request):
             return Response({'status':204,'message':'Buyer Product Details Not Present'},status=204)
     except Exception as e:
         return Response({'status':500,'error':str(e)},status=500)
+
+
+@api_view(['put'])
+@permission_classes((AllowAny,))
+def updated_rfq_code_settings_and_rfq_number(request):
+    data=request.data
+    userid=data['userid']
+    prefix=data['prefix']
+    suffix=data['suffix']
+    numeric=data['numeric']
+    try:
+        rfqcodesettingsobj=RfqCodeSettings.objects.filter(updated_by=userid).order_by('-id').values()
+        if len(rfqcodesettingsobj)>0:
+            rfqcodeobj=RfqCodeSettings.objects.get(updated_by=userid,id=rfqcodesettingsobj[0].get('id'))
+            if rfqcodeobj.prefix !=prefix:
+                rfqcodeobj.prefix=prefix
+                rfqcodeobj.save()
+            if rfqcodeobj.suffix!=suffix:
+                rfqcodeobj.suffix=suffix
+                rfqcodeobj.save()
+
+            if rfqcodeobj.numeric!=numeric:
+                rfqcodeobj.numeric=numeric
+                rfqcodeobj.save()
+
+                value=rfqcodeobj.prefix+rfqcodeobj.suffix+rfqcodeobj.numeric
+                rfqcodeobj.rfq_number=value
+                rfqcodeobj.save()
+
+            rfqbid=BuyerProductBidding.objects.filter(updated_by_id=userid).order_by('-product_bidding_id').values()
+            if len(rfqbid)>0:
+                rfqval=BuyerProductBidding.objects.get(product_bidding_id=rfqbid[0].get('product_bidding_id'),updated_by_id=rfqbid[0].get('updated_by_id'))
+                print(rfqval.product_bidding_id)
+                if rfqval.user_rfq_number!=rfqcodeobj.rfq_number:
+                    rfqval.user_rfq_number=rfqcodeobj.rfq_number
+                    rfqval.save()
+                if rfqval.user_bidding_numeric!=rfqcodeobj.numeric:
+                    rfqval.user_bidding_numeric=int(rfqcodeobj.numeric)+1
+                    rfqval.save()
+
+                if rfqval.user_prefix !=rfqcodeobj.prefix:
+                    rfqval.user_prefix=rfqcodeobj.prefix
+                    rfqval.save()
+
+                return Response({'status':202,'message':'Buyer Product Bidding and Rfq Code Settings Upadted'},status=202)
+
+            else:
+                return Response({'status': 200, 'message': 'Buyer Product Bidding Not Present'}, status=200)
+
+        else:
+            return Response({'status':204,'message':'Rfq Code Settigs data for this user id is not present'},status=204)
+    except Exception as e:
+        return Response({'status':500,'error':str(e)},status=500)

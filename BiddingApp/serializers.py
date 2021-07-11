@@ -30,3 +30,9 @@ class RfqCodeSettingsSerializer(serializers.ModelSerializer):
     class Meta:
         model=RfqCodeSettings
         fields='__all__'
+
+class RfqTermsDescriptionSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model=RfqTermsDescription
+        fields='__all__'

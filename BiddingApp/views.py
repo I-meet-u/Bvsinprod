@@ -192,3 +192,10 @@ def updated_rfq_code_settings_and_rfq_number(request):
             return Response({'status':204,'message':'Rfq Code Settigs data for this user id is not present'},status=204)
     except Exception as e:
         return Response({'status':500,'error':str(e)},status=500)
+
+class RfqTermsDescriptionView(viewsets.ModelViewSet):
+    permission_classes = [permissions.AllowAny]
+    queryset = RfqTermsDescription.objects.all()
+    serializer_class = RfqTermsDescriptionSerializer
+    ordering_fields = ['id']
+    ordering = ['id']

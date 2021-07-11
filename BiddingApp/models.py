@@ -32,7 +32,7 @@ class BuyerProductBidding(models.Model):
 
 
 class BiddingBuyerProductDetails(models.Model):
-    buyer_item_code= models.CharField(max_length=100,unique=True)
+    buyer_item_code= models.CharField(max_length=100,null=True,blank=True)
     buyer_item_name = models.CharField(max_length=100)
     buyer_item_description = models.TextField(null=True,blank=True)
     buyer_uom = models.CharField(max_length=100, null=True,blank=True)
@@ -61,3 +61,15 @@ class RfqCodeSettings(models.Model):
 
     class Meta:
         db_table = "RfqCodeSettings"
+
+class RfqTermsDescription(models.Model):
+    rfq_number=models.CharField(max_length=200)
+    terms=models.CharField(max_length=500)
+    description=models.TextField()
+    created_on = models.DateTimeField(auto_now_add=True)
+    updated_on = models.DateTimeField(auto_now=True)
+    created_by = models.BigIntegerField()
+    updated_by = models.ForeignKey(SelfRegistration, on_delete=models.CASCADE)
+
+    class Meta:
+        db_table = "RfqTermsDescription"

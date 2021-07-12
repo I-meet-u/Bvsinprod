@@ -313,7 +313,7 @@ def advance_search_invite_vendor(request):
 
 
 @api_view(['post'])
-@permission_classes((AllowAny,))
+@permission_classes([AllowAny,])
 def advance_search_external_vendor(request):
     # external vendor advance search
     data = request.data

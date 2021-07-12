@@ -256,7 +256,7 @@ def external_vendor(request):
 
 
 @api_view(['post'])
-def advancesearch_business_request(request):
+def advance_search_business_request(request):
     # business request advance search
     data = request.data
     company_code = data['company_code']

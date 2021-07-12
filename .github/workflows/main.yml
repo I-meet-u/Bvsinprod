@@ -5,4 +5,8 @@ jobs:
     runs-on: self-hosted
     steps:
       - uses: actions/checkout@master
+      - name: Restart supervisor
+        run: |
+          echo Vendorsin@2021 | sudo -S systemctl restart gunicorn
+          echo Vendorsin@2021 | sudo -S systemctl restart nginx
      

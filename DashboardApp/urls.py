@@ -14,7 +14,7 @@ urlpatterns = [
     path('dashboard-router-urls/',include(router.urls)),
     path('get-all-details-for-business-request/',views.get_all_details_for_business_request),
     path('external-vendor/',views.external_vendor),
-    path('advance-search-business-request/',views.advancesearch_business_request),
+    path('advance-search-business-request/',views.advance_search_business_request),
     path('advance-search-external-vendor/',views.advance_search_external_vendor),
     path('advance-search-invite-vendor/', views.advance_search_invite_vendor)
 

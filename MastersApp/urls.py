@@ -30,7 +30,12 @@ router.register('transit-insurance-master',views.TransitInsuranceMasterView)
 router.register('payment-master',views.PaymentMasterView)
 router.register('validity-master',views.ValidityMasterView)
 router.register('rfq-category-master',views.RfqCategoryMasterView)
-
+router.register('price-basis-master',views.PriceBasisMasterView)
+router.register('inspection-master',views.InspectionMasterView)
+router.register('liquidated-damage-master',views.LiquidatedDamageMasterView)
+router.register('tax-duties-master',views.TaxesAndDutiesMasterView)
+router.register('test-qap-master',views.TestAndQapMasterView)
+router.register('performance-guarantee-master',views.PerformanceGuaranteesMasterView)
 
 # router.register('SubCategoryMasterPaginationView',views.SubCategoryMasterPaginationView)
 urlpatterns = [
@@ -59,22 +64,22 @@ urlpatterns = [
     path('enable-uom-master/',views.enable_uom_master),
     path('all-masters/',views.all_masters),
     path('delete-uom-masters/',views.delete_uom_master),
-    path('uom-master-history/',views.uom_master_history),
+    # path('uom-master-history/',views.uom_master_history),
     path('uom-master-user-id/',views. uom_master_user_id),
 
     path('disable-department-master/', views.disable_department_master),
     path('enable-department-master/', views.enable_department_master),
     path('delete-department-master/', views.delete_department_master),
-    path('history-department-master/', views.department_master_history),
+    # path('history-department-master/', views.department_master_history),
     path('department-master-get-by-userid/', views.department_master_user_id),
 
-
-    path('industry-to-serve-master-history/', views.industry_to_serve_master_history),
-    path('nature-of-business-master-history/',views.nature_of_business_master_history),
-    path('supply-capabilites-master-history/', views.supply_capabilites_master_history),
-    path('maincore-master-history/',views.maincore_master_history),
-    path('category-master-history/',views.category_master_history),
-    path('sub-category-master-history/',views.sub_category_master_history),
+    #
+    # path('industry-to-serve-master-history/', views.industry_to_serve_master_history),
+    # path('nature-of-business-master-history/',views.nature_of_business_master_history),
+    # path('supply-capabilites-master-history/', views.supply_capabilites_master_history),
+    # path('maincore-master-history/',views.maincore_master_history),
+    # path('category-master-history/',views.category_master_history),
+    # path('sub-category-master-history/',views.sub_category_master_history),
 
 
     path('disable-maincore-master/',views.disable_maincore_master),
@@ -94,23 +99,23 @@ urlpatterns = [
     path('disable-item-group-master/', views.disable_item_group_master),
     path('enable-item-group-master/', views.enable_item_group_master),
     path('delete-item-group-master/', views.delete_item_group_master),
-    path('history-item-group-master/', views.item_group_master_history),
+    # path('history-item-group-master/', views.item_group_master_history),
 
     # disable,enable,delete,history of item group master
     path('disable-hsn-master/', views.disable_hsn_master),
     path('enable-hsn-master/', views.enable_hsn_master),
     path('delete-hsn-master/', views.delete_hsn_master),
-    path('history-hsn-master/', views.hsn_master_history),
+    # path('history-hsn-master/', views.hsn_master_history),
 
     path('disable-sac-master/', views.disable_sac_master),
     path('enable-sac-master/', views.enable_sac_master),
     path('delete-sac-master/', views.delete_sac_master),
-    path('history-sac-master/', views.sac_master_history),
+    # path('history-sac-master/', views.sac_master_history),
 
     path('disable-frieght-master/', views.disable_frieght_charges_master),
     path('enable-frieght-master/', views.enable_frieght_charges_master),
     path('delete-frieght-master/', views.delete_freight_master),
-    path('history-frieght-master/', views.frieght_master_history),
+    # path('history-frieght-master/', views.frieght_master_history),
     path('frieght-master-get-by-userid/',views.frieght_masters_user_id),
 
 
@@ -118,7 +123,7 @@ urlpatterns = [
     path('disable-pf-charge-master/', views.disable_pf_charge_master),
     path('enable-pf_charge-master/', views.enable_pf_charge_master),
     path('delete-pf_charge-master/', views.delete_pf_charge_master),
-    path('history-pf_charge-master/', views.pf_charges_master_history),
+    # path('history-pf_charge-master/', views.pf_charges_master_history),
     path('pf_charge-master-get-by-userid/', views.pf_charges_master_get_by_userid),
 
     path('hsn-master-get-by-userid/', views.hsn_masters_user_id),
@@ -127,56 +132,56 @@ urlpatterns = [
     path('disable-guarantee-master/', views.disable_guarantee_master),
     path('enable-guarantee-master/', views.enable_guarantee_master),
     path('delete-guarantee-master/', views.delete_guarantee_master),
-    path('history-guarantee-master/', views.guarantee_master_history),
+    # path('history-guarantee-master/', views.guarantee_master_history),
     path('guarantee-master-get-by-userid/', views.guarantee_masters_user_id),
 
 
     path('disable-designation-master/', views.disable_designation_master),
     path('enable-designation-master/', views.enable_designation_master),
     path('delete-designation-master/', views.delete_designation_master),
-    path('history-designation-master/', views.designation_master_history),
+    # path('history-designation-master/', views.designation_master_history),
     path('designation-master-get-by-userid/', views.designation_masters_user_id),
 
     path('disable-transit-insurance-master/', views.disable_transit_insurance_master),
     path('enable-transit-insurance-master/', views.enable_transit_insurance_master),
     path('delete-transit-insurance-master/', views.delete_transit_insurance_master),
-    path('history-transit-insurance-master/', views.transit_insurance_master_history),
+    # path('history-transit-insurance-master/', views.transit_insurance_master_history),
     path('transit-insurance-master-get-by-userid/', views.transit_insurance_master_user_id),
 
     path('disable-payment-master/', views.disable_payment_master),
     path('enable-payment-master/', views.enable_payment_master),
     path('delete-payment-master/', views.delete_payment_master),
-    path('history-payment-master/', views.payment_master_history),
+    # path('history-payment-master/', views.payment_master_history),
     path('payment-master-get-by-userid/', views.payment_master_user_id),
 
     path('disable-validity-master/', views.disable_validity_master),
     path('enable-validity-master/', views.enable_validity_master),
     path('delete-validity-master/', views.delete_validity_master),
-    path('history-validity-master/', views.validity_master_history),
+    # path('history-validity-master/', views.validity_master_history),
     path('validity-master-get-by-userid/', views.validity_master_user_id),
 
     path('disable-delivery-master/', views.disable_delivery_master),
     path('enable-delivery-master/', views.enable_delivery_master),
     path('delete-delivery-master/', views.delete_delivery_master),
-    path('history-delivery-master/', views.delivery_master_history),
+    # path('history-delivery-master/', views.delivery_master_history),
     path('delivery-master-get-by-userid/', views.delivery_master_user_id),
 
     path('disable-country-master/', views.disable_country_master),
     path('enable-country-master/', views.enable_country_master),
     path('delete-country-master/', views.delete_country_master),
-    path('history-country-master/', views.country_master_history),
+    # path('history-country-master/', views.country_master_history),
     path('country-master-get-by-userid/', views.country_master_user_id),
 
     path('disable-tax-master/', views.disable_tax_master),
     path('enable-tax-master/', views.enable_tax_master),
     path('delete-tax-master/', views.delete_tax_master),
-    path('history-tax-master/', views.tax_master_history),
+    # path('history-tax-master/', views.tax_master_history),
     path('tax-master-get-by-userid/', views.tax_master_user_id),
 
     path('disable-currency-master/', views.disable_currency_master),
     path('enable-currency-master/', views.enable_currency_master),
     path('delete-currency-master/', views.delete_currency_master),
-    path('history-currency-master/', views.currency_master_history),
+    # path('history-currency-master/', views.currency_master_history),
     path('currency-master-get-by-userid/', views.currency_master_user_id),
 
 ]

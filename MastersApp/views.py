@@ -5,32 +5,19 @@ from django.shortcuts import render
 from rest_framework import viewsets, status, generics, permissions
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.exceptions import ValidationError
-# from rest_framework.pagination import PageNumberPagination
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from django.http import HttpResponse, JsonResponse
 from datetime import datetime
-from django.views import View
 import io, csv
 
 from rest_framework.views import APIView
 
 from AdminApp.models import AdminRegister
-from .serializers import MainCoreMasterSerializer, CategoryMasterSerializer, SubcategoryMasterSerializer, \
-    IndustryToServeMasterSerializer, \
-    NatureOfBusinessMasterSerializer, SupplyCapabilitiesMasterSerializer, PincodeMasterSerializer, UOMMasterSerializer, \
-    DepartmentMasterSerializer, DesignationMasterSerializer, TaxMasterSerializer, HSNMasterSerializer, \
-    SACMasterSerializer, CurrencyMasterSerializer, PFChargesMasterSerializer, FrieghtChargesMasterSerializer, \
-    DeliveryMasterSerializer, CountryMasterSerializer, WarrantyMasterSerializer, \
-    GuaranteeMasterSerializer, ItemGroupMasterSerializer, TransitInsuranceMasterSerializer, PaymentMasterSerializer, \
-    ValidityMasterSerializer, RfqCategoryMasterSerializer
-from .models import MaincoreMaster, CategoryMaster, SubCategoryMaster, \
-    IndustryToServeMaster, NatureOfBusinessMaster, SupplyCapabilitiesMaster, PincodeMaster, UOMMaster, DepartmentMaster, \
-    DesignationMaster, TaxMaster, HSNMaster, SACMaster, CurrencyMaster, PFChargesMaster, FrieghtChargesMaster, \
-    DeliveryMaster, CountryMaster, WarrantyMaster, GuaranteeMaster, ItemGroupMaster, TransitInsuranceMaster, \
-    PaymentMaster, ValidityMaster, RfqCategoryMaster
+from .serializers import *
+from .models import  *
 
-# from .paginations import CustomPagination
+from .paginations import CustomPagination
 
 # Create your views here.
 # class LimitOffsetPagination(PageNumberPagination):
@@ -924,65 +911,65 @@ def delete_sub_category_master(request):
         return Response({'status':500,'error':str(e)},status=500)
 
 
-@api_view(['get'])
-@permission_classes([AllowAny,])
-def industry_to_serve_master_history(request):
-    try:
-        industrytoservehistoryobj=IndustryToServeMaster.history.filter().values()
-        return Response({'status':200,'message':'Industry to Serve Master history','data':industrytoservehistoryobj},status=200)
-    except Exception as e:
-        return Response({'status': 500, 'error': str(e)}, status=500)
-
-@api_view(['get'])
-@permission_classes([AllowAny,])
-def nature_of_business_master_history(request):
-    try:
-        natureofbusinesshistoryobj=NatureOfBusinessMaster.history.filter().values()
-        return Response({'status':200,'message':'Nature of business Master history','data':natureofbusinesshistoryobj},status=200)
-    except Exception as e:
-        return Response({'status': 500, 'error': str(e)}, status=500)
-
-
-@api_view(['get'])
-@permission_classes([AllowAny,])
-def supply_capabilites_master_history(request):
-    try:
-        supplycapabiliteshistoryobj=SupplyCapabilitiesMaster.history.filter().values()
-        return Response({'status':200,'message':'Supply Capabilities Master history','data':supplycapabiliteshistoryobj},status=200)
-    except Exception as e:
-        return Response({'status': 500, 'error': str(e)}, status=500)
-
-
-@api_view(['get'])
-@permission_classes([AllowAny,])
-def maincore_master_history(request):
-    try:
-        maincorehisotryobj=MaincoreMaster.history.filter().values()
-        return Response({'status':200,'message':'Maincore Master history','data':maincorehisotryobj},status=200)
-    except Exception as e:
-        return Response({'status': 500, 'error': str(e)}, status=500)
-
-
-
-@api_view(['get'])
-@permission_classes([AllowAny,])
-def category_master_history(request):
-    try:
-        categoryhistoryobj=CategoryMaster.history.filter().values()
-        return Response({'status':200,'message':'Category Master history','data':categoryhistoryobj},status=200)
-    except Exception as e:
-        return Response({'status': 500, 'error': str(e)}, status=500)
-
-
-
-@api_view(['get'])
-@permission_classes([AllowAny,])
-def sub_category_master_history(request):
-    try:
-        subcategoryhistoryobj=SubCategoryMaster.history.filter().values()
-        return Response({'status':200,'message':'Sub Category Master history','data':subcategoryhistoryobj},status=200)
-    except Exception as e:
-        return Response({'status': 500, 'error': str(e)}, status=500)
+# @api_view(['get'])
+# @permission_classes([AllowAny,])
+# def industry_to_serve_master_history(request):
+#     try:
+#         industrytoservehistoryobj=IndustryToServeMaster.history.filter().values()
+#         return Response({'status':200,'message':'Industry to Serve Master history','data':industrytoservehistoryobj},status=200)
+#     except Exception as e:
+#         return Response({'status': 500, 'error': str(e)}, status=500)
+#
+# @api_view(['get'])
+# @permission_classes([AllowAny,])
+# def nature_of_business_master_history(request):
+#     try:
+#         natureofbusinesshistoryobj=NatureOfBusinessMaster.history.filter().values()
+#         return Response({'status':200,'message':'Nature of business Master history','data':natureofbusinesshistoryobj},status=200)
+#     except Exception as e:
+#         return Response({'status': 500, 'error': str(e)}, status=500)
+#
+#
+# @api_view(['get'])
+# @permission_classes([AllowAny,])
+# def supply_capabilites_master_history(request):
+#     try:
+#         supplycapabiliteshistoryobj=SupplyCapabilitiesMaster.history.filter().values()
+#         return Response({'status':200,'message':'Supply Capabilities Master history','data':supplycapabiliteshistoryobj},status=200)
+#     except Exception as e:
+#         return Response({'status': 500, 'error': str(e)}, status=500)
+#
+#
+# @api_view(['get'])
+# @permission_classes([AllowAny,])
+# def maincore_master_history(request):
+#     try:
+#         maincorehisotryobj=MaincoreMaster.history.filter().values()
+#         return Response({'status':200,'message':'Maincore Master history','data':maincorehisotryobj},status=200)
+#     except Exception as e:
+#         return Response({'status': 500, 'error': str(e)}, status=500)
+#
+#
+#
+# @api_view(['get'])
+# @permission_classes([AllowAny,])
+# def category_master_history(request):
+#     try:
+#         categoryhistoryobj=CategoryMaster.history.filter().values()
+#         return Response({'status':200,'message':'Category Master history','data':categoryhistoryobj},status=200)
+#     except Exception as e:
+#         return Response({'status': 500, 'error': str(e)}, status=500)
+#
+#
+#
+# @api_view(['get'])
+# @permission_classes([AllowAny,])
+# def sub_category_master_history(request):
+#     try:
+#         subcategoryhistoryobj=SubCategoryMaster.history.filter().values()
+#         return Response({'status':200,'message':'Sub Category Master history','data':subcategoryhistoryobj},status=200)
+#     except Exception as e:
+#         return Response({'status': 500, 'error': str(e)}, status=500)
 
 
 
@@ -1179,19 +1166,19 @@ def delete_item_group_master(request):
     except Exception as e:
         return Response({'status':500,'error':str(e)},status=500)
 
-@api_view(['get'])
-@permission_classes([AllowAny,])
-def item_group_master_history(request):
-    try:
-        itemgroupmasterobj=ItemGroupMaster.history.filter().values()
-        if itemgroupmasterobj:
-            return Response({'status':200,'message':'Item group Master history','data':itemgroupmasterobj},status=200)
-        else:
-            return Response({'status': 204, 'message': 'Item group Master data not persent'},
-                            status=204)
-
-    except Exception as e:
-        return Response({'status': 500, 'error': str(e)}, status=500)
+# @api_view(['get'])
+# @permission_classes([AllowAny,])
+# def item_group_master_history(request):
+#     try:
+#         itemgroupmasterobj=ItemGroupMaster.history.filter().values()
+#         if itemgroupmasterobj:
+#             return Response({'status':200,'message':'Item group Master history','data':itemgroupmasterobj},status=200)
+#         else:
+#             return Response({'status': 204, 'message': 'Item group Master data not persent'},
+#                             status=204)
+#
+#     except Exception as e:
+#         return Response({'status': 500, 'error': str(e)}, status=500)
 
 
 
@@ -1262,19 +1249,19 @@ def delete_hsn_master(request):
     except Exception as e:
         return Response({'status':500,'error':str(e)},status=500)
 
-@api_view(['get'])
-@permission_classes([AllowAny,])
-def hsn_master_history(request):
-    try:
-        hsnmasterobj=HSNMaster.history.filter().values()
-        if hsnmasterobj:
-            return Response({'status':200,'message':'HSN Master history','data':hsnmasterobj},status=200)
-        else:
-            return Response({'status': 204, 'message': 'HSN Master history data not persent'},
-                            status=204)
-
-    except Exception as e:
-        return Response({'status': 500, 'error': str(e)}, status=500)
+# @api_view(['get'])
+# @permission_classes([AllowAny,])
+# def hsn_master_history(request):
+#     try:
+#         hsnmasterobj=HSNMaster.history.filter().values()
+#         if hsnmasterobj:
+#             return Response({'status':200,'message':'HSN Master history','data':hsnmasterobj},status=200)
+#         else:
+#             return Response({'status': 204, 'message': 'HSN Master history data not persent'},
+#                             status=204)
+#
+#     except Exception as e:
+#         return Response({'status': 500, 'error': str(e)}, status=500)
 
 
 
@@ -1345,19 +1332,19 @@ def delete_sac_master(request):
     except Exception as e:
         return Response({'status':500,'error':str(e)},status=500)
 
-@api_view(['get'])
-@permission_classes([AllowAny,])
-def sac_master_history(request):
-    try:
-        sacmasterobj=SACMaster.history.filter().values()
-        if sacmasterobj:
-            return Response({'status':200,'message':'SAC Master history','data':sacmasterobj},status=200)
-        else:
-            return Response({'status': 204, 'message': 'SAC Master data not persent'},
-                            status=204)
-
-    except Exception as e:
-        return Response({'status': 500, 'error': str(e)}, status=500)
+# @api_view(['get'])
+# @permission_classes([AllowAny,])
+# def sac_master_history(request):
+#     try:
+#         sacmasterobj=SACMaster.history.filter().values()
+#         if sacmasterobj:
+#             return Response({'status':200,'message':'SAC Master history','data':sacmasterobj},status=200)
+#         else:
+#             return Response({'status': 204, 'message': 'SAC Master data not persent'},
+#                             status=204)
+#
+#     except Exception as e:
+#         return Response({'status': 500, 'error': str(e)}, status=500)
 
 
 
@@ -1427,19 +1414,19 @@ def delete_currency_master(request):
     except Exception as e:
         return Response({'status':500,'error':str(e)},status=500)
 
-@api_view(['get'])
-@permission_classes([AllowAny,])
-def currency_master_history(request):
-    try:
-        currencyhistoryobj=CurrencyMaster.history.filter().values()
-        if currencyhistoryobj:
-            return Response({'status':200,'message':'Currency Master history','data':currencyhistoryobj},status=200)
-        else:
-            return Response({'status': 204, 'message': 'Currency History Master data not persent'},
-                            status=204)
-
-    except Exception as e:
-        return Response({'status': 500, 'error': str(e)}, status=500)
+# @api_view(['get'])
+# @permission_classes([AllowAny,])
+# def currency_master_history(request):
+#     try:
+#         currencyhistoryobj=CurrencyMaster.history.filter().values()
+#         if currencyhistoryobj:
+#             return Response({'status':200,'message':'Currency Master history','data':currencyhistoryobj},status=200)
+#         else:
+#             return Response({'status': 204, 'message': 'Currency History Master data not persent'},
+#                             status=204)
+#
+#     except Exception as e:
+#         return Response({'status': 500, 'error': str(e)}, status=500)
 
 
 
@@ -1510,19 +1497,19 @@ def delete_freight_master(request):
     except Exception as e:
         return Response({'status':500,'error':str(e)},status=500)
 
-@api_view(['get'])
-@permission_classes([AllowAny,])
-def frieght_master_history(request):
-    try:
-        frieghthistoryobj=FrieghtChargesMaster.history.filter().values()
-        if frieghthistoryobj:
-            return Response({'status':200,'message':'Frieght Master history','data':frieghthistoryobj},status=200)
-        else:
-            return Response({'status': 204, 'message': 'Frieght History Master data not persent'},
-                            status=204)
-
-    except Exception as e:
-        return Response({'status': 500, 'error': str(e)}, status=500)
+# @api_view(['get'])
+# @permission_classes([AllowAny,])
+# def frieght_master_history(request):
+#     try:
+#         frieghthistoryobj=FrieghtChargesMaster.history.filter().values()
+#         if frieghthistoryobj:
+#             return Response({'status':200,'message':'Frieght Master history','data':frieghthistoryobj},status=200)
+#         else:
+#             return Response({'status': 204, 'message': 'Frieght History Master data not persent'},
+#                             status=204)
+#
+#     except Exception as e:
+#         return Response({'status': 500, 'error': str(e)}, status=500)
 
 @api_view(['post'])
 @permission_classes([AllowAny,])
@@ -1612,19 +1599,19 @@ def delete_pf_charge_master(request):
     except Exception as e:
         return Response({'status':500,'error':str(e)},status=500)
 
-@api_view(['get'])
-@permission_classes([AllowAny,])
-def pf_charges_master_history(request):
-    try:
-        pfchargemasterhistory=PFChargesMaster.history.filter().values()
-        if pfchargemasterhistory:
-            return Response({'status':200,'message':'PF Charges Master history','data':pfchargemasterhistory},status=200)
-        else:
-            return Response({'status': 204, 'message': 'PF Charges History Master data not persent'},
-                            status=204)
-
-    except Exception as e:
-        return Response({'status': 500, 'error': str(e)}, status=500)
+# @api_view(['get'])
+# @permission_classes([AllowAny,])
+# def pf_charges_master_history(request):
+#     try:
+#         pfchargemasterhistory=PFChargesMaster.history.filter().values()
+#         if pfchargemasterhistory:
+#             return Response({'status':200,'message':'PF Charges Master history','data':pfchargemasterhistory},status=200)
+#         else:
+#             return Response({'status': 204, 'message': 'PF Charges History Master data not persent'},
+#                             status=204)
+#
+#     except Exception as e:
+#         return Response({'status': 500, 'error': str(e)}, status=500)
 
 
 @api_view(['post'])
@@ -1782,19 +1769,19 @@ def delete_guarantee_master(request):
     except Exception as e:
         return Response({'status':500,'error':str(e)},status=500)
 
-@api_view(['get'])
-@permission_classes([AllowAny,])
-def guarantee_master_history(request):
-    try:
-        guaranteemasterhistory=GuaranteeMaster.history.filter().values()
-        if guaranteemasterhistory:
-            return Response({'status':200,'message':'Guarantee Master history','data':guaranteemasterhistory},status=200)
-        else:
-            return Response({'status': 204, 'message': 'Guarantee Master history data not persent'},
-                            status=204)
-
-    except Exception as e:
-        return Response({'status': 500, 'error': str(e)}, status=500)
+# @api_view(['get'])
+# @permission_classes([AllowAny,])
+# def guarantee_master_history(request):
+#     try:
+#         guaranteemasterhistory=GuaranteeMaster.history.filter().values()
+#         if guaranteemasterhistory:
+#             return Response({'status':200,'message':'Guarantee Master history','data':guaranteemasterhistory},status=200)
+#         else:
+#             return Response({'status': 204, 'message': 'Guarantee Master history data not persent'},
+#                             status=204)
+#
+#     except Exception as e:
+#         return Response({'status': 500, 'error': str(e)}, status=500)
 
 
 @api_view(['post'])
@@ -1891,19 +1878,19 @@ def delete_designation_master(request):
     except Exception as e:
         return Response({'status':500,'error':str(e)},status=500)
 
-@api_view(['get'])
-@permission_classes([AllowAny,])
-def designation_master_history(request):
-    try:
-        designationmasterhistory=DesignationMaster.history.filter().values()
-        if designationmasterhistory:
-            return Response({'status':200,'message':'Designation Master history','data':designationmasterhistory},status=200)
-        else:
-            return Response({'status': 204, 'message': 'Designation Master history data not persent'},
-                            status=204)
-
-    except Exception as e:
-        return Response({'status': 500, 'error': str(e)}, status=500)
+# @api_view(['get'])
+# @permission_classes([AllowAny,])
+# def designation_master_history(request):
+#     try:
+#         designationmasterhistory=DesignationMaster.history.filter().values()
+#         if designationmasterhistory:
+#             return Response({'status':200,'message':'Designation Master history','data':designationmasterhistory},status=200)
+#         else:
+#             return Response({'status': 204, 'message': 'Designation Master history data not persent'},
+#                             status=204)
+#
+#     except Exception as e:
+#         return Response({'status': 500, 'error': str(e)}, status=500)
 
 
 @api_view(['post'])
@@ -2011,18 +1998,18 @@ def delete_transit_insurance_master(request):
     except Exception as e:
         return Response({'status':500,'error':str(e)},status=500)
 
-@api_view(['get'])
-@permission_classes([AllowAny,])
-def transit_insurance_master_history(request):
-    try:
-        transitmasterhistory=TransitInsuranceMaster.history.filter().values()
-        if transitmasterhistory:
-            return Response({'status':200,'message':'Transit Master history','data':transitmasterhistory},status=200)
-        else:
-            return Response({'status': 204, 'message': 'Transit Master history data not persent'},status=204)
-
-    except Exception as e:
-        return Response({'status': 500, 'error': str(e)}, status=500)
+# @api_view(['get'])
+# @permission_classes([AllowAny,])
+# def transit_insurance_master_history(request):
+#     try:
+#         transitmasterhistory=TransitInsuranceMaster.history.filter().values()
+#         if transitmasterhistory:
+#             return Response({'status':200,'message':'Transit Master history','data':transitmasterhistory},status=200)
+#         else:
+#             return Response({'status': 204, 'message': 'Transit Master history data not persent'},status=204)
+#
+#     except Exception as e:
+#         return Response({'status': 500, 'error': str(e)}, status=500)
 
 
 @api_view(['post'])
@@ -2132,19 +2119,19 @@ def delete_payment_master(request):
 
     except Exception as e:
         return Response({'status':500,'error':str(e)},status=500)
-
-@api_view(['get'])
-@permission_classes([AllowAny,])
-def payment_master_history(request):
-    try:
-        paymentmasterhistory=PaymentMaster.history.filter().values()
-        if paymentmasterhistory:
-            return Response({'status':200,'message':'Payment Master history','data':paymentmasterhistory},status=200)
-        else:
-            return Response({'status': 204, 'message': 'Payment Master history data not persent'},status=204)
-
-    except Exception as e:
-        return Response({'status': 500, 'error': str(e)}, status=500)
+#
+# @api_view(['get'])
+# @permission_classes([AllowAny,])
+# def payment_master_history(request):
+#     try:
+#         paymentmasterhistory=PaymentMaster.history.filter().values()
+#         if paymentmasterhistory:
+#             return Response({'status':200,'message':'Payment Master history','data':paymentmasterhistory},status=200)
+#         else:
+#             return Response({'status': 204, 'message': 'Payment Master history data not persent'},status=204)
+#
+#     except Exception as e:
+#         return Response({'status': 500, 'error': str(e)}, status=500)
 
 
 @api_view(['post'])
@@ -2254,18 +2241,18 @@ def delete_validity_master(request):
     except Exception as e:
         return Response({'status':500,'error':str(e)},status=500)
 
-@api_view(['get'])
-@permission_classes([AllowAny,])
-def validity_master_history(request):
-    try:
-        validitymasterhistory=ValidityMaster.history.filter().values()
-        if validitymasterhistory:
-            return Response({'status':200,'message':'Validity Master history','data':validitymasterhistory},status=200)
-        else:
-            return Response({'status': 204, 'message': 'Validity Master history data not persent'},status=204)
-
-    except Exception as e:
-        return Response({'status': 500, 'error': str(e)}, status=500)
+# @api_view(['get'])
+# @permission_classes([AllowAny,])
+# def validity_master_history(request):
+#     try:
+#         validitymasterhistory=ValidityMaster.history.filter().values()
+#         if validitymasterhistory:
+#             return Response({'status':200,'message':'Validity Master history','data':validitymasterhistory},status=200)
+#         else:
+#             return Response({'status': 204, 'message': 'Validity Master history data not persent'},status=204)
+#
+#     except Exception as e:
+#         return Response({'status': 500, 'error': str(e)}, status=500)
 
 
 @api_view(['post'])
@@ -2356,18 +2343,18 @@ def delete_delivery_master(request):
     except Exception as e:
         return Response({'status':500,'error':str(e)},status=500)
 
-@api_view(['get'])
-@permission_classes([AllowAny,])
-def delivery_master_history(request):
-    try:
-        deliverymasterhistory=DeliveryMaster.history.filter().values()
-        if deliverymasterhistory:
-            return Response({'status':200,'message':'Delivery Master history','data':deliverymasterhistory},status=200)
-        else:
-            return Response({'status': 204, 'message': 'Delivery Master history data not persent'},status=204)
-
-    except Exception as e:
-        return Response({'status': 500, 'error': str(e)}, status=500)
+# @api_view(['get'])
+# @permission_classes([AllowAny,])
+# def delivery_master_history(request):
+#     try:
+#         deliverymasterhistory=DeliveryMaster.history.filter().values()
+#         if deliverymasterhistory:
+#             return Response({'status':200,'message':'Delivery Master history','data':deliverymasterhistory},status=200)
+#         else:
+#             return Response({'status': 204, 'message': 'Delivery Master history data not persent'},status=204)
+#
+#     except Exception as e:
+#         return Response({'status': 500, 'error': str(e)}, status=500)
 
 
 @api_view(['post'])
@@ -2458,18 +2445,18 @@ def delete_country_master(request):
     except Exception as e:
         return Response({'status':500,'error':str(e)},status=500)
 
-@api_view(['get'])
-@permission_classes([AllowAny,])
-def country_master_history(request):
-    try:
-        countrymasterhistory=CountryMaster.history.filter().values()
-        if countrymasterhistory:
-            return Response({'status':200,'message':'Country Master history','data':countrymasterhistory},status=200)
-        else:
-            return Response({'status': 204, 'message': 'Country Master history data not persent'},status=204)
-
-    except Exception as e:
-        return Response({'status': 500, 'error': str(e)}, status=500)
+# @api_view(['get'])
+# @permission_classes([AllowAny,])
+# def country_master_history(request):
+#     try:
+#         countrymasterhistory=CountryMaster.history.filter().values()
+#         if countrymasterhistory:
+#             return Response({'status':200,'message':'Country Master history','data':countrymasterhistory},status=200)
+#         else:
+#             return Response({'status': 204, 'message': 'Country Master history data not persent'},status=204)
+#
+#     except Exception as e:
+#         return Response({'status': 500, 'error': str(e)}, status=500)
 
 
 @api_view(['post'])
@@ -2559,18 +2546,18 @@ def delete_tax_master(request):
     except Exception as e:
         return Response({'status':500,'error':str(e)},status=500)
 
-@api_view(['get'])
-@permission_classes([AllowAny,])
-def tax_master_history(request):
-    try:
-        taxmasterhistory=TaxMaster.history.filter().values()
-        if taxmasterhistory:
-            return Response({'status':200,'message':'Tax Master history','data':taxmasterhistory},status=200)
-        else:
-            return Response({'status': 204, 'message': 'Tax Master history data not persent'},status=204)
-
-    except Exception as e:
-        return Response({'status': 500, 'error': str(e)}, status=500)
+# @api_view(['get'])
+# @permission_classes([AllowAny,])
+# def tax_master_history(request):
+#     try:
+#         taxmasterhistory=TaxMaster.history.filter().values()
+#         if taxmasterhistory:
+#             return Response({'status':200,'message':'Tax Master history','data':taxmasterhistory},status=200)
+#         else:
+#             return Response({'status': 204, 'message': 'Tax Master history data not persent'},status=204)
+#
+#     except Exception as e:
+#         return Response({'status': 500, 'error': str(e)}, status=500)
 
 
 @api_view(['post'])
@@ -2663,18 +2650,18 @@ def delete_currency_master(request):
     except Exception as e:
         return Response({'status':500,'error':str(e)},status=500)
 
-@api_view(['get'])
-@permission_classes([AllowAny,])
-def currency_master_history(request):
-    try:
-        currencymasterhistory=CurrencyMaster.history.filter().values()
-        if currencymasterhistory:
-            return Response({'status':200,'message':'Currency Master history','data':currencymasterhistory},status=200)
-        else:
-            return Response({'status': 204, 'message': 'Currency Master history data not persent'},status=204)
-
-    except Exception as e:
-        return Response({'status': 500, 'error': str(e)}, status=500)
+# @api_view(['get'])
+# @permission_classes([AllowAny,])
+# def currency_master_history(request):
+#     try:
+#         currencymasterhistory=CurrencyMaster.history.filter().values()
+#         if currencymasterhistory:
+#             return Response({'status':200,'message':'Currency Master history','data':currencymasterhistory},status=200)
+#         else:
+#             return Response({'status': 204, 'message': 'Currency Master history data not persent'},status=204)
+#
+#     except Exception as e:
+#         return Response({'status': 500, 'error': str(e)}, status=500)
 
 
 @api_view(['post'])
@@ -2698,18 +2685,18 @@ def currency_master_user_id(request):
         return Response({'status': 500, 'error': str(e)}, status=500)
 
 #--------------------------------------------------------------------------------------------------------------
-@api_view(['get'])
-@permission_classes([AllowAny,])
-def uom_master_history(request):
-    try:
-        uommasterhistory=UOMMaster.history.filter().values()
-        if uommasterhistory:
-            return Response({'status':200,'message':'UOM Master history','data':uommasterhistory},status=200)
-        else:
-            return Response({'status': 204, 'message': 'UOM Master history data not persent'},status=204)
-
-    except Exception as e:
-        return Response({'status': 500, 'error': str(e)}, status=500)
+# @api_view(['get'])
+# @permission_classes([AllowAny,])
+# def uom_master_history(request):
+#     try:
+#         uommasterhistory=UOMMaster.history.filter().values()
+#         if uommasterhistory:
+#             return Response({'status':200,'message':'UOM Master history','data':uommasterhistory},status=200)
+#         else:
+#             return Response({'status': 204, 'message': 'UOM Master history data not persent'},status=204)
+#
+#     except Exception as e:
+#         return Response({'status': 500, 'error': str(e)}, status=500)
 
 
 @api_view(['post'])
@@ -2801,18 +2788,18 @@ def delete_department_master(request):
     except Exception as e:
         return Response({'status':500,'error':str(e)},status=500)
 
-@api_view(['get'])
-@permission_classes([AllowAny,])
-def department_master_history(request):
-    try:
-        departmentmasterhistory=DepartmentMaster.history.filter().values()
-        if departmentmasterhistory:
-            return Response({'status':200,'message':'Department Master history','data':departmentmasterhistory},status=200)
-        else:
-            return Response({'status': 204, 'message': 'Department Master history data not persent'},status=204)
-
-    except Exception as e:
-        return Response({'status': 500, 'error': str(e)}, status=500)
+# @api_view(['get'])
+# @permission_classes([AllowAny,])
+# def department_master_history(request):
+#     try:
+#         departmentmasterhistory=DepartmentMaster.history.filter().values()
+#         if departmentmasterhistory:
+#             return Response({'status':200,'message':'Department Master history','data':departmentmasterhistory},status=200)
+#         else:
+#             return Response({'status': 204, 'message': 'Department Master history data not persent'},status=204)
+#
+#     except Exception as e:
+#         return Response({'status': 500, 'error': str(e)}, status=500)
 
 
 @api_view(['post'])
@@ -2852,3 +2839,55 @@ class RfqCategoryMasterView(viewsets.ModelViewSet):
     serializer_class = RfqCategoryMasterSerializer
     ordering_fields = ['rfq_category_id']
     ordering = ['rfq_category_id']
+
+
+class PriceBasisMasterView(viewsets.ModelViewSet):
+    # price basis master viewsets
+    permission_classes = (AllowAny,)
+    queryset = PriceBasisMaster.objects.all()
+    serializer_class = PriceBasisMasterSerializer
+    ordering_fields = ['price_basis_id']
+    ordering = ['price_basis_id']
+
+
+class InspectionMasterView(viewsets.ModelViewSet):
+    # inspection master viewsets
+    permission_classes = (AllowAny,)
+    queryset = InspectionMaster.objects.all()
+    serializer_class = InspectionMasterSerializer
+    ordering_fields = ['inspection_id']
+    ordering = ['inspection_id']
+
+class LiquidatedDamageMasterView(viewsets.ModelViewSet):
+    # liquidated master viewsets
+    permission_classes = (AllowAny,)
+    queryset = LiquidatedDamageMaster.objects.all()
+    serializer_class = LiquidatedDamageMasterSerializer
+    ordering_fields = ['liquidated_id']
+    ordering = ['liquidated_id']
+
+class TaxesAndDutiesMasterView(viewsets.ModelViewSet):
+    # liquidated master viewsets
+    permission_classes = (AllowAny,)
+    queryset = TaxesAndDutiesMaster.objects.all()
+    serializer_class = TaxesAndDutiesMasterSerializer
+    ordering_fields = ['tax_duties_id']
+    ordering = ['tax_duties_id']
+
+
+class TestAndQapMasterView(viewsets.ModelViewSet):
+    # liquidated master viewsets
+    permission_classes = (AllowAny,)
+    queryset = TestAndQapMaster.objects.all()
+    serializer_class = TestAndQapMasterSerializer
+    ordering_fields = ['test_qap_id']
+    ordering = ['test_qap_id']
+
+
+class PerformanceGuaranteesMasterView(viewsets.ModelViewSet):
+    # performance guarantee  master viewsets
+    permission_classes = (AllowAny,)
+    queryset = PerformanceGuaranteesMaster.objects.all()
+    serializer_class = PerformanceGuaranteesMasterSerializer
+    ordering_fields = ['performance_id']
+    ordering = ['performance_id']

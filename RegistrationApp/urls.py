@@ -28,10 +28,10 @@ urlpatterns = [
     #normal urls other than router
     path('logout/',views.Logout.as_view()), # logout
     path('phone-verification-otp/',views.phone_verification_otp),
-    path('email-verification-otp/',views.email_verification_otp),
+    # path('email-verification-otp/',views.email_verification_otp),
     path('get-token-key-by-userid/',views.get_token_key_by_userid),
     path('get-userid-by-token/',views.get_userid_by_token),
-    path('email-verification-otp-to-change-email/',views.email_verification_otp_to_change_email),
+    # path('email-verification-otp-to-change-email/',views.email_verification_otp_to_change_email),
     path('change-email/',views.change_email),
     path('phone-otp-verfication-to-change-phonenumber/',views.phone_otp_verfication_to_change_phonenumber),
     path('change-phonenumber/',views.change_phonenumber),

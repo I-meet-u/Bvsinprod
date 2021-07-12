@@ -3,7 +3,7 @@ from django.db import models
 # Create your models here.
 from AdminApp.models import AdminRegister, CreateUser
 from RegistrationApp.models import SelfRegistration
-from simple_history.models import HistoricalRecords
+# from simple_history.models import HistoricalRecords
 
 
 # -----------------------------------------INDUSTRY_TO_SERVE MASTER-------------------------------------------------------------
@@ -23,7 +23,7 @@ class IndustryToServeMaster(models.Model):
     created_by_name=models.CharField(null=True,blank=True,max_length=100)
     status = models.CharField(max_length=30, default='Active')
     csv_industry=models.FileField(upload_to='MasterFile',null=True,blank=True)
-    history = HistoricalRecords()
+    # history = HistoricalRecords()
 
     class Meta:
         db_table = "IndustryToServeMaster"
@@ -47,7 +47,7 @@ class NatureOfBusinessMaster(models.Model):
     created_by = models.BigIntegerField(null=True)
     updated_by_name = models.CharField(null=True, blank=True, max_length=100)
     created_by_name = models.CharField(null=True, blank=True, max_length=100)
-    history = HistoricalRecords()
+    # history = HistoricalRecords()
 
     class Meta:
         db_table = "NatureOfBusinessMaster"
@@ -70,7 +70,7 @@ class SupplyCapabilitiesMaster(models.Model):
     created_by = models.BigIntegerField(null=True,blank=True)
     updated_by_name = models.CharField(null=True, blank=True, max_length=100)
     created_by_name = models.CharField(null=True, blank=True, max_length=100)
-    history = HistoricalRecords()
+    # history = HistoricalRecords()
 
     class Meta:
         db_table = "SupplyCapabilitiesMaster"
@@ -94,7 +94,7 @@ class MaincoreMaster(models.Model):
     created_by = models.BigIntegerField(null=True,blank=True)
     updated_by_name = models.CharField(null=True, blank=True, max_length=100)
     created_by_name = models.CharField(null=True, blank=True, max_length=100)
-    history = HistoricalRecords()
+    # history = HistoricalRecords()
 
     class Meta:
         db_table = "MaincoreMaster"
@@ -118,7 +118,7 @@ class CategoryMaster(models.Model):
     created_by = models.BigIntegerField(null=True,blank=True)
     updated_by_name = models.CharField(null=True, blank=True, max_length=100)
     created_by_name = models.CharField(null=True, blank=True, max_length=100)
-    history = HistoricalRecords()
+    # history = HistoricalRecords()
 
     class Meta:
         db_table = "CategoryMaster"
@@ -143,7 +143,7 @@ class SubCategoryMaster(models.Model):
     created_by = models.BigIntegerField(null=True,blank=True)
     updated_by_name = models.CharField(null=True, blank=True, max_length=100)
     created_by_name = models.CharField(null=True, blank=True, max_length=100)
-    history = HistoricalRecords()
+    # history = HistoricalRecords()
 
     class Meta:
         db_table = "SubCategoryMaster"
@@ -164,7 +164,7 @@ class PincodeMaster(models.Model):
     created_by = models.BigIntegerField(null=True,blank=True)
     updated_by_name = models.CharField(null=True, blank=True, max_length=100)
     created_by_name = models.CharField(null=True, blank=True, max_length=100)
-    history = HistoricalRecords()
+    # history = HistoricalRecords()
 
     class Meta:
         db_table = "PincodeMaster"
@@ -185,7 +185,7 @@ class UOMMaster(models.Model):
     created_by = models.BigIntegerField(null=True,blank=True)
     updated_by_name = models.CharField(null=True, blank=True, max_length=100)
     created_by_name = models.CharField(null=True, blank=True, max_length=100)
-    history = HistoricalRecords()
+    # history = HistoricalRecords()
 
     class Meta:
         db_table = "UOMMaster"
@@ -206,7 +206,7 @@ class DepartmentMaster(models.Model):
     created_by = models.BigIntegerField(null=True,blank=True)
     updated_by_name = models.CharField(null=True, blank=True, max_length=100)
     created_by_name = models.CharField(null=True, blank=True, max_length=100)
-    history = HistoricalRecords()
+    # history = HistoricalRecords()
 
     class Meta:
         db_table = "DepartmentMaster"
@@ -228,7 +228,7 @@ class DesignationMaster(models.Model):
     created_by = models.BigIntegerField(null=True,blank=True)
     updated_by_name = models.CharField(null=True, blank=True, max_length=100)
     created_by_name = models.CharField(null=True, blank=True, max_length=100)
-    history = HistoricalRecords()
+    # history = HistoricalRecords()
 
     class Meta:
         db_table = "DesignationMaster"
@@ -253,7 +253,7 @@ class TaxMaster(models.Model):
     created_by = models.BigIntegerField(null=True,blank=True)
     updated_by_name = models.CharField(null=True, blank=True, max_length=100)
     created_by_name = models.CharField(null=True, blank=True, max_length=100)
-    history = HistoricalRecords()
+    # history = HistoricalRecords()
 
     class Meta:
         db_table = "TaxMaster"
@@ -274,7 +274,7 @@ class HSNMaster(models.Model):
     created_by = models.BigIntegerField(null=True,blank=True)
     updated_by_name = models.CharField(null=True, blank=True, max_length=100)
     created_by_name = models.CharField(null=True, blank=True, max_length=100)
-    history = HistoricalRecords()
+    # history = HistoricalRecords()
 
     class Meta:
         db_table = "HSNMaster"
@@ -295,7 +295,7 @@ class SACMaster(models.Model):
     created_by = models.BigIntegerField(null=True,blank=True)
     updated_by_name = models.CharField(null=True, blank=True, max_length=100)
     created_by_name = models.CharField(null=True, blank=True, max_length=100)
-    history = HistoricalRecords()
+    # history = HistoricalRecords()
 
     class Meta:
         db_table = "SACMaster"
@@ -317,7 +317,7 @@ class CurrencyMaster(models.Model):
     created_by = models.BigIntegerField(null=True,blank=True)
     updated_by_name = models.CharField(null=True, blank=True, max_length=100)
     created_by_name = models.CharField(null=True, blank=True, max_length=100)
-    history = HistoricalRecords()
+    # history = HistoricalRecords()
 
     class Meta:
         db_table = "CurrencyMaster"
@@ -336,7 +336,7 @@ class PFChargesMaster(models.Model):
     created_by = models.BigIntegerField(null=True,blank=True)
     updated_by_name = models.CharField(null=True, blank=True, max_length=100)
     created_by_name = models.CharField(null=True, blank=True, max_length=100)
-    history = HistoricalRecords()
+    # history = HistoricalRecords()
 
     class Meta:
         db_table = "PFChargesMaster"
@@ -355,7 +355,7 @@ class FrieghtChargesMaster(models.Model):
     created_by = models.BigIntegerField(null=True,blank=True)
     updated_by_name = models.CharField(null=True, blank=True, max_length=100)
     created_by_name = models.CharField(null=True, blank=True, max_length=100)
-    history = HistoricalRecords()
+    # history = HistoricalRecords()
 
     class Meta:
         db_table = "FrieghtChargesMaster"
@@ -374,7 +374,7 @@ class WarrantyMaster(models.Model):
     created_by = models.BigIntegerField(null=True,blank=True)
     updated_by_name = models.CharField(null=True, blank=True, max_length=100)
     created_by_name = models.CharField(null=True, blank=True, max_length=100)
-    history = HistoricalRecords()
+    # history = HistoricalRecords()
 
     class Meta:
         db_table = "WarrantyMaster"
@@ -393,7 +393,7 @@ class GuaranteeMaster(models.Model):
     created_by = models.BigIntegerField(null=True,blank=True)
     updated_by_name = models.CharField(null=True, blank=True, max_length=100)
     created_by_name = models.CharField(null=True, blank=True, max_length=100)
-    history = HistoricalRecords()
+    # history = HistoricalRecords()
 
     class Meta:
         db_table = "GuaranteeMaster"
@@ -412,8 +412,7 @@ class DeliveryMaster(models.Model):
     created_by = models.BigIntegerField(null=True,blank=True)
     updated_by_name = models.CharField(null=True, blank=True, max_length=100)
     created_by_name = models.CharField(null=True, blank=True, max_length=100)
-    history = HistoricalRecords()
-
+    # history = HistoricalRecords()
     class Meta:
         db_table = "DeliveryMaster"
 
@@ -433,7 +432,7 @@ class CountryMaster(models.Model):
     created_by = models.BigIntegerField(null=True,blank=True)
     updated_by_name = models.CharField(null=True, blank=True, max_length=100)
     created_by_name = models.CharField(null=True, blank=True, max_length=100)
-    history = HistoricalRecords()
+    # history = HistoricalRecords()
 
     class Meta:
         db_table = "CountryMaster"
@@ -453,7 +452,7 @@ class ItemGroupMaster(models.Model):
     admins = models.ForeignKey(AdminRegister, on_delete=models.CASCADE, null=True,blank=True)
     updated_by = models.ForeignKey(CreateUser, on_delete=models.CASCADE, null=True,blank=True)
     created_by = models.BigIntegerField(null=True,blank=True)
-    history = HistoricalRecords()
+    # history = HistoricalRecords()
 
     class Meta:
         db_table = "ItemGroupMaster"
@@ -475,7 +474,7 @@ class TransitInsuranceMaster(models.Model):
     admins = models.ForeignKey(AdminRegister, on_delete=models.CASCADE, null=True,blank=True)
     updated_by = models.ForeignKey(CreateUser, on_delete=models.CASCADE, null=True,blank=True)
     created_by = models.BigIntegerField(null=True,blank=True)
-    history = HistoricalRecords()
+    # history = HistoricalRecords()
 
     class Meta:
         db_table = "TransitInsuranceMaster"
@@ -495,7 +494,7 @@ class ValidityMaster(models.Model):
     admins = models.ForeignKey(AdminRegister, on_delete=models.CASCADE, null=True,blank=True)
     updated_by = models.ForeignKey(CreateUser, on_delete=models.CASCADE, null=True,blank=True)
     created_by = models.BigIntegerField(null=True,blank=True)
-    history = HistoricalRecords()
+    # history = HistoricalRecords()
 
     class Meta:
         db_table = "ValidityMaster"
@@ -516,7 +515,7 @@ class PaymentMaster(models.Model):
     admins = models.ForeignKey(AdminRegister, on_delete=models.CASCADE, null=True,blank=True)
     updated_by = models.ForeignKey(CreateUser, on_delete=models.CASCADE, null=True,blank=True)
     created_by = models.BigIntegerField(null=True,blank=True)
-    history = HistoricalRecords()
+    # history = HistoricalRecords()
 
     class Meta:
         db_table = "PaymentMaster"
@@ -540,3 +539,125 @@ class RfqCategoryMaster(models.Model):
 
     class Meta:
         db_table = "RfqCategoryMaster"
+
+
+class PriceBasisMaster(models.Model):
+    # price basis master model and fields
+    price_basis_id = models.BigAutoField(primary_key=True)
+    price_basis_code = models.CharField(max_length=40, null=True, blank=True)
+    price_basis_name = models.CharField(max_length=100, unique=True, blank=True)
+    is_verified = models.BooleanField(default=False)
+    created_on = models.DateTimeField(auto_now_add=True)
+    updated_on = models.DateTimeField(auto_now=True)
+    admin_order = models.CharField(max_length=50, null=True)
+    status = models.CharField(max_length=30, default='Active', null=True)
+    admins = models.ForeignKey(AdminRegister, on_delete=models.CASCADE, null=True)
+    updated_by = models.ForeignKey(CreateUser, on_delete=models.CASCADE, null=True)
+    created_by = models.BigIntegerField(null=True,blank=True)
+    updated_by_name = models.CharField(null=True, blank=True, max_length=100)
+    created_by_name = models.CharField(null=True, blank=True, max_length=100)
+
+    class Meta:
+        db_table = "PriceBasisMaster"
+
+
+class InspectionMaster(models.Model):
+    # inspection master model and fields
+    inspection_id = models.BigAutoField(primary_key=True)
+    inspection_code = models.CharField(max_length=40, null=True, blank=True)
+    inspection_name = models.CharField(max_length=100, unique=True, blank=True)
+    is_verified = models.BooleanField(default=False)
+    created_on = models.DateTimeField(auto_now_add=True)
+    updated_on = models.DateTimeField(auto_now=True)
+    admin_order = models.CharField(max_length=50, null=True)
+    status = models.CharField(max_length=30, default='Active', null=True)
+    admins = models.ForeignKey(AdminRegister, on_delete=models.CASCADE, null=True)
+    updated_by = models.ForeignKey(CreateUser, on_delete=models.CASCADE, null=True)
+    created_by = models.BigIntegerField(null=True,blank=True)
+    updated_by_name = models.CharField(null=True, blank=True, max_length=100)
+    created_by_name = models.CharField(null=True, blank=True, max_length=100)
+
+    class Meta:
+        db_table = "InspectionMaster"
+
+
+class LiquidatedDamageMaster(models.Model):
+    #  liquidated master model and fields
+    liquidated_id = models.BigAutoField(primary_key=True)
+    liquidated_code = models.CharField(max_length=40, null=True, blank=True)
+    liquidated_name = models.CharField(max_length=100, unique=True, blank=True)
+    is_verified = models.BooleanField(default=False)
+    created_on = models.DateTimeField(auto_now_add=True)
+    updated_on = models.DateTimeField(auto_now=True)
+    admin_order = models.CharField(max_length=50, null=True)
+    status = models.CharField(max_length=30, default='Active', null=True)
+    admins = models.ForeignKey(AdminRegister, on_delete=models.CASCADE, null=True)
+    updated_by = models.ForeignKey(CreateUser, on_delete=models.CASCADE, null=True)
+    created_by = models.BigIntegerField(null=True,blank=True)
+    updated_by_name = models.CharField(null=True, blank=True, max_length=100)
+    created_by_name = models.CharField(null=True, blank=True, max_length=100)
+
+    class Meta:
+        db_table = "LiquidatedDamageMaster"
+
+
+
+class TaxesAndDutiesMaster(models.Model):
+    #  taxes and duties master model and fields
+    tax_duties_id = models.BigAutoField(primary_key=True)
+    tax_duties_code = models.CharField(max_length=40, null=True, blank=True)
+    tax_duties_name = models.CharField(max_length=100, unique=True, blank=True)
+    is_verified = models.BooleanField(default=False)
+    created_on = models.DateTimeField(auto_now_add=True)
+    updated_on = models.DateTimeField(auto_now=True)
+    admin_order = models.CharField(max_length=50, null=True)
+    status = models.CharField(max_length=30, default='Active', null=True)
+    admins = models.ForeignKey(AdminRegister, on_delete=models.CASCADE, null=True)
+    updated_by = models.ForeignKey(CreateUser, on_delete=models.CASCADE, null=True)
+    created_by = models.BigIntegerField(null=True,blank=True)
+    updated_by_name = models.CharField(null=True, blank=True, max_length=100)
+    created_by_name = models.CharField(null=True, blank=True, max_length=100)
+
+    class Meta:
+        db_table = "TaxesAndDutiesMaster"
+
+
+
+class TestAndQapMaster(models.Model):
+    #  test and qap master model and fields
+    test_qap_id = models.BigAutoField(primary_key=True)
+    test_qap_code = models.CharField(max_length=40, null=True, blank=True)
+    test_qap_name = models.CharField(max_length=100, unique=True, blank=True)
+    is_verified = models.BooleanField(default=False)
+    created_on = models.DateTimeField(auto_now_add=True)
+    updated_on = models.DateTimeField(auto_now=True)
+    admin_order = models.CharField(max_length=50, null=True)
+    status = models.CharField(max_length=30, default='Active', null=True)
+    admins = models.ForeignKey(AdminRegister, on_delete=models.CASCADE, null=True)
+    updated_by = models.ForeignKey(CreateUser, on_delete=models.CASCADE, null=True)
+    created_by = models.BigIntegerField(null=True,blank=True)
+    updated_by_name = models.CharField(null=True, blank=True, max_length=100)
+    created_by_name = models.CharField(null=True, blank=True, max_length=100)
+
+    class Meta:
+        db_table = "TestAndQapMaster"
+
+
+class PerformanceGuaranteesMaster(models.Model):
+    #  peroformance guarantee master model and fields
+    performance_id = models.BigAutoField(primary_key=True)
+    performance_code = models.CharField(max_length=40, null=True, blank=True)
+    performance_name = models.CharField(max_length=100, unique=True, blank=True)
+    is_verified = models.BooleanField(default=False)
+    created_on = models.DateTimeField(auto_now_add=True)
+    updated_on = models.DateTimeField(auto_now=True)
+    admin_order = models.CharField(max_length=50, null=True)
+    status = models.CharField(max_length=30, default='Active', null=True)
+    admins = models.ForeignKey(AdminRegister, on_delete=models.CASCADE, null=True)
+    updated_by = models.ForeignKey(CreateUser, on_delete=models.CASCADE, null=True)
+    created_by = models.BigIntegerField(null=True,blank=True)
+    updated_by_name = models.CharField(null=True, blank=True, max_length=100)
+    created_by_name = models.CharField(null=True, blank=True, max_length=100)
+
+    class Meta:
+        db_table = "PerformanceGuaranteesMaster"

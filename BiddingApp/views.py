@@ -199,3 +199,28 @@ class RfqTermsDescriptionView(viewsets.ModelViewSet):
     serializer_class = RfqTermsDescriptionSerializer
     ordering_fields = ['id']
     ordering = ['id']
+
+    def create(self, request, *args, **kwargs):
+        rfq_number = request.data['rfq_number']
+        dictsqueries = request.data['dictsqueries']
+        print(type(dictsqueries))
+        product_biddings = request.data.get('product_biddings', None)
+        updated_by = request.data.get('updated_by', None)
+        try:
+            for i in range(0,len(dictsqueries)):
+                for keys in dictsqueries[i]:
+                    RfqTermsDescription.objects.create(rfq_number=rfq_number,
+                                                       terms=keys,
+                                                       description=dictsqueries[i][keys],
+                                                       product_biddings=BuyerProductBidding.objects.get(
+                                                           product_bidding_id=product_biddings),
+                                                       updated_by=SelfRegistration.objects.get(id=updated_by),
+                                                       created_by=updated_by)
+
+
+            return Response({'status': 201, 'message': 'Terms and Descriptions are created'}, status=201)
+        except Exception as e:
+            return Response({'status': 500, 'message': str(e)}, status=500)
+
+
+

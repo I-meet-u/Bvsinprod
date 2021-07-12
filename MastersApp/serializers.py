@@ -1,10 +1,6 @@
 from django.http import request
 
-from .models import MaincoreMaster, CategoryMaster, SubCategoryMaster, \
-    IndustryToServeMaster, NatureOfBusinessMaster, SupplyCapabilitiesMaster, PincodeMaster, UOMMaster, DepartmentMaster, \
-    DesignationMaster, TaxMaster, HSNMaster, SACMaster, CurrencyMaster, PFChargesMaster, FrieghtChargesMaster, \
-    DeliveryMaster, CountryMaster, WarrantyMaster, GuaranteeMaster, ItemGroupMaster, TransitInsuranceMaster, \
-    PaymentMaster, ValidityMaster, RfqCategoryMaster
+from .models import *
 from rest_framework import serializers
 
 class IndustryToServeMasterSerializer(serializers.ModelSerializer):
@@ -425,4 +421,121 @@ class RfqCategoryMasterSerializer(serializers.ModelSerializer):
             print(rfqcategoryobj.rfq_category_code)
             rfq_category_code = int(rfqcategoryobj.rfq_category_code) + 1
         values = RfqCategoryMaster.objects.create(rfq_category_code=rfq_category_code, **validate_data)
+        return values
+
+class PriceBasisMasterSerializer(serializers.ModelSerializer):
+    # price basis master serializer
+    class Meta:
+        model=PriceBasisMaster
+        fields='__all__'
+
+    def create(self, validate_data):
+        # to add any extra details into the object before saving
+        print(validate_data)
+        pricebasisobj = PriceBasisMaster.objects.count()
+        if pricebasisobj == 0:
+            price_basis_code = '3301'
+        else:
+            pricebasisobj = PriceBasisMaster.objects.last()
+            print(pricebasisobj.price_basis_code)
+            price_basis_code = int(pricebasisobj.price_basis_code) + 1
+        values = PriceBasisMaster.objects.create(price_basis_code=price_basis_code, **validate_data)
+        return values
+
+
+class InspectionMasterSerializer(serializers.ModelSerializer):
+    # inspection  master serializer
+    class Meta:
+        model=InspectionMaster
+        fields='__all__'
+
+    def create(self, validate_data):
+        # to add any extra details into the object before saving
+        print(validate_data)
+        inspectionobj = InspectionMaster.objects.count()
+        if inspectionobj == 0:
+            inspection_code = '3401'
+        else:
+            inspectionobj = InspectionMaster.objects.last()
+            print(inspectionobj.inspection_code)
+            inspection_code = int(inspectionobj.inspection_code) + 1
+        values = InspectionMaster.objects.create(inspection_code=inspection_code, **validate_data)
+        return values
+
+
+class LiquidatedDamageMasterSerializer(serializers.ModelSerializer):
+    # liquidated  master serializer
+    class Meta:
+        model=LiquidatedDamageMaster
+        fields='__all__'
+
+    def create(self, validate_data):
+        # to add any extra details into the object before saving
+        print(validate_data)
+        liquidatedobj = LiquidatedDamageMaster.objects.count()
+        if liquidatedobj == 0:
+            liquidated_code = '3501'
+        else:
+            liquidatedobj = LiquidatedDamageMaster.objects.last()
+            print(liquidatedobj.liquidated_code)
+            liquidated_code = int(liquidatedobj.liquidated_code) + 1
+        values = LiquidatedDamageMaster.objects.create(liquidated_code=liquidated_code, **validate_data)
+        return values
+
+class TaxesAndDutiesMasterSerializer(serializers.ModelSerializer):
+    # taxes and duties  master serializer
+    class Meta:
+        model=TaxesAndDutiesMaster
+        fields='__all__'
+
+    def create(self, validate_data):
+        # to add any extra details into the object before saving
+        print(validate_data)
+        taxdutiesobj = TaxesAndDutiesMaster.objects.count()
+        if taxdutiesobj == 0:
+            tax_duties_code = '3601'
+        else:
+            taxdutiesobj = TaxesAndDutiesMaster.objects.last()
+            print(taxdutiesobj.tax_duties_code)
+            tax_duties_code = int(taxdutiesobj.tax_duties_code) + 1
+        values = TaxesAndDutiesMaster.objects.create(tax_duties_code=tax_duties_code, **validate_data)
+        return values
+
+
+class TestAndQapMasterSerializer(serializers.ModelSerializer):
+    # test and qap  master serializer
+    class Meta:
+        model=TestAndQapMaster
+        fields='__all__'
+
+    def create(self, validate_data):
+        # to add any extra details into the object before saving
+        print(validate_data)
+        testqapobj = TestAndQapMaster.objects.count()
+        if testqapobj == 0:
+            test_qap_code = '3701'
+        else:
+            testqapobj = TestAndQapMaster.objects.last()
+            print(testqapobj.test_qap_code)
+            test_qap_code = int(testqapobj.test_qap_code) + 1
+        values = TestAndQapMaster.objects.create(test_qap_code=test_qap_code, **validate_data)
+        return values
+
+class PerformanceGuaranteesMasterSerializer(serializers.ModelSerializer):
+    # performance and guarantee  master serializer
+    class Meta:
+        model=PerformanceGuaranteesMaster
+        fields='__all__'
+
+    def create(self, validate_data):
+        # to add any extra details into the object before saving
+        print(validate_data)
+        performanceobj = PerformanceGuaranteesMaster.objects.count()
+        if performanceobj == 0:
+            performance_code = '3801'
+        else:
+            performanceobj = PerformanceGuaranteesMaster.objects.last()
+            print(performanceobj.performance_code)
+            performance_code = int(performanceobj.performance_code) + 1
+        values = PerformanceGuaranteesMaster.objects.create(performance_code=performance_code, **validate_data)
         return values

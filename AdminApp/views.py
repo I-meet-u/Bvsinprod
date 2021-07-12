@@ -19,7 +19,7 @@ from RegistrationApp.models import SelfRegistration, BasicCompanyDetails, Indust
     BankDetails, LegalDocuments
 from .models import *
 from AdminApp.serializers import AdminInviteSerializer, CreateUserSerializer, AdminRegisterSerializer, \
-    PermissionsSerializer, ImageModelSerializer
+    PermissionsSerializer
 
 
 class AdminRegisterView(viewsets.ModelViewSet):
@@ -355,44 +355,3 @@ def admin_approve_pending_list(request):
 
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)
-
-
-class ImageModelView(viewsets.ModelViewSet):
-    permission_classes=((AllowAny,))
-    queryset = ImageModel.objects.all()
-    serializer_class=ImageModelSerializer
-
-
-    def create(self, request, *args, **kwargs):
-        # test_string=request.data('test_string')
-        # image_1=request.data.get('image_1',None)
-        userid=request.data.get('userid',None)
-        try:
-            files=request.FILES['image_1'].read()
-            # print(files)
-            print(type(files))
-            # with open(image_1)as f:
-            #     res =b64encode(f).decode('utf-8')
-            # # with open()
-            ImageModel.objects.create(image_1=files,
-                                      userid=SelfRegistration.objects.get(id=userid))
-            # for x in files:  # iterating on a bytes object produces integers
-            #     print(x, type(x))
-            return Response({'status': 200, 'message': 'Pending List'}, status=200)
-        except Exception as e:
-            return Response({'status': 500, 'error': str(e)}, status=500)
-
-# @api_view(['post'])
-# @permission_classes((AllowAny,))
-# def image_add(request):
-#     data=request.data
-#     test_string = data['test']
-#     try:
-#
-#         res = bytes(test_string,'utf-8')
-#         ImageModel.objects.create(image_1=res,
-#                                   userid=SelfRegistration.objects.get(id=data['userid']))
-#         return Response({'status': 204, 'message': 'data not present'}, status=204)
-#     except Exception as e:
-#         return Response({'status': 500, 'error': str(e)}, status=500)
-

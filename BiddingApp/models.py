@@ -1,6 +1,8 @@
 from django.db import models
 
 # Create your models here.
+from simple_history.models import HistoricalRecords
+
 from RegistrationApp.models import SelfRegistration
 
 
@@ -25,6 +27,7 @@ class BuyerProductBidding(models.Model):
     updated_on = models.DateTimeField(auto_now=True)
     created_by = models.BigIntegerField()
     updated_by = models.ForeignKey(SelfRegistration, on_delete=models.CASCADE)
+    history=HistoricalRecords()
 
     class Meta:
         db_table='BuyerProductBidding'
@@ -44,6 +47,7 @@ class BiddingBuyerProductDetails(models.Model):
     created_by = models.BigIntegerField()
     buyer_rfq_number=models.CharField(max_length=100)
     updated_by = models.ForeignKey(SelfRegistration, on_delete=models.CASCADE)
+    history = HistoricalRecords()
 
     class Meta:
         db_table='BiddingBuyerProductDetails'
@@ -70,6 +74,8 @@ class RfqTermsDescription(models.Model):
     updated_on = models.DateTimeField(auto_now=True)
     created_by = models.BigIntegerField()
     updated_by = models.ForeignKey(SelfRegistration, on_delete=models.CASCADE)
+    product_biddings=models.ForeignKey(BuyerProductBidding, on_delete=models.CASCADE,null=True,blank=True)
+    history = HistoricalRecords()
 
     class Meta:
         db_table = "RfqTermsDescription"

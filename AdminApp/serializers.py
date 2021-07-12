@@ -46,9 +46,3 @@ class PermissionsSerializer(serializers.ModelSerializer):
     class Meta:
         model=Permissions
         fields='__all__'
-
-
-class ImageModelSerializer(serializers.ModelSerializer):
-    class Meta:
-        model=ImageModel
-        fields='__all__'

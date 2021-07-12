@@ -229,23 +229,33 @@ def company_details_by_subcategory_id(request):
     data=request.data
     sub_category_id=data['sub_category_id']
     companycodearray=[]
+    subcatnamearrayofarray=[]
+    basicdatavalues=[]
     try:
-        subobj=SubCategoryMaster.objects.filter(sub_category_id__in=sub_category_id).values()
-        print(subobj[0].get('sub_category_name'))
-        subcname=subobj[0].get('sub_category_name')
-        supplyobj=IndustrialHierarchy.objects.filter(subcategory__icontains=subcname).values()
-        for i in range(0,len(supplyobj)):
-            basicoinfoobj = BasicCompanyDetails.objects.filter(company_code=supplyobj[i].get('company_code_id')).values()
-            bill_obj = BillingAddress.objects.filter(company_code_id=supplyobj[i].get('company_code_id')).values()
-            companycodearray.append({'compcode': supplyobj[i].get('company_code_id'),
-                                  'cname': basicoinfoobj[0].get('company_name'),
-                                  'GST': basicoinfoobj[0].get('gst_no'),
-                                  'city': bill_obj[0].get('bill_city'),
-                                  'state': bill_obj[0].get('bill_state'),
-                                  'country': bill_obj[0].get('bill_country'),
-                                  'maincore': supplyobj[i].get('maincore')
-                                  })
-        return Response({'status':200,'message':'ok','data':companycodearray},status=200)
+        subobj=SubCategoryMaster.objects.filter(sub_category_id=sub_category_id).values()
+        for i in range(0, len(subobj)):
+            subcatnamearrayofarray.append(subobj[i].get('sub_category_name'))
+        print(subcatnamearrayofarray)
+        companycodearray.append(subcatnamearrayofarray)
+        print(companycodearray)
+        supplyobj = IndustrialHierarchy.objects.filter(subcategory__overlap=subcatnamearrayofarray).values()
+            # subcatnamearrayofarray.append({'sub_category_name': subobj[i].get('sub_category_name')})
+
+        for i  in range(0,len(supplyobj)):
+            basicobj=BasicCompanyDetails.objects.get(company_code=supplyobj[i].get('company_code_id'))
+            basicdatavalues.append({'company_code':basicobj.company_code,
+                                    'company_name':basicobj.company_name,
+                                    'company_type':basicobj.company_type,
+                                    'listing_date':basicobj.listing_date,
+                                    'pan_number':basicobj.pan_number,
+                                    'tax_payer_type':basicobj.tax_payer_type,
+                                    'msme_registered':basicobj.msme_registered,
+                                    'company_established':basicobj.company_established,
+                                    'updated_by':basicobj.updated_by_id
+
+                                    })
+
+        return Response({'status':200,'message':'ok','data':basicdatavalues},status=200)
     except Exception as e:
         return Response({'status':500,'error':str(e)},status=500)
 

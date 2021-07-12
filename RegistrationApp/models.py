@@ -24,7 +24,6 @@ class SelfRegistration(AbstractUser):
     phone_otp = models.CharField(max_length=20, blank=True)
     profile_cover_photo = models.FileField(upload_to='static/coverphoto',null=True)
     # registration_status = models.CharField(max_length=80, default='Not Registered')
-    history = HistoricalRecords()
 
     class Meta:
         db_table = 'SelfRegistration'
@@ -42,7 +41,6 @@ class SelfRegistration_Sample(models.Model):
     email_otp = models.CharField(max_length=20, blank=True)
     phone_otp = models.CharField(max_length=20, blank=True)
     profile_cover_photo = models.FileField(upload_to='static/coverphoto',null=True)
-    history = HistoricalRecords()
 
     class Meta:
         db_table = 'SelfRegistration_Sample'
@@ -65,7 +63,6 @@ class BasicCompanyDetails(models.Model):
     updated_on = models.DateTimeField(auto_now=True)
     created_by = models.BigIntegerField()
     updated_by = models.OneToOneField(SelfRegistration, on_delete=models.CASCADE)
-    history = HistoricalRecords()
 
     class Meta:
         db_table = "BasicCompanyDetails"
@@ -85,7 +82,6 @@ class BillingAddress(models.Model):
     created_by = models.BigIntegerField()
     updated_by = models.ForeignKey(SelfRegistration, on_delete=models.CASCADE)
     company_code = models.ForeignKey(BasicCompanyDetails,on_delete=models.CASCADE)
-    history = HistoricalRecords()
 
     class Meta:
         db_table = "BillingAddress"
@@ -105,7 +101,6 @@ class ShippingAddress(models.Model):
     created_by = models.BigIntegerField()
     updated_by = models.ForeignKey(SelfRegistration, on_delete=models.CASCADE)
     company_code = models.ForeignKey(BasicCompanyDetails,on_delete=models.CASCADE)
-    history = HistoricalRecords()
 
     class Meta:
         db_table = "ShippingAddress"
@@ -122,7 +117,6 @@ class IndustrialInfo(models.Model):
     created_by = models.BigIntegerField()
     updated_by = models.OneToOneField(SelfRegistration, on_delete=models.CASCADE)
     company_code = models.OneToOneField(BasicCompanyDetails, on_delete=models.CASCADE)
-    history = HistoricalRecords()
 
     class Meta:
         db_table = "IndustrialInfo"
@@ -138,7 +132,6 @@ class IndustrialHierarchy(models.Model):
     created_by = models.BigIntegerField()
     updated_by = models.OneToOneField(SelfRegistration, on_delete=models.CASCADE)
     company_code = models.OneToOneField(BasicCompanyDetails, on_delete=models.CASCADE)
-    history = HistoricalRecords()
 
     class Meta:
         db_table = "IndustrialHierarchy"
@@ -164,7 +157,6 @@ class BankDetails(models.Model):
     created_by = models.BigIntegerField()
     updated_by = models.ForeignKey(SelfRegistration, on_delete=models.CASCADE)
     company_code = models.ForeignKey(BasicCompanyDetails, on_delete=models.CASCADE)
-    history = HistoricalRecords()
 
     class Meta:
         db_table = "BankDetails"
@@ -177,7 +169,6 @@ class LegalDocuments(models.Model):
     updated_on = models.DateTimeField(auto_now=True)
     created_by = models.BigIntegerField()
     updated_by = models.ForeignKey(SelfRegistration, on_delete=models.CASCADE)
-    history = HistoricalRecords()
 
 
     class Meta:
@@ -198,7 +189,6 @@ class BasicCompanyDetails_Others(models.Model):
     updated_on = models.DateTimeField(auto_now=True)
     created_by = models.BigIntegerField()
     updated_by = models.OneToOneField(SelfRegistration, on_delete=models.CASCADE)
-    history = HistoricalRecords()
 
     class Meta:
         db_table = "BasicCompanyDetails_Others"
@@ -218,7 +208,6 @@ class BillingAddress_Others(models.Model):
     created_by_others = models.BigIntegerField()
     updated_by_others = models.ForeignKey(SelfRegistration, on_delete=models.CASCADE)
     company_code_others = models.ForeignKey(BasicCompanyDetails_Others,on_delete=models.CASCADE)
-    history = HistoricalRecords()
 
     class Meta:
         db_table = "BillingAddress_Others"
@@ -238,7 +227,6 @@ class ShippingAddress_Others(models.Model):
     created_by_others = models.BigIntegerField()
     updated_by_others = models.ForeignKey(SelfRegistration, on_delete=models.CASCADE)
     company_code_others = models.ForeignKey(BasicCompanyDetails_Others,on_delete=models.CASCADE)
-    history = HistoricalRecords()
 
     class Meta:
         db_table = "ShippingAddress_Others"
@@ -289,7 +277,6 @@ class Employee_CompanyDetails(models.Model):
     emp_updated_on = models.DateTimeField(auto_now=True)
     emp_created_by = models.BigIntegerField()
     emp_updated_by = models.ForeignKey(EmployeeRegistration, on_delete=models.CASCADE)
-    history = HistoricalRecords()
 
     class Meta:
         db_table = "Employee_CompanyDetails"
@@ -304,7 +291,6 @@ class Employee_IndustryInfo(models.Model):
     emp_created_by = models.BigIntegerField()
     emp_updated_by = models.ForeignKey(EmployeeRegistration, on_delete=models.CASCADE)
     emp_company = models.ForeignKey(Employee_CompanyDetails, on_delete=models.CASCADE)
-    history = HistoricalRecords()
 
     class Meta:
         db_table = "Employee_IndustryInfo"

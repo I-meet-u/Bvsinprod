@@ -1,23 +1,15 @@
 from __future__ import print_function
 import time
 import urllib
-
-import sib_api_v3_sdk
-from sib_api_v3_sdk.rest import ApiException
 from pprint import pprint
 import itertools
 import json
 import math
 import random
 
-
-
-
 from django.contrib.auth.hashers import make_password, check_password
-import mailchimp_transactional as MailchimpTransactional
-from mailchimp_transactional.api_client import ApiClientError
+
 import requests
-# from mailchimp3 import MailChimp
 from django.core.exceptions import ObjectDoesNotExist
 from django.shortcuts import render
 
@@ -40,11 +32,8 @@ from .serializers import SelfRegistrationSerializer, SelfRegistrationSerializerS
     EmployeeRegistrationSerializer, Employee_CompanyDetailsSerializers, Employee_IndustryInfoSerializer
 from rest_framework.permissions import AllowAny
 from rest_framework import status
-
-# from mailchimp_marketing import Client
 from rest_framework.response import Response
 from rest_framework.generics import GenericAPIView
-# from Vendorsinprojectversion2.settings import (MAILCHIMP_API_KEY,MAILCHIMP_DATA_CENTER,MAILCHIMP_EMAIL_LIST_ID)
 
 class SelfRegisterView(viewsets.ModelViewSet):
     # Register user information
@@ -138,41 +127,41 @@ def phone_verification_otp(request):
 
 
 
-@api_view(['post'])
-@permission_classes((AllowAny,))
-def email_verification_otp(request):
-    # email id verification by otp sending to mail
-    data = request.data
-    email = data['email']
-    digits = '0123456789'
-    OTP = ""
-    try:
-        user = SelfRegistration.objects.get(username=email)
-        print(user)
-        if user:
-            for i in range(6):
-                OTP += digits[math.floor(random.random() * 10)]
-            mailchimp = MailchimpTransactional.Client('14kMF-44pCPZu8XbNkAzFA')
-            message = {
-                "from_email": "admin@vendorsin.com",
-                "subject": "Mail Verification OTP",
-                "text":"You mail verificaton OTP is"+" "+OTP+" "+"Please Don't Share Your OTP \n Thank You",
-                "to": [
-                    {
-                        "email": user.username,
-                        "type": "to"
-                    }
-                ]
-            }
-            response = mailchimp.messages.send({"message": message})
-            print(response)
-            return Response({'status': 200, 'message': 'Email sent successfully'}, status=200)
-        else:
-            return Response({'status': 202, 'message': 'Not present'}, status=202)
-    except ObjectDoesNotExist as e:
-        return Response({'status': 404, 'error': "Email not exist"}, status=404)
-    except ApiClientError as error:
-        return Response({'status': 500, 'error': error}, status=500)
+# @api_view(['post'])
+# @permission_classes((AllowAny,))
+# def email_verification_otp(request):
+#     # email id verification by otp sending to mail
+#     data = request.data
+#     email = data['email']
+#     digits = '0123456789'
+#     OTP = ""
+#     try:
+#         user = SelfRegistration.objects.get(username=email)
+#         print(user)
+#         if user:
+#             for i in range(6):
+#                 OTP += digits[math.floor(random.random() * 10)]
+#             mailchimp = MailchimpTransactional.Client('14kMF-44pCPZu8XbNkAzFA')
+#             message = {
+#                 "from_email": "admin@vendorsin.com",
+#                 "subject": "Mail Verification OTP",
+#                 "text":"You mail verificaton OTP is"+" "+OTP+" "+"Please Don't Share Your OTP \n Thank You",
+#                 "to": [
+#                     {
+#                         "email": user.username,
+#                         "type": "to"
+#                     }
+#                 ]
+#             }
+#             response = mailchimp.messages.send({"message": message})
+#             print(response)
+#             return Response({'status': 200, 'message': 'Email sent successfully'}, status=200)
+#         else:
+#             return Response({'status': 202, 'message': 'Not present'}, status=202)
+#     except ObjectDoesNotExist as e:
+#         return Response({'status': 404, 'error': "Email not exist"}, status=404)
+#     except ApiClientError as error:
+#         return Response({'status': 500, 'error': error}, status=500)
 
 
 @api_view(['post'])
@@ -202,40 +191,40 @@ def get_userid_by_token(request):
 
 
 
-@api_view(['post'])
-@permission_classes((AllowAny,))
-def email_verification_otp_to_change_email(request):
-    # email verification to change mail
-    data = request.data
-    email = data['email']
-    digits = '0123456789'
-    OTP = ""
-    try:
-        user = SelfRegistration.objects.get(username=email)
-        print(user)
-        if user:
-            for i in range(6):
-                OTP += digits[math.floor(random.random() * 10)]
-            mailchimp = MailchimpTransactional.Client('14kMF-44pCPZu8XbNkAzFA')
-            message = {
-                "from_email": "admin@vendorsin.com",
-                "subject": "Mail Verification OTP",
-                "to": [
-                    {
-                        "email": user.username,
-                        "type": "to"
-                    }
-                ]
-            }
-            response = mailchimp.messages.send({"message": message})
-            print(response)
-            return Response({'status': 200, 'message': 'Email sent successfully'}, status=200)
-        else:
-            return Response({'status': 202, 'message': 'Not present'}, status=202)
-    except ObjectDoesNotExist as e:
-        return Response({'status': 404, 'error': "Email not exist"}, status=404)
-    except ApiClientError as error:
-        return Response({'status': 500, 'error': error}, status=500)
+# @api_view(['post'])
+# @permission_classes((AllowAny,))
+# def email_verification_otp_to_change_email(request):
+#     # email verification to change mail
+#     data = request.data
+#     email = data['email']
+#     digits = '0123456789'
+#     OTP = ""
+#     try:
+#         user = SelfRegistration.objects.get(username=email)
+#         print(user)
+#         if user:
+#             for i in range(6):
+#                 OTP += digits[math.floor(random.random() * 10)]
+#             mailchimp = MailchimpTransactional.Client('14kMF-44pCPZu8XbNkAzFA')
+#             message = {
+#                 "from_email": "admin@vendorsin.com",
+#                 "subject": "Mail Verification OTP",
+#                 "to": [
+#                     {
+#                         "email": user.username,
+#                         "type": "to"
+#                     }
+#                 ]
+#             }
+#             response = mailchimp.messages.send({"message": message})
+#             print(response)
+#             return Response({'status': 200, 'message': 'Email sent successfully'}, status=200)
+#         else:
+#             return Response({'status': 202, 'message': 'Not present'}, status=202)
+#     except ObjectDoesNotExist as e:
+#         return Response({'status': 404, 'error': "Email not exist"}, status=404)
+#     except ApiClientError as error:
+#         return Response({'status': 500, 'error': error}, status=500)
 
 @api_view(['post'])
 @permission_classes((AllowAny,))
@@ -1160,3 +1149,45 @@ def getcompanycode(request):
                             status=202)
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)
+
+
+# @api_view(['post'])
+# @permission_classes((AllowAny,))
+# def changeemail_check(request):
+#     data=request.data
+#     userid=data['userid']
+#     email=data['email']
+#     digits = "0123456789"
+#     try:
+#         user = SelfRegistration.objects.get(id=userid)
+#         if user:
+#             if user.username!=email:
+#                 user.username = email
+#                 user.save()
+#
+#                 OTP = ""
+#                 for i in range(6):
+#                     OTP += digits[math.floor(random.random() * 10)]
+#                 print(OTP)
+#                 user.email_otp = OTP
+#                 user.save()
+#                 headers = {
+#                     'accept': 'application/json',
+#                     'api-key': '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',
+#                     'content-type': 'application/json',
+#                 }
+#                 data = '{ "sender":{ "name":"VENDORSIN COMMERCE PVT LTD", "email":"admin@vendorsin.com" }, "to":[ { "email":"' + email + '' \
+#                                                                                                                                          '", "name":"Harish" } ], "subject":"OTP Confirmation", "templateId":1 ,}''}'
+#
+#                 # data = '{ "sender":{ "name":"VENDORSIN COMMERCE PVT LTD", "email":"admin@vendorsin.com" },"subject":"This is my default subject line","templateId":96,"to":[ { "email":"harishshetty7459@gmail.com", "name":"harish" } ]'
+#
+#                 response = requests.post('https://api.sendinblue.com/v3/smtp/email', headers=headers, data=data)
+#                 print("----")
+#                 print(response)
+#                 print("----")
+#
+#                 return Response({'status': 200, 'message': "success"}, status=200)
+#             else:
+#                 return Response({'status': 202, 'message': "Already Exist"}, status=202)
+#     except Exception as e:
+#         return Response({'status': 500, 'error': str(e)}, status=500)

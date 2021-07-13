@@ -17,5 +17,6 @@ urlpatterns = [
     path('advance-search-business-request/',views.advance_search_business_request),
     path('advance-search-invite-vendor/', views.advance_search_invite_vendor),
     path('advance-search-external-vendor/', views.advance_search_external_vendor),
+    path('getinternalvendor/',views.getinternalvendor)
 
     ]

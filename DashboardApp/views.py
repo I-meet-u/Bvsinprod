@@ -116,6 +116,18 @@ class InternalVendorView(viewsets.ModelViewSet):
             return Response({'status': 500, 'error': str(e)}, status=500)
 
 
+@api_view(['post'])
+def getinternalvendor(request):
+    data=request.data
+    try:
+        intobj=InternalVendor.objects.filter(updated_by=data['updated_by']).values()
+        return Response({'status': 200, 'data': intobj}, status=200)
+
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)
+
+
+
 class InternalBuyerView(viewsets.ModelViewSet):
     permission_classes = [permissions.AllowAny]
     queryset = InternalBuyer.objects.all()

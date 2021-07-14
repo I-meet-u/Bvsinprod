@@ -97,7 +97,6 @@ DATABASES = {
         'PORT': '5432',
         'sslrequire':True,
     }
-
 }
 
 

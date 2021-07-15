@@ -8,7 +8,7 @@ from rest_framework.exceptions import ValidationError
 from rest_framework.parsers import MultiPartParser
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
-
+# ------
 from RegistrationApp.models import SelfRegistration
 from .models import VendorProduct_BasicDetails, VendorProduct_GeneralDetails, VendorProduct_TechnicalSpecifications, \
     VendorProduct_ProductFeatures, VendorProduct_Documents, BuyerProductDetails, ItemCodeSettings

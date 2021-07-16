@@ -36,3 +36,30 @@ class RfqTermsDescriptionSerializer(serializers.ModelSerializer):
     class Meta:
         model=RfqTermsDescription
         fields='__all__'
+
+
+class SelectVendorsForBiddingProductSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = SelectVendorsForBiddingProduct
+        fields='__all__'
+
+class BiddingTermMasterSettingsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = BiddingTermMasterSettings
+        fields='__all__'
+
+
+class VendorProductBiddingSerializer(serializers.ModelSerializer):
+    class Meta:
+        model=VendorProductBidding
+        fields='__all__'
+
+class VendorBiddingBuyerProductDetailsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model=VendorBiddingBuyerProductDetails
+        fields='__all__'
+
+class VendorRfqTermsDescriptionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model=VendorRfqTermsDescription
+        fields='__all__'

@@ -85,28 +85,29 @@ class InternalVendorView(viewsets.ModelViewSet):
 
     def create(self, request, *args, **kwargs):
         ccode = request.data.get('ccode', None)
+        userid=request.data.get('userid',None)
         try:
-            hierarchyvalues = IndustrialHierarchy.objects.filter(company_code_id__in=ccode).values()
-            if len(hierarchyvalues) > 0:
-                basicobj = BasicCompanyDetails.objects.filter(company_code__in=ccode).values()
-                for i in range(0, len(basicobj)):
-                    basicdata = BasicCompanyDetails.objects.get(company_code=basicobj[i].get('company_code'))
-                    regobj = SelfRegistration.objects.get(id=basicdata.updated_by_id)
-                    hierarchyobj = IndustrialHierarchy.objects.get(company_code=basicdata.company_code)
-                    industryinfoobj = IndustrialInfo.objects.get(company_code=basicdata.company_code)
-                    address = BillingAddress.objects.filter(company_code=basicdata.company_code).values()
-                    InternalVendor.objects.create(company_code=basicdata.company_code,
-                                                  company_name=basicdata.company_name,
+            if len(ccode)>0:
+                print(ccode)
+                for i in range(0,len(ccode)):
+                    basicobj=BasicCompanyDetails.objects.filter(company_code=ccode[i]).values()
+                    print(len(basicobj),'length')
+                    address=BillingAddress.objects.filter(company_code=basicobj[0].get('company_code')).values()
+                    regobj=SelfRegistration.objects.get(id=basicobj[0].get('updated_by_id'))
+                    print(regobj.id)
+                    hierarchyvalues = IndustrialHierarchy.objects.filter(company_code_id=ccode[i]).values()
+                    InternalVendor.objects.create(company_code=basicobj[0].get('company_code'),
+                                                  company_name=basicobj[0].get('company_name'),
                                                   city=address[0].get('bill_city'),
                                                   state=address[0].get('bill_state'),
-                                                  nature_of_business=industryinfoobj.nature_of_business,
+                                                  nature_of_business=regobj.nature_of_business,
                                                   email_id=regobj.username,
                                                   phone_number=regobj.phone_number,
-                                                  maincore=hierarchyobj.maincore,
-                                                  category=hierarchyobj.category,
-                                                  sub_category=hierarchyobj.subcategory,
-                                                  updated_by=SelfRegistration.objects.get(id=basicdata.updated_by_id),
-                                                  created_by=basicdata.updated_by_id
+                                                  maincore=hierarchyvalues[0].get('maincore'),
+                                                  category=hierarchyvalues[0].get('category'),
+                                                  sub_category=hierarchyvalues[0].get('subcategory'),
+                                                  updated_by=SelfRegistration.objects.get(id=userid),
+                                                  created_by=userid
                                                   )
                 return Response({'status': 201, 'message': "Internal Vendor Created"}, status=201)
             else:
@@ -118,14 +119,13 @@ class InternalVendorView(viewsets.ModelViewSet):
 
 @api_view(['post'])
 def getinternalvendor(request):
-    data=request.data
+    data = request.data
     try:
-        intobj=InternalVendor.objects.filter(updated_by=data['updated_by']).values()
+        intobj = InternalVendor.objects.filter(updated_by=data['updated_by']).values()
         return Response({'status': 200, 'data': intobj}, status=200)
 
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)
-
 
 
 class InternalBuyerView(viewsets.ModelViewSet):
@@ -180,7 +180,6 @@ def get_all_details_for_business_request(request):
         return Response({'status': 500, 'error': str(e)}, status=500)
 
 
-#
 # @api_view(['post'])
 # @permission_classes((AllowAny,))
 # def external_vendor(request):
@@ -214,7 +213,6 @@ def get_all_details_for_business_request(request):
 #
 #     except Exception as e:
 #         return Response({'status': 500, 'error': str(e)}, status=500)
-
 
 @api_view(['post'])
 @permission_classes((AllowAny,))
@@ -267,35 +265,7 @@ def external_vendor(request):
         return Response({'status': 500, 'error': str(e)}, status=500)
 
 
-@api_view(['post'])
-def advance_search_business_request(request):
-    # business request advance search
-    data = request.data
-    company_code = data['company_code']
-    company_name = data['company_name']
-    city = data['city']
-    nature_of_business = data['nature_of_business']
-    supply_capabilites = data['supply_capabilites']
-    industry_to_serve = data['industry_to_serve']
-    maincore = data['maincore']
-    category = data['category']
-    sub_category = data['sub_category']
 
-    try:
-        businessrequestadvancesearch = BusinessRequest.objects.filter(updated_by=data['userid']).filter(
-            company_code__icontains=company_code).filter(company_name__icontains=company_name).filter(
-            city__icontains=city).filter(
-            industry_to_serve__icontains=industry_to_serve).filter(
-            nature_of_business__icontains=nature_of_business).filter(
-            supply_capabilites__icontains=supply_capabilites).filter(
-            maincore__icontains=maincore).filter(category__icontains=category).filter(
-            sub_category__icontains=sub_category).values()
-
-        return Response(
-            {'status': '200', 'message': 'Business Request Advance Search', 'data': businessrequestadvancesearch},
-            status=200)
-    except Exception as e:
-        return Response({'status': '500', 'error': str(e)}, status=500)
 
 
 @api_view(['post'])
@@ -325,7 +295,7 @@ def advance_search_invite_vendor(request):
 
 
 @api_view(['post'])
-@permission_classes([AllowAny,])
+@permission_classes([AllowAny, ])
 def advance_search_external_vendor(request):
     # external vendor advance search
     data = request.data
@@ -343,15 +313,167 @@ def advance_search_external_vendor(request):
     try:
         for i in range(0, len(valuearray)):
             if valuearray[i].get('company_code').count(company_code) > 0 and maincore.lower() in valuearray[i].get(
-                    'maincore') and category.lower() in valuearray[i].get('category') and \
-                    subcategory.lower() in valuearray[i].get('subcategory') and bill_city.lower() in valuearray[i].get(
-                'bill_city').lower() and bill_state.lower() in valuearray[i].get('bill_state') and \
+                    'maincore').lower() and category.lower() in valuearray[i].get('category').lower() and subcategory.lower() in valuearray[i].get('subcategory').lower() and bill_city.lower() in valuearray[i].get(
+                'bill_city').lower() and bill_state.lower() in valuearray[i].get('bill_state').lower() and \
                     nature_of_business.lower() in valuearray[i].get(
-                'nature_of_business') and industry_to_serve.lower() in valuearray[i].get(
-                'industry_to_serve') and company_name.lower() in valuearray[i].get('company_name').lower():
+                'nature_of_business').lower() and industry_to_serve.lower() in valuearray[i].get(
+                'industry_to_serve').lower() and company_name.lower() in valuearray[i].get('company_name').lower():
                 externalarraysearch.append(valuearray[i])
             else:
                 print('Not Present')
         return Response({'status': 200, 'message': 'ok', 'data': externalarraysearch}, status=200)
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)
+
+
+@api_view(['post'])
+@permission_classes((AllowAny,))
+def buzrequestcreate(request):
+    data = request.data
+    compcode = data['compcode']
+    userid = data['userid']
+
+    try:
+        for i in range(0, len(compcode)):
+            basicoj = BasicCompanyDetails.objects.filter(company_code=compcode[i]).values()
+            billngaddrs = BillingAddress.objects.filter(company_code=basicoj[0].get('company_code')).values()
+            Regobj = SelfRegistration.objects.get(id=basicoj[0].get('updated_by_id'))
+            indobj = IndustrialInfo.objects.filter(company_code=compcode[i]).values()
+            BusinessRequest.objects.create(company_code=basicoj[0].get('company_code'),
+                                           company_name=basicoj[0].get('company_name'),
+                                           city=billngaddrs[0].get('bill_city'), state=billngaddrs[0].get('bill_state'),
+                                           nature_of_business=Regobj.nature_of_business,
+                                           industry_to_serve=indobj[0].get('industry_to_serve'), created_by=userid,
+                                           updated_by=SelfRegistration.objects.get(id=userid))
+
+        return Response({'status': 200, 'message': 'ok', 'data': basicoj}, status=200)
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)
+
+
+@api_view(['post'])
+def sendergetbuzrequestdata(request):
+    data = request.data
+    userid = data['userid']
+    try:
+        buzobj = BusinessRequest.objects.filter(updated_by=userid).order_by('company_code').values()
+
+        return Response({'status': 200, 'message': 'ok', 'data': buzobj}, status=200)
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)
+
+
+@api_view(['post'])
+def searchinternalvendor(request):
+    data = request.data
+    ccode = data['ccode']
+    cname = data['cname']
+    city = data['city']
+    nob = data['nob']
+    state = data['state']
+    grp = data['grp']
+    maincore = data['maincore']
+    category = data['category']
+    subcategory = data['subcategory']
+
+    try:
+        if grp == "":
+
+            internalobj = InternalVendor.objects.filter(updated_by=data['userid'], company_code=ccode,
+                                                        company_name__icontains=cname, city__icontains=city,
+                                                        nature_of_business__icontains=nob, state__icontains=state,
+                                                        maincore__icontains=maincore, category__icontains=category,
+                                                        sub_category__icontains=subcategory,
+                                                        groups__isnull=True).values()
+        else:
+
+            internalobj = InternalVendor.objects.filter(updated_by=data['userid'], company_code=ccode,
+                                                        company_name__icontains=cname, city__icontains=city,
+                                                        nature_of_business__icontains=nob, state__icontains=state,
+                                                        maincore__icontains=maincore, category__icontains=category,
+                                                        sub_category__icontains=subcategory,
+                                                        groups__icontains=grp).values()
+
+        return Response({'status': 200, 'message': 'ok', 'message': internalobj}, status=200)
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)
+
+
+@api_view(['post'])
+def buzrequest(request):
+    data = request.data
+    userbuzdata = []
+    try:
+        basiccompoobj = BasicCompanyDetails.objects.get(updated_by=data['userid'])
+        print(basiccompoobj.company_code)
+        buzobj = BusinessRequest.objects.filter(company_code=str(basiccompoobj.company_code)).values()
+        print(buzobj)
+        for i in range(0,len(buzobj)):
+            sendcompdetailsobj = BasicCompanyDetails.objects.get(updated_by_id=buzobj[i].get('updated_by_id'))
+            billsaddrsobj = BillingAddress.objects.filter(updated_by_id=buzobj[i].get('updated_by_id')).order_by(
+                'id').values()
+            Industryinfoobj=IndustrialInfo.objects.filter(updated_by_id=buzobj[i].get('updated_by_id')).values()
+            print(sendcompdetailsobj)
+            print(billsaddrsobj)
+            print(Industryinfoobj)
+            # userbuzdata.append({'ccode':sendcompdetailsobj.company_code,
+            #                     'cname':sendcompdetailsobj.company_name,
+            #                     'city':billsaddrsobj[0].get('bill_city'),
+            #                     'Industry':Industryinfoobj[0].get('industry_to_serve'),
+            #                     'Natureofbuz':Industryinfoobj[0].get('industry_to_serve')
+            #                     })
+
+        return Response({'status': 200, 'message': 'ok','data':userbuzdata}, status=200)
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)
+
+
+
+
+@api_view(['post'])
+@permission_classes((AllowAny,))
+def business_request_accept_reject_advance_search(request):
+    data = request.data
+    company_code = data['company_code']
+    company_name = data['company_name']
+    nature_of_business = data['nature_of_business']
+    city = data['city']
+    state = data['state']
+    industry_type = data['industry_type']
+    valuedata = data['valuedata']
+    businessrequestdata = []
+    try:
+        for i in range(0, len(valuedata)):
+            if company_code.lower() in valuedata[i].get('company_code').lower() and company_name.lower() in valuedata[
+                i].get('company_name').lower() and \
+                    nature_of_business.lower() in valuedata[i].get('nature_of_business').lower() and city.lower() in \
+                    valuedata[i].get('city').lower() and state.lower() in valuedata[i].get('state').lower() and \
+                    industry_type.lower() in valuedata[i].get('industry_type').lower():
+                businessrequestdata.append(valuedata[i])
+        return Response({'status': 200, 'message': 'ok', 'data': businessrequestdata}, status=200)
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)
+
+
+@api_view(['post'])
+@permission_classes((AllowAny,))
+def search_business_request_advance_search(request):
+    # business request advance search
+    data = request.data
+    company_code = data['company_code']
+    company_name = data['company_name']
+    state = data['state']
+    industry_to_serve = data['industry_to_serve']
+    nature_of_business = data['nature_of_business']
+    send_status=data['send_status']
+    serveappend = []
+    try:
+        serveappend.append(industry_to_serve)
+        businessrequestadvancesearch = BusinessRequest.objects.filter(updated_by=data['userid']).filter(
+            company_code__icontains=company_code).filter(company_name__icontains=company_name).filter(state__icontains=state).filter(industry_to_serve__contains=serveappend).filter(nature_of_business__0__icontains=nature_of_business).filter(send_status__icontains=send_status).values()
+
+        return Response(
+            {'status': '200', 'message': 'Business Request Advance Search', 'data': businessrequestadvancesearch},
+            status=200)
+    except Exception as e:
+        return Response({'status': '500', 'error': str(e)}, status=500)

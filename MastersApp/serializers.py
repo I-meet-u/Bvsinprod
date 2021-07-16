@@ -539,3 +539,9 @@ class PerformanceGuaranteesMasterSerializer(serializers.ModelSerializer):
             performance_code = int(performanceobj.performance_code) + 1
         values = PerformanceGuaranteesMaster.objects.create(performance_code=performance_code, **validate_data)
         return values
+
+class TermMasterCreateSerializer(serializers.ModelSerializer):
+    # term master serializer
+    class Meta:
+        model=TermMasterCreate
+        fields='__all__'

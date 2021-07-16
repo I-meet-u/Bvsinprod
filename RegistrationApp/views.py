@@ -797,9 +797,7 @@ def sendOtpmail(request):
                     'content-type': 'application/json',
                 }
                 data = '{ "sender":{ "name":"VENDORSIN COMMERCE PVT LTD", "email":"admin@vendorsin.com" }, "to":[ { "email":"' + email + '' \
-                                                                                                                                         '", "name":"Harish" } ], "subject":"OTP Confirmation", "templateId":1 ,"params":{"OTP":' + OTP + '}''}'
-
-                # data = '{ "sender":{ "name":"VENDORSIN COMMERCE PVT LTD", "email":"admin@vendorsin.com" },"subject":"This is my default subject line","templateId":96,"to":[ { "email":"harishshetty7459@gmail.com", "name":"harish" } ]'
+                                                                                                                                         '", "name":"Harish" } ], "subject":"VENDORSIN Registration OTP", "templateId":6 ,"params":{"OTP":' + OTP + '}''}'
 
                 response = requests.post('https://api.sendinblue.com/v3/smtp/email', headers=headers, data=data)
                 print("----")
@@ -947,11 +945,11 @@ def checkemailotp(request):
 def checkphoneotp(request):
     data=request.data
     userid=data['userid']
+    otp=data['phone_otp']
     try:
         user = SelfRegistration.objects.get(id=userid)
         if user:
-            if user.phone_otp==data['phone_otp']:
-
+            if user.phone_otp==otp:
                 return Response({'status': 200, 'message': "Both OTP Matching"}, status=200)
             else:
                 return Response({'status': 202, 'message': "OTP Not Matching"}, status=202)
@@ -1002,7 +1000,7 @@ def changeemail(request):
                     'content-type': 'application/json',
                 }
                 data = '{ "sender":{ "name":"VENDORSIN COMMERCE PVT LTD", "email":"admin@vendorsin.com" }, "to":[ { "email":"' + email + '' \
-                                                                                                                                         '", "name":"Harish" } ], "subject":"OTP Confirmation", "templateId":1 ,"params":{"OTP":' + OTP + '}''}'
+                                                                                                                                         '", "name":"Harish" } ], "subject":"VENDORSIN Registration OTP", "templateId":6 ,"params":{"OTP":' + OTP + '}''}'
 
                 # data = '{ "sender":{ "name":"VENDORSIN COMMERCE PVT LTD", "email":"admin@vendorsin.com" },"subject":"This is my default subject line","templateId":96,"to":[ { "email":"harishshetty7459@gmail.com", "name":"harish" } ]'
 
@@ -1030,7 +1028,6 @@ def changephone(request):
             if user.phone_number != phone:
                 user.phone_number = phone
                 user.save()
-
                 OTP = ""
                 for i in range(6):
                     OTP += digits[math.floor(random.random() * 10)]
@@ -1190,4 +1187,5 @@ def getcompanycode(request):
 #             else:
 #                 return Response({'status': 202, 'message': "Already Exist"}, status=202)
 #     except Exception as e:
-#         return Response({'status': 500, 'error': str(e)}, status=500)
+#         return Response({'status': 500
+#         , 'error': str(e)}, status=500)

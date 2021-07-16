@@ -90,13 +90,14 @@ WSGI_APPLICATION = 'Vendorsinprojectversion2.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'hsbdemovendorsin',
+        'NAME': 'NewVersion2DB',
         'USER': 'azureadmin@postgresdbtest',
         'PASSWORD':'Vendorsin@2021',
         'HOST': 'postgresdbtest.postgres.database.azure.com',
         'PORT': '5432',
         'sslrequire':True,
     }
+
 }
 
 

@@ -15,7 +15,7 @@ class BuyerProductBidding(models.Model):
     product_rfq_type=models.CharField(max_length=400)
     product_rfq_status=models.CharField(max_length=50,default='Pending')
     product_publish_date=models.CharField(max_length=100)
-    product_deadline_date=models.CharField(max_length=100)
+    product_deadline_date=models.DateField(null=True,blank=True)
     product_delivery_date = models.CharField(max_length=100)
     product_rfq_currency = models.CharField(max_length=100,null=True,blank=True)
     product_rfq_category = models.CharField(max_length=100, null=True, blank=True)
@@ -79,3 +79,86 @@ class RfqTermsDescription(models.Model):
 
     class Meta:
         db_table = "RfqTermsDescription"
+
+
+class SelectVendorsForBiddingProduct(models.Model):
+    rfq_number = models.CharField(max_length=50)
+    vendor_code=models.CharField(max_length=80)
+    vendor_status=models.CharField(max_length=50,default='Pending')
+    created_on = models.DateTimeField(auto_now_add=True)
+    updated_on = models.DateTimeField(auto_now=True)
+    created_by = models.BigIntegerField()
+    updated_by = models.ForeignKey(SelfRegistration, on_delete=models.CASCADE)
+
+    class Meta:
+        db_table = "SelectVendorsForBiddingProduct"
+
+class BiddingTermMasterSettings(models.Model):
+    term_masters=models.CharField(max_length=80)
+    created_on = models.DateTimeField(auto_now_add=True)
+    updated_on = models.DateTimeField(auto_now=True)
+    created_by = models.BigIntegerField()
+    updated_by = models.ForeignKey(SelfRegistration, on_delete=models.CASCADE)
+
+    class Meta:
+        db_table = "BiddingTermMasterSettings"
+
+
+class VendorProductBidding(models.Model):
+    vendor_product_bidding_id=models.BigAutoField(primary_key=True)
+    vendor_product_rfq_number=models.CharField(max_length=40,unique=True,null=True,blank=True)
+    vendor_user_rfq_number=models.CharField(max_length=50,null=True,blank=True)
+    vendor_product_rfq_type=models.CharField(max_length=400)
+    vendor_product_rfq_status=models.CharField(max_length=50,default='Pending')
+    vendor_product_publish_date=models.CharField(max_length=100)
+    vendor_product_deadline_date=models.CharField(max_length=100)
+    vendor_product_delivery_date = models.CharField(max_length=100)
+    vendor_product_rfq_currency = models.CharField(max_length=100,null=True,blank=True)
+    vendor_product_rfq_category = models.CharField(max_length=100, null=True, blank=True)
+    vendor_product_department=models.CharField(max_length=300)
+    vendor_product_bill_address=models.TextField()
+    vendor_product_ship_address=models.TextField()
+    vendor_product_rfq_title = models.CharField(max_length=600)
+    created_on = models.DateTimeField(auto_now_add=True)
+    updated_on = models.DateTimeField(auto_now=True)
+    created_by = models.BigIntegerField()
+    updated_by = models.ForeignKey(SelfRegistration, on_delete=models.CASCADE)
+    history=HistoricalRecords()
+
+    class Meta:
+        db_table='VendorProductBidding'
+
+
+class VendorBiddingBuyerProductDetails(models.Model):
+    vendor_item_code= models.CharField(max_length=100,null=True,blank=True)
+    vendor_item_name = models.CharField(max_length=100)
+    vendor_item_description = models.TextField(null=True,blank=True)
+    vendor_uom = models.CharField(max_length=100, null=True,blank=True)
+    vendor_category = models.CharField(max_length=500,null=True)
+    vendor_quantity = models.CharField(max_length=100)
+    vendor_document=models.FileField(upload_to='BuyerProductFiles',null=True,blank=True)
+    created_on = models.DateTimeField(auto_now_add=True)
+    updated_on = models.DateTimeField(auto_now=True)
+    created_by = models.BigIntegerField()
+    vendor_rfq_number=models.CharField(max_length=100)
+    updated_by = models.ForeignKey(SelfRegistration, on_delete=models.CASCADE)
+    history = HistoricalRecords()
+
+    class Meta:
+        db_table='VendorBiddingBuyerProductDetails'
+
+
+class VendorRfqTermsDescription(models.Model):
+    vendor_rfq_number=models.CharField(max_length=200)
+    vendor_terms=models.CharField(max_length=500)
+    vendor_description=models.TextField()
+    created_on = models.DateTimeField(auto_now_add=True)
+    updated_on = models.DateTimeField(auto_now=True)
+    created_by = models.BigIntegerField()
+    updated_by = models.ForeignKey(SelfRegistration, on_delete=models.CASCADE)
+    vendor_product_biddings=models.ForeignKey(VendorProductBidding, on_delete=models.CASCADE,null=True,blank=True)
+    history = HistoricalRecords()
+
+    class Meta:
+        db_table = "VendorRfqTermsDescription"
+

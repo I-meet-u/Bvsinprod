@@ -2891,3 +2891,18 @@ class PerformanceGuaranteesMasterView(viewsets.ModelViewSet):
     serializer_class = PerformanceGuaranteesMasterSerializer
     ordering_fields = ['performance_id']
     ordering = ['performance_id']
+
+class TermMasterCreateView(viewsets.ModelViewSet):
+    # term master create viewsets
+    permission_classes = (AllowAny,)
+    queryset = TermMasterCreate.objects.all()
+    serializer_class = TermMasterCreateSerializer
+    ordering_fields = ['term_masters_id']
+    ordering = ['term_masters_id']
+
+    def get_queryset(self):
+        termmastercreateobj = TermMasterCreate.objects.filter(updated_by=self.request.GET.get('updated_by'))
+        if termmastercreateobj:
+            return termmastercreateobj
+        raise ValidationError(
+            {'message': 'Term Master Create of particular user id is not exist', 'status': 204})

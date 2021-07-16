@@ -10,13 +10,19 @@ router.register('business-request', views.BusinessRequestView)
 router.register('internal-vendor', views.InternalVendorView)
 router.register('internal-buyer', views.InternalBuyerView)
 
+
 urlpatterns = [
     path('dashboard-router-urls/',include(router.urls)),
     path('get-all-details-for-business-request/',views.get_all_details_for_business_request),
     path('external-vendor/',views.external_vendor),
-    path('advance-search-business-request/',views.advance_search_business_request),
     path('advance-search-invite-vendor/', views.advance_search_invite_vendor),
     path('advance-search-external-vendor/', views.advance_search_external_vendor),
-    path('getinternalvendor/',views.getinternalvendor)
+    path('getinternalvendor/',views.getinternalvendor),
+    path('buzrequestcreate/',views.buzrequestcreate),
+    path('sendergetbuzrequestdata/',views.sendergetbuzrequestdata),
+    path('searchinternalvendor/',views.searchinternalvendor),
+    path('buzrequest/',views.buzrequest),
+    path('business-request-accept-reject-advance-search/',views.business_request_accept_reject_advance_search),
+    path('search-business-request-advance-search/',views.search_business_request_advance_search)
 
     ]

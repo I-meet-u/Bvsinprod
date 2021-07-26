@@ -51,7 +51,6 @@ class VendorProduct_BasicDetails(models.Model):
     class Meta:
         db_table = "VendorProduct_BasicDetails"
 
-
 class VendorProduct_GeneralDetails(models.Model):
 
     p_f_charges=models.CharField(max_length=400,null=True,blank=True)

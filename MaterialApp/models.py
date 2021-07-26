@@ -20,7 +20,7 @@ class VendorProduct_BasicDetails(models.Model):
     product_category=models.CharField(max_length=100, null=True,blank=True)
     final_selling_price = models.CharField(max_length=80, null=True,blank=True)
     item_name = models.CharField(max_length=100, null=True,blank=True)
-    add_image1 = models.FileField(upload_to='vendorproductimage', null=True, blank=True)
+    add_image1 = models.FileField(upload_to='static/vendorproductimage', null=True, blank=True)
     add_image2 = models.FileField(upload_to='vendorproductimage', null=True, blank=True)
     add_image3 = models.FileField(upload_to='vendorproductimage', null=True, blank=True)
     add_image4 = models.FileField(upload_to='vendorproductimage', null=True, blank=True)

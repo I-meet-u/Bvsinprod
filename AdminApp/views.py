@@ -54,23 +54,6 @@ def admin_login(request):
         admin_obj = AdminRegister.objects.get(admin_email=admin_email)
         if admin_obj:
             if check_password(password, admin_obj.password) and admin_obj.admin_email == admin_email:
-                for i in range(6):
-                    OTP += digits[math.floor(random.random() * 10)]
-                mailchimp = MailchimpTransactional.Client('14kMF-44pCPZu8XbNkAzFA')
-                message = {
-                    "from_email": "admin@vendorsin.com",
-                    "subject": "Admin Login Verification OTP",
-                    "text": "Your Login Confirmation OTP is" + " " + OTP + " " + "Please Don't Share it with anyone \n Thank You",
-
-                    "to": [
-                        {
-                            "email": admin_obj.admin_email,
-                            "type": "to"
-                        }
-                    ]
-                }
-                response = mailchimp.messages.send({"message": message})
-                print(response)
                 admin_user_data = {
                     'adminemail': admin_obj.admin_email,
                     'OTP':OTP
@@ -188,50 +171,6 @@ def create_user_status_update(request):
         return Response({'status':500,'error':str(e)},status=500)
 
 
-
-# @api_view(['post'])
-# @permission_classes((AllowAny,))
-# def admin_login_verification_otp(request):
-#     # email id verification by otp sending to mail
-#     data = request.data
-#     adminemail = data['adminemail']
-#     digits = '0123456789'
-#     OTP = ""
-#     try:
-#         adminuserobj = AdminRegister.objects.get(admin_email=adminemail)
-#         print(adminuserobj)
-#         if adminuserobj:
-#             for i in range(6):
-#                 OTP += digits[math.floor(random.random() * 10)]
-#             mailchimp = MailchimpTransactional.Client('14kMF-44pCPZu8XbNkAzFA')
-#             message = {
-#                 "from_email": "admin@vendorsin.com",
-#                 "subject": "Admin Login Verification OTP",
-#                 "text":"Your Login Confirmation OTP is"+" "+OTP+" "+"Please Don't Share it with anyone \n Thank You",
-#
-#                 "to": [
-#                     {
-#                         "email": adminuserobj.admin_email,
-#                         "type": "to"
-#                     }
-#                 ]
-#             }
-#             response = mailchimp.messages.send({"message": message})
-#             print(response)
-#             return Response({'status': 200, 'message': 'Email sent successfully'}, status=200)
-#         else:
-#             return Response({'status': 202, 'message': 'Not present'}, status=202)
-#     except ObjectDoesNotExist as e:
-#         return Response({'status': 404, 'error': "Email not exist"}, status=404)
-#     except ApiClientError as error:
-#         return Response({'status': 500, 'error': error}, status=500)
-
-# @api_view(['post'])
-# @permission_classes((AllowAny,))
-# def admin_email_otp_verify(request):
-#     otp=data['otp']
-#
-
 @api_view(['get'])
 @permission_classes([AllowAny])
 def registration_list(request):
@@ -338,7 +277,7 @@ def admin_approval(request):
             else:
                 return Response({'status': 200, 'message': 'user is not present or not registered'}, status=200)
         else:
-            return Response({'status':204,'message':'type is not correct or mis-spelled'},status=204)
+            return Response({'status':204,'message':'Not present for this particular admin id'},status=204)
     except Exception as e:
         return Response({'status':500,'error':str(e)},status=500)
 
@@ -355,3 +294,5 @@ def admin_approve_pending_list(request):
 
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)
+
+

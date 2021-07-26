@@ -19,4 +19,8 @@ urlpatterns = [
     path('disable-buyer-product/',views.disable_buyer_product),
     path('enable-buyer-product/',views.enable_buyer_product),
     path('delete-buyer-product/',views.delete_buyer_product),
+    path('update-item-code-settings-and-item-code/',views.updated_item_code_settings_and_item_code),
+    path('t-codes-datas/',views.t_codes_datas),
+    path('get-item-code-details-by-userid-itemtype/',views.get_item_code_details_by_userid_itemtype),
+    path('advance-search-buyer-product/',views.advance_search_buyer_product)
     ]

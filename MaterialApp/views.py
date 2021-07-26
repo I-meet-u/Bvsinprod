@@ -18,86 +18,14 @@ from .serializers import VendorProduct_BasicDetailsSerializer, VendorProduct_Gen
     VendorProduct_DocumentsSerializer, BuyerProductDetailsSerializer, ItemCodeSettingsSerializer
 
 
-# class VendorProduct_BasicDetailsView(viewsets.ModelViewSet):
-#     queryset = VendorProduct_BasicDetails.objects.all()
-#     serializer_class = VendorProduct_BasicDetailsSerializer
-#
-#     def create(self, request, *args, **kwargs):
-#         data=request.data
-#         core_sector = data['core_sector']
-#         category = data['category']
-#         sub_category = data['sub_category']
-#         product_category = data['product_category']
-#         product_type=data['product_type']
-#         item_type = data['item_type']
-#         item_name = data['item_name']
-#         item_description=data['item_description']
-#         final_selling_price = data['final_selling_price']
-#         add_image1 = data['add_image1']
-#         add_image2 = data['add_image2']
-#         add_image3 = data['add_image3']
-#         add_image4 = data['add_image4']
-#         uom = data['uom']
-#         quantity = data['quantity']
-#         hsn_sac = data['hsn_sac']
-#         unit_price = data['unit_price']
-#         discount = data['discount']
-#         tax = data['tax']
-#         sku_id = data['sku_id']
-#         country_of_origin = data['country_of_origin']
-#         currency = data['currency']
-#         userid = data['userid']
-#         type = data['type']
-#         try:
-#
-#             vedordetailsobj = VendorProduct_BasicDetails.objects.filter(updated_by=userid).order_by('-numeric').values()
-#             if type == 'auto':
-#                 if vedordetailsobj:
-#                     vendorobj = VendorProduct_BasicDetails.objects.create(core_sector=core_sector, category=category,sub_category=sub_category,product_category=product_category,product_type=product_type,item_type=item_type,item_code=vedordetailsobj[0].get('numeric'),item_name=item_name,item_description=item_description,
-#                                                                           final_selling_price=final_selling_price,
-#                                                                           numeric=vedordetailsobj[0].get('numeric') + 1,add_image1=add_image1, add_image2=add_image2,add_image3=add_image3, add_image4=add_image4,
-#                                                                           uom=uom, quantity=quantity, hsn_sac=hsn_sac,unit_price=unit_price, discount=discount, tax=tax,sku_id=sku_id,country_of_origin=country_of_origin,
-#                                                                           currency=currency,created_by=userid,updated_by=SelfRegistration.objects.get(id=userid))
-#                 else:
-#                     print('not exist')
-#                     vendorobj = VendorProduct_BasicDetails.objects.create(core_sector=core_sector, category=category,sub_category=sub_category,product_category=product_category,product_type=product_type,item_type=item_type, item_code=100001,item_name=item_name,item_description=item_description,
-#                                                                           final_selling_price=final_selling_price,numeric=100002, add_image1=add_image1,add_image2=add_image2, add_image3=add_image3,add_image4=add_image4,
-#                                                                           uom=uom, quantity=quantity,hsn_sac=hsn_sac,unit_price=unit_price,discount=discount, tax=tax, sku_id=sku_id,
-#                                                                           country_of_origin=country_of_origin,currency=currency,created_by=userid,
-#                                                                           updated_by=SelfRegistration.objects.get(id=userid))
-#             if type == 'manual':
-#                 item_code = data['item_code']
-#                 vendorobj=VendorProduct_BasicDetails.objects.count()
-#                 if vendorobj==0:
-#                     print('s')
-#                     vendorobj = VendorProduct_BasicDetails.objects.create(core_sector=core_sector, category=category,sub_category=sub_category,product_category=product_category,item_name=item_name,product_type=product_type, item_type=item_type,item_code=item_code,item_description=item_description,
-#                                                                           final_selling_price=final_selling_price,numeric='100001',add_image1=add_image1, add_image2=add_image2,add_image3=add_image3, add_image4=add_image4,
-#                                                                           uom=uom, quantity=quantity, hsn_sac=hsn_sac,unit_price=unit_price, discount=discount, tax=tax,sku_id=sku_id,country_of_origin=country_of_origin,
-#                                                                           currency=currency,created_by=userid,updated_by=SelfRegistration.objects.get(id=userid))
-#                 else:
-#                     vendorobj = VendorProduct_BasicDetails.objects.create(core_sector=core_sector,
-#                                                                           category=category,sub_category=sub_category,product_category=product_category,item_name=item_name,product_type=product_type,
-#                                                                           item_type=item_type, item_code=item_code,item_description=item_description,
-#                                                                           final_selling_price=final_selling_price,numeric=vedordetailsobj[0].get('numeric'), add_image1=add_image1,
-#                                                                           add_image2=add_image2,add_image3=add_image3,add_image4=add_image4,uom=uom, quantity=quantity,hsn_sac=hsn_sac, unit_price=unit_price,
-#                                                                           discount=discount, tax=tax, sku_id=sku_id,country_of_origin=country_of_origin,
-#                                                                           currency=currency, created_by=userid,updated_by=SelfRegistration.objects.get(id=userid))
-#
-#
-#                 return Response({'status': 201, 'message': 'Vendor Product  Created'}, status=201)
-#             else:
-#                 return Response({'status': 204, 'message': 'Not Present or enter type name properly'}, status=204)
-#         except Exception as e:
-#             return Response({'status': 500, 'error': str(e)}, status=500)
-
-
-
 class VendorProduct_GeneralDetailsView(viewsets.ModelViewSet):
     permission_classes = [permissions.AllowAny]
     queryset = VendorProduct_GeneralDetails.objects.all()
     serializer_class = VendorProduct_GeneralDetailsSerializer
     ordering_fields = ['id']
     ordering = ['id']
+
+
 
 
 class VendorProduct_TechnicalSpecificationsView(viewsets.ModelViewSet):
@@ -163,178 +91,97 @@ class VendorProduct_DocumentsView(viewsets.ModelViewSet):
     ordering = ['id']
 
 
-    # def create(self, request, *args, **kwargs):
-    #     vendorproductdocumentslist = request.data['vendorproductdocumentslist']
-    #     updated_by = request.data.get('updated_by', None)
-    #     try:
-    #         if updated_by is None:
-    #             return Response({'status': 204, 'message': 'Enter user id or user id not exist'}, status=204)
-    #         for i in range(0, len(vendorproductdocumentslist)):
-    #             VendorProduct_ProductFeatures.objects.create(
-    #                 product_item_specification=vendorproductdocumentslist[i].get('product_item_specification'),
-    #                 product_item_description=vendorproductdocumentslist[i].get('product_item_description'),
-    #                 description=vendorproductdocumentslist[i].get('description'),
-    #                 vendor_products=VendorProduct_BasicDetails.objects.get(
-    #                     vendor_product_id=vendorproductdocumentslist[i].get('vendor_products')),
-    #                 updated_by=SelfRegistration.objects.get(id=updated_by),
-    #                 created_by=updated_by
-    #             )
-    #         return Response({'status': 201, 'message': 'Vendor Product Features Are Added'}, status=201)
-    #     except Exception as e:
-    #         return Response({'status': 500, 'error': str(e)}, status=500)
 
-# @api_view(['post'])
-# def vendor_product_create(request):
-#     data=request.data
+# class VendorProduct_BasicDetailsView(viewsets.ModelViewSet):
+#     permission_classes = [permissions.AllowAny]
+#     queryset = VendorProduct_BasicDetails.objects.all()
+#     serializer_class = VendorProduct_BasicDetailsSerializer
+#     parser_classes = [MultiPartParser]
+#     ordering_fields = ['vendor_product_id']
+#     ordering = ['vendor_product_id']
 #
-#                 #
-#                 # vendor_id={
-#                 #     'vendor_product_id':vendorobj.vendor_product_id
-#                 # }
+#     def create(self, request, *args, **kwargs):
+#         data=request.data
+#         core_sector = data['core_sector']
+#         category = data['category']
+#         sub_category = data['sub_category']
+#         product_category = data['product_category']
+#         product_type=data['product_type']
+#         item_type = data['item_type']
+#         item_name = data['item_name']
+#         item_description=data['item_description']
+#         final_selling_price = data['final_selling_price']
+#         add_image1 = data['add_image1']
+#         add_image2 = data['add_image2']
+#         add_image3 = data['add_image3']
+#         add_image4 = data['add_image4']
+#         uom = data['uom']
+#         quantity = data['quantity']
+#         hsn_sac = data['hsn_sac']
+#         unit_price = data['unit_price']
+#         discount = data['discount']
+#         tax = data['tax']
+#         sku_id = data['sku_id']
+#         country_of_origin = data['country_of_origin']
+#         currency = data['currency']
+#         userid = data['userid']
+#         type = data['type']
+#         try:
 #
-#         vendorgeneraldetailsobj=VendorProduct_GeneralDetails.objects.create(p_f_charges=data['p_f_charges'],frieght_charges=data['frieght_charges'],delivery=data['delivery'],warranty=data['warranty'],brand_make=data['brand_make'],department=data['department'],
-#                                                                      guarantee=data['guarantee'],model_no=data['model_no'],min_order_quantity=data['min_order_quantity'],after_sale_service=data['after_sale_service'],
-#                                                                      part_no=data['part_no'],packing_type=data['packing_type'],not_covered_w_g=data['not_covered_w_g'],alternate_parts=data['alternate_parts'],delievery_days=data['delievery_days'],standard_measures=data['standard_measures'],product_length=data['product_length'],
-#                                                                      shipping_uom=data['shipping_uom'],item_weight=data['item_weight'],product_width=data['product_width'],shipping_weight=data['shipping_weight'],after_packed_weight=data['after_packed_weight'],product_height=data['product_height'],ship_via=data['ship_via'],
-#                                                                      created_by=userid,updated_by=SelfRegistration.objects.get(id=userid),vendor_products=VendorProduct_BasicDetails.objects.get(vendor_product_id=vendorobj.vendor_product_id))
+#             vedordetailsobj = VendorProduct_BasicDetails.objects.filter(updated_by=userid).order_by('-numeric').values()
+#             if type == 'auto':
+#                 if vedordetailsobj:
+#                     vendorobj = VendorProduct_BasicDetails.objects.create(core_sector=core_sector, category=category,sub_category=sub_category,product_category=product_category,product_type=product_type,item_type=item_type,item_code=vedordetailsobj[0].get('numeric'),item_name=item_name,item_description=item_description,
+#                                                                           final_selling_price=final_selling_price,
+#                                                                           numeric=vedordetailsobj[0].get('numeric') + 1,add_image1=add_image1, add_image2=add_image2,add_image3=add_image3, add_image4=add_image4,
+#                                                                           uom=uom, quantity=quantity, hsn_sac=hsn_sac,unit_price=unit_price, discount=discount, tax=tax,sku_id=sku_id,country_of_origin=country_of_origin,
+#                                                                           currency=currency,created_by=userid,updated_by=SelfRegistration.objects.get(id=userid))
+#                 else:
+#                     print('not exist')
+#                     vendorobj = VendorProduct_BasicDetails.objects.create(core_sector=core_sector, category=category,sub_category=sub_category,product_category=product_category,product_type=product_type,item_type=item_type, item_code=100001,item_name=item_name,item_description=item_description,
+#                                                                           final_selling_price=final_selling_price,numeric=100002, add_image1=add_image1,add_image2=add_image2, add_image3=add_image3,add_image4=add_image4,
+#                                                                           uom=uom, quantity=quantity,hsn_sac=hsn_sac,unit_price=unit_price,discount=discount, tax=tax, sku_id=sku_id,
+#                                                                           country_of_origin=country_of_origin,currency=currency,created_by=userid,
+#                                                                           updated_by=SelfRegistration.objects.get(id=userid))
+#             if type == 'manual':
+#                 item_code = data['item_code']
+#                 vendorobj=VendorProduct_BasicDetails.objects.count()
+#                 if vendorobj==0:
+#                     print('s')
+#                     vendorobj = VendorProduct_BasicDetails.objects.create(core_sector=core_sector, category=category,sub_category=sub_category,product_category=product_category,item_name=item_name,product_type=product_type, item_type=item_type,item_code=item_code,item_description=item_description,
+#                                                                           final_selling_price=final_selling_price,numeric='100001',add_image1=add_image1, add_image2=add_image2,add_image3=add_image3, add_image4=add_image4,
+#                                                                           uom=uom, quantity=quantity, hsn_sac=hsn_sac,unit_price=unit_price, discount=discount, tax=tax,sku_id=sku_id,country_of_origin=country_of_origin,
+#                                                                           currency=currency,created_by=userid,updated_by=SelfRegistration.objects.get(id=userid))
+#                 else:
+#                     vendorobj = VendorProduct_BasicDetails.objects.create(core_sector=core_sector,
+#                                                                           category=category,sub_category=sub_category,product_category=product_category,item_name=item_name,product_type=product_type,
+#                                                                           item_type=item_type, item_code=item_code,item_description=item_description,
+#                                                                           final_selling_price=final_selling_price,numeric=vedordetailsobj[0].get('numeric'), add_image1=add_image1,
+#                                                                           add_image2=add_image2,add_image3=add_image3,add_image4=add_image4,uom=uom, quantity=quantity,hsn_sac=hsn_sac, unit_price=unit_price,
+#                                                                           discount=discount, tax=tax, sku_id=sku_id,country_of_origin=country_of_origin,
+#                                                                           currency=currency, created_by=userid,updated_by=SelfRegistration.objects.get(id=userid))
 #
-#         vendortechincalobj=VendorProduct_TechnicalSpecifications.objects.create(item_specification=data['item_specification'],item_description=data['item_description'],created_by=userid,updated_by=SelfRegistration.objects.get(id=userid),vendor_products=VendorProduct_BasicDetails.objects.get(vendor_product_id=vendorobj.vendor_product_id))
 #
-#         vendorproductobj=VendorProduct_ProductFeatures.objects.create(product_item_specification=data['product_item_specification'],product_item_description=data['product_item_description'],created_by=userid,updated_by=SelfRegistration.objects.get(id=userid),vendor_products=VendorProduct_BasicDetails.objects.get(vendor_product_id=vendorobj.vendor_product_id))
+#             return Response({'status': 201, 'message': 'Vendor Product  Created'}, status=201)
+#         except Exception as e:
+#             return Response({'status': 500, 'error': str(e)}, status=500)
+
+
+
+# class BuyerProductDetailsView(viewsets.ModelViewSet):
+#     permission_classes = [permissions.AllowAny]
+#     queryset = BuyerProductDetails.objects.all()
+#     serializer_class = BuyerProductDetailsSerializer
+#     parser_classes = [MultiPartParser]
+#     ordering_fields = ['buyer_product_id']
+#     ordering = ['buyer_product_id']
 #
-#         vendordocumentsobj=VendorProduct_Documents.objects.create(document=data['document'],document_description=data['document_description'],created_by=userid,updated_by=SelfRegistration.objects.get(id=userid),vendor_products=VendorProduct_BasicDetails.objects.get(vendor_product_id=vendorobj.vendor_product_id))
-#         return Response({'status': 201, 'message': 'Vendor Product Created'}, status=201)
-#
-#
-#
-#
-#
-#     except Exception as e:
-#         return Response({'status':500,'error':str(e)},status=500)
+#     def get_queryset(self):
+#         buyerproductobj=BuyerProductDetails.objects.filter(updated_by=self.request.GET.get('updated_by'))
+#         if buyerproductobj:
+#             return buyerproductobj
+#         raise ValidationError({'message':'Buyer Product Details Not Present','status':204})
 
-class VendorProduct_BasicDetailsView(viewsets.ModelViewSet):
-    permission_classes = [permissions.AllowAny]
-    queryset = VendorProduct_BasicDetails.objects.all()
-    serializer_class = VendorProduct_BasicDetailsSerializer
-    parser_classes = [MultiPartParser]
-    ordering_fields = ['vendor_product_id']
-    ordering = ['vendor_product_id']
-
-    def create(self, request, *args, **kwargs):
-        data=request.data
-        core_sector = data['core_sector']
-        category = data['category']
-        sub_category = data['sub_category']
-        product_category = data['product_category']
-        product_type=data['product_type']
-        item_type = data['item_type']
-        item_name = data['item_name']
-        item_description=data['item_description']
-        final_selling_price = data['final_selling_price']
-        add_image1 = data['add_image1']
-        add_image2 = data['add_image2']
-        add_image3 = data['add_image3']
-        add_image4 = data['add_image4']
-        uom = data['uom']
-        quantity = data['quantity']
-        hsn_sac = data['hsn_sac']
-        unit_price = data['unit_price']
-        discount = data['discount']
-        tax = data['tax']
-        sku_id = data['sku_id']
-        country_of_origin = data['country_of_origin']
-        currency = data['currency']
-        userid = data['userid']
-        type = data['type']
-        try:
-
-            vedordetailsobj = VendorProduct_BasicDetails.objects.filter(updated_by=userid).order_by('-numeric').values()
-            if type == 'auto':
-                if vedordetailsobj:
-                    vendorobj = VendorProduct_BasicDetails.objects.create(core_sector=core_sector, category=category,sub_category=sub_category,product_category=product_category,product_type=product_type,item_type=item_type,item_code=vedordetailsobj[0].get('numeric'),item_name=item_name,item_description=item_description,
-                                                                          final_selling_price=final_selling_price,
-                                                                          numeric=vedordetailsobj[0].get('numeric') + 1,add_image1=add_image1, add_image2=add_image2,add_image3=add_image3, add_image4=add_image4,
-                                                                          uom=uom, quantity=quantity, hsn_sac=hsn_sac,unit_price=unit_price, discount=discount, tax=tax,sku_id=sku_id,country_of_origin=country_of_origin,
-                                                                          currency=currency,created_by=userid,updated_by=SelfRegistration.objects.get(id=userid))
-                else:
-                    print('not exist')
-                    vendorobj = VendorProduct_BasicDetails.objects.create(core_sector=core_sector, category=category,sub_category=sub_category,product_category=product_category,product_type=product_type,item_type=item_type, item_code=100001,item_name=item_name,item_description=item_description,
-                                                                          final_selling_price=final_selling_price,numeric=100002, add_image1=add_image1,add_image2=add_image2, add_image3=add_image3,add_image4=add_image4,
-                                                                          uom=uom, quantity=quantity,hsn_sac=hsn_sac,unit_price=unit_price,discount=discount, tax=tax, sku_id=sku_id,
-                                                                          country_of_origin=country_of_origin,currency=currency,created_by=userid,
-                                                                          updated_by=SelfRegistration.objects.get(id=userid))
-            if type == 'manual':
-                item_code = data['item_code']
-                vendorobj=VendorProduct_BasicDetails.objects.count()
-                if vendorobj==0:
-                    print('s')
-                    vendorobj = VendorProduct_BasicDetails.objects.create(core_sector=core_sector, category=category,sub_category=sub_category,product_category=product_category,item_name=item_name,product_type=product_type, item_type=item_type,item_code=item_code,item_description=item_description,
-                                                                          final_selling_price=final_selling_price,numeric='100001',add_image1=add_image1, add_image2=add_image2,add_image3=add_image3, add_image4=add_image4,
-                                                                          uom=uom, quantity=quantity, hsn_sac=hsn_sac,unit_price=unit_price, discount=discount, tax=tax,sku_id=sku_id,country_of_origin=country_of_origin,
-                                                                          currency=currency,created_by=userid,updated_by=SelfRegistration.objects.get(id=userid))
-                else:
-                    vendorobj = VendorProduct_BasicDetails.objects.create(core_sector=core_sector,
-                                                                          category=category,sub_category=sub_category,product_category=product_category,item_name=item_name,product_type=product_type,
-                                                                          item_type=item_type, item_code=item_code,item_description=item_description,
-                                                                          final_selling_price=final_selling_price,numeric=vedordetailsobj[0].get('numeric'), add_image1=add_image1,
-                                                                          add_image2=add_image2,add_image3=add_image3,add_image4=add_image4,uom=uom, quantity=quantity,hsn_sac=hsn_sac, unit_price=unit_price,
-                                                                          discount=discount, tax=tax, sku_id=sku_id,country_of_origin=country_of_origin,
-                                                                          currency=currency, created_by=userid,updated_by=SelfRegistration.objects.get(id=userid))
-
-
-            return Response({'status': 201, 'message': 'Vendor Product  Created'}, status=201)
-        except Exception as e:
-            return Response({'status': 500, 'error': str(e)}, status=500)
-
-
-
-class BuyerProductDetailsView(viewsets.ModelViewSet):
-    permission_classes = [permissions.AllowAny]
-    queryset = BuyerProductDetails.objects.all()
-    serializer_class = BuyerProductDetailsSerializer
-    parser_classes = [MultiPartParser]
-    ordering_fields = ['buyer_product_id']
-    ordering = ['buyer_product_id']
-
-    def get_queryset(self):
-        buyerproductobj=BuyerProductDetails.objects.filter(updated_by=self.request.GET.get('updated_by'))
-        if buyerproductobj:
-            return buyerproductobj
-        raise ValidationError({'message':'Buyer Product Details Not Present','status':204})
-
-
-
-
-
-
-
-
-# @api_view(['post'])
-# @permission_classes((AllowAny,))
-# def buyer_product_create(request):
-#     data=request.data
-#     userid=data['userid']
-#     ccode=data['ccode']
-#     buyerdetailsobj=BuyerProductDetails.objects.filter(updated_by=userid).order_by('-buyer_numeric').values()
-#     if buyerdetailsobj:
-#         buyerobj=BuyerProductDetails.objects.create(buyer_item_type=data['buyer_item_type'],buyer_numeric=buyerdetailsobj[0].get('buyer_numeric')+1,buyer_item_code=str(ccode)+"-"+str(buyerdetailsobj[0].get('buyer_numeric')),buyer_item_name=data['buyer_item_name'],buyer_item_description=data['buyer_item_description'],
-#                                                     buyer_uom=data['buyer_uom'],buyer_hsn_sac=data['buyer_hsn_sac'],buyer_unit_price=data['buyer_unit_price'],
-#                                                     buyer_category=data['buyer_category'],buyer_department=data['buyer_department'],buyer_item_group=data['buyer_item_group'],
-#                                                     buyer_annual_consumption=data['buyer_annual_consumption'],buyer_safety_stock=data['buyer_safety_stock'],buyer_model_no=data['buyer_model_no'],buyer_document=data['buyer_document'],
-#                                                     buyer_additional_specifications=data['buyer_additional_specifications'],buyer_add_product_supplies=data['buyer_add_product_supplies'],
-#                                                     updated_by=SelfRegistration.objects.get(id=userid),created_by=userid)
-#
-#     else:
-#         print("data not exist")
-#         buyerobj = BuyerProductDetails.objects.create(buyer_item_type=data['buyer_item_type'],
-#                                                buyer_numeric=1002,buyer_item_code=str(ccode)+"-"+"1001",buyer_item_name=data['buyer_item_name'],buyer_item_description=data['buyer_item_description'],
-#                                                buyer_uom=data['buyer_uom'], buyer_hsn_sac=data['buyer_hsn_sac'],buyer_unit_price=data['buyer_unit_price'],buyer_category=data['buyer_category'], buyer_department=data['buyer_department'],
-#                                                buyer_item_group=data['buyer_item_group'],buyer_annual_consumption=data['buyer_annual_consumption'],buyer_safety_stock=data['buyer_safety_stock'],buyer_model_no=data['buyer_model_no'],
-#                                                buyer_document=data['buyer_document'],buyer_additional_specifications=data['buyer_additional_specifications'],buyer_add_product_supplies=data['buyer_add_product_supplies'],
-#                                                updated_by=SelfRegistration.objects.get(id=userid),created_by=userid)
-#
-#     # productbuyer=BuyerProductDetails.objects.filter(buyer_product_id=buyerobj.buyer_product_id).values()
-#     return Response({'status':201,'message':'Buyer Product Created'},status=201)
 
 @api_view(['post'])
 @permission_classes((AllowAny,))
@@ -372,9 +219,12 @@ class ItemCodeSettingsView(viewsets.ModelViewSet):
         prefix = request.data.get('prefix',None)
         numeric = request.data.get('numeric',None)
         suffix = request.data.get('suffix',None)
+        userid=request.data.get('userid',None)
         try:
-            code_format=prefix+suffix+numeric
+            code_format=prefix+suffix+str(numeric)
             request.data['code_format']=code_format
+            request.data['updated_by']=userid
+            request.data['created_by']=userid
             return super().create(request, *args, **kwargs)
 
         except Exception as e:
@@ -515,3 +365,320 @@ def delete_buyer_product(request):
 
     except Exception as e:
         return Response({'status':500,'error':str(e)},status=500)
+
+
+class VendorProduct_BasicDetailsView(viewsets.ModelViewSet):
+    permission_classes = [permissions.AllowAny]
+    queryset = VendorProduct_BasicDetails.objects.all()
+    serializer_class = VendorProduct_BasicDetailsSerializer
+    parser_classes = [MultiPartParser]
+    ordering_fields = ['vendor_product_id']
+    ordering = ['vendor_product_id']
+
+
+    def create(self, request, *args, **kwargs):
+        core_sector=request.data.get('core_sector')
+        category=request.data.get('category')
+        sub_category=request.data.get('sub_category')
+        product_category=request.data.get('product_category')
+        item_type = request.data.get('item_type')
+        item_group=request.data.get('item_group')
+        item_name = request.data.get('item_name')
+        item_description = request.data.get('item_description')
+        final_selling_price = request.data.get('final_selling_price')
+        add_image1 = request.data.get('add_image1')
+        add_image2 = request.data.get('add_image2')
+        add_image3 = request.data.get('add_image3')
+        add_image4 = request.data.get('add_image4')
+        uom = request.data.get('uom')
+        quantity = request.data.get('quantity')
+        hsn_sac = request.data.get('hsn_sac')
+        unit_price = request.data.get('unit_price')
+        discount = request.data.get('discount')
+        tax = request.data.get('tax')
+        brand_make=request.data.get('brand_make')
+        country_of_origin = request.data.get('country_of_origin')
+        currency = request.data.get('currency')
+        model_no=request.data.get('model_no')
+        part_no=request.data.get('part_no')
+        alternative_parts_no=request.data.get('alternative_parts_no')
+        pricing=request.data.get('pricing')
+        request_on_quote=request.data.get('request_on_quote')
+        price_range=request.data.get('price_range')
+        sku_id = request.data.get('sku_id')
+        userid = request.data.get('userid')
+        type = request.data.get('type')
+
+
+        try:
+            vendordetailsobj = VendorProduct_BasicDetails.objects.filter(updated_by=userid).order_by('-numeric').values()
+            if type == 'auto':
+                if len(vendordetailsobj)>0:
+                    vendorobj = VendorProduct_BasicDetails.objects.create(core_sector=core_sector,category=category,sub_category=sub_category,item_type=item_type,item_group=item_group,item_code=vendordetailsobj[0].get('numeric'),product_category=product_category,item_name=item_name,item_description=item_description,
+                                                                          final_selling_price=final_selling_price,numeric=vendordetailsobj[0].get('numeric') + 1,add_image1=add_image1, add_image2=add_image2,add_image3=add_image3, add_image4=add_image4,
+                                                                          uom=uom, quantity=quantity, hsn_sac=hsn_sac,unit_price=unit_price, discount=discount, tax=tax,brand_make=brand_make,country_of_origin=country_of_origin,currency=currency,model_no=model_no,part_no=part_no,alternative_parts_no=alternative_parts_no,
+                                                                          pricing=pricing,request_on_quote=request_on_quote,price_range=price_range,sku_id=sku_id,
+                                                                          created_by=userid,updated_by=SelfRegistration.objects.get(id=userid))
+                else:
+                    print('not exist')
+                    vendorobj = VendorProduct_BasicDetails.objects.create(core_sector=core_sector, category=category,sub_category=sub_category,item_type=item_type, item_group=item_group,item_code=100001,product_category=product_category,item_name=item_name,item_description=item_description,
+                                                                          final_selling_price=final_selling_price,numeric=100002, add_image1=add_image1,add_image2=add_image2, add_image3=add_image3,add_image4=add_image4,
+                                                                          uom=uom, quantity=quantity, hsn_sac=hsn_sac,unit_price=unit_price, discount=discount,tax=tax, brand_make=brand_make,country_of_origin=country_of_origin,currency=currency, model_no=model_no,part_no=part_no,alternative_parts_no=alternative_parts_no,
+                                                                          pricing=pricing,request_on_quote=request_on_quote,price_range=price_range,sku_id=sku_id,created_by=userid,updated_by=SelfRegistration.objects.get(id=userid))
+
+                return Response({'status': 201, 'message': 'Vendor Product  Created Auto'}, status=201)
+
+
+            else:
+                if type == 'manual':
+                    item_code = request.data['item_code']
+                    vendorobj=VendorProduct_BasicDetails.objects.count()
+                    if vendorobj==0:
+                        print('s')
+                        vendorobj = VendorProduct_BasicDetails.objects.create(core_sector=core_sector,category=category,sub_category=sub_category,item_type=item_type,item_group=item_group, item_code=item_code,product_category=product_category,item_name=item_name, item_description=item_description,
+                                                                              final_selling_price=final_selling_price,numeric='100001', add_image1=add_image1,add_image2=add_image2,add_image3=add_image3,add_image4=add_image4,
+                                                                              uom=uom, quantity=quantity,hsn_sac=hsn_sac, unit_price=unit_price,discount=discount, tax=tax,brand_make=brand_make,country_of_origin=country_of_origin,
+                                                                              currency=currency, model_no=model_no,part_no=part_no,alternative_parts_no=alternative_parts_no,
+                                                                              pricing=pricing,request_on_quote=request_on_quote,price_range=price_range,sku_id=sku_id, created_by=userid,updated_by=SelfRegistration.objects.get(id=userid))
+
+                    else:
+                        vendorobj = VendorProduct_BasicDetails.objects.create(core_sector=core_sector, category=category,sub_category=sub_category,item_type=item_type,item_group=item_group,item_code=item_code,product_category=product_category,item_name=item_name,item_description=item_description,final_selling_price=final_selling_price,numeric=vendordetailsobj[0].get('numeric'), add_image1=add_image1,
+                                                                              add_image2=add_image2,add_image3=add_image3,add_image4=add_image4,uom=uom, quantity=quantity,hsn_sac=hsn_sac, unit_price=unit_price,discount=discount,tax=tax,brand_make=brand_make,
+                                                                              country_of_origin=country_of_origin,currency=currency, model_no=model_no,part_no=part_no,alternative_parts_no=alternative_parts_no,
+                                                                              pricing=pricing,request_on_quote=request_on_quote,price_range=price_range,sku_id=sku_id, created_by=userid,updated_by=SelfRegistration.objects.get(id=userid))
+
+                return Response({'status': 201, 'message': 'Vendor Product  Created'}, status=201)
+            # else:
+            #     return Response({'status': 204, 'message': 'Not Present or enter type name properly'}, status=204)
+        except Exception as e:
+            return Response({'status': 500, 'error': str(e)}, status=500)
+
+
+
+
+
+
+
+@api_view(['put'])
+@permission_classes((AllowAny,))
+def updated_item_code_settings_and_item_code(request):
+    data=request.data
+    userid=data['userid']
+    prefix=data['prefix']
+    suffix=data['suffix']
+    numeric=data['numeric']
+    try:
+        itemcodesettingsobj=ItemCodeSettings.objects.filter(updated_by=userid).order_by('-id').values()
+        if len(itemcodesettingsobj)>0:
+            itemcodeobj=ItemCodeSettings.objects.get(updated_by=userid,id=itemcodesettingsobj[0].get('id'))
+            if itemcodeobj.prefix !=prefix:
+                itemcodeobj.prefix=prefix
+                itemcodeobj.save()
+            if itemcodeobj.suffix!=suffix:
+                itemcodeobj.suffix=suffix
+                itemcodeobj.save()
+
+            if itemcodeobj.numeric!=numeric:
+                itemcodeobj.numeric=numeric
+                itemcodeobj.save()
+
+                value = itemcodeobj.prefix + itemcodeobj.suffix + itemcodeobj.numeric
+                itemcodeobj.code_format=value
+                itemcodeobj.save()
+
+            itemcodeobj1=BuyerProductDetails.objects.filter(updated_by_id=userid).order_by('-buyer_product_id').values()
+            if len(itemcodeobj1)>0:
+                itemvalue=BuyerProductDetails.objects.get(buyer_product_id=itemcodeobj1[0].get('buyer_product_id'),updated_by_id=itemcodeobj1[0].get('updated_by_id'))
+                print(itemvalue.buyer_product_id)
+                if itemvalue.buyer_item_code!=itemcodeobj.code_format:
+                    itemvalue.buyer_item_code=itemcodeobj.code_format
+                    itemvalue.save()
+                if itemvalue.buyer_numeric!=itemcodeobj.numeric:
+                    itemvalue.buyer_numeric=int(itemcodeobj.numeric)+1
+                    itemvalue.save()
+
+                if itemvalue.buyer_prefix !=itemcodeobj.prefix:
+                    itemvalue.buyer_prefix=itemcodeobj.prefix
+                    itemvalue.save()
+
+                return Response({'status':202,'message':'Buyer item code and item Code Settings Upadted'},status=202)
+
+            else:
+                return Response({'status': 200, 'message': 'Buyer Product Not Present'}, status=200)
+
+        else:
+            return Response({'status':204,'message':'Item Code Settigs data for this user id is not present'},status=204)
+    except Exception as e:
+        return Response({'status':500,'error':str(e)},status=500)
+
+
+@api_view(['post'])
+@permission_classes((AllowAny,))
+def get_item_code_details_by_userid_itemtype(request):
+    data=request.data
+    item_type=data['item_type']
+    userid=data['userid']
+    try:
+        itemcodeobj=ItemCodeSettings.objects.filter(updated_by_id=userid,item_type=item_type).values()
+        if itemcodeobj:
+            return Response({'status': 200, 'message': 'Item Code Settings Based on Item Type Success','data':itemcodeobj}, status=200)
+        else:
+            return Response({'status': 204, 'message': 'Data No Present for this item type and user'}, status=204)
+
+
+
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)
+
+
+
+class BuyerProductDetailsView(viewsets.ModelViewSet):
+    permission_classes = [permissions.AllowAny]
+    queryset = BuyerProductDetails.objects.all()
+    serializer_class = BuyerProductDetailsSerializer
+    # parser_classes = (MultiPartParser,)
+    ordering_fields = ['buyer_product_id']
+    ordering = ['buyer_product_id']
+
+
+    def create(self, request, *args, **kwargs):
+        buyer_item_type=request.data.get('buyer_item_type',None)
+        buyer_item_name=request.data.get('buyer_item_name',None)
+        buyer_item_description=request.data.get('buyer_item_description',None)
+        buyer_uom=request.data.get('buyer_uom',None)
+        buyer_hsn_sac = request.data.get('buyer_hsn_sac',None)
+        buyer_unit_price = request.data.get('buyer_unit_price',None)
+        buyer_category = request.data.get('buyer_category',None)
+        buyer_department = request.data.get('buyer_department',None)
+        buyer_item_group = request.data.get('buyer_item_group',None)
+        buyer_annual_consumption = request.data.get('buyer_annual_consumption',None)
+        buyer_safety_stock = request.data.get('buyer_safety_stock',None)
+        buyer_model_no = request.data.get('buyer_model_no',None)
+        buyer_document = request.data.get('buyer_document',None)
+        buyer_additional_specifications = request.data.get('buyer_additional_specifications',None)
+        buyer_add_product_supplies = request.data.get('buyer_add_product_supplies',None)
+        userid = request.data.get('userid',None)
+        try:
+            itemcodesettingsobj = ItemCodeSettings.objects.filter(updated_by=userid).order_by('-id').values()
+            if len(itemcodesettingsobj) > 0:
+                buyerproductobj = BuyerProductDetails.objects.filter(updated_by=userid).order_by('-buyer_numeric').values()
+                if len(buyerproductobj)==0:
+                    print("data not exist")
+                    buyerobj = BuyerProductDetails.objects.create(buyer_item_type=buyer_item_type,
+                                                                  buyer_prefix=itemcodesettingsobj[0].get('prefix'),
+                                                                  buyer_suffix=itemcodesettingsobj[0].get('suffix'),
+                                                                  buyer_numeric=int(
+                                                                      itemcodesettingsobj[0].get('numeric')) + 1,
+                                                                  buyer_item_code=itemcodesettingsobj[0].get(
+                                                                      'code_format'),
+                                                                  buyer_item_name=buyer_item_name,
+                                                                  buyer_item_description=buyer_item_description,
+                                                                  buyer_uom=buyer_uom,
+                                                                  buyer_hsn_sac=buyer_hsn_sac,
+                                                                  buyer_unit_price=buyer_unit_price,
+                                                                  buyer_category=buyer_category,
+                                                                  buyer_department=buyer_department,
+                                                                  buyer_item_group=buyer_item_group,
+                                                                  buyer_annual_consumption=buyer_annual_consumption,
+                                                                  buyer_safety_stock=buyer_safety_stock,
+                                                                  buyer_model_no=buyer_model_no,
+                                                                  buyer_document=buyer_document,
+                                                                  buyer_additional_specifications=buyer_additional_specifications,
+                                                                  buyer_add_product_supplies=buyer_add_product_supplies,
+                                                                  updated_by=SelfRegistration.objects.get(id=userid),
+                                                                  created_by=userid)
+                else:
+                    buyerobj = BuyerProductDetails.objects.create(buyer_item_type=buyer_item_type,
+                                                                  buyer_prefix=buyerproductobj[0].get('buyer_prefix'),
+                                                                  buyer_suffix=buyerproductobj[0].get('buyer_suffix'),
+                                                                  buyer_numeric=int(buyerproductobj[0].get('buyer_numeric')) + 1,
+                                                                  buyer_item_code=buyerproductobj[0].get('buyer_prefix') + buyerproductobj[0].get('buyer_suffix')+buyerproductobj[0].get('buyer_numeric'),
+                                                                  buyer_item_name=buyer_item_name,
+                                                                  buyer_item_description=buyer_item_description,
+                                                                  buyer_uom=buyer_uom,
+                                                                  buyer_hsn_sac=buyer_hsn_sac,
+                                                                  buyer_unit_price=buyer_unit_price,
+                                                                  buyer_category=buyer_category,
+                                                                  buyer_department=buyer_department,
+                                                                  buyer_item_group=buyer_item_group,
+                                                                  buyer_annual_consumption=buyer_annual_consumption,
+                                                                  buyer_safety_stock=buyer_safety_stock,
+                                                                  buyer_model_no=buyer_model_no,
+                                                                  buyer_document=buyer_document,
+                                                                  buyer_additional_specifications=buyer_additional_specifications,
+                                                                  buyer_add_product_supplies=buyer_add_product_supplies,
+                                                                  updated_by=SelfRegistration.objects.get(id=userid),
+                                                                  created_by=userid)
+                return Response({'status':201,'message':'Buyer Product Created'},status=201)
+            else:
+                return Response(
+                    {'status': 204, 'message': 'Item Code Settings Not Present,Please Create Item Code in Settings'},
+                    status=204)
+
+        except Exception as e:
+            return Response({'status': 500, 'error': str(e)}, status=500)
+
+    def get_queryset(self):
+        buyerproductobj=BuyerProductDetails.objects.filter(updated_by=self.request.GET.get('updated_by'))
+        if buyerproductobj:
+            return buyerproductobj
+        raise ValidationError({'message':'Buyer Product Details Not Present','status':204})
+
+
+
+@api_view(['post'])
+@permission_classes((AllowAny,))
+def advance_search_buyer_product(request):
+    # advance search buyer product
+    data = request.data
+    buyer_item_type=data['buyer_item_type']
+    buyer_item_code = data['buyer_item_code']
+    buyer_item_name = data['buyer_item_name']
+    buyer_item_description = data['buyer_item_description']
+    buyer_uom = data['buyer_uom']
+    buyer_hsn_sac = data['buyer_hsn_sac']
+    buyer_unit_price=data['buyer_unit_price']
+    buyer_category=data['buyer_category']
+    buyer_department=data['buyer_department']
+    buyer_item_group=data['buyer_item_group']
+    buyer_model_no=data['buyer_model_no']
+    updated_by=data['updated_by']
+
+    try:
+        buyerproductadvancesearch = BuyerProductDetails.objects.filter(updated_by_id=updated_by).filter(
+            buyer_item_type__icontains=buyer_item_type).filter(buyer_item_code__icontains=buyer_item_code).filter(
+            buyer_item_name__icontains=buyer_item_name). \
+            filter(buyer_item_description__icontains=buyer_item_description).filter(
+            buyer_uom__icontains=buyer_uom).filter(
+            buyer_hsn_sac__icontains=buyer_hsn_sac).filter(buyer_unit_price__icontains=buyer_unit_price).filter(buyer_category__icontains=buyer_category).filter(
+            buyer_department__icontains=buyer_department).filter(buyer_item_group__icontains=buyer_item_group).filter(buyer_model_no__icontains=buyer_model_no).values()
+
+        return Response({'status': '200', 'message': 'Buyer Product Advance Search', 'data': buyerproductadvancesearch},
+                        status=200)
+    except Exception as e:
+        return Response({'status': '500', 'error': str(e)}, status=500)
+
+
+
+
+@api_view(['post'])
+@permission_classes((AllowAny,))
+def t_codes_datas(request):
+    data=request.data
+    searchdata=data['searchdata']
+    try:
+
+        if searchdata.lower()=="VdrP1".lower():
+            return Response({'status': 200, 'message': 'Search_Success'}, status=200)
+        elif searchdata.lower()=="VdrP2".lower():
+            return Response({'status': 200, 'message': 'Search_Category_Success'}, status=200)
+        elif searchdata.lower()=="VdrP3".lower():
+            return Response({'status': 200, 'message': 'Vendor_Product_Details'}, status=200)
+        elif searchdata.lower()=="VdrP4".lower():
+            return Response({'status': 200, 'message': 'Pricing_Details'}, status=200)
+        elif searchdata.lower()=="VdrP5".lower():
+            return Response({'status': 200, 'message': 'List_And_Summary'}, status=200)
+        else:
+            return Response({'status': 204, 'message': 'Not_Present'}, status=204)
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)

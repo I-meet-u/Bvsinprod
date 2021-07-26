@@ -63,3 +63,24 @@ class VendorRfqTermsDescriptionSerializer(serializers.ModelSerializer):
     class Meta:
         model=VendorRfqTermsDescription
         fields='__all__'
+
+class SourceList_CreateItemsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model=SourceList_CreateItems
+        fields='__all__'
+
+    def create(self, validate_data):
+        # to add any extra details into the object before saving
+        sourceobj = SourceList_CreateItems.objects.count()
+        if sourceobj == 0:
+            source_code = '80001'
+        else:
+            sourceobj = SourceList_CreateItems.objects.last()
+            source_code = int(sourceobj.source_code) + 1
+        values = SourceList_CreateItems.objects.create(source_code=source_code, **validate_data)
+        return values
+
+class SourcePublishSerializer(serializers.ModelSerializer):
+    class Meta:
+        model=SourcePublish
+        fields='__all__'

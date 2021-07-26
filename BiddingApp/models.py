@@ -1,3 +1,4 @@
+from django.contrib.postgres.fields import ArrayField
 from django.db import models
 
 # Create your models here.
@@ -15,7 +16,7 @@ class BuyerProductBidding(models.Model):
     product_rfq_type=models.CharField(max_length=400)
     product_rfq_status=models.CharField(max_length=50,default='Pending')
     product_publish_date=models.CharField(max_length=100)
-    product_deadline_date=models.DateField(null=True,blank=True)
+    product_deadline_date=models.DateField(max_length=100,null=True,blank=True)
     product_delivery_date = models.CharField(max_length=100)
     product_rfq_currency = models.CharField(max_length=100,null=True,blank=True)
     product_rfq_category = models.CharField(max_length=100, null=True, blank=True)
@@ -94,7 +95,8 @@ class SelectVendorsForBiddingProduct(models.Model):
         db_table = "SelectVendorsForBiddingProduct"
 
 class BiddingTermMasterSettings(models.Model):
-    term_masters=models.CharField(max_length=80)
+    terms_name=models.CharField(max_length=80,null=True,blank=True)
+    terms_description=ArrayField(models.CharField(max_length=500),null=True,blank=True)
     created_on = models.DateTimeField(auto_now_add=True)
     updated_on = models.DateTimeField(auto_now=True)
     created_by = models.BigIntegerField()
@@ -106,7 +108,7 @@ class BiddingTermMasterSettings(models.Model):
 
 class VendorProductBidding(models.Model):
     vendor_product_bidding_id=models.BigAutoField(primary_key=True)
-    vendor_product_rfq_number=models.CharField(max_length=40,unique=True,null=True,blank=True)
+    vendor_product_rfq_number=models.CharField(max_length=40,null=True,blank=True)
     vendor_user_rfq_number=models.CharField(max_length=50,null=True,blank=True)
     vendor_product_rfq_type=models.CharField(max_length=400)
     vendor_product_rfq_status=models.CharField(max_length=50,default='Pending')
@@ -134,13 +136,19 @@ class VendorBiddingBuyerProductDetails(models.Model):
     vendor_item_name = models.CharField(max_length=100)
     vendor_item_description = models.TextField(null=True,blank=True)
     vendor_uom = models.CharField(max_length=100, null=True,blank=True)
-    vendor_category = models.CharField(max_length=500,null=True)
-    vendor_quantity = models.CharField(max_length=100)
+    vendor_category = models.CharField(max_length=500,null=True,blank=True)
+    buyer_quantity = models.CharField(max_length=100,null=True,blank=True)
+    vendor_quantity = models.CharField(max_length=100,null=True,blank=True)
+    vendor_rate = models.CharField(max_length=100,null=True,blank=True)
+    vendor_tax = models.CharField(max_length=100,null=True,blank=True)
+    vendor_discount = models.CharField(max_length=100,null=True,blank=True)
+    vendor_final_amount = models.CharField(max_length=80,null=True,blank=True)
+    vendor_total_amount= models.CharField(max_length=80,null=True,blank=True)
     vendor_document=models.FileField(upload_to='BuyerProductFiles',null=True,blank=True)
-    created_on = models.DateTimeField(auto_now_add=True)
+    created_on = models.DateTimeField(auto_now_add=True,null=True,blank=True)
     updated_on = models.DateTimeField(auto_now=True)
-    created_by = models.BigIntegerField()
-    vendor_rfq_number=models.CharField(max_length=100)
+    created_by = models.BigIntegerField(null=True,blank=True)
+    vendor_rfq_number=models.CharField(max_length=100,null=True,blank=True)
     updated_by = models.ForeignKey(SelfRegistration, on_delete=models.CASCADE)
     history = HistoricalRecords()
 
@@ -151,7 +159,8 @@ class VendorBiddingBuyerProductDetails(models.Model):
 class VendorRfqTermsDescription(models.Model):
     vendor_rfq_number=models.CharField(max_length=200)
     vendor_terms=models.CharField(max_length=500)
-    vendor_description=models.TextField()
+    vendor_description=models.TextField(null=True,blank=True)
+    vendor_response=models.TextField(null=True,blank=True)
     created_on = models.DateTimeField(auto_now_add=True)
     updated_on = models.DateTimeField(auto_now=True)
     created_by = models.BigIntegerField()
@@ -161,4 +170,74 @@ class VendorRfqTermsDescription(models.Model):
 
     class Meta:
         db_table = "VendorRfqTermsDescription"
+
+
+
+class SourceList_CreateItems(models.Model):
+    item_type=models.CharField(max_length=80)
+    source_code=models.CharField(unique=True,max_length=100,null=True,blank=True)
+    source=models.CharField(max_length=200)
+    item_name=models.CharField(max_length=200)
+    item_code=models.CharField(max_length=60)
+    item_description=models.TextField()
+    uom=models.CharField(max_length=80)
+    department=models.CharField(max_length=100)
+    quantity=models.CharField(max_length=80)
+    present_cost=models.CharField(max_length=50)
+    target_cost=models.CharField(max_length=50)
+    product_category=models.CharField(max_length=100)
+    p_f_charges=models.CharField(max_length=200)
+    frieght_charges=models.CharField(max_length=200)
+    delivery=models.CharField(max_length=200)
+    priority=models.CharField(max_length=200)
+    annual_consumption=models.CharField(max_length=200)
+    source_required_city=models.CharField(max_length=200)
+    source_vendors = ArrayField(models.CharField(max_length=800),null=True,blank=True)
+    document_1=models.FileField(upload_to='SourceListFiles',null=True,blank=True)
+    document_2 = models.FileField(upload_to='SourceListFiles',null=True,blank=True)
+    document_3= models.FileField(upload_to='SourceListFiles',null=True,blank=True)
+    status=models.CharField(max_length=40,default='Pending')
+    created_on = models.DateTimeField(auto_now_add=True)
+    updated_on = models.DateTimeField(auto_now=True)
+    created_by = models.BigIntegerField()
+    updated_by = models.ForeignKey(SelfRegistration, on_delete=models.CASCADE)
+
+    class Meta:
+        db_table="SourceList_CreateItems"
+
+class SourcePublish(models.Model):
+    source_item_type=models.CharField(max_length=100,null=True,blank=True)
+    source_code = models.CharField(max_length=100, null=True, blank=True)
+    source_type = models.CharField(max_length=100, null=True, blank=True)
+    source_department=models.CharField(max_length=150,null=True,blank=True)
+    source_present_cost = models.CharField(max_length=70, null=True, blank=True)
+    source_target_cost = models.CharField(max_length=70, null=True, blank=True)
+    source_pf_charges=models.CharField(max_length=200,null=True,blank=True)
+    source_frieght_charges = models.CharField(max_length=200, null=True, blank=True)
+    source_delivery_charges = models.CharField(max_length=200, null=True, blank=True)
+    source_item_code = models.CharField(max_length=100, null=True, blank=True)
+    source_item_name = models.CharField(max_length=100, null=True, blank=True)
+    source_item_description=models.TextField(null=True,blank=True)
+    source_uom=models.CharField(max_length=70,null=True,blank=True)
+    source_product_category = models.CharField(max_length=200, null=True, blank=True)
+    source_priority = models.CharField(max_length=50, null=True, blank=True)
+    source_quantity=models.CharField(max_length=50,null=True,blank=True)
+    source_unit_rate = models.CharField(max_length=50, null=True, blank=True)
+    source_tax = models.CharField(max_length=50, null=True, blank=True)
+    source_discount = models.CharField(max_length=50, null=True, blank=True)
+    source_total_amount=models.CharField(max_length=50,null=True,blank=True)
+    source=models.ForeignKey(SourceList_CreateItems,models.CASCADE, null=True,blank=True)
+    source_user_id = models.CharField(max_length=40)
+    created_on = models.DateTimeField(auto_now_add=True)
+    updated_on = models.DateTimeField(auto_now=True)
+    created_by = models.BigIntegerField()
+    updated_by = models.ForeignKey(SelfRegistration, on_delete=models.CASCADE)
+
+    class Meta:
+        db_table="SourcePublish"
+
+
+
+
+
 

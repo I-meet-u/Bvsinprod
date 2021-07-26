@@ -1,10 +1,13 @@
 from itertools import chain
 
 from django.shortcuts import render
-from rest_framework.decorators import api_view, permission_classes
+from rest_framework import permissions, viewsets, status
+from rest_framework.decorators import api_view, permission_classes, action
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 # Create your views here.
+from LandingPageApp.models import CompanyReview, CompanyRating
+from LandingPageApp.serializers import CompanyReviewSerializer, CompanyRatingSerializer
 from MastersApp.models import MaincoreMaster, CategoryMaster, SubCategoryMaster
 from RegistrationApp.models import SelfRegistration, BasicCompanyDetails, IndustrialHierarchy, BillingAddress, \
     IndustrialInfo
@@ -49,7 +52,7 @@ def category_list(request):
     subcatarray=[]
     subcategoryarray = []
     try:
-        catobj = CategoryMaster.objects.filter(maincore=maincoreid).values()
+        catobj = CategoryMaster.objects.filter(maincore=maincoreid).order_by('category_name').values()
         print(len(catobj))
         if catobj:
             for i in range(0, len(catobj)):
@@ -157,40 +160,6 @@ def category_search_by_name(request):
             return Response({'status': 204, 'message': 'not found'}, status=204)
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)
-
-# @api_view(['post'])
-# @permission_classes([AllowAny])
-# def company_details_by_category_id(request):
-#     # get company details by passing category_id to sub_category and also fetching basic details and industry hierarchy
-#
-#     data = request.data
-#     categoryid = data['categoryid']
-#     subcategoryarray =[]
-#     compcodearray=[]
-#     subcatnamearrayofarray=[]
-#     try:
-#         subcategoryobj = SubCategoryMaster.objects.filter(category__in=categoryid).values()
-#         for i in range(0,len(subcategoryobj)):
-#             subcatnamearrayofarray.append({'sub_category_name':subcategoryobj[i].get('sub_category_name'),
-#                                            'sub_category_id':subcategoryobj[i].get('sub_category_id')})
-#             subcategoryarray.append({subcategoryobj[i].get('sub_category_name')})
-#             supobj=IndustrialHierarchy.objects.filter(subcategory__icontains=subcategoryobj[i].get('sub_category_name')).values()
-#             for j in range(0,len(supobj)):
-#                 basicinfoobj = BasicCompanyDetails.objects.filter(company_code=supobj[j].get('company_code_id')).values()
-#                 bill_obj=BillingAddress.objects.filter(company_code_id=supobj[j].get('company_code_id')).values()
-#                 compcodearray.append({'compcode':supobj[j].get('company_code_id'),
-#                                       'cname':basicinfoobj[0].get('company_name'),
-#                                       'GST':basicinfoobj[0].get('gst_number'),
-#                                       'city': bill_obj[0].get('bill_city'),
-#                                       'state': bill_obj[0].get('bill_state'),
-#                                       'country': bill_obj[0].get('bill_country'),
-#                                       'maincore':supobj[j].get('maincore')
-#                                       })
-#             subcatnamearrayofarray[i].__setitem__('compcodearray',compcodearray)
-#             compcodearray=[]
-#         return Response({'status': 200, 'message': 'ok','data':subcatnamearrayofarray}, status=200)
-#     except Exception as e:
-#         return Response({'status': 500, 'error': str(e)}, status=500)
 
 
 @api_view(['get'])
@@ -335,3 +304,48 @@ def basic_details_by_company_name(request):
             return Response({'status': 204, 'message': 'basic company details not present for this company name'}, status=204)
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)
+
+
+@api_view(['post'])
+@permission_classes([AllowAny])
+def maincore_by_id(request):
+    data=request.data
+    maincore_id=data['maincore_id']
+    # maincore master all data by using filter and passig maincore id
+    try:
+        maincoreobj=MaincoreMaster.objects.filter(maincore_id=maincore_id).values('maincore_name')
+        if len(maincoreobj)>0:
+            return Response({'status': 200, 'message': 'Maincore List', 'data': maincoreobj}, status=200)
+        else:
+            return Response({'status': 204, 'message': 'Maincore details not found for this id'}, status=204)
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)
+
+
+
+class CompanyReviewViewSet(viewsets.ModelViewSet):
+    permission_classes = [permissions.AllowAny]
+    queryset = CompanyReview.objects.all()
+    serializer_class = CompanyReviewSerializer
+
+    @action(detail=True,methods=['POST'])
+    def rate_movie(self,request,pk=None):
+        if 'stars' in request.data:
+            reviews=CompanyReview.objects.get(id=pk)
+            stars=request.data['stars']
+            user=SelfRegistration.objects.get(id=request.data('user',None))
+
+            try:
+                ratingobj=CompanyRating.objects.get(user=user.id,movie=reviews.id)
+                ratingobj.stars=stars
+                ratingobj.save()
+                serailizer=CompanyRatingSerializer(ratingobj,many=False)
+                response={'message':'Rating Updated','result':serailizer.data}
+                return Response(response,status=status.HTTP_200_OK)
+            except Exception as e:
+                return Response({'status': 500, 'error': str(e)}, status=500)
+
+class CompanyRatingViewSet(viewsets.ModelViewSet):
+    permission_classes = [permissions.AllowAny]
+    queryset = CompanyRating.objects.all()
+    serializer_class = CompanyRatingSerializer

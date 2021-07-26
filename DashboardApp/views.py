@@ -7,7 +7,7 @@ from django.db.models import Q
 from django.shortcuts import render
 
 # Create your views here.
-from rest_framework import viewsets, permissions
+from rest_framework import viewsets, permissions, status
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.exceptions import ValidationError
 from rest_framework.permissions import AllowAny
@@ -42,19 +42,6 @@ class InviteVendorView(viewsets.ModelViewSet):
             if email_id in regarray:
                 return Response({'status': 202, 'message': 'Email Id already present in Registration'}, status=202)
             return super().create(request, *args, **kwargs)
-            #
-            # headers = {
-            #     'accept': 'application/json',
-            #     'api-key': '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',
-            #     'content-type': 'application/json',
-            # }
-            # data = '{ "sender":{ "name":"VENDORSIN COMMERCE PVT LTD", "email":"admin@vendorsin.com" }, "to":[ { "email":"' + email_id + '' \
-            #                                                                                                                          '", "name":"Harish" } ], "subject":"You have been invited to Vendorsin Commerce as a Vendor,Please Dont Share this mail to anyone",''}'
-            # print(data,'xcxc')
-            # response = requests.post('https://api.sendinblue.com/v3/smtp/email', headers=headers, data=data)
-            # print("----")
-            # print(response)
-            # print("----")
 
 
         except Exception as e:
@@ -180,40 +167,6 @@ def get_all_details_for_business_request(request):
         return Response({'status': 500, 'error': str(e)}, status=500)
 
 
-# @api_view(['post'])
-# @permission_classes((AllowAny,))
-# def external_vendor(request):
-#     data=request.data
-#     regid=[]
-#     userid=data['userid']
-#     internalarray=[]
-#     internalarray2=[]
-#     try:
-#         regobj1=SelfRegistration.objects.filter(id=userid).values()
-#         regobj=SelfRegistration.objects.filter().values()
-#         internalvendorobj = InternalVendor.objects.filter().values('company_code').order_by('internal_vendor_id')
-#         for i in range(0, len(internalvendorobj)):
-#             internalarray.append(internalvendorobj[i].get('company_code'))
-#         if len(regobj)>0:
-#             for i in range(0,len(regobj)):
-#                 regid.append(regobj[i].get('id'))
-#             basicdata=BasicCompanyDetails.objects.filter(updated_by__in=regid).values()
-#             for i in range(0,len(basicdata)):
-#                 if basicdata[i].get('company_code') not in internalarray:
-#                     x=basicdata[i].get('company_code')
-#                     internalarray2.append(x)
-#             basicdataobj= BasicCompanyDetails.objects.filter(company_code__in=internalarray2).values('company_code','company_name').order_by('company_code')
-#             industryhierarchy = IndustrialHierarchy.objects.filter(company_code__in=internalarray2).values('maincore','category','subcategory','updated_by','company_code').order_by('company_code')
-#             industryobj = IndustrialInfo.objects.filter(company_code__in=internalarray2).values('nature_of_business','industry_to_serve','updated_by','company_code').order_by('company_code')
-#             billingobj = BillingAddress.objects.filter(company_code__in=internalarray2).values('bill_city','bill_state','updated_by','company_code').order_by('company_code')
-#             external_vendor_array=list(chain(basicdataobj,industryhierarchy,industryobj,billingobj))
-#             return Response({'status': 200, 'message': 'External Vendor List','data':external_vendor_array}, status=200)
-#         return Response({'status': 204, 'message': 'Not Present'}, status=204)
-#
-#
-#     except Exception as e:
-#         return Response({'status': 500, 'error': str(e)}, status=500)
-
 @api_view(['post'])
 @permission_classes((AllowAny,))
 def external_vendor(request):
@@ -227,7 +180,7 @@ def external_vendor(request):
     try:
         regobj1 = SelfRegistration.objects.filter(id=userid).values()
         regobj = SelfRegistration.objects.filter().values()
-        internalvendorobj = InternalVendor.objects.filter().values('company_code').order_by('internal_vendor_id')
+        internalvendorobj = InternalVendor.objects.filter(updated_by_id=userid).values('company_code').order_by('internal_vendor_id')
         for i in range(0, len(internalvendorobj)):
             internalarray.append(internalvendorobj[i].get('company_code'))
         for i in range(0, len(regobj)):
@@ -239,22 +192,25 @@ def external_vendor(request):
         industryhierarchy = IndustrialHierarchy.objects.filter(company_code__in=ccode).values()
         if len(industryhierarchy) > 0:
             for j in range(0, len(industryhierarchy)):
+                regstatus = SelfRegistration.objects.filter(id=industryhierarchy[j].get('updated_by_id'),
+                                                        admin_approve="Approved").values()
                 x = industryhierarchy[j].get('company_code_id')
                 print(x)
-                inudstryobj = IndustrialInfo.objects.filter(company_code=x).values()
-                basicobj = BasicCompanyDetails.objects.filter(company_code=x).values()
-                bill_obj = BillingAddress.objects.filter(company_code=x).values()
-                externalarray.append({'maincore': industryhierarchy[j].get('maincore'),
-                                      'category': industryhierarchy[j].get('category'),
-                                      'subcategory': industryhierarchy[j].get('subcategory'),
-                                      'bill_city': basicobj[0].get('bill_city'),
-                                      'bill_state': bill_obj[0].get('bill_state'),
-                                      'nature_of_business': inudstryobj[0].get('nature_of_business'),
-                                      'industry_to_serve': inudstryobj[0].get('industry_to_serve'),
-                                      'company_code': basicobj[0].get('company_code'),
-                                      'company_name': basicobj[0].get('company_name')
+                if len(regstatus)>0:
+                    inudstryobj = IndustrialInfo.objects.filter(company_code=x).values()
+                    basicobj = BasicCompanyDetails.objects.filter(company_code=x).values()
+                    bill_obj = BillingAddress.objects.filter(company_code=x).values()
+                    externalarray.append({'maincore': industryhierarchy[j].get('maincore'),
+                                          'category': industryhierarchy[j].get('category'),
+                                          'subcategory': industryhierarchy[j].get('subcategory'),
+                                          'bill_city': basicobj[0].get('bill_city'),
+                                          'bill_state': bill_obj[0].get('bill_state'),
+                                          'nature_of_business': inudstryobj[0].get('nature_of_business'),
+                                          'industry_to_serve': inudstryobj[0].get('industry_to_serve'),
+                                          'company_code': basicobj[0].get('company_code'),
+                                          'company_name': basicobj[0].get('company_name')
 
-                                      })
+                                          })
 
             return Response({'status': 200, 'message': 'External Vendor List', 'data': externalarray}, status=200)
         else:
@@ -332,21 +288,31 @@ def buzrequestcreate(request):
     data = request.data
     compcode = data['compcode']
     userid = data['userid']
+    emptyarra=[]
 
     try:
-        for i in range(0, len(compcode)):
-            basicoj = BasicCompanyDetails.objects.filter(company_code=compcode[i]).values()
-            billngaddrs = BillingAddress.objects.filter(company_code=basicoj[0].get('company_code')).values()
-            Regobj = SelfRegistration.objects.get(id=basicoj[0].get('updated_by_id'))
-            indobj = IndustrialInfo.objects.filter(company_code=compcode[i]).values()
-            BusinessRequest.objects.create(company_code=basicoj[0].get('company_code'),
-                                           company_name=basicoj[0].get('company_name'),
-                                           city=billngaddrs[0].get('bill_city'), state=billngaddrs[0].get('bill_state'),
-                                           nature_of_business=Regobj.nature_of_business,
-                                           industry_to_serve=indobj[0].get('industry_to_serve'), created_by=userid,
-                                           updated_by=SelfRegistration.objects.get(id=userid))
+        businessrequest = BusinessRequest.objects.filter(company_code__in=compcode,updated_by_id=userid).values()
+        for i in range(0,len(businessrequest)):
+            if businessrequest[i].get('company_code') in compcode:
+                return Response({'status':202,'message':'Company Code Already Present in Business Request'},status=status.HTTP_202_ACCEPTED)
+            else:
+                emptyarra.append(compcode)
+                print(emptyarra)
+        else:
 
-        return Response({'status': 200, 'message': 'ok', 'data': basicoj}, status=200)
+            for i in range(0, len(compcode)):
+                basicoj = BasicCompanyDetails.objects.filter(company_code=compcode[i]).values()
+                billngaddrs = BillingAddress.objects.filter(company_code=basicoj[0].get('company_code')).values()
+                Regobj = SelfRegistration.objects.get(id=basicoj[0].get('updated_by_id'))
+                indobj = IndustrialInfo.objects.filter(company_code=compcode[i]).values()
+                BusinessRequest.objects.create(company_code=basicoj[0].get('company_code'),
+                                               company_name=basicoj[0].get('company_name'),
+                                               city=billngaddrs[0].get('bill_city'), state=billngaddrs[0].get('bill_state'),
+                                               nature_of_business=Regobj.nature_of_business,
+                                               industry_to_serve=indobj[0].get('industry_to_serve'), created_by=userid,
+                                               updated_by=SelfRegistration.objects.get(id=userid))
+
+            return Response({'status': 200, 'message': 'ok'}, status=200)
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)
 
@@ -355,10 +321,32 @@ def buzrequestcreate(request):
 def sendergetbuzrequestdata(request):
     data = request.data
     userid = data['userid']
+    businessrequestarray=[]
     try:
         buzobj = BusinessRequest.objects.filter(updated_by=userid).order_by('company_code').values()
+        for i in range(0,len(buzobj)-1):
+            print(i)
+            if buzobj[i].get('company_code')==buzobj[i+1].get('company_code'):
+                pass
+            else:
+                businessrequestarray.append({'company_code':buzobj[i].get('company_code'),
+                                             'company_name':buzobj[i].get('company_name'),
+                                             'city':buzobj[i].get('city'),
+                                             'state':buzobj[i].get('state'),
+                                             'nature_of_business':buzobj[i].get('nature_of_business'),
+                                             'supply_capabilites':buzobj[i].get('supply_capabilites'),
+                                             'industry_to_serve':buzobj[i].get('industry_to_serve'),
+                                             'maincore':buzobj[i].get('maincore'),
+                                             'category':buzobj[i].get('category'),
+                                             'sub_category':buzobj[i].get('sub_category'),
+                                             'send_status':buzobj[i].get('send_status'),
+                                             'created_by':buzobj[i].get('created_by'),
+                                             'updated_by':buzobj[i].get('updated_by')
 
-        return Response({'status': 200, 'message': 'ok', 'data': buzobj}, status=200)
+                                             })
+
+        businessrequestarray.append(buzobj[len(buzobj)-1])
+        return Response({'status': 200, 'message': 'ok', 'data': businessrequestarray}, status=200)
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)
 
@@ -394,40 +382,49 @@ def searchinternalvendor(request):
                                                         sub_category__icontains=subcategory,
                                                         groups__icontains=grp).values()
 
-        return Response({'status': 200, 'message': 'ok', 'message': internalobj}, status=200)
+        return Response({'status': 200, 'message': 'ok', 'data': internalobj}, status=200)
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)
 
 
 @api_view(['post'])
+@permission_classes((AllowAny,))
 def buzrequest(request):
     data = request.data
     userbuzdata = []
+
     try:
         basiccompoobj = BasicCompanyDetails.objects.get(updated_by=data['userid'])
         print(basiccompoobj.company_code)
-        buzobj = BusinessRequest.objects.filter(company_code=str(basiccompoobj.company_code)).values()
-        print(buzobj)
-        for i in range(0,len(buzobj)):
-            sendcompdetailsobj = BasicCompanyDetails.objects.get(updated_by_id=buzobj[i].get('updated_by_id'))
-            billsaddrsobj = BillingAddress.objects.filter(updated_by_id=buzobj[i].get('updated_by_id')).order_by(
-                'id').values()
-            Industryinfoobj=IndustrialInfo.objects.filter(updated_by_id=buzobj[i].get('updated_by_id')).values()
-            print(sendcompdetailsobj)
-            print(billsaddrsobj)
-            print(Industryinfoobj)
-            # userbuzdata.append({'ccode':sendcompdetailsobj.company_code,
-            #                     'cname':sendcompdetailsobj.company_name,
-            #                     'city':billsaddrsobj[0].get('bill_city'),
-            #                     'Industry':Industryinfoobj[0].get('industry_to_serve'),
-            #                     'Natureofbuz':Industryinfoobj[0].get('industry_to_serve')
-            #                     })
+        businessrequest=BusinessRequest.objects.filter(company_code=basiccompoobj.company_code).values().order_by('id')
+        if len(businessrequest)>0:
+            for i in range(0,len(businessrequest)):
+                regobj=SelfRegistration.objects.filter(id=businessrequest[i].get('updated_by_id')).values()
+                basival=BasicCompanyDetails.objects.filter(updated_by_id=businessrequest[i].get('updated_by_id')).values().order_by('company_code')
+                # industryinfoobj = IndustrialInfo.objects.filter(company_code_id=basival[0].get('company_code')).values().order_by('id')
+                billsaddrsobj = BillingAddress.objects.filter(company_code_id=basival[0].get('company_code')).order_by('id').values()
+                print(len(billsaddrsobj))
+                industryinfoobj = IndustrialInfo.objects.filter(company_code_id=basival[0].get('company_code')).values().order_by('id')
+                userbuzdata.append({'ccode':basival[0].get('company_code'),
+                                    'cname':basival[0].get('company_name'),
+                                    'gst_number':basival[0].get('gst_number'),
+                                    'profile_cover_photo':regobj[0].get('profile_cover_photo'),
+                                    'city': billsaddrsobj[0].get('bill_city'),
+                                    'Industry': industryinfoobj[0].get('industry_to_serve'),
+                                    'natureofbuz': industryinfoobj[0].get('nature_of_business'),
+                                    'state': billsaddrsobj[0].get('bill_state'),
+                                    'gst': basival[0].get('gst_number'),
+                                    'user_id':basival[0].get('updated_by_id'),
+                                    'business_id':businessrequest[i].get('id')
 
-        return Response({'status': 200, 'message': 'ok','data':userbuzdata}, status=200)
+
+                                    })
+            return Response({'status':200,'message':'ok','data':userbuzdata},status=200)
+        else:
+            return Response({'status': 204, 'message': 'Company code not present in busines request'}, status=204)
+
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)
-
-
 
 
 @api_view(['post'])
@@ -477,3 +474,26 @@ def search_business_request_advance_search(request):
             status=200)
     except Exception as e:
         return Response({'status': '500', 'error': str(e)}, status=500)
+
+
+
+@api_view(['put'])
+def update_business_status(request):
+    data = request.data
+    vendorcode = data['vendorcode']
+    businessid = data['businessid']
+    statusval=data['statusval']
+    try:
+        businessobj = BusinessRequest.objects.filter(company_code=vendorcode,id=businessid).values().order_by('id')
+
+        for i in range(0, len(businessobj)):
+            businessobj = BusinessRequest.objects.get(id=businessobj[i].get('id'))
+            print(businessobj)
+            if businessobj.send_status!=statusval:
+                businessobj.send_status = statusval
+                businessobj.save()
+                return Response({'status': 200, 'message': 'Status Updated', 'data': businessobj.send_status},status=status.HTTP_200_OK)
+            else:
+                return Response({'status': 202, 'message': 'Already Updated'},status=status.HTTP_202_ACCEPTED)
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

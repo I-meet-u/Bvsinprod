@@ -5,7 +5,7 @@ from rest_framework.validators import UniqueValidator
 
 from .models import SelfRegistration, SelfRegistration_Sample, BasicCompanyDetails, BillingAddress, ShippingAddress, \
     IndustrialInfo, IndustrialHierarchy, BankDetails, LegalDocuments, BasicCompanyDetails_Others, EmployeeRegistration, \
-    Employee_CompanyDetails, Employee_IndustryInfo
+    Employee_CompanyDetails, Employee_IndustryInfo, ContactDetails, CommunicationDetails
 
 
 class SelfRegistrationSerializer(serializers.ModelSerializer):
@@ -187,3 +187,15 @@ class Employee_IndustryInfoSerializer(serializers.ModelSerializer):
     class Meta:
         model=Employee_IndustryInfo
         fields="__all__"
+
+
+class ContactDetailsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model=ContactDetails
+        fields='__all__'
+
+
+class CommunicationDetailsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model=CommunicationDetails
+        fields='__all__'

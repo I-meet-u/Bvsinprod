@@ -201,7 +201,7 @@ class TaxMasterSerializer(serializers.ModelSerializer):
         print(validate_data)
         taxobj = TaxMaster.objects.count()
         if taxobj == 0:
-            tax_code = '2201'
+            tax_code = '4201'
         else:
             taxobj = TaxMaster.objects.last()
             tax_code = int(taxobj.tax_code) + 1
@@ -215,18 +215,6 @@ class HSNMasterSerializer(serializers.ModelSerializer):
         model=HSNMaster
         fields='__all__'
 
-    # def create(self, validate_data):
-    #     # to add any extra details into the object before saving
-    #     print(validate_data)
-    #     hsnobj = HSNMaster.objects.count()
-    #     if hsnobj == 0:
-    #         hsn_code = '1201'
-    #     else:
-    #         hsnobj = HSNMaster.objects.last()
-    #         print(hsnobj.hsn_code)
-    #         hsn_code = int(hsnobj.hsn_code) + 1
-    #     values = HSNMaster.objects.create(hsn_code=hsn_code, **validate_data)
-    #     return values
 
 class SACMasterSerializer(serializers.ModelSerializer):
     # sac_master serializer
@@ -283,6 +271,18 @@ class WarrantyMasterSerializer(serializers.ModelSerializer):
     class Meta:
         model=WarrantyMaster
         fields='__all__'
+
+    def create(self, validate_data):
+        # to add any extra details into the object before saving
+        print(validate_data)
+        warrantyobj = WarrantyMaster.objects.count()
+        if warrantyobj == 0:
+            warranty_code = '9500'
+        else:
+            warrantyobj = WarrantyMaster.objects.last()
+            warranty_code = int(warrantyobj.warranty_code) + 1
+        values = WarrantyMaster.objects.create(warranty_code=warranty_code, **validate_data)
+        return values
 
 class GuaranteeMasterSerializer(serializers.ModelSerializer):
     # guarentee master serializer
@@ -539,9 +539,3 @@ class PerformanceGuaranteesMasterSerializer(serializers.ModelSerializer):
             performance_code = int(performanceobj.performance_code) + 1
         values = PerformanceGuaranteesMaster.objects.create(performance_code=performance_code, **validate_data)
         return values
-
-class TermMasterCreateSerializer(serializers.ModelSerializer):
-    # term master serializer
-    class Meta:
-        model=TermMasterCreate
-        fields='__all__'

@@ -1,9 +1,18 @@
 from django.conf.urls.static import static
 from django.urls import path,include
+from rest_framework import routers
+
 from . import views
 from django.conf import settings
 
+
+router=routers.DefaultRouter()
+
+router.register('company-review', views.CompanyReviewViewSet)
+router.register('company-rating', views.CompanyRatingViewSet)
+
 urlpatterns = [
+    path('api/',include(router.urls)),
     path('maincore-all-list/',views.maincore_all_list),
     path('maincore-list/', views.maincore_list),
     path('category-list/', views.category_list),
@@ -21,6 +30,7 @@ urlpatterns = [
     path('get-all_company-details-company_code/',views.get_all_company_details_company_code),
     # path('getallcompanydetails_companycode/',views.getallcompanydetails_companycode)
     path('category-list-by-maincore/',views.category_list_by_maincore),
-    path('basic-details-by-company_name/',views.basic_details_by_company_name)
+    path('basic-details-by-company_name/',views.basic_details_by_company_name),
+    path('maincore-by-id/',views.maincore_by_id)
 
 ]

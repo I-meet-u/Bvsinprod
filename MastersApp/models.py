@@ -661,16 +661,3 @@ class PerformanceGuaranteesMaster(models.Model):
 
     class Meta:
         db_table = "PerformanceGuaranteesMaster"
-
-
-
-class TermMasterCreate(models.Model):
-    term_masters_id=models.BigAutoField(primary_key=True)
-    term_masters=models.CharField(max_length=80)
-    created_on = models.DateTimeField(auto_now_add=True)
-    updated_on = models.DateTimeField(auto_now=True)
-    created_by = models.BigIntegerField()
-    updated_by = models.ForeignKey(SelfRegistration, on_delete=models.CASCADE)
-
-    class Meta:
-        db_table = "TermMasterCreate"

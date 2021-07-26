@@ -25,11 +25,13 @@ from rest_framework.views import APIView
 
 from .models import SelfRegistration, SelfRegistration_Sample, BasicCompanyDetails, BillingAddress, ShippingAddress, \
     IndustrialInfo, IndustrialHierarchy, BankDetails, LegalDocuments, BasicCompanyDetails_Others, BillingAddress_Others, \
-    ShippingAddress_Others, EmployeeRegistration, Employee_CompanyDetails, Employee_IndustryInfo
+    ShippingAddress_Others, EmployeeRegistration, Employee_CompanyDetails, Employee_IndustryInfo, ContactDetails, \
+    CommunicationDetails
 from .serializers import SelfRegistrationSerializer, SelfRegistrationSerializerSample, BasicCompanyDetailsSerializers, \
     BillingAddressSerializer, ShippingAddressSerializer, IndustrialInfoSerializer, IndustrialHierarchySerializer, \
     BankDetailsSerializer, LegalDocumentsSerializers, BasicCompanyDetailsOthersSerializers, \
-    EmployeeRegistrationSerializer, Employee_CompanyDetailsSerializers, Employee_IndustryInfoSerializer
+    EmployeeRegistrationSerializer, Employee_CompanyDetailsSerializers, Employee_IndustryInfoSerializer, \
+    ContactDetailsSerializer, CommunicationDetailsSerializer
 from rest_framework.permissions import AllowAny
 from rest_framework import status
 from rest_framework.response import Response
@@ -89,79 +91,6 @@ class Logout(APIView):
         return Response(status=status.HTTP_200_OK)
 
 
-@api_view(['post'])
-@permission_classes((AllowAny,))
-def phone_verification_otp(request):
-    # phone number verification by OTP
-    data = request.data
-    digits = "0123456789"
-    phone_number = data['phone_number']
-    phone_number_otp= "+91"+str(phone_number)
-    print(type(phone_number_otp))
-    try:
-        user = SelfRegistration.objects.get(phone_number=phone_number)
-        if user:
-            pass
-            OTP = ""
-            for i in range(6):
-                OTP += digits[math.floor(random.random() * 10)]
-            print(OTP)
-            user.phone_otp = OTP
-            user.save()
-            mjtoken = 'a68496eb4e6d4286887b3196db434fc0'
-            print(mjtoken)
-            headers = {
-                'Authorization': f"Bearer {mjtoken}",
-                'Content-Type': 'application/json',
-            }
-            data = '{ "From": "VendorsIn", "To": "'+phone_number_otp+'", "Text": "Your OTP for Registration to Vendorsin portal is '+OTP+" Please donot share your OTP to anyone"'" }'
-            # data = '{ "Text": "Have a nice SMS flight with Mailjet !", "To":'++919482212344", "From": "VendorsIn" }'
-            response = requests.post('https://api.mailjet.com/v4/sms-send', headers=headers, data=data)
-            print(response)
-        return Response({'status': 200, 'message': 'OTP successfully sent to phone'}, status=200)
-    except ObjectDoesNotExist as e:
-        return Response({'status': 404, 'error': "phone number not exist"}, status=404)
-    except Exception as e:
-        return Response({'status': 500, 'error': str(e)}, status=500)
-
-
-
-
-# @api_view(['post'])
-# @permission_classes((AllowAny,))
-# def email_verification_otp(request):
-#     # email id verification by otp sending to mail
-#     data = request.data
-#     email = data['email']
-#     digits = '0123456789'
-#     OTP = ""
-#     try:
-#         user = SelfRegistration.objects.get(username=email)
-#         print(user)
-#         if user:
-#             for i in range(6):
-#                 OTP += digits[math.floor(random.random() * 10)]
-#             mailchimp = MailchimpTransactional.Client('14kMF-44pCPZu8XbNkAzFA')
-#             message = {
-#                 "from_email": "admin@vendorsin.com",
-#                 "subject": "Mail Verification OTP",
-#                 "text":"You mail verificaton OTP is"+" "+OTP+" "+"Please Don't Share Your OTP \n Thank You",
-#                 "to": [
-#                     {
-#                         "email": user.username,
-#                         "type": "to"
-#                     }
-#                 ]
-#             }
-#             response = mailchimp.messages.send({"message": message})
-#             print(response)
-#             return Response({'status': 200, 'message': 'Email sent successfully'}, status=200)
-#         else:
-#             return Response({'status': 202, 'message': 'Not present'}, status=202)
-#     except ObjectDoesNotExist as e:
-#         return Response({'status': 404, 'error': "Email not exist"}, status=404)
-#     except ApiClientError as error:
-#         return Response({'status': 500, 'error': error}, status=500)
 
 
 @api_view(['post'])
@@ -190,42 +119,6 @@ def get_userid_by_token(request):
         return Response({'status': 500, 'error': str(e)}, status=500)
 
 
-
-# @api_view(['post'])
-# @permission_classes((AllowAny,))
-# def email_verification_otp_to_change_email(request):
-#     # email verification to change mail
-#     data = request.data
-#     email = data['email']
-#     digits = '0123456789'
-#     OTP = ""
-#     try:
-#         user = SelfRegistration.objects.get(username=email)
-#         print(user)
-#         if user:
-#             for i in range(6):
-#                 OTP += digits[math.floor(random.random() * 10)]
-#             mailchimp = MailchimpTransactional.Client('14kMF-44pCPZu8XbNkAzFA')
-#             message = {
-#                 "from_email": "admin@vendorsin.com",
-#                 "subject": "Mail Verification OTP",
-#                 "to": [
-#                     {
-#                         "email": user.username,
-#                         "type": "to"
-#                     }
-#                 ]
-#             }
-#             response = mailchimp.messages.send({"message": message})
-#             print(response)
-#             return Response({'status': 200, 'message': 'Email sent successfully'}, status=200)
-#         else:
-#             return Response({'status': 202, 'message': 'Not present'}, status=202)
-#     except ObjectDoesNotExist as e:
-#         return Response({'status': 404, 'error': "Email not exist"}, status=404)
-#     except ApiClientError as error:
-#         return Response({'status': 500, 'error': error}, status=500)
-
 @api_view(['post'])
 @permission_classes((AllowAny,))
 def change_email(request):
@@ -242,36 +135,6 @@ def change_email(request):
 
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)
-
-
-
-@api_view(['post'])
-@permission_classes((AllowAny,))
-def phone_otp_verfication_to_change_phonenumber(request):
-    # otp verification to change phone number
-    data = request.data
-    digits = "0123456789"
-    phonenumber = data['phonenumber']
-    phone_number_otp = "+91" + str(phonenumber)
-    try:
-        pass
-        # OTP = ""
-        # for i in range(6):
-        #     OTP += digits[math.floor(random.random() * 10)]
-        #     print(OTP)
-        #
-        # mjtoken = 'a68496eb4e6d4286887b3196db434fc0'
-        # print(mjtoken)
-        # headers = {'Authorization': f"Bearer {mjtoken}",'Content-Type': 'application/json',}
-        # data = '{ "From": "VendorsIn", "To": "' + phone_number_otp + '", "Text": "Your OTP for phone number verification to change phone number ' + OTP + " Please donot share your OTP to anyone"'" }'
-        # response = requests.post('https://api.mailjet.com/v4/sms-send', headers=headers, data=data)
-        # print(response)
-        return Response({'status': 200, 'message': 'OTP Sent Successfully'}, status=200)
-    except ObjectDoesNotExist as e:
-        return Response({'status': 404, 'error': "phone number not exist"}, status=404)
-    except Exception as e:
-        return Response({'status': 500, 'error': str(e)}, status=500)
-
 
 @api_view(['post'])
 @permission_classes((AllowAny,))
@@ -665,60 +528,6 @@ class EmployeeIndustrialInfoView(viewsets.ModelViewSet):
             raise ValidationError({'message': ' Employee Industry info details not exist','status':204})
         return employee_industry
 
-#
-# @api_view(['get'])
-# @permission_classes([AllowAny])
-# def registration_list(request):
-#     emptydata=list()
-#     try:
-#         regobj=SelfRegistration.objects.filter().values()
-#         for i in range(0,len(regobj)):
-#             val=regobj[i].get('id')
-#             basicobj=BasicCompanyDetails.objects.filter(updated_by=val).values()
-#             # basics = BasicCompanyDetails.objects.get(updated_by=val)
-#             industry_info = IndustrialInfo.objects.filter(updated_by=val).values()
-#             industry_hierarchy = IndustrialHierarchy.objects.filter(updated_by=val).values()
-#             bankdetails = BankDetails.objects.filter(updated_by=val).values()
-#             legalobj = LegalDocuments.objects.filter(updated_by=val).values()
-#             emptydata.append({
-#                 "username": regobj[i].get('contact_person'),
-#                 "user_type": regobj[i].get('user_type'),
-#                 "email": regobj[i].get('username'),
-#                 "phone_number": regobj[i].get('phone_number'),
-#                 "nature_of_business": regobj[i].get('nature_of_business'),
-#                 "business_type": regobj[i].get('business_to_serve'),
-#                 # "register_status": "Company Details",
-#             })
-#
-#             if basicobj:
-#                 if industry_info:
-#                     if industry_hierarchy:
-#                         if bankdetails:
-#                             if legalobj:
-#                                     return Response({'status': 200, 'mesage': 'upto legal obj', 'data': emptydata}, status=200)
-#                             else:
-#                                 return Response({'status': 200, 'mesage': 'upto bank', 'data': emptydata},
-#                                                 status=200)
-#                         else:
-#                             return Response({'status': 200, 'mesage': 'upto industry hierarchy', 'data': emptydata}, status=200)
-#                     else:
-#                         return Response({'status': 200, 'mesage': 'upto industry info', 'data': emptydata},
-#                                         status=200)
-#                 else:
-#                     return Response({'status': 200, 'mesage': 'upto basic info', 'data': emptydata}, status=200)
-#             else:
-#                 return Response({'status': 200, 'mesage': 'not present'}, status=200)
-#
-#
-#
-#
-#
-#
-#
-#         return Response({'status':200,'mesage':'ok','data':emptydata},status=200)
-#
-#     except Exception as e:
-#         return Response({'status':500,'error':str(e)},status=500)
 
 
 @api_view(['post'])
@@ -831,11 +640,6 @@ def sendOtpmail(request):
             return Response({'status': 200, 'message': 'ok'}, status=200)
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)
-
-
-
-
-
 
 
 
@@ -1148,44 +952,17 @@ def getcompanycode(request):
         return Response({'status': 500, 'error': str(e)}, status=500)
 
 
-# @api_view(['post'])
-# @permission_classes((AllowAny,))
-# def changeemail_check(request):
-#     data=request.data
-#     userid=data['userid']
-#     email=data['email']
-#     digits = "0123456789"
-#     try:
-#         user = SelfRegistration.objects.get(id=userid)
-#         if user:
-#             if user.username!=email:
-#                 user.username = email
-#                 user.save()
-#
-#                 OTP = ""
-#                 for i in range(6):
-#                     OTP += digits[math.floor(random.random() * 10)]
-#                 print(OTP)
-#                 user.email_otp = OTP
-#                 user.save()
-#                 headers = {
-#                     'accept': 'application/json',
-#                     'api-key': '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',
-#                     'content-type': 'application/json',
-#                 }
-#                 data = '{ "sender":{ "name":"VENDORSIN COMMERCE PVT LTD", "email":"admin@vendorsin.com" }, "to":[ { "email":"' + email + '' \
-#                                                                                                                                          '", "name":"Harish" } ], "subject":"OTP Confirmation", "templateId":1 ,}''}'
-#
-#                 # data = '{ "sender":{ "name":"VENDORSIN COMMERCE PVT LTD", "email":"admin@vendorsin.com" },"subject":"This is my default subject line","templateId":96,"to":[ { "email":"harishshetty7459@gmail.com", "name":"harish" } ]'
-#
-#                 response = requests.post('https://api.sendinblue.com/v3/smtp/email', headers=headers, data=data)
-#                 print("----")
-#                 print(response)
-#                 print("----")
-#
-#                 return Response({'status': 200, 'message': "success"}, status=200)
-#             else:
-#                 return Response({'status': 202, 'message': "Already Exist"}, status=202)
-#     except Exception as e:
-#         return Response({'status': 500
-#         , 'error': str(e)}, status=500)
+
+class ContactDetailsViewset(viewsets.ModelViewSet):
+    queryset = ContactDetails.objects.all()
+    serializer_class = ContactDetailsSerializer
+    permission_classes = (AllowAny,)
+    ordering_fields = ['id']
+    ordering = ['id']
+
+class CommunicationDetailsViewset(viewsets.ModelViewSet):
+    queryset = CommunicationDetails.objects.all()
+    serializer_class = CommunicationDetailsSerializer
+    permission_classes = (AllowAny,)
+    ordering_fields = ['id']
+    ordering = ['id']

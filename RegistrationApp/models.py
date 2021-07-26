@@ -294,3 +294,45 @@ class Employee_IndustryInfo(models.Model):
 
     class Meta:
         db_table = "Employee_IndustryInfo"
+
+
+class ContactDetails(models.Model):
+    name=models.CharField(max_length=100,null=True,blank=True)
+    currency=models.CharField(max_length=100,null=True,blank=True)
+    department = models.CharField(max_length=200, null=True, blank=True)
+    designation = models.CharField(max_length=200, null=True, blank=True)
+    region = models.CharField(max_length=200, null=True, blank=True)
+    email_id = models.CharField(max_length=100, null=True, blank=True)
+    phone_number = models.CharField(max_length=20, null=True, blank=True)
+    created_on = models.DateTimeField(auto_now_add=True)
+    updated_on = models.DateTimeField(auto_now=True)
+    created_by = models.BigIntegerField()
+    updated_by = models.OneToOneField(SelfRegistration, on_delete=models.CASCADE)
+
+    class Meta:
+        db_table = "ContactDetails"
+
+
+class CommunicationDetails(models.Model):
+    name=models.CharField(max_length=100,null=True,blank=True)
+    currency=models.CharField(max_length=100,null=True,blank=True)
+    department = models.CharField(max_length=200, null=True, blank=True)
+    designation = models.CharField(max_length=200, null=True, blank=True)
+    region = models.CharField(max_length=200, null=True, blank=True)
+    email_id = models.CharField(max_length=100, null=True, blank=True)
+    phone_number = models.CharField(max_length=20, null=True, blank=True)
+    unit_address=models.TextField(null=True,blank=True)
+    unit_name= models.CharField(max_length=100, null=True, blank=True)
+    address=models.TextField(null=True,blank=True)
+    state=models.CharField(max_length=50, null=True, blank=True)
+    city=models.CharField(max_length=80, null=True, blank=True)
+    pincode=models.CharField(max_length=12, null=True, blank=True)
+    landmark=models.CharField(max_length=150,null=True,blank=True)
+    created_on = models.DateTimeField(auto_now_add=True)
+    updated_on = models.DateTimeField(auto_now=True)
+    created_by = models.BigIntegerField()
+    updated_by = models.ForeignKey(SelfRegistration, on_delete=models.CASCADE)
+
+    class Meta:
+        db_table = "CommunicationDetails"
+

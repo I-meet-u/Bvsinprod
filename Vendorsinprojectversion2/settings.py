@@ -90,16 +90,15 @@ WSGI_APPLICATION = 'Vendorsinprojectversion2.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'NewVersion2DB',
-        'USER': 'azureadmin@postgresdbtest',
-        'PASSWORD':'Vendorsin@2021',
-        'HOST': 'postgresdbtest.postgres.database.azure.com',
+        'NAME': 'FileTestingDB',
+        'USER': 'vendorsincommerce@vendorsincommerce',
+        'PASSWORD':'Vendorsin@vsin2021',
+        'HOST': 'vendorsincommerce.postgres.database.azure.com',
         'PORT': '5432',
         'sslrequire':True,
     }
 
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
@@ -160,10 +159,11 @@ REST_FRAMEWORK = {
 
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
-
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
 AUTH_USER_MODEL ='RegistrationApp.SelfRegistration'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 CORS_ORIGIN_ALLOW_ALL = True
+
+

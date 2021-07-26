@@ -22,18 +22,20 @@ router.register('basic-company-details-others',views.BasicCompanyDetailsOthersVi
 router.register('employee-registration',views.EmployeeRegistrationView)
 router.register('employee-basic-details',views.Employee_CompanyDetailsView)
 router.register('employee-industry-info',views.EmployeeIndustrialInfoView)
+router.register('contact-details',views.ContactDetailsViewset)
+router.register('communication-details',views.CommunicationDetailsViewset)
 urlpatterns = [
     path('router-register-urls/',include(router.urls)), #router urls are included
 
     #normal urls other than router
     path('logout/',views.Logout.as_view()), # logout
-    path('phone-verification-otp/',views.phone_verification_otp),
+    # path('phone-verification-otp/',views.phone_verification_otp),
     # path('email-verification-otp/',views.email_verification_otp),
     path('get-token-key-by-userid/',views.get_token_key_by_userid),
     path('get-userid-by-token/',views.get_userid_by_token),
     # path('email-verification-otp-to-change-email/',views.email_verification_otp_to_change_email),
     path('change-email/',views.change_email),
-    path('phone-otp-verfication-to-change-phonenumber/',views.phone_otp_verfication_to_change_phonenumber),
+    # path('phone-otp-verfication-to-change-phonenumber/',views.phone_otp_verfication_to_change_phonenumber),
     path('change-phonenumber/',views.change_phonenumber),
     path('change-password-with-phone-number/',views.change_password_with_phone_number),
     path('change-password-with-email/',views.change_password_with_email),

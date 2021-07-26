@@ -1,5 +1,5 @@
-"""Vendorsinprojectversion2 URL Configuration
 
+"""Vendorsinprojectversion2 URL Configuration
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/3.2/topics/http/urls/
 Examples:
@@ -29,5 +29,4 @@ urlpatterns = [
     path('dashboard-page/',include('DashboardApp.urls')),
     path('bidding/',include('BiddingApp.urls')),
     path('admin-page/',include('AdminApp.urls'))
-]
-# urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+]+static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

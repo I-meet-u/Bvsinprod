@@ -23,6 +23,7 @@ urlpatterns = [
     path('searchinternalvendor/',views.searchinternalvendor),
     path('buzrequest/',views.buzrequest),
     path('business-request-accept-reject-advance-search/',views.business_request_accept_reject_advance_search),
-    path('search-business-request-advance-search/',views.search_business_request_advance_search)
+    path('search-business-request-advance-search/',views.search_business_request_advance_search),
+    path('update-business-status/',views.update_business_status),
 
     ]

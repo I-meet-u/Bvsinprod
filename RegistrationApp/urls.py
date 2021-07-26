@@ -7,6 +7,8 @@ from . import  views
 from .views import sendSMS, sendOtpmail
 
 router=routers.DefaultRouter()
+
+# wwww
 #routers are used with ViewSets in django rest framework to auto config the urls.
 #when we are used serializers and viewsets we used router
 router.register('user-register',views.SelfRegisterView)

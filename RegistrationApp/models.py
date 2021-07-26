@@ -25,6 +25,7 @@ class SelfRegistration(AbstractUser):
     profile_cover_photo = models.FileField(upload_to='coverphoto',null=True)
     # registration_status = models.CharField(max_length=80, default='Not Registered')
 
+
     class Meta:
         db_table = 'SelfRegistration'
 

@@ -27,7 +27,6 @@ class VendorProduct_GeneralDetailsView(viewsets.ModelViewSet):
 
 
 
-
 class VendorProduct_TechnicalSpecificationsView(viewsets.ModelViewSet):
     permission_classes = [permissions.AllowAny]
     queryset = VendorProduct_TechnicalSpecifications.objects.all()

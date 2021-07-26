@@ -176,3 +176,4 @@ class ItemCodeSettings(models.Model):
 
     class Meta:
         db_table = "ItemCodeSettings"
+

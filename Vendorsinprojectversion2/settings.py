@@ -89,7 +89,7 @@ WSGI_APPLICATION = 'Vendorsinprojectversion2.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'FileTestingDB',
+        'NAME': 'NewTestDB',
         'USER': 'vendorsincommerce@vendorsincommerce',
         'PASSWORD':'Vendorsin@vsin2021',
         'HOST': 'vendorsincommerce.postgres.database.azure.com',
@@ -157,10 +157,7 @@ REST_FRAMEWORK = {
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
 # STATIC_URL = '/static/'
-# STATIC_ROOT = os.path.join(BASE_DIR, 'assests/')
-# STATICFILES_DIRS = [
-#         os.path.join(BASE_DIR, 'static'),
-# ]
+# STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = 'media/'
 # Default primary key field type

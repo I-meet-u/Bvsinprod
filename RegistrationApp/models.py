@@ -235,6 +235,7 @@ class ShippingAddress_Others(models.Model):
 class EmployeeRegistration(models.Model):
     emp_id=models.BigAutoField(primary_key=True)
     username=models.CharField(max_length=100)
+    employee_user_type=models.CharField(max_length=100,null=True,blank=True)
     country=models.CharField(max_length=100)
     department=models.CharField(max_length=100)
     designation=models.CharField(max_length=100)

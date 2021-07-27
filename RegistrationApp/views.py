@@ -328,12 +328,44 @@ class IndustrialInfoView(viewsets.ModelViewSet):
     ordering_fields = ['id']
     ordering = ['id']
 
+    def create(self,request,*args, **kwargs):
+        updated_by = request.data.get('updated_by', None)
+        created_by=request.data.get('created_by',None)
+        nature_of_business=request.data.get('nature_of_business',None)
+        geographical_area=request.data.get('geographical_area',None)
+        supply_capabilites=request.data.get('supply_capabilites',None)
+        industry_to_serve=request.data.get('industry_to_serve',None)
+        company_code=request.data.get('company_code',None)
+        try:
+            industryobj=IndustrialInfo.objects.create(nature_of_business=nature_of_business,
+                                                      geographical_area=geographical_area,
+                                                      supply_capabilites=supply_capabilites,
+                                                      industry_to_serve=industry_to_serve,
+                                                      updated_by=SelfRegistration.objects.get(id=updated_by),
+                                                      created_by=created_by,
+                                                      company_code=BasicCompanyDetails.objects.get(company_code=company_code)
+
+                                                      )
+            regobj=SelfRegistration.objects.get(id=updated_by)
+            if regobj.nature_of_business==industryobj.nature_of_business:
+                pass
+            else:
+                regobj.nature_of_business=industryobj.nature_of_business
+                regobj.save()
+                return Response({'status': 201, 'message': 'Industry Info Created'}, status=201)
+
+
+        except Exception as e:
+            return Response({'status': 500, 'error': str(e)}, status=500)
+
+
     def get_queryset(self):
         # it determines the list of objects that you want to display by passing userid(updated_by)
         industryinfoobj = IndustrialInfo.objects.filter(updated_by=self.request.GET.get('updated_by'))
         if not industryinfoobj:
             raise ValidationError({'message': 'Industry info details not exist','status':204})
         return industryinfoobj
+
 
 
 class IndustrialHierarchyView(viewsets.ModelViewSet):

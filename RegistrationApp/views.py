@@ -611,7 +611,7 @@ def sendOtpmail(request):
 
                 apikey = 'YTU3NjhmMDdmYjFlYzA2OWY0YzhlNjA3YmEyYjMxNGM='
                 numbers = '918095994214'
-                message = OTP + 'Is The OTP To Verify Your Mobile Number On VENDORSIN COMMERCE Self Registration Portal. Do Not Share It With Anyone .'
+                message = OTP + ' Is The OTP To Verify Your Mobile Number On VENDORSIN COMMERCE Self Registration Portal. Do Not Share It With Anyone .'
                 sender = 'VSINVC'
 
                 data = urllib.parse.urlencode({'apikey': apikey, 'numbers': numbers,
@@ -657,7 +657,7 @@ def sendOtpmail(request):
 
                 apikey = 'YTU3NjhmMDdmYjFlYzA2OWY0YzhlNjA3YmEyYjMxNGM='
                 numbers = '91'+phone
-                message = OTP + 'Is The OTP To Verify Your Mobile Number On VENDORSIN COMMERCE Self Registration Portal. Do Not Share It With Anyone .'
+                message = OTP + ' Is The OTP To Verify Your Mobile Number On VENDORSIN COMMERCE Self Registration Portal. Do Not Share It With Anyone .'
                 sender = 'VSINVC'
 
                 data = urllib.parse.urlencode({'apikey': apikey, 'numbers': numbers,
@@ -727,7 +727,7 @@ def sendSMS(request):
 
             apikey = 'YTU3NjhmMDdmYjFlYzA2OWY0YzhlNjA3YmEyYjMxNGM='
             numbers = '91' + phone
-            message = OTP + 'Is The OTP To Verify Your Mobile Number On VENDORSIN COMMERCE Self Registration Portal. Do Not Share It With Anyone .'
+            message = OTP + ' Is The OTP To Verify Your Mobile Number On VENDORSIN COMMERCE Self Registration Portal. Do Not Share It With Anyone .'
             sender = 'VSINVC'
 
             data = urllib.parse.urlencode({'apikey': apikey, 'numbers': numbers,
@@ -873,7 +873,7 @@ def changephone(request):
 
                 apikey = 'YTU3NjhmMDdmYjFlYzA2OWY0YzhlNjA3YmEyYjMxNGM='
                 numbers = '91' + phone
-                message = OTP + 'Is The OTP To Verify Your Mobile Number On VENDORSIN COMMERCE Self Registration Portal. Do Not Share It With Anyone .'
+                message = OTP + ' Is The OTP To Verify Your Mobile Number On VENDORSIN COMMERCE Self Registration Portal. Do Not Share It With Anyone .'
                 sender = 'VSINVC'
 
                 data = urllib.parse.urlencode({'apikey': apikey, 'numbers': numbers,

@@ -89,7 +89,7 @@ WSGI_APPLICATION = 'Vendorsinprojectversion2.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'NewProductionDB',
+        'NAME': 'NewTestDB',
         'USER': 'vendorsincommerce@vendorsincommerce',
         'PASSWORD':'Vendorsin@vsin2021',
         'HOST': 'vendorsincommerce.postgres.database.azure.com',

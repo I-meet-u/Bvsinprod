@@ -1047,7 +1047,10 @@ def update_basic_details(request):
 
         if len(basicobj)>0 and len(billaddressbj)>0 and len(shippingaddressobj)>0:
             basicedit=BasicCompanyDetails.objects.get(updated_by_id=basicobj[0].get('updated_by_id'),company_code=basicobj[0].get('company_code'))
-            billedit=BasicCompanyDetails.objects.get(updated_by_id=basicobj[0].get('updated_by_id'),company_code_id=basicobj[0].get('company_code_id'))
+            billedit=BillingAddress.objects.get(updated_by_id=billaddressbj[0].get('updated_by_id'),company_code_id=billaddressbj[0].get('company_code_id'),id=billaddressbj[0].get('id'))
+            print(billedit.id)
+            shipedit=ShippingAddress.objects.get(updated_by_id=shippingaddressobj[0].get('updated_by_id'),company_code_id=shippingaddressobj[0].get('company_code_id'),id=shippingaddressobj[0].get('id'))
+
             if basicedit and basicedit.updated_by_id!="":
                 if basicedit.gst_number!=gst_number:
                     basicedit.gst_number=gst_number
@@ -1085,11 +1088,64 @@ def update_basic_details(request):
                     basicedit.industrial_scale=industrial_scale
                     basicedit.save()
 
-            # if billaddressbj and billaddressbj.
+                if billedit.bill_address!=bill_address:
+                    billedit.bill_address=bill_address
+                    billedit.save()
 
+                if  billedit.bill_country!=bill_country:
+                    billedit.bill_country=bill_country
+                    billedit.save()
 
+                if billedit.bill_state!=bill_state:
+                    billedit.bill_state=bill_state
+                    basicedit.save()
 
+                if billedit.bill_city!=bill_city:
+                    billedit.bill_city=bill_city
+                    billedit.save()
 
-            return Response({'status': 200, 'message': 'Basic Details Updated Successfully'}, status=status.HTTP_200_OK)
+                if billedit.bill_pincode!=bill_pincode:
+                    billedit.bill_pincode=bill_pincode
+                    billedit.save()
+
+                if billedit.bill_landmark!=bill_landmark:
+                    billedit.bill_landmark=bill_landmark
+                    billedit.save()
+
+                if billedit.bill_location!=bill_location:
+                    billedit.bill_location=bill_location
+                    billedit.save()
+
+                if shipedit.ship_address!=ship_address:
+                    shipedit.ship_address=ship_address
+                    shipedit.save()
+
+                if shipedit.ship_country!=ship_country:
+                    shipedit.ship_country=ship_country
+                    shipedit.save()
+
+                if shipedit.ship_state!=ship_state:
+                    shipedit.ship_state=ship_state
+                    shipedit.save()
+
+                if shipedit.ship_city!=ship_city:
+                    shipedit.ship_city=ship_city
+                    shipedit.save()
+
+                if shipedit.ship_pincode!=ship_pincode:
+                    shipedit.ship_pincode=ship_pincode
+                    shipedit.save()
+
+                if shipedit.ship_landmark!=ship_landmark:
+                    shipedit.ship_landmark=ship_landmark
+                    shipedit.save()
+
+                if shipedit.ship_location!=ship_location:
+                    shipedit.ship_location=ship_location
+                    shipedit.save()
+            return Response({'status': 200, 'message': 'Basic Details Updated Successfully'},
+                                status=status.HTTP_200_OK)
+        else:
+            return Response({'status': 204, 'message': 'Not Present'}, status=status.HTTP_204_NO_CONTENT)
     except Exception as e:
         return Response({'status':500,'error':str(e)},status=500)

@@ -345,13 +345,11 @@ class IndustrialInfoView(viewsets.ModelViewSet):
                                                       company_code=BasicCompanyDetails.objects.get(company_code=company_code)
 
                                                       )
-            regobj=SelfRegistration.objects.get(id=updated_by)
-            if regobj.nature_of_business==industryobj.nature_of_business:
-                pass
-            else:
-                regobj.nature_of_business=industryobj.nature_of_business
-                regobj.save()
-                return Response({'status': 201, 'message': 'Industry Info Created'}, status=201)
+            regobj = SelfRegistration.objects.get(id=updated_by)
+            regobj.nature_of_business = industryobj.nature_of_business
+            regobj.save()
+                # return super().create(request, *args, **kwargs)
+            return Response({'status': 201, 'message': 'Industry Info Created'}, status=201)
 
 
         except Exception as e:

@@ -84,7 +84,11 @@ def admin_email_otp_verify(request):
     try:
         adminobjverify=AdminRegister.objects.get(admin_email=admin_email)
         if adminobjverify and adminobjverify.email_otp==email_otp:
-            return Response({'status':200,'message':"Email OTP is verified","data":adminobjverify.admin_id},status=200)
+            admin_data={
+                'admin_id':adminobjverify.admin_id
+            }
+
+            return Response({'status':200,'message':"Email OTP is verified","data":admin_data},status=200)
         else:
             return Response({'status': 204, 'message': "Email OTP is not correct"}, status=204)
     except ObjectDoesNotExist as e:

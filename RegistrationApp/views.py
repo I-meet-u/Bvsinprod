@@ -998,3 +998,17 @@ class CommunicationDetailsViewset(viewsets.ModelViewSet):
     permission_classes = (AllowAny,)
     ordering_fields = ['id']
     ordering = ['id']
+
+
+@api_view(['post'])
+def get_profile_photo(request):
+    data=request.data
+    try:
+        regobj=SelfRegistration.objects.filter(id=data['userid']).values('profile_cover_photo')
+        if len(regobj)>0:
+            return Response({'status':200,'message':'Profile Photo','data':regobj},status=status.HTTP_200_OK)
+        else:
+            return Response({'status': 204, 'message': 'No Present'}, status=status.HTTP_204_NO_CONTENT)
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)
+

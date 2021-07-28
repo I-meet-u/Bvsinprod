@@ -74,7 +74,7 @@ class LegalDocumentsView(viewsets.ModelViewSet):
         # overriding get_queryset by passing user_id. Here user_id is nothing but updated_by
         legalobj = LegalDocuments.objects.filter(updated_by=self.request.GET.get('updated_by'))
         if not legalobj:
-            raise ValidationError({'message': 'Legal Documentss details not exist', 'status': 204})
+            raise ValidationError({'message': 'Legal Documents details not exist', 'status': 204})
         return legalobj
 
     def destroy(self, request, *args, **kwargs):

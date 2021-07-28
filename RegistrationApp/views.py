@@ -84,7 +84,6 @@ class LegalDocumentsView(viewsets.ModelViewSet):
 
 
 class Logout(APIView):
-    permission_classes = [permissions.AllowAny]
     def get(self, request, format=None):
         # simply delete the token to force a login
         request.user.auth_token.delete()
@@ -1012,3 +1011,85 @@ def get_profile_photo(request):
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)
 
+
+@api_view(['put'])
+def update_basic_details(request):
+    data=request.data
+    userid=data['userid']
+    gst_number=data['gst_number']
+    company_name=data['company_name']
+    company_type=data['company_type']
+    listing_date=data['listing_date']
+    pan_number=data['pan_number']
+    tax_payer_type=data['tax_payer_type']
+    msme_registered=data['msme_registered']
+    company_established=data['company_established']
+    registered_iec=data['registered_iec']
+    industrial_scale=data['industrial_scale']
+    bill_address=data['bill_address']
+    bill_country=data['bill_country']
+    bill_state=data['bill_state']
+    bill_city=data['bill_city']
+    bill_pincode=data['bill_pincode']
+    bill_landmark=data['bill_landmark']
+    bill_location=data['bill_location']
+    ship_address=data['ship_address']
+    ship_country=data['ship_country']
+    ship_state=data['ship_state']
+    ship_city=data['ship_city']
+    ship_pincode=data['ship_pincode']
+    ship_landmark=data['ship_landmark']
+    ship_location=data['ship_location']
+    try:
+        basicobj=BasicCompanyDetails.objects.filter(updated_by_id=userid).values().order_by('company_code')
+        billaddressbj=BillingAddress.objects.filter(updated_by_id=userid,company_code_id=basicobj[0].get('company_code')).values().order_by('id')
+        shippingaddressobj=ShippingAddress.objects.filter(updated_by_id=userid,company_code_id=basicobj[0].get('company_code')).values().order_by('id')
+
+        if len(basicobj)>0 and len(billaddressbj)>0 and len(shippingaddressobj)>0:
+            basicedit=BasicCompanyDetails.objects.get(updated_by_id=basicobj[0].get('updated_by_id'),company_code=basicobj[0].get('company_code'))
+            billedit=BasicCompanyDetails.objects.get(updated_by_id=basicobj[0].get('updated_by_id'),company_code_id=basicobj[0].get('company_code_id'))
+            if basicedit and basicedit.updated_by_id!="":
+                if basicedit.gst_number!=gst_number:
+                    basicedit.gst_number=gst_number
+                    basicedit.save()
+                if basicedit.company_name!=company_name:
+                    basicedit.company_name=company_name
+                    basicedit.save()
+                if basicedit.company_type!=company_type:
+                    basicedit.company_type=company_type
+                    basicedit.save()
+                if basicedit.listing_date!=listing_date:
+                    basicedit.listing_date=listing_date
+                    basicedit.save()
+                if basicedit.pan_number!=pan_number:
+                    basicedit.pan_number=pan_number
+                    basicedit.save()
+
+                if basicedit.tax_payer_type!=tax_payer_type:
+                    basicedit.tax_payer_type=tax_payer_type
+                    basicedit.save()
+
+                if basicedit.msme_registered!=msme_registered:
+                    basicedit.msme_registered=msme_registered
+                    basicedit.save()
+
+                if basicedit.company_established!=company_established:
+                    basicedit.company_established=company_established
+                    basicedit.save()
+
+                if basicedit.registered_iec!=registered_iec:
+                    basicedit.registered_iec=registered_iec
+                    basicedit.save()
+
+                if basicedit.industrial_scale!=industrial_scale:
+                    basicedit.industrial_scale=industrial_scale
+                    basicedit.save()
+
+            # if billaddressbj and billaddressbj.
+
+
+
+
+            return Response({'status': 200, 'message': 'Basic Details Updated Successfully'}, status=status.HTTP_200_OK)
+    except Exception as e:
+        return Response({'status':500,'error':str(e)},status=500)

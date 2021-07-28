@@ -63,6 +63,7 @@ urlpatterns = [
     path('employee-login/',views.employee_login),
     path('get-profile-photo/', views.get_profile_photo),
     path('getcompanycode/',views.getcompanycode),
+    path('update-basic-details/',views.update_basic_details)
 
     # path('send_mail_template/',views.send_mail_template)
     # path('subscribe_email/', MailSubscriptionAPIView.as_view(),name='subscribe-email')

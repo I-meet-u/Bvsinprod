@@ -47,7 +47,8 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'AdminApp',
     'DashboardApp',
-    'BiddingApp'
+    'BiddingApp',
+    'SubscriptionApp'
 ]
 
 MIDDLEWARE = [
@@ -178,4 +179,7 @@ AUTH_USER_MODEL ='RegistrationApp.SelfRegistration'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 CORS_ORIGIN_ALLOW_ALL = True
 
+
+RAZORPAY_PUBLIC_KEY='rzp_test_Yc04Au8QLfhBi8'
+RAZORPAY_SECRET_KEY='YlhC40Wli9QWk284ONbL0lPz'
 

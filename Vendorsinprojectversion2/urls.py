@@ -28,7 +28,8 @@ urlpatterns = [
     path('landing-page/',include('LandingPageApp.urls')),
     path('dashboard-page/',include('DashboardApp.urls')),
     path('bidding/',include('BiddingApp.urls')),
-    path('admin-page/',include('AdminApp.urls'))
+    path('admin-page/',include('AdminApp.urls')),
+    path('subscriptions/',include('SubscriptionApp.urls'))
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

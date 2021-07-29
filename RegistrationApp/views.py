@@ -348,7 +348,6 @@ class IndustrialInfoView(viewsets.ModelViewSet):
             regobj = SelfRegistration.objects.get(id=updated_by)
             regobj.nature_of_business = industryobj.nature_of_business
             regobj.save()
-                # return super().create(request, *args, **kwargs)
             return Response({'status': 201, 'message': 'Industry Info Created'}, status=201)
 
 
@@ -1147,3 +1146,24 @@ def update_basic_details(request):
             return Response({'status': 204, 'message': 'Not Present'}, status=status.HTTP_204_NO_CONTENT)
     except Exception as e:
         return Response({'status':500,'error':str(e)},status=500)
+
+
+
+@api_view(['post'])
+def admin_approval_mail_send(request):
+    data = request.data
+    digits = '0123456789'
+    userid = data['userid']
+
+    try:
+        userdeatils = SelfRegistration.objects.filter(id=userid).values()
+        print(userdeatils)
+        recemail = userdeatils[0].get('username')
+        print(recemail)
+        return Response({'status': 200, 'message': 'mail sent successfully'}, status=200)
+
+    except ObjectDoesNotExist as e:
+        return Response({'status': 424, 'error': "email not exist"}, status=404)
+
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)

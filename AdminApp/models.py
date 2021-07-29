@@ -32,7 +32,6 @@ class AdminInvite(models.Model):
     updated_on = models.DateTimeField(auto_now=True, null=True)
     admins = models.ForeignKey(AdminRegister, on_delete=models.CASCADE)
     status = models.CharField(max_length=100, default='Pending')
-    history = HistoricalRecords()
 
     class Meta:
         db_table = "AdminInvite"
@@ -77,7 +76,6 @@ class CreateUser(models.Model):
     updated_on = models.DateTimeField(auto_now=True, null=True)
     status = models.CharField(max_length=50, default='Active')
     admins=models.ForeignKey(AdminRegister,on_delete=models.CASCADE)
-    history = HistoricalRecords()
 
     class Meta:
         db_table = "CreateUser"

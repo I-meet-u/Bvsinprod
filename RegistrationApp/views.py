@@ -1226,7 +1226,9 @@ def registration_list_by_user_id(request):
                 return Response({'status': 200, 'message': 'ok', 'data': emptydata}, status=200)
             else:
                 emptydata.append({"id": userval,
-                                  "registration_status": "Self_Registration Completed"})
+                                  "user_type":regobj[0].get('user_type'),
+                                  "registration_status": "Self_Registration Completed",
+                                  })
                 return Response({'status': 202, 'message': 'Only in Registraion','data':emptydata}, status=202)
         else:
             return Response({'status': 204, 'message': 'No data with this id'}, status=204)

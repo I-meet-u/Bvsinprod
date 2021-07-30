@@ -137,17 +137,17 @@ class BuyerProductDetails(models.Model):
     buyer_item_description = models.TextField(null=True)
     buyer_numeric = models.CharField(max_length=50,null=True,blank=True)
     buyer_uom = models.CharField(max_length=100, blank=True)
-    buyer_hsn_sac = models.CharField(max_length=100, blank=True)
-    buyer_unit_price = models.CharField(max_length=100, blank=True)
+    buyer_hsn_sac = models.CharField(max_length=100, blank=True,null=True)
+    buyer_unit_price = models.CharField(max_length=100, blank=True,null=True)
     buyer_prefix = models.CharField(max_length=50,null=True, blank=True)
     buyer_suffix = models.CharField(max_length=50,null=True, blank=True)
     # buyer_country_of_origin = models.CharField(max_length=50, blank=True)
-    buyer_category=models.CharField(max_length=500,null=True)
+    buyer_category=models.CharField(max_length=500,null=True,blank=True)
     buyer_department=models.CharField(max_length=400,null=True,blank=True)
-    buyer_item_group = models.CharField(max_length=500, blank=True)
-    buyer_annual_consumption = models.CharField(max_length=500, blank=True)
-    buyer_safety_stock = models.CharField(max_length=100, blank=True)
-    buyer_model_no = models.CharField(max_length=500, blank=True)
+    buyer_item_group = models.CharField(max_length=500, blank=True,null=True)
+    buyer_annual_consumption = models.CharField(max_length=500, null=True,blank=True)
+    buyer_safety_stock = models.CharField(max_length=100, blank=True,null=True)
+    buyer_model_no = models.CharField(max_length=500, blank=True,null=True)
     buyer_document=models.FileField(upload_to='BuyerProductFiles',null=True,blank=True)
     buyer_additional_specifications=models.TextField(null=True,blank=True)
     buyer_add_product_supplies=models.CharField(max_length=200,null=True,blank=True)
@@ -160,6 +160,73 @@ class BuyerProductDetails(models.Model):
 
     class Meta:
         db_table = "BuyerProductDetails"
+
+
+class BuyerServiceDetails(models.Model):
+    buyer_service_id = models.BigAutoField(primary_key=True)
+    buyer_service_item_type = models.CharField(max_length=100, null=True)
+    buyer_service_item_code = models.CharField(max_length=100, null=True, unique=True)
+    buyer_service_item_name = models.CharField(max_length=100, null=True)
+    buyer_service_item_description = models.TextField(null=True)
+    buyer_service_numeric = models.CharField(max_length=50,null=True,blank=True)
+    buyer_service_uom = models.CharField(max_length=100, blank=True,null=True)
+    buyer_service_hsn_sac = models.CharField(max_length=100, blank=True,null=True)
+    buyer_service_unit_price = models.CharField(max_length=100, blank=True,null=True)
+    buyer_service_prefix = models.CharField(max_length=50,null=True,blank=True)
+    buyer_service_suffix = models.CharField(max_length=50,null=True,blank=True)
+    # buyer_country_of_origin = models.CharField(max_length=50, blank=True)
+    buyer_service_category=models.CharField(max_length=500,null=True,blank=True)
+    buyer_service_department=models.CharField(max_length=400,null=True,blank=True)
+    buyer_service_item_group = models.CharField(max_length=500, blank=True,null=True)
+    buyer_service_annual_consumption = models.CharField(max_length=500,blank=True,null=True)
+    buyer_service_safety_stock = models.CharField(max_length=100, blank=True,null=True)
+    buyer_service_model_no = models.CharField(max_length=500,blank=True,null=True)
+    buyer_service_document=models.FileField(upload_to='BuyerServiceFiles',null=True,blank=True)
+    buyer_service_additional_specifications=models.TextField(null=True,blank=True)
+    buyer_service_add_product_supplies=models.CharField(max_length=200,null=True,blank=True)
+    buyer_service_status=models.CharField(max_length=50,default='Active')
+    created_on = models.DateTimeField(auto_now_add=True)
+    updated_on = models.DateTimeField(auto_now=True)
+    created_by = models.BigIntegerField()
+    updated_by = models.ForeignKey(SelfRegistration, on_delete=models.CASCADE)
+    history = HistoricalRecords()
+
+    class Meta:
+        db_table = "BuyerServiceDetails"
+
+
+class BuyerMachinaryDetails(models.Model):
+    buyer_machinary_id = models.BigAutoField(primary_key=True)
+    buyer_machinary_item_type = models.CharField(max_length=100,null=True)
+    buyer_machinary_item_code = models.CharField(max_length=100,null=True, unique=True)
+    buyer_machinary_item_name = models.CharField(max_length=100,null=True)
+    buyer_machinary_item_description = models.TextField(null=True)
+    buyer_machinary_numeric = models.CharField(max_length=50,null=True,blank=True)
+    buyer_machinary_uom = models.CharField(max_length=100, blank=True,null=True)
+    buyer_machinary_hsn_sac = models.CharField(max_length=100, blank=True,null=True)
+    buyer_machinary_unit_price = models.CharField(max_length=100, blank=True,null=True)
+    buyer_machinary_prefix = models.CharField(max_length=50,null=True, blank=True)
+    buyer_machinary_suffix = models.CharField(max_length=50,null=True, blank=True)
+    # buyer_country_of_origin = models.CharField(max_length=50, blank=True)
+    buyer_machinary_category=models.CharField(max_length=500,null=True,blank=True)
+    buyer_machinary_department=models.CharField(max_length=400,null=True,blank=True)
+    buyer_machinary_item_group = models.CharField(max_length=500, blank=True,null=True)
+    buyer_machinary_annual_consumption = models.CharField(max_length=500, blank=True,null=True)
+    buyer_machinary_safety_stock = models.CharField(max_length=100,blank=True,null=True)
+    buyer_machinary_model_no = models.CharField(max_length=500, blank=True,null=True)
+    buyer_machinary_document=models.FileField(upload_to='BuyerMachinaryFiles',null=True,blank=True)
+    buyer_machinary_additional_specifications=models.TextField(null=True,blank=True)
+    buyer_machinary_add_product_supplies=models.CharField(max_length=200,null=True,blank=True)
+    buyer_machinary_product_status=models.CharField(max_length=50,default='Active')
+    created_on = models.DateTimeField(auto_now_add=True)
+    updated_on = models.DateTimeField(auto_now=True)
+    created_by = models.BigIntegerField()
+    updated_by = models.ForeignKey(SelfRegistration,on_delete=models.CASCADE)
+    history = HistoricalRecords()
+
+    class Meta:
+        db_table = "BuyerMachinaryDetails"
+
 
 
 class ItemCodeSettings(models.Model):

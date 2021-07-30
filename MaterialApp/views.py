@@ -10,12 +10,9 @@ from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 
 from RegistrationApp.models import SelfRegistration
-from .models import VendorProduct_BasicDetails, VendorProduct_GeneralDetails, VendorProduct_TechnicalSpecifications, \
-    VendorProduct_ProductFeatures, VendorProduct_Documents, BuyerProductDetails, ItemCodeSettings
+from .models import *
 
-from .serializers import VendorProduct_BasicDetailsSerializer, VendorProduct_GeneralDetailsSerializer, \
-    VendorProduct_TechnicalSpecificationsSerialzer, VendorProduct_ProductFeaturesSerializer, \
-    VendorProduct_DocumentsSerializer, BuyerProductDetailsSerializer, ItemCodeSettingsSerializer
+from .serializers import *
 
 
 class VendorProduct_GeneralDetailsView(viewsets.ModelViewSet):
@@ -190,7 +187,7 @@ def buyer_product_create(request):
     userid=data['userid']
     buyerdetailsobj=BuyerProductDetails.objects.filter(updated_by=userid).order_by('-buyer_numeric').values()
     if buyerdetailsobj:
-        buyerobj=BuyerProductDetails.objects.create(buyer_item_type=data['buyer_item_type'],buyer_numeric=buyerdetailsobj[0].get('buyer_numeric')+1,buyer_item_code=str(buyerdetailsobj[0].get('buyer_numeric')),buyer_item_name=data['buyer_item_name'],buyer_item_description=data['buyer_item_description'],
+        buyerobj=BuyerProductDetails.objects.create(buyer_item_type=data['buyer_item_type'],buyer_numeric=int(buyerdetailsobj[0].get('buyer_numeric'))+1,buyer_item_code=buyerdetailsobj[0].get('buyer_numeric'),buyer_item_name=data['buyer_item_name'],buyer_item_description=data['buyer_item_description'],
                                                     buyer_uom=data['buyer_uom'],buyer_hsn_sac=data['buyer_hsn_sac'],buyer_unit_price=data['buyer_unit_price'],
                                                     buyer_category=data['buyer_category'],buyer_department=data['buyer_department'],buyer_item_group=data['buyer_item_group'],
                                                     buyer_annual_consumption=data['buyer_annual_consumption'],buyer_safety_stock=data['buyer_safety_stock'],buyer_model_no=data['buyer_model_no'],buyer_document=data['buyer_document'],
@@ -207,6 +204,98 @@ def buyer_product_create(request):
                                                updated_by=SelfRegistration.objects.get(id=userid),created_by=userid)
 
     return Response({'status':201,'message':'Buyer Product Created'},status=201)
+
+
+
+
+@api_view(['post'])
+@permission_classes((AllowAny,))
+def buyer_service_create(request):
+    data=request.data
+    userid=data['userid']
+    buyer_service_item_type = data['buyer_service_item_type']
+    buyer_service_item_name = data['buyer_service_item_name']
+    buyer_service_item_description = data['buyer_service_item_description']
+    buyer_service_uom = data['buyer_service_uom']
+    buyer_service_hsn_sac = data['buyer_service_hsn_sac']
+    buyer_service_unit_price = data['buyer_service_unit_price']
+    buyer_service_category = data['buyer_service_category']
+    buyer_service_department = data['buyer_service_department']
+    buyer_service_item_group = data['buyer_service_item_group']
+    buyer_service_annual_consumption = data['buyer_service_annual_consumption']
+    buyer_service_safety_stock = data['buyer_service_safety_stock']
+    buyer_service_model_no = data['buyer_service_model_no']
+    buyer_service_document = data['buyer_service_document']
+    buyer_service_additional_specifications = data['buyer_service_additional_specifications']
+    buyer_service_add_product_supplies = data['buyer_service_add_product_supplies']
+    try:
+        buyerservicedetailsobj=BuyerServiceDetails.objects.filter(updated_by=userid).order_by('-buyer_service_numeric').values()
+        if buyerservicedetailsobj:
+
+            buyerserviceobj=BuyerServiceDetails.objects.create(buyer_service_item_type=buyer_service_item_type,buyer_service_numeric=int(buyerservicedetailsobj[0].get('buyer_service_numeric'))+1,buyer_service_item_code=str(buyerservicedetailsobj[0].get('buyer_service_numeric')),buyer_service_item_name=buyer_service_item_name,buyer_service_item_description=buyer_service_item_description,
+                                                        buyer_service_uom=buyer_service_uom,buyer_service_hsn_sac=buyer_service_hsn_sac,buyer_service_unit_price=buyer_service_unit_price,
+                                                        buyer_service_category=buyer_service_category,buyer_service_department=buyer_service_department,buyer_service_item_group=buyer_service_item_group,
+                                                        buyer_service_annual_consumption=buyer_service_annual_consumption,buyer_service_safety_stock=buyer_service_safety_stock,buyer_service_model_no=buyer_service_model_no,buyer_service_document=buyer_service_document,
+                                                        buyer_service_additional_specifications=buyer_service_additional_specifications,buyer_service_add_product_supplies=buyer_service_add_product_supplies,
+                                                        updated_by=SelfRegistration.objects.get(id=userid),created_by=userid)
+
+        else:
+            print("data not exist")
+            buyerserviceobj = BuyerServiceDetails.objects.create(buyer_service_item_type=buyer_service_item_type,buyer_service_numeric=2002,buyer_service_item_code=2001,buyer_service_item_name=buyer_service_item_name,buyer_service_item_description=buyer_service_item_description,
+                                                                 buyer_service_uom=buyer_service_uom,buyer_service_hsn_sac=buyer_service_hsn_sac,buyer_service_unit_price=buyer_service_unit_price,buyer_service_category=buyer_service_category,
+                                                                 buyer_service_department=buyer_service_department,buyer_service_item_group=buyer_service_item_group,buyer_service_annual_consumption=buyer_service_annual_consumption,buyer_service_safety_stock=buyer_service_safety_stock,
+                                                                 buyer_service_model_no=buyer_service_model_no,buyer_service_document=buyer_service_document,buyer_service_additional_specifications=buyer_service_additional_specifications,
+                                                                 buyer_service_add_product_supplies=buyer_service_add_product_supplies, updated_by=SelfRegistration.objects.get(id=userid),created_by=userid)
+
+        return Response({'status':201,'message':'Buyer Service Created'},status=201)
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)
+
+
+
+@api_view(['post'])
+@permission_classes((AllowAny,))
+def buyer_machinary_create(request):
+    data=request.data
+    userid=data['userid']
+    buyer_machinary_item_type = data['buyer_machinary_item_type']
+    buyer_machinary_item_name = data['buyer_machinary_item_name']
+    buyer_machinary_item_description = data['buyer_machinary_item_description']
+    buyer_machinary_uom = data['buyer_machinary_uom']
+    buyer_machinary_hsn_sac = data['buyer_machinary_hsn_sac']
+    buyer_machinary_unit_price = data['buyer_machinary_unit_price']
+    buyer_machinary_category = data['buyer_machinary_category']
+    buyer_machinary_department = data['buyer_machinary_department']
+    buyer_machinary_item_group = data['buyer_machinary_item_group']
+    buyer_machinary_annual_consumption = data['buyer_machinary_annual_consumption']
+    buyer_machinary_safety_stock = data['buyer_machinary_safety_stock']
+    buyer_machinary_model_no = data['buyer_machinary_model_no']
+    buyer_machinary_document = data['buyer_machinary_document']
+    buyer_machinary_additional_specifications = data['buyer_machinary_additional_specifications']
+    buyer_machinary_add_product_supplies = data['buyer_machinary_add_product_supplies']
+    try:
+        buyermachinarydetailsobj=BuyerMachinaryDetails.objects.filter(updated_by=userid).order_by('-buyer_machinary_numeric').values()
+        if buyermachinarydetailsobj:
+
+            buyermachinaryobj=BuyerMachinaryDetails.objects.create(buyer_machinary_item_type=buyer_machinary_item_type,buyer_machinary_numeric=int(buyermachinarydetailsobj[0].get('buyer_machinary_numeric'))+1,buyer_machinary_item_code=str(buyermachinarydetailsobj[0].get('buyer_machinary_numeric')),buyer_machinary_item_name=buyer_machinary_item_name,buyer_machinary_item_description=buyer_machinary_item_description,
+                                                        buyer_machinary_uom=buyer_machinary_uom,buyer_machinary_hsn_sac=buyer_machinary_hsn_sac,buyer_machinary_unit_price=buyer_machinary_unit_price,
+                                                        buyer_machinary_category=buyer_machinary_category,buyer_machinary_department=buyer_machinary_department,buyer_machinary_item_group=buyer_machinary_item_group,
+                                                        buyer_machinary_annual_consumption=buyer_machinary_annual_consumption,buyer_machinary_safety_stock=buyer_machinary_safety_stock,buyer_machinary_model_no=buyer_machinary_model_no,buyer_machinary_document=buyer_machinary_document,
+                                                        buyer_machinary_additional_specifications=buyer_machinary_additional_specifications,buyer_machinary_add_product_supplies=buyer_machinary_add_product_supplies,
+                                                        updated_by=SelfRegistration.objects.get(id=userid),created_by=userid)
+
+        else:
+            print("data not exist")
+            buyermachinaryobj = BuyerMachinaryDetails.objects.create(buyer_machinary_item_type=buyer_machinary_item_type,buyer_machinary_numeric=3002,buyer_machinary_item_code=3001,buyer_machinary_item_name=buyer_machinary_item_name,buyer_machinary_item_description=buyer_machinary_item_description,
+                                                                 buyer_machinary_uom=buyer_machinary_uom,buyer_machinary_hsn_sac=buyer_machinary_hsn_sac,buyer_machinary_unit_price=buyer_machinary_unit_price,buyer_machinary_category=buyer_machinary_category,
+                                                                 buyer_machinary_department=buyer_machinary_department,buyer_machinary_item_group=buyer_machinary_item_group,buyer_machinary_annual_consumption=buyer_machinary_annual_consumption,buyer_machinary_safety_stock=buyer_machinary_safety_stock,
+                                                                 buyer_machinary_model_no=buyer_machinary_model_no,buyer_machinary_document=buyer_machinary_document,buyer_machinary_additional_specifications=buyer_machinary_additional_specifications,
+                                                                 buyer_machinary_add_product_supplies=buyer_machinary_add_product_supplies, updated_by=SelfRegistration.objects.get(id=userid),created_by=userid)
+
+        return Response({'status':201,'message':'Buyer Machinary Created'},status=201)
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)
+
 
 class ItemCodeSettingsView(viewsets.ModelViewSet):
     permission_classes = [permissions.AllowAny]

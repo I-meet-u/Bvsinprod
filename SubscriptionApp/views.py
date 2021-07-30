@@ -85,3 +85,73 @@ def fetch_all_plan(request):
                     status=status.HTTP_201_CREATED)
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+class SubscriptionModelViewset(viewsets.ModelViewSet):
+    queryset = SubscriptionModel.objects.all()
+    serializer_class = SubscriptionModelSerializer
+
+    def create(self, request, *args, **kwargs):
+        valq=[]
+        plan_id=request.data.get('plan_id')
+        total_count=request.data.get('total_count')
+        start_at=request.data.get('start_at',None)
+        expire_by=request.data.get('expire_by',None)
+        # offer_id=request.data.get('offer_id',None)
+        notes=request.data.get('notes',None)
+        notify_info=request.data.get('notify_info',None)
+        print(type(notify_info))
+        customer_notify=request.data.get('customer_notify',None)
+        try:
+            for i in range(0,len(notify_info)):
+                print(notify_info[i])
+                print(notify_info[i]['notify_phone'])
+                phone=notify_info[i]['notify_phone']
+                email = notify_info[i]['notify_email']
+                print(email)
+            client = razorpay.Client(auth=(RAZORPAY_PUBLIC_KEY,RAZORPAY_SECRET_KEY))
+            razorpaysubscription=client.subscription.create({'plan_id':plan_id,
+                                                        'total_count':total_count,
+                                                        'start_at':start_at,
+                                                        'expire_by':expire_by,
+                                                        # 'offer_id':offer_id,
+                                                        'customer_notify':customer_notify,
+                                                        'notes':notes,
+                                                        'notify_info':notify_info
+                                                        })
+
+
+            # print(razorpaysubscription[])
+            # our server subscription
+            subscriptionobj=SubscriptionModel.objects.create(subscription_id=razorpaysubscription['id'],
+                                                             entity=razorpaysubscription['entity'],
+                                                             plan_id=razorpaysubscription['plan_id'],
+                                                             status=razorpaysubscription['status'],
+                                                             current_start=razorpaysubscription['current_start'],
+                                                             current_end=razorpaysubscription['current_end'],
+                                                             ended_at=razorpaysubscription['ended_at'],
+                                                             quantity=razorpaysubscription['quantity'],
+                                                             notes=razorpaysubscription['notes'],
+                                                             charge_at=razorpaysubscription['charge_at'],
+                                                             start_at=razorpaysubscription['start_at'],
+                                                             end_at=razorpaysubscription['end_at'],
+                                                             auth_attempts=razorpaysubscription['auth_attempts'],
+                                                             total_count=razorpaysubscription['total_count'],
+                                                             paid_count=razorpaysubscription['paid_count'],
+                                                             customer_notify=razorpaysubscription['customer_notify'],
+                                                             created_at=razorpaysubscription['created_at'],
+                                                             expire_by=razorpaysubscription['expire_by'],
+                                                             short_url=razorpaysubscription['short_url'],
+                                                             has_scheduled_changes=razorpaysubscription['has_scheduled_changes'],
+                                                             change_scheduled_at=razorpaysubscription['change_scheduled_at'],
+                                                             # offer_id=razorpaysubscription['offer_id'],
+                                                             remaining_count=razorpaysubscription['remaining_count'],
+                                                             notify_email=email,
+                                                             notify_phone=phone)
+            serializer = SubscriptionModelSerializer(subscriptionobj)
+            data={
+                'subscriptionobj':serializer.data
+            }
+            return Response({'status':201,'message':'Subscription Created','data':data},status=status.HTTP_201_CREATED)
+        except Exception as e:
+            return Response({'status': 500, 'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

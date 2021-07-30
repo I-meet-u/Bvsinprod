@@ -15,9 +15,9 @@ class SelfRegistration(AbstractUser):
     first_name = None
     last_name = None
     contact_person = models.CharField(max_length=200)
-    business_to_serve = models.CharField(max_length=50)
+    business_to_serve = models.CharField(max_length=50,null=True)
     country = models.CharField(max_length=100)
-    nature_of_business = ArrayField(models.CharField(max_length=500))
+    nature_of_business = ArrayField(models.CharField(max_length=500),null=True)
     user_type = models.CharField(max_length=100)
     phone_number = models.CharField(max_length=15, unique=True)
     created_on = models.DateTimeField(auto_now_add=True)

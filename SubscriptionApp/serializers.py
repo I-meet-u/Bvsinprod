@@ -8,3 +8,10 @@ class PlanModelSerializer(serializers.ModelSerializer):
         model = PlanModel
         fields = '__all__'
         depth = 2
+
+class SubscriptionModelSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = SubscriptionModel
+        fields = '__all__'
+        depth = 2

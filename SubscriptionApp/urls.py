@@ -5,6 +5,7 @@ from . import views
 
 router=DefaultRouter()
 router.register('plan-model',views.PlanModelViewset)
+router.register('subscription-model',views.SubscriptionModelViewset)
 
 urlpatterns = [
     path('router-urls/',include(router.urls)),

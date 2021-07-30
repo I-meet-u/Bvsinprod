@@ -776,6 +776,186 @@ class BuyerProductDetailsView(viewsets.ModelViewSet):
 
 
 
+
+class BuyerServiceDetailsView(viewsets.ModelViewSet):
+    permission_classes = [permissions.AllowAny]
+    queryset = BuyerServiceDetails.objects.all()
+    serializer_class = BuyerServiceDetailsSerializer
+    # parser_classes = (MultiPartParser,)
+
+
+    def create(self, request, *args, **kwargs):
+        buyer_service_item_type=request.data.get('buyer_service_item_type',None)
+        buyer_service_item_name=request.data.get('buyer_service_item_name',None)
+        buyer_service_item_description=request.data.get('buyer_service_item_description',None)
+        buyer_service_uom=request.data.get('buyer_service_uom',None)
+        buyer_service_hsn_sac = request.data.get('buyer_service_hsn_sac',None)
+        buyer_service_unit_price = request.data.get('buyer_service_unit_price',None)
+        buyer_service_category = request.data.get('buyer_service_category',None)
+        buyer_service_department = request.data.get('buyer_service_department',None)
+        buyer_service_item_group = request.data.get('buyer_service_item_group',None)
+        buyer_service_annual_consumption = request.data.get('buyer_service_annual_consumption',None)
+        buyer_service_safety_stock = request.data.get('buyer_service_safety_stock',None)
+        buyer_service_model_no = request.data.get('buyer_service_model_no',None)
+        buyer_service_document = request.data.get('buyer_service_document',None)
+        buyer_service_additional_specifications = request.data.get('buyer_service_additional_specifications',None)
+        buyer_service_add_product_supplies = request.data.get('buyer_service_add_product_supplies',None)
+        userid = request.data.get('userid',None)
+        try:
+            itemcodesettingsobj = ItemCodeSettings.objects.filter(updated_by=userid,item_type='Service').order_by('-id').values()
+            if len(itemcodesettingsobj) > 0:
+                buyerserviceobj = BuyerServiceDetails.objects.filter(updated_by=userid).order_by('-buyer_service_numeric').values()
+                if len(buyerserviceobj)==0:
+                    print("data not exist")
+                    buyerserviceobj = BuyerServiceDetails.objects.create(buyer_service_item_type=buyer_service_item_type,
+                                                                  buyer_service_prefix=itemcodesettingsobj[0].get('prefix'),
+                                                                  buyer_service_suffix=itemcodesettingsobj[0].get('suffix'),
+                                                                  buyer_service_numeric=int(itemcodesettingsobj[0].get('numeric')) + 1,
+                                                                  buyer_service_item_code=itemcodesettingsobj[0].get('prefix')+itemcodesettingsobj[0].get('suffix')+str(itemcodesettingsobj[0].get('numeric')),
+                                                                  buyer_service_item_name=buyer_service_item_name,
+                                                                  buyer_service_item_description=buyer_service_item_description,
+                                                                  buyer_service_uom=buyer_service_uom,
+                                                                  buyer_service_hsn_sac=buyer_service_hsn_sac,
+                                                                  buyer_service_unit_price=buyer_service_unit_price,
+                                                                  buyer_service_category=buyer_service_category,
+                                                                  buyer_service_department=buyer_service_department,
+                                                                  buyer_service_item_group=buyer_service_item_group,
+                                                                  buyer_service_annual_consumption=buyer_service_annual_consumption,
+                                                                  buyer_service_safety_stock=buyer_service_safety_stock,
+                                                                  buyer_service_model_no=buyer_service_model_no,
+                                                                  buyer_service_document=buyer_service_document,
+                                                                  buyer_service_additional_specifications=buyer_service_additional_specifications,
+                                                                  buyer_service_add_product_supplies=buyer_service_add_product_supplies,
+                                                                  updated_by=SelfRegistration.objects.get(id=userid),
+                                                                  created_by=userid)
+                else:
+                    buyerserviceobj = BuyerServiceDetails.objects.create(buyer_service_item_type=buyer_service_item_type,
+                                                                  buyer_service_prefix=buyerserviceobj[0].get('buyer_service_prefix'),
+                                                                  buyer_service_suffix=buyerserviceobj[0].get('buyer_service_suffix'),
+                                                                  buyer_service_numeric=int(buyerserviceobj[0].get('buyer_service_numeric')) + 1,
+                                                                  buyer_service_item_code=buyerserviceobj[0].get('buyer_service_prefix') + buyerserviceobj[0].get('buyer_service_suffix')+buyerserviceobj[0].get('buyer_service_numeric'),
+                                                                  buyer_service_item_name=buyer_service_item_name,
+                                                                  buyer_service_item_description=buyer_service_item_description,
+                                                                  buyer_service_uom=buyer_service_uom,
+                                                                  buyer_service_hsn_sac=buyer_service_hsn_sac,
+                                                                  buyer_service_unit_price=buyer_service_unit_price,
+                                                                  buyer_service_category=buyer_service_category,
+                                                                  buyer_service_department=buyer_service_department,
+                                                                  buyer_service_item_group=buyer_service_item_group,
+                                                                  buyer_service_annual_consumption=buyer_service_annual_consumption,
+                                                                  buyer_service_safety_stock=buyer_service_safety_stock,
+                                                                  buyer_service_model_no=buyer_service_model_no,
+                                                                  buyer_service_document=buyer_service_document,
+                                                                  buyer_service_additional_specifications=buyer_service_additional_specifications,
+                                                                  buyer_service_add_product_supplies=buyer_service_add_product_supplies,
+                                                                  updated_by=SelfRegistration.objects.get(id=userid),
+                                                                  created_by=userid)
+                return Response({'status':201,'message':'Buyer Service Created'},status=201)
+            else:
+                return Response(
+                    {'status': 204, 'message': 'Item Code Settings Not Present for Service,Please Create Service Item Code in Settings'},
+                    status=204)
+
+        except Exception as e:
+            return Response({'status': 500, 'error': str(e)}, status=500)
+
+    def get_queryset(self):
+        buyerserviceobj=BuyerServiceDetails.objects.filter(updated_by=self.request.GET.get('updated_by'))
+        if buyerserviceobj:
+            return buyerserviceobj
+        raise ValidationError({'message':'Buyer Service Details Not Present','status':204})
+
+
+class BuyerMachinaryDetailsView(viewsets.ModelViewSet):
+    permission_classes = [permissions.AllowAny]
+    queryset = BuyerMachinaryDetails.objects.all()
+    serializer_class = BuyerMachinaryDetailsSerializer
+    # parser_classes = (MultiPartParser,)
+
+
+    def create(self, request, *args, **kwargs):
+        buyer_machinary_item_type=request.data.get('buyer_machinary_item_type',None)
+        buyer_machinary_item_name=request.data.get('buyer_machinary_item_name',None)
+        buyer_machinary_item_description=request.data.get('buyer_machinary_item_description',None)
+        buyer_machinary_uom=request.data.get('buyer_machinary_uom',None)
+        buyer_machinary_hsn_sac = request.data.get('buyer_machinary_hsn_sac',None)
+        buyer_machinary_unit_price = request.data.get('buyer_machinary_unit_price',None)
+        buyer_machinary_category = request.data.get('buyer_machinary_category',None)
+        buyer_machinary_department = request.data.get('buyer_machinary_department',None)
+        buyer_machinary_item_group = request.data.get('buyer_machinary_item_group',None)
+        buyer_machinary_annual_consumption = request.data.get('buyer_machinary_annual_consumption',None)
+        buyer_machinary_safety_stock = request.data.get('buyer_machinary_safety_stock',None)
+        buyer_machinary_model_no = request.data.get('buyer_machinary_model_no',None)
+        buyer_machinary_document = request.data.get('buyer_machinary_document',None)
+        buyer_machinary_additional_specifications = request.data.get('buyer_machinary_additional_specifications',None)
+        buyer_machinary_add_product_supplies = request.data.get('buyer_machinary_add_product_supplies',None)
+        userid = request.data.get('userid',None)
+        try:
+            itemcodesettingsobj = ItemCodeSettings.objects.filter(updated_by=userid,item_type='Machinary & equipments').order_by('-id').values()
+            if len(itemcodesettingsobj) > 0:
+                buyermachinaryobj = BuyerMachinaryDetails.objects.filter(updated_by=userid).order_by('-buyer_machinary_numeric').values()
+                if len(buyermachinaryobj)==0:
+                    print("data not exist")
+                    buyermachinary = BuyerMachinaryDetails.objects.create(buyer_machinary_item_type=buyer_machinary_item_type,
+                                                                  buyer_machinary_prefix=itemcodesettingsobj[0].get('prefix'),
+                                                                  buyer_machinary_suffix=itemcodesettingsobj[0].get('suffix'),
+                                                                  buyer_machinary_numeric=int(itemcodesettingsobj[0].get('numeric')) + 1,
+                                                                  buyer_machinary_item_code=itemcodesettingsobj[0].get('prefix')+itemcodesettingsobj[0].get('suffix')+str(itemcodesettingsobj[0].get('numeric')),
+                                                                  buyer_machinary_item_name=buyer_machinary_item_name,
+                                                                  buyer_machinary_item_description=buyer_machinary_item_description,
+                                                                  buyer_machinary_uom=buyer_machinary_uom,
+                                                                  buyer_machinary_hsn_sac=buyer_machinary_hsn_sac,
+                                                                  buyer_machinary_unit_price=buyer_machinary_unit_price,
+                                                                  buyer_machinary_category=buyer_machinary_category,
+                                                                  buyer_machinary_department=buyer_machinary_department,
+                                                                  buyer_machinary_item_group=buyer_machinary_item_group,
+                                                                  buyer_machinary_annual_consumption=buyer_machinary_annual_consumption,
+                                                                  buyer_machinary_safety_stock=buyer_machinary_safety_stock,
+                                                                  buyer_machinary_model_no=buyer_machinary_model_no,
+                                                                  buyer_machinary_document=buyer_machinary_document,
+                                                                  buyer_machinary_additional_specifications=buyer_machinary_additional_specifications,
+                                                                  buyer_machinary_add_product_supplies=buyer_machinary_add_product_supplies,
+                                                                  updated_by=SelfRegistration.objects.get(id=userid),
+                                                                  created_by=userid)
+                else:
+                    buyermachinary = BuyerMachinaryDetails.objects.create(buyer_machinary_item_type=buyer_machinary_item_type,
+                                                                  buyer_machinary_prefix=buyermachinaryobj[0].get('buyer_machinary_prefix'),
+                                                                  buyer_machinary_suffix=buyermachinaryobj[0].get('buyer_machinary_suffix'),
+                                                                  buyer_machinary_numeric=int(buyermachinaryobj[0].get('buyer_machinary_numeric')) + 1,
+                                                                  buyer_machinary_item_code=buyermachinaryobj[0].get('buyer_machinary_prefix') + buyermachinaryobj[0].get('buyer_machinary_suffix')+buyermachinaryobj[0].get('buyer_machinary_numeric'),
+                                                                  buyer_machinary_item_name=buyer_machinary_item_name,
+                                                                  buyer_machinary_item_description=buyer_machinary_item_description,
+                                                                  buyer_machinary_uom=buyer_machinary_uom,
+                                                                  buyer_machinary_hsn_sac=buyer_machinary_hsn_sac,
+                                                                  buyer_machinary_unit_price=buyer_machinary_unit_price,
+                                                                  buyer_machinary_category=buyer_machinary_category,
+                                                                  buyer_machinary_department=buyer_machinary_department,
+                                                                  buyer_machinary_item_group=buyer_machinary_item_group,
+                                                                  buyer_machinary_annual_consumption=buyer_machinary_annual_consumption,
+                                                                  buyer_machinary_safety_stock=buyer_machinary_safety_stock,
+                                                                  buyer_machinary_model_no=buyer_machinary_model_no,
+                                                                  buyer_machinary_document=buyer_machinary_document,
+                                                                  buyer_machinary_additional_specifications=buyer_machinary_additional_specifications,
+                                                                  buyer_machinary_add_product_supplies=buyer_machinary_add_product_supplies,
+                                                                  updated_by=SelfRegistration.objects.get(id=userid),
+                                                                  created_by=userid)
+                return Response({'status':201,'message':'Buyer Equipments Created'},status=201)
+            else:
+                return Response(
+                    {'status': 204, 'message': 'Item Code Settings Not Present for Equipments,Please Create Equipments Item Code in Settings'},
+                    status=204)
+
+        except Exception as e:
+            return Response({'status': 500, 'error': str(e)}, status=500)
+
+    def get_queryset(self):
+        buyerserviceobj=BuyerServiceDetails.objects.filter(updated_by=self.request.GET.get('updated_by'))
+        if buyerserviceobj:
+            return buyerserviceobj
+        raise ValidationError({'message':'Buyer Service Details Not Present','status':204})
+
+
+
 @api_view(['post'])
 @permission_classes((AllowAny,))
 def advance_search_buyer_product(request):

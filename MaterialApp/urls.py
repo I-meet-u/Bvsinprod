@@ -10,6 +10,8 @@ router.register('vendor-product-technical', views.VendorProduct_TechnicalSpecifi
 router.register('vendor-product-features', views.VendorProduct_ProductFeaturesView)
 router.register('vendor-product-document', views.VendorProduct_DocumentsView)
 router.register('buyer-product-details', views.BuyerProductDetailsView)
+router.register('buyer-service-details', views.BuyerServiceDetailsView)
+router.register('buyer-machinary-details', views.BuyerMachinaryDetailsView)
 router.register('item-code-settings', views.ItemCodeSettingsView)
 urlpatterns = [
     path('vendor-product-router-urls/',include(router.urls)),

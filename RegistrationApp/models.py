@@ -25,6 +25,8 @@ class SelfRegistration(AbstractUser):
     admin_approve = models.CharField(max_length=50, default='Pending')
     email_otp = models.CharField(max_length=20, blank=True)
     phone_otp = models.CharField(max_length=20, blank=True)
+    department=models.CharField(max_length=100,null=True,blank=True)
+    desgination = models.CharField(max_length=100, null=True, blank=True)
     profile_cover_photo = models.FileField(upload_to='coverphoto',null=True)
     # registration_status = models.CharField(max_length=80, default='Not Registered')
 
@@ -235,22 +237,22 @@ class ShippingAddress_Others(models.Model):
         db_table = "ShippingAddress_Others"
 
 
-class EmployeeRegistration(models.Model):
-    emp_id=models.BigAutoField(primary_key=True)
-    username=models.CharField(max_length=100)
-    employee_user_type=models.CharField(max_length=100,null=True,blank=True)
-    country=models.CharField(max_length=100)
-    department=models.CharField(max_length=100)
-    designation=models.CharField(max_length=100)
-    email_id=models.CharField(max_length=100,unique=True)
-    phone_no=models.CharField(max_length=20,unique=True)
-    employee_usertype=models.CharField(max_length=70,null=True)
-    password=models.CharField(max_length=300)
-    created_on_others = models.DateTimeField(auto_now_add=True)
-    updated_on_others = models.DateTimeField(auto_now=True)
-
-    class Meta:
-        db_table="EmployeeRegistration"
+# class EmployeeRegistration(models.Model):
+#     emp_id=models.BigAutoField(primary_key=True)
+#     username=models.CharField(max_length=100)
+#     employee_user_type=models.CharField(max_length=100,null=True,blank=True)
+#     country=models.CharField(max_length=100)
+#     department=models.CharField(max_length=100)
+#     designation=models.CharField(max_length=100)
+#     email_id=models.CharField(max_length=100,unique=True)
+#     phone_no=models.CharField(max_length=20,unique=True)
+#     employee_usertype=models.CharField(max_length=70,null=True)
+#     password=models.CharField(max_length=300)
+#     created_on_others = models.DateTimeField(auto_now_add=True)
+#     updated_on_others = models.DateTimeField(auto_now=True)
+#
+#     class Meta:
+#         db_table="EmployeeRegistration"
 
 class Employee_CompanyDetails(models.Model):
     # basic details model fields
@@ -280,7 +282,7 @@ class Employee_CompanyDetails(models.Model):
     emp_created_on = models.DateTimeField(auto_now_add=True)
     emp_updated_on = models.DateTimeField(auto_now=True)
     emp_created_by = models.BigIntegerField()
-    emp_updated_by = models.ForeignKey(EmployeeRegistration, on_delete=models.CASCADE)
+    emp_updated_by = models.ForeignKey(SelfRegistration, on_delete=models.CASCADE)
 
     class Meta:
         db_table = "Employee_CompanyDetails"
@@ -293,7 +295,7 @@ class Employee_IndustryInfo(models.Model):
     emp_created_on = models.DateTimeField(auto_now_add=True)
     emp_updated_on = models.DateTimeField(auto_now=True)
     emp_created_by = models.BigIntegerField()
-    emp_updated_by = models.ForeignKey(EmployeeRegistration, on_delete=models.CASCADE)
+    emp_updated_by = models.ForeignKey(SelfRegistration, on_delete=models.CASCADE)
     emp_company = models.ForeignKey(Employee_CompanyDetails, on_delete=models.CASCADE)
 
     class Meta:

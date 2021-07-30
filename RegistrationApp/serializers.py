@@ -4,7 +4,7 @@ from rest_framework import serializers
 from rest_framework.validators import UniqueValidator
 
 from .models import SelfRegistration, SelfRegistration_Sample, BasicCompanyDetails, BillingAddress, ShippingAddress, \
-    IndustrialInfo, IndustrialHierarchy, BankDetails, LegalDocuments, BasicCompanyDetails_Others, EmployeeRegistration, \
+    IndustrialInfo, IndustrialHierarchy, BankDetails, LegalDocuments, BasicCompanyDetails_Others, \
     Employee_CompanyDetails, Employee_IndustryInfo, ContactDetails, CommunicationDetails
 
 
@@ -19,7 +19,7 @@ class SelfRegistrationSerializer(serializers.ModelSerializer):
     class Meta:
         model = SelfRegistration
         fields = ('id','username', 'password', 'confirm_password', 'last_login', 'contact_person', 'business_to_serve', 'country',
-        'nature_of_business','user_type','phone_number', 'admin_approve','profile_cover_photo')
+        'nature_of_business','user_type','phone_number', 'admin_approve','profile_cover_photo','department','desgination')
 
     def validate(self, obj):
         # validation of password and confirm_password
@@ -39,6 +39,8 @@ class SelfRegistrationSerializer(serializers.ModelSerializer):
             nature_of_business=validated_data['nature_of_business'],
             user_type=validated_data['user_type'],
             phone_number=validated_data['phone_number'],
+            department=validated_data['department'],
+            desgination=validated_data['desgination'],
             last_login=timezone.now()
         )
         registerobj.set_password(validated_data['password'])
@@ -151,10 +153,10 @@ class BasicCompanyDetailsOthersSerializers(serializers.ModelSerializer):
         return values
 
 
-class EmployeeRegistrationSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = EmployeeRegistration
-        fields = '__all__'
+# class EmployeeRegistrationSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = EmployeeRegistration
+#         fields = '__all__'
 
 
 class Employee_CompanyDetailsSerializers(serializers.ModelSerializer):

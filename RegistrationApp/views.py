@@ -25,12 +25,11 @@ from rest_framework.views import APIView
 
 from .models import SelfRegistration, SelfRegistration_Sample, BasicCompanyDetails, BillingAddress, ShippingAddress, \
     IndustrialInfo, IndustrialHierarchy, BankDetails, LegalDocuments, BasicCompanyDetails_Others, BillingAddress_Others, \
-    ShippingAddress_Others, EmployeeRegistration, Employee_CompanyDetails, Employee_IndustryInfo, ContactDetails, \
+    ShippingAddress_Others, Employee_CompanyDetails, Employee_IndustryInfo, ContactDetails, \
     CommunicationDetails
 from .serializers import SelfRegistrationSerializer, SelfRegistrationSerializerSample, BasicCompanyDetailsSerializers, \
     BillingAddressSerializer, ShippingAddressSerializer, IndustrialInfoSerializer, IndustrialHierarchySerializer, \
-    BankDetailsSerializer, LegalDocumentsSerializers, BasicCompanyDetailsOthersSerializers, \
-    EmployeeRegistrationSerializer, Employee_CompanyDetailsSerializers, Employee_IndustryInfoSerializer, \
+    BankDetailsSerializer, LegalDocumentsSerializers, BasicCompanyDetailsOthersSerializers,Employee_CompanyDetailsSerializers, Employee_IndustryInfoSerializer, \
     ContactDetailsSerializer, CommunicationDetailsSerializer
 from rest_framework.permissions import AllowAny
 from rest_framework import status
@@ -503,27 +502,27 @@ def all_basic_data(request):
         return Response({'status':500,'error':str(e)},status=500)
 
 
-class EmployeeRegistrationView(viewsets.ModelViewSet):
-    permission_classes = (AllowAny,)
-    queryset = EmployeeRegistration.objects.all()
-    serializer_class = EmployeeRegistrationSerializer
-    ordering_fields = ['emp_id']
-    ordering = ['emp_id']
-
-    def perform_create(self, serializer):
-        # Hash password but passwords are not required
-        if ('password' in self.request.data):
-            password = make_password(self.request.data['password'])
-            serializer.save(password=password)
-        else:
-            serializer.save()
-
-    def perform_update(self, serializer):
-        if ('password' in self.request.data):
-            password = make_password(self.request.data['password'])
-            serializer.save(password=password)
-        else:
-            serializer.save()
+# class EmployeeRegistrationView(viewsets.ModelViewSet):
+#     permission_classes = (AllowAny,)
+#     queryset = EmployeeRegistration.objects.all()
+#     serializer_class = EmployeeRegistrationSerializer
+#     ordering_fields = ['emp_id']
+#     ordering = ['emp_id']
+#
+#     def perform_create(self, serializer):
+#         # Hash password but passwords are not required
+#         if ('password' in self.request.data):
+#             password = make_password(self.request.data['password'])
+#             serializer.save(password=password)
+#         else:
+#             serializer.save()
+#
+#     def perform_update(self, serializer):
+#         if ('password' in self.request.data):
+#             password = make_password(self.request.data['password'])
+#             serializer.save(password=password)
+#         else:
+#             serializer.save()
 
 
 class Employee_CompanyDetailsView(viewsets.ModelViewSet):

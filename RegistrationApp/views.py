@@ -1189,7 +1189,7 @@ def registration_list_by_user_id(request):
     data=request.data
     emptydata=[]
     try:
-        regobj=SelfRegistration.objects.filter(id=data['userid']).values()
+        regobj=SelfRegistration.objects.filter(username=data['email_id']).values()
         if len(regobj)>0:
             userval=regobj[0].get('id')
             basicobj = BasicCompanyDetails.objects.filter(updated_by=userval).values()

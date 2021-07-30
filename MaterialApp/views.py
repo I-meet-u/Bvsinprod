@@ -709,7 +709,7 @@ class BuyerProductDetailsView(viewsets.ModelViewSet):
         buyer_add_product_supplies = request.data.get('buyer_add_product_supplies',None)
         userid = request.data.get('userid',None)
         try:
-            itemcodesettingsobj = ItemCodeSettings.objects.filter(updated_by=userid).order_by('-id').values()
+            itemcodesettingsobj = ItemCodeSettings.objects.filter(updated_by=userid,item_type='Product').order_by('-id').values()
             if len(itemcodesettingsobj) > 0:
                 buyerproductobj = BuyerProductDetails.objects.filter(updated_by=userid).order_by('-buyer_numeric').values()
                 if len(buyerproductobj)==0:

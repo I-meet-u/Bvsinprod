@@ -1224,7 +1224,7 @@ def registration_list_by_user_id(request):
                                   "user_type":regobj[0].get('user_type'),
                                   "registration_status": "Self Registration",
                                   })
-            return Response({'status': 202, 'message':'ok','data':emptydata}, status=202)
+            return Response({'status': 200, 'message':'ok','data':emptydata}, status=200)
         else:
             return Response({'status': 204, 'message': 'No data with this id'}, status=204)
 

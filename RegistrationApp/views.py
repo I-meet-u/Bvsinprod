@@ -1203,31 +1203,31 @@ def registration_list_by_user_id(request):
                             legalobj = LegalDocuments.objects.filter(updated_by=userval).values()
                             if legalobj:
                                 emptydata.append({"id":userval,
-                                                "registration_status": "Legal Documents completed"})
+                                                "registration_status": "Legal Documents"})
                             else:
                                 emptydata.append({"id":userval,
-                                                  "registration_status": "Bank Details Completed"})
+                                                  "registration_status": "Bank Details"})
 
                         else:
                             emptydata.append({"id":userval,
-                                              "registration_status": "Industry hierarchy Completed"})
+                                              "registration_status": "Industry hierarchy"})
 
                     else:
                         emptydata.append({"id":userval,
-                                          "registration_status": "Seller Info Completed"})
+                                          "registration_status": "Seller Info"})
 
 
 
 
                 else:
                     emptydata.append({"id":userval,
-                                      "registration_status": "Basic Company Details Completed"})
+                                      "registration_status": "Basic Company Details"})
 
                 return Response({'status': 200, 'message': 'ok', 'data': emptydata}, status=200)
             else:
                 emptydata.append({"id": userval,
                                   "user_type":regobj[0].get('user_type'),
-                                  "registration_status": "Self_Registration Completed",
+                                  "registration_status": "Self Registration",
                                   })
                 return Response({'status': 202, 'message': 'Only in Registraion','data':emptydata}, status=202)
         else:

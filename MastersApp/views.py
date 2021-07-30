@@ -139,12 +139,12 @@ class HSNMasterSerializerView(viewsets.ModelViewSet):
     queryset = HSNMaster.objects.all().order_by('hsn_id')
     serializer_class = HSNMasterSerializer
 
-    def get_queryset(self):
-        # overriding get_queryset by passing user_id. Here user_id is nothing but updated_by
-        hsnmasterobj = HSNMaster.objects.filter(updated_by=self.request.GET.get('updated_by'))
-        if hsnmasterobj:
-            return hsnmasterobj
-        raise ValidationError({'message': 'HSN Master details not exist', 'status': 204})
+    # def get_queryset(self):
+    #     # overriding get_queryset by passing user_id. Here user_id is nothing but updated_by
+    #     hsnmasterobj = HSNMaster.objects.filter(updated_by=self.request.GET.get('updated_by'))
+    #     if hsnmasterobj:
+    #         return hsnmasterobj
+    #     raise ValidationError({'message': 'HSN Master details not exist', 'status': 204})
 
 
 class SACMasterView(viewsets.ModelViewSet):
@@ -2527,3 +2527,24 @@ class PerformanceGuaranteesMasterView(viewsets.ModelViewSet):
     permission_classes = (AllowAny,)
     queryset = PerformanceGuaranteesMaster.objects.all().order_by('performance_id')
     serializer_class = PerformanceGuaranteesMasterSerializer
+
+
+@api_view(['post'])
+@permission_classes([AllowAny,])
+def hsn_masters_user_id(request):
+    data=request.data
+    userid = data['userid']
+    try:
+        hsnobj = HSNMaster.objects.filter(updated_by=userid).values()
+        hsnadmin=HSNMaster.objects.filter(admins=1).values()
+        hsnval=list(chain(hsnobj,hsnadmin))
+        if len(hsnval)==0:
+            return Response({'status': 200, 'message': 'HSN masters data', 'data': hsnadmin}, status=200)
+        if len(hsnadmin) == 0:
+            return Response({'status': 200, 'message': 'HSN admins datas', 'data': hsnobj}, status=200)
+        elif len(hsnobj)!=0 and len(hsnadmin)!=0:
+            return Response({'status': 200, 'message': 'HSN all datas', 'data':hsnval}, status=200)
+        else:
+            return Response({'status':204,'message':'No HSN data present'},status=204)
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)

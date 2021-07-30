@@ -1181,3 +1181,55 @@ def admin_approval_mail_send(request):
 
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)
+
+
+@api_view(['post'])
+@permission_classes([AllowAny])
+def registration_list_by_user_id(request):
+    data=request.data
+    emptydata=[]
+    try:
+        regobj=SelfRegistration.objects.filter(id=data['userid']).values()
+        if len(regobj)>0:
+            userval=regobj[0].get('id')
+            basicobj = BasicCompanyDetails.objects.filter(updated_by=userval).values()
+            if basicobj:
+                industry_info = IndustrialInfo.objects.filter(updated_by=userval).values()
+                if industry_info:
+                    industry_hierarchy = IndustrialHierarchy.objects.filter(updated_by=userval).values()
+                    if industry_hierarchy:
+                        bankdetails = BankDetails.objects.filter(updated_by=userval).values()
+                        if bankdetails:
+                            legalobj = LegalDocuments.objects.filter(updated_by=userval).values()
+                            if legalobj:
+                                emptydata.append({"id":userval,
+                                                "registration_status": "Legal Documents completed"})
+                            else:
+                                emptydata.append({"id":userval,
+                                                  "registration_status": "Bank Details Completed"})
+
+                        else:
+                            emptydata.append({"id":userval,
+                                              "registration_status": "Industry hierarchy Completed"})
+
+                    else:
+                        emptydata.append({"id":userval,
+                                          "registration_status": "Seller Info Completed"})
+
+
+
+
+                else:
+                    emptydata.append({"id":userval,
+                                      "registration_status": "Basic Company Details Completed"})
+
+                return Response({'status': 200, 'message': 'ok', 'data': emptydata}, status=200)
+            else:
+                emptydata.append({"id": userval,
+                                  "registration_status": "Self_Registration Completed"})
+                return Response({'status': 202, 'message': 'Only in Registraion','data':emptydata}, status=202)
+        else:
+            return Response({'status': 204, 'message': 'No data with this id'}, status=204)
+
+    except Exception as e:
+        return Response({'status':500,'error':str(e)},status=500)

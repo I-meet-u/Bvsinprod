@@ -19,7 +19,7 @@ class SelfRegistrationSerializer(serializers.ModelSerializer):
     class Meta:
         model = SelfRegistration
         fields = ('id','username', 'password', 'confirm_password', 'last_login', 'contact_person', 'business_to_serve', 'country',
-        'nature_of_business','user_type','phone_number', 'admin_approve','profile_cover_photo','department','desgination')
+        'nature_of_business','user_type','phone_number', 'admin_approve','profile_cover_photo','department','designation')
 
     def validate(self, obj):
         # validation of password and confirm_password
@@ -40,7 +40,7 @@ class SelfRegistrationSerializer(serializers.ModelSerializer):
             user_type=validated_data['user_type'],
             phone_number=validated_data['phone_number'],
             department=validated_data['department'],
-            desgination=validated_data['desgination'],
+            designation=validated_data['designation'],
             last_login=timezone.now()
         )
         registerobj.set_password(validated_data['password'])

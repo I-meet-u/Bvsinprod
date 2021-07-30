@@ -949,10 +949,10 @@ class BuyerMachinaryDetailsView(viewsets.ModelViewSet):
             return Response({'status': 500, 'error': str(e)}, status=500)
 
     def get_queryset(self):
-        buyerserviceobj=BuyerServiceDetails.objects.filter(updated_by=self.request.GET.get('updated_by'))
-        if buyerserviceobj:
-            return buyerserviceobj
-        raise ValidationError({'message':'Buyer Service Details Not Present','status':204})
+        buyermachinaryobjval=BuyerMachinaryDetails.objects.filter(updated_by=self.request.GET.get('updated_by'))
+        if buyermachinaryobjval:
+            return buyermachinaryobjval
+        raise ValidationError({'message':'Buyer Machinary Details Not Present','status':204})
 
 
 

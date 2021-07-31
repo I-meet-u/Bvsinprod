@@ -1239,3 +1239,41 @@ def registration_list_by_user_id(request):
 
     except Exception as e:
         return Response({'status':500,'error':str(e)},status=500)
+
+
+@api_view(['post'])
+@permission_classes([AllowAny])
+def employee_registration_list_by_user_id(request):
+    data=request.data
+    emptydata=[]
+    try:
+        regobj=SelfRegistration.objects.filter(username=data['email_id']).values()
+        if len(regobj)>0:
+            userval=regobj[0].get('id')
+            print(userval)
+            basicobj = Employee_CompanyDetails.objects.filter(emp_updated_by_id=userval).values()
+            if basicobj:
+                industry_info = Employee_IndustryInfo.objects.filter(emp_updated_by_id=userval).values()
+                if industry_info:
+                    emptydata.append({"id": userval,
+                                      "user_type": regobj[0].get('user_type'),
+                                      "emp_company_code": basicobj[0].get('emp_company_code'),
+                                      "registration_status": "Industry Info Details"})
+
+                else:
+                    emptydata.append({"id":userval,
+                                      "user_type": regobj[0].get('user_type'),
+                                      "emp_company_code": basicobj[0].get('emp_company_code'),
+                                      "registration_status": "Basic Info Details"})
+
+            else:
+                emptydata.append({"id": userval,
+                                  "user_type":regobj[0].get('user_type'),
+                                  "registration_status": "Self Registration",
+                                  })
+            return Response({'status': 200, 'message':'Employee Company Details','data':emptydata}, status=200)
+        else:
+            return Response({'status': 204, 'message': 'No data with this id'}, status=204)
+
+    except Exception as e:
+        return Response({'status':500,'error':str(e)},status=500)

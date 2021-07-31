@@ -1,3 +1,5 @@
+from itertools import chain
+
 from django.shortcuts import render
 
 # Create your views here.
@@ -1010,5 +1012,24 @@ def t_codes_datas(request):
             return Response({'status': 200, 'message': 'List_And_Summary'}, status=200)
         else:
             return Response({'status': 204, 'message': 'Not_Present'}, status=204)
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)
+
+
+@api_view(['post'])
+def get_all_types_of_products_by_user_id(request):
+    data=request.data
+    userid=data['userid']
+    try:
+        buyerproductobj=BuyerProductDetails.objects.filter(updated_by_id=userid).values()
+        buyerserviceobj = BuyerServiceDetails.objects.filter(updated_by_id=userid).values()
+        buyermachinaryobj = BuyerMachinaryDetails.objects.filter(updated_by_id=userid).values()
+        totalproducts = list(chain(buyerproductobj, buyerserviceobj, buyermachinaryobj))
+        if len(buyerproductobj) or len(buyerserviceobj) or len(buyermachinaryobj)>0:
+            return Response({'status':200,'message':'All Products List','data':totalproducts},status=200)
+        else:
+            return Response({'status':204,'message':'Not Present'},status=204)
+
+
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)

@@ -347,7 +347,7 @@ class BiddingTermMasterSettingsView(viewsets.ModelViewSet):
         updated_by = request.data.get('updated_by', None)
         try:
             for i in range(0, len(datavalues)):
-                print(datavalues[i],'datavalues')
+                print(datavalues[i], 'datavalues')
                 for keys in datavalues[i]:
                     BiddingTermMasterSettings.objects.create(terms_name=keys,
                                                              terms_description=datavalues[i][keys],
@@ -610,7 +610,8 @@ def update_buyer_bidding_deadline_date(request):
         buyerbidupdateobj = BuyerProductBidding.objects.filter(product_bidding_id=product_bidding_id,
                                                                user_rfq_number=user_rfq_number).values()
         if len(buyerbidupdateobj) > 0:
-            buyerobj = BuyerProductBidding.objects.get(product_bidding_id=product_bidding_id,user_rfq_number=user_rfq_number)
+            buyerobj = BuyerProductBidding.objects.get(product_bidding_id=product_bidding_id,
+                                                       user_rfq_number=user_rfq_number)
             if buyerobj.product_deadline_date != product_deadline_date:
                 buyerobj.product_deadline_date = product_deadline_date
                 buyerobj.save()
@@ -625,15 +626,14 @@ def update_buyer_bidding_deadline_date(request):
         return Response({'status': 500, 'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
-
-
 @api_view(['put'])
 def status_vendor_accept(request):
     data = request.data
     rfq_number = data['rfq_number']
     vendor_code = data['vendor_code']
     try:
-        vends = SelectVendorsForBiddingProduct.objects.filter(rfq_number=rfq_number,vendor_code=vendor_code).values().order_by('rfq_number')
+        vends = SelectVendorsForBiddingProduct.objects.filter(rfq_number=rfq_number,
+                                                              vendor_code=vendor_code).values().order_by('rfq_number')
 
         for i in range(0, len(vends)):
             vendobj = SelectVendorsForBiddingProduct.objects.get(id=vends[i].get('id'))
@@ -641,7 +641,8 @@ def status_vendor_accept(request):
             if vendobj.vendor_status == 'Pending':
                 vendobj.vendor_status = 'Accept'
                 vendobj.save()
-                return Response({'status': 200, 'message': 'Status Updated to Accepted', 'data': vendobj.vendor_status},status=status.HTTP_200_OK)
+                return Response({'status': 200, 'message': 'Status Updated to Accepted', 'data': vendobj.vendor_status},
+                                status=status.HTTP_200_OK)
             else:
                 return Response({'status': 202, 'error': 'Already Accepted'}, status=status.HTTP_202_ACCEPTED)
 
@@ -654,9 +655,10 @@ def status_vendor_reject(request):
     data = request.data
     rfq_number = data['rfq_number']
     vendor_code = data['vendor_code']
-    userid=data['userid']
+    userid = data['userid']
     try:
-        vends = SelectVendorsForBiddingProduct.objects.filter(rfq_number=rfq_number,vendor_code=vendor_code,updated_by=userid).values().order_by('rfq_number')
+        vends = SelectVendorsForBiddingProduct.objects.filter(rfq_number=rfq_number, vendor_code=vendor_code,
+                                                              updated_by=userid).values().order_by('rfq_number')
 
         for i in range(0, len(vends)):
             vendobj = SelectVendorsForBiddingProduct.objects.get(id=vends[i].get('id'))
@@ -664,7 +666,8 @@ def status_vendor_reject(request):
             if vendobj.vendor_status == 'Pending':
                 vendobj.vendor_status = 'Reject'
                 vendobj.save()
-                return Response({'status': 200, 'message': 'Status Updated to Rejected', 'data': vendobj.vendor_status},status=status.HTTP_200_OK)
+                return Response({'status': 200, 'message': 'Status Updated to Rejected', 'data': vendobj.vendor_status},
+                                status=status.HTTP_200_OK)
             else:
                 return Response({'status': 202, 'error': 'Already rejected'}, status=status.HTTP_202_ACCEPTED)
 
@@ -674,17 +677,103 @@ def status_vendor_reject(request):
 
 @api_view(['post'])
 def vendor_bidding_all_details(request):
-    data=request.data
-    updated_by=data['updated_by']
+    data = request.data
+    updated_by = data['updated_by']
     try:
-        vendorproductbiddingobj=VendorProductBidding.objects.filter(updated_by=updated_by).values()
-        vendorproductdetails=VendorBiddingBuyerProductDetails.objects.filter(updated_by=updated_by).values()
-        vendortermsobj=VendorRfqTermsDescription.objects.filter(updated_by=updated_by).values()
-        vendorobj=list(chain(vendorproductbiddingobj,vendorproductdetails,vendortermsobj))
-        return Response({'status':200,'message':'Vendor Bidding List','data':vendorobj},status=status.HTTP_200_OK)
+        vendorproductbiddingobj = VendorProductBidding.objects.filter(updated_by=updated_by).values()
+        vendorproductdetails = VendorBiddingBuyerProductDetails.objects.filter(updated_by=updated_by).values()
+        vendortermsobj = VendorRfqTermsDescription.objects.filter(updated_by=updated_by).values()
+        vendorobj = list(chain(vendorproductbiddingobj, vendorproductdetails, vendortermsobj))
+        return Response({'status': 200, 'message': 'Vendor Bidding List', 'data': vendorobj}, status=status.HTTP_200_OK)
 
     except Exception as e:
-        return Response({'status':500,'error':str(e)},status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        return Response({'status': 500, 'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+@api_view(['post'])
+def get_vendor_published_leads(request):
+    data = request.data
+    userid = data['userid']
+    ccode = data['ccode']
+    vendorpublishleads = []
+    selectsarray = []
+    try:
+        basic = BasicCompanyDetails.objects.get(updated_by_id=userid)
+        selects = SelectVendorsForBiddingProduct.objects.filter(vendor_code=ccode).values()
+        if len(selects) > 0:
+            for i in range(0, len(selects)):
+                selectsarray.append(selects[i].get('rfq_number'))
+
+            bidobj = BuyerProductBidding.objects.filter(user_rfq_number__in=selectsarray).values().order_by(
+                'user_rfq_number')
+            print(len(bidobj))
+            for i in range(0, len(selects)):
+                print(bidobj[i].get('updated_by_id'))
+                basicobj = BasicCompanyDetails.objects.get(updated_by_id=bidobj[i].get('updated_by_id'))
+                vendorpublishleads.append({'user_rfq_number': bidobj[i].get('user_rfq_number'),
+                                           'vendor_code': basicobj.company_code,
+                                           'vendor_status': selects[i].get('vendor_status'),
+                                           'updatedby': selects[i].get('updatedby_id'),
+                                           'product_bidding_id': bidobj[i].get('product_bidding_id'),
+                                           'product_rfq_status': bidobj[i].get('product_rfq_status'),
+                                           'product_rfq_type': bidobj[i].get('product_rfq_type'),
+                                           'product_publish_date': bidobj[i].get('product_publish_date'),
+                                           'product_department': bidobj[i].get('product_department'),
+                                           'product_deadline_date': bidobj[i].get('product_deadline_date'),
+                                           'product_bill_address': bidobj[i].get('product_bill_address'),
+                                           'product_ship_address': bidobj[i].get('product_ship_address'),
+                                           'product_rfq_title': bidobj[i].get('product_rfq_title'),
+                                           'company_name': basicobj.company_name
+
+                                           })
+            return Response({'status': 200, 'message': 'Getting data', 'data': vendorpublishleads}, status=200)
+        else:
+            return Response({'status': 202, 'message': 'No Data Found'}, status=202)
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)
+
+
+
+@api_view(['post'])
+def open_leads_product_advance_search(request):
+    data=request.data
+    user_rfq_number=data['user_rfq_number']
+    company_name=data['company_name']
+    product_rfq_type=data['product_rfq_type']
+    product_rfq_title=data['product_rfq_title']
+    product_rfq_status=data['product_rfq_status']
+    product_publish_date=data['product_publish_date']
+    product_deadline_date=data['product_deadline_date']
+    product_delivery_date=data['product_delivery_date']
+    product_rfq_currency=data['product_rfq_currency']
+    product_rfq_category=data['product_rfq_category']
+    product_department=data['product_department']
+    valuearray = data['valuearray']
+    openleadssearch=[]
+
+    try:
+        for i in range(0,len(valuearray)):
+            if user_rfq_number.lower() in valuearray[i].get('user_rfq_number').lower() and \
+                    company_name.lower() in valuearray[i].get('company_name').lower() and \
+                    product_rfq_type.lower() in valuearray[i].get('product_rfq_type').lower() and \
+                    product_rfq_title.lower() in valuearray[i].get('product_rfq_title').lower() and \
+                    product_rfq_status.lower() in valuearray[i].get('product_rfq_status').lower() and \
+                    product_publish_date in valuearray[i].get('product_publish_date') and \
+                    product_deadline_date in valuearray[i].get('product_deadline_date') and \
+                    product_delivery_date in valuearray[i].get('product_delivery_date') and \
+                    product_rfq_currency.lower()  in valuearray[i].get('product_rfq_currency').lower() and \
+                    product_rfq_category.lower() in valuearray[i].get('product_rfq_category').lower()  and \
+                    product_department.lower() in valuearray[i].get('product_department').lower():
+                openleadssearch.append(valuearray[i])
+            else:
+                print('Not Present')
+        return Response({'status': 200, 'message': 'Open Leads Search Success', 'data': openleadssearch}, status=200)
+
+
+
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)
+
 
 
 # ----------------------------------------------------------------SOURCE---------------------------------------------------------------------

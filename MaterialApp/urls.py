@@ -27,5 +27,9 @@ urlpatterns = [
     path('t-codes-datas/',views.t_codes_datas),
     path('get-item-code-details-by-userid-itemtype/',views.get_item_code_details_by_userid_itemtype),
     path('advance-search-buyer-product/',views.advance_search_buyer_product),
-    path('get-all-types-of-products-by-user-id/',views.get_all_types_of_products_by_user_id)
+    path('get-all-types-of-products-by-user-id/',views.get_all_types_of_products_by_user_id),
+    path('vendor-product-based-on-maincore-name/',views.vendor_product_based_on_maincore_name),
+    path('vendor-product-based-on-category-name/',views.vendor_product_based_on_category_name),
+    path('update-buyer-products/',views.update_buyer_products),
+    path('get-product-all-details-based-on-id-and-userid/',views.get_product_all_details_based_on_id_and_userid)
     ]

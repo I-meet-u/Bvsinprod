@@ -38,6 +38,8 @@ urlpatterns = [
     path('update-buyer-bidding-deadline-date/',views.update_buyer_bidding_deadline_date),
     path('status-vendor-accept/',views.status_vendor_accept),
     path('status-vendor-reject/',views.status_vendor_reject),
-    path('vendor-bidding-all-details/',views.vendor_bidding_all_details)
+    path('vendor-bidding-all-details/',views.vendor_bidding_all_details),
+    path('get-vendor-published-leads/',views.get_vendor_published_leads),
+    path('open-leads-product-advance-search/',views.open_leads_product_advance_search)
 
 ]

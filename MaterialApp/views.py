@@ -1033,3 +1033,308 @@ def get_all_types_of_products_by_user_id(request):
 
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)
+
+@api_view(['post'])
+def vendor_product_based_on_maincore_name(request):
+    data=request.data
+    maincorename=data['maincorename']
+    try:
+        vendorobj=VendorProduct_BasicDetails.objects.filter(core_sector=maincorename).values()
+        if len(vendorobj)>0:
+            return Response({'status': 200, 'message': 'Success', 'data': vendorobj}, status=200)
+        else:
+            return Response({'status': 204, 'message': 'Not Present'}, status=204)
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)
+
+@api_view(['post'])
+def vendor_product_based_on_category_name(request):
+    data = request.data
+    categoryname = data['categoryname']
+    try:
+        vendorobj = VendorProduct_BasicDetails.objects.filter(category=categoryname).values()
+        if len(vendorobj) > 0:
+            return Response({'status': 200, 'message': 'Success', 'data': vendorobj}, status=200)
+        else:
+            return Response({'status': 204, 'message': 'Not Present'}, status=204)
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)
+
+
+@api_view(['put'])
+def update_buyer_products(request):
+    data=request.data
+    userid=data['userid']
+    productid=data['productid']
+    itemtype=data['itemtype']
+    try:
+        if itemtype=='Product':
+            buyer_item_name = data['buyer_item_name']
+            buyer_item_description = data['buyer_item_description']
+            buyer_hsn_sac = data['buyer_hsn_sac']
+            buyer_uom = data['buyer_uom']
+            buyer_unit_price = data['buyer_unit_price']
+            buyer_category = data['buyer_category']
+            buyer_department = data['buyer_department']
+            buyer_item_group = data['buyer_item_group']
+            buyer_annual_consumption = data['buyer_annual_consumption']
+            buyer_safety_stock = data['buyer_safety_stock']
+            buyer_model_no = data['buyer_model_no']
+            buyer_document = data['buyer_document']
+            buyer_additional_specifications = data['buyer_additional_specifications']
+            buyer_add_product_supplies = data['buyer_add_product_supplies']
+
+            productobj= BuyerProductDetails.objects.filter(updated_by_id=userid,buyer_product_id=productid,buyer_item_type=itemtype).values()
+            if len(productobj)>0:
+                productobjget=BuyerProductDetails.objects.get(buyer_product_id=productobj[0].get('buyer_product_id'))
+                if productobjget and productobjget.updated_by_id!=0:
+                    if productobjget.buyer_uom!=buyer_uom:
+                        productobjget.buyer_uom=buyer_uom
+                        productobjget.save()
+
+                    if productobjget.buyer_item_name!=buyer_item_name:
+                        productobjget.buyer_item_name=buyer_item_name
+                        productobjget.save()
+
+                    if productobjget.buyer_item_description != buyer_item_description:
+                        productobjget.buyer_item_description = buyer_item_description
+                        productobjget.save()
+
+                    if productobjget.buyer_hsn_sac!=buyer_hsn_sac:
+                        productobjget.buyer_hsn_sac=buyer_hsn_sac
+                        productobjget.save()
+
+                    if productobjget.buyer_unit_price != buyer_unit_price:
+                        productobjget.buyer_unit_price = buyer_unit_price
+                        productobjget.save()
+
+                    if productobjget.buyer_category != buyer_category:
+                        productobjget.buyer_category = buyer_category
+                        productobjget.save()
+
+                    if productobjget.buyer_department != buyer_department:
+                        productobjget.buyer_department = buyer_department
+                        productobjget.save()
+
+                    if productobjget.buyer_item_group != buyer_item_group:
+                        productobjget.buyer_item_group = buyer_item_group
+                        productobjget.save()
+
+                    if productobjget.buyer_annual_consumption != buyer_annual_consumption:
+                        productobjget.buyer_annual_consumption = buyer_annual_consumption
+                        productobjget.save()
+
+                    if productobjget.buyer_safety_stock != buyer_safety_stock:
+                        productobjget.buyer_safety_stock = buyer_safety_stock
+                        productobjget.save()
+
+                    if productobjget.buyer_model_no != buyer_model_no:
+                        productobjget.buyer_model_no = buyer_model_no
+                        productobjget.save()
+
+                    if productobjget.buyer_document != buyer_document:
+                        productobjget.buyer_document = buyer_document
+                        productobjget.save()
+
+                    if productobjget.buyer_additional_specifications != buyer_additional_specifications:
+                        productobjget.buyer_additional_specifications = buyer_additional_specifications
+                        productobjget.save()
+
+                    if productobjget.buyer_add_product_supplies != buyer_add_product_supplies:
+                        productobjget.buyer_add_product_supplies = buyer_add_product_supplies
+                        productobjget.save()
+                    productres=BuyerProductDetails.objects.filter(updated_by=userid,buyer_product_id=productid).values()
+                    return Response({'status':202,'message':'Buyer Product Updated','data':productres},status=202)
+
+        elif itemtype == 'Service':
+            buyer_service_item_name = data['buyer_service_item_name']
+            buyer_service_item_description = data['buyer_service_item_description']
+            buyer_service_hsn_sac = data['buyer_service_hsn_sac']
+            buyer_service_uom = data['buyer_service_uom']
+            buyer_service_unit_price = data['buyer_service_unit_price']
+            buyer_service_category = data['buyer_service_category']
+            buyer_service_department = data['buyer_service_department']
+            buyer_service_item_group = data['buyer_service_item_group']
+            buyer_service_annual_consumption = data['buyer_service_annual_consumption']
+            buyer_service_safety_stock = data['buyer_service_safety_stock']
+            buyer_service_model_no = data['buyer_service_model_no']
+            buyer_service_document = data['buyer_service_document']
+            buyer_service_additional_specifications = data['buyer_service_additional_specifications']
+            buyer_service_add_product_supplies = data['buyer_service_add_product_supplies']
+            serviceobj = BuyerServiceDetails.objects.filter(updated_by_id=userid, buyer_service_id=productid,buyer_service_item_type=itemtype).values()
+            if len(serviceobj) > 0:
+                serviceobjget = BuyerServiceDetails.objects.get(buyer_service_id=serviceobj[0].get('buyer_service_id'))
+                if serviceobjget and serviceobjget.updated_by_id != 0:
+                    if serviceobjget.buyer_service_uom != buyer_service_uom:
+                        serviceobjget.buyer_service_uom = buyer_service_uom
+                        serviceobjget.save()
+
+                    if serviceobjget.buyer_service_item_name != buyer_service_item_name:
+                        serviceobjget.buyer_service_item_name = buyer_service_item_name
+                        serviceobjget.save()
+
+                    if serviceobjget.buyer_service_item_description != buyer_service_item_description:
+                        serviceobjget.buyer_service_item_description = buyer_service_item_description
+                        serviceobjget.save()
+
+                    if serviceobjget.buyer_service_hsn_sac != buyer_service_hsn_sac:
+                        serviceobjget.buyer_service_hsn_sac = buyer_service_hsn_sac
+                        serviceobjget.save()
+
+                    if serviceobjget.buyer_service_unit_price != buyer_service_unit_price:
+                        serviceobjget.buyer_service_unit_price = buyer_service_unit_price
+                        serviceobjget.save()
+
+                    if serviceobjget.buyer_service_category != buyer_service_category:
+                        serviceobjget.buyer_service_category = buyer_service_category
+                        serviceobjget.save()
+
+                    if serviceobjget.buyer_service_department != buyer_service_department:
+                        serviceobjget.buyer_service_department = buyer_service_department
+                        serviceobjget.save()
+
+                    if serviceobjget.buyer_service_item_group != buyer_service_item_group:
+                        serviceobjget.buyer_service_item_group = buyer_service_item_group
+                        serviceobjget.save()
+
+                    if serviceobjget.buyer_service_annual_consumption != buyer_service_annual_consumption:
+                        serviceobjget.buyer_service_annual_consumption = buyer_service_annual_consumption
+                        serviceobjget.save()
+
+                    if serviceobjget.buyer_service_safety_stock != buyer_service_safety_stock:
+                        serviceobjget.buyer_service_safety_stock = buyer_service_safety_stock
+                        serviceobjget.save()
+
+                    if serviceobjget.buyer_service_model_no != buyer_service_model_no:
+                        serviceobjget.buyer_service_model_no = buyer_service_model_no
+                        serviceobjget.save()
+
+                    if serviceobjget.buyer_service_document != buyer_service_document:
+                        serviceobjget.buyer_service_document = buyer_service_document
+                        serviceobjget.save()
+
+                    if serviceobjget.buyer_service_additional_specifications != buyer_service_additional_specifications:
+                        serviceobjget.buyer_service_additional_specifications = buyer_service_additional_specifications
+                        serviceobjget.save()
+
+                    if serviceobjget.buyer_service_add_product_supplies != buyer_service_add_product_supplies:
+                        serviceobjget.buyer_service_add_product_supplies = buyer_service_add_product_supplies
+                        serviceobjget.save()
+                    serviceres =  BuyerServiceDetails.objects.filter(updated_by=userid, buyer_service_id=productid).values()
+                    return Response({'status': 202, 'message': 'Buyer Service Updated', 'data': serviceres}, status=202)
+
+        elif itemtype == 'Machinary & equipments':
+            buyer_machinary_item_name = data['buyer_machinary_item_name']
+            buyer_machinary_item_description = data['buyer_machinary_item_description']
+            buyer_machinary_uom = data['buyer_machinary_uom']
+            buyer_machinary_hsn_sac = data['buyer_machinary_hsn_sac']
+            buyer_machinary_unit_price = data['buyer_machinary_unit_price']
+            buyer_machinary_category = data['buyer_machinary_category']
+            buyer_machinary_department = data['buyer_machinary_department']
+            buyer_machinary_item_group = data['buyer_machinary_item_group']
+            buyer_machinary_annual_consumption = data['buyer_machinary_annual_consumption']
+            buyer_machinary_safety_stock = data['buyer_machinary_safety_stock']
+            buyer_machinary_model_no = data['buyer_machinary_model_no']
+            buyer_machinary_document = data['buyer_machinary_document']
+            buyer_machinary_additional_specifications = data['buyer_machinary_additional_specifications']
+            buyer_machinary_add_product_supplies = data['buyer_machinary_add_product_supplies']
+            machinaryobj = BuyerMachinaryDetails.objects.filter(updated_by_id=userid, buyer_machinary_id=productid,
+                                                            buyer_machinary_item_type=itemtype).values()
+            if len(machinaryobj) > 0:
+                machinaryobjget = BuyerMachinaryDetails.objects.get(buyer_machinary_id=machinaryobj[0].get('buyer_machinary_id'))
+                if machinaryobjget and machinaryobjget.updated_by_id != 0:
+                    if machinaryobjget.buyer_machinary_item_name != buyer_machinary_item_name:
+                        machinaryobjget.buyer_machinary_item_name = buyer_machinary_item_name
+                        machinaryobjget.save()
+
+                    if machinaryobjget.buyer_machinary_uom != buyer_machinary_uom:
+                        machinaryobjget.buyer_machinary_uom = buyer_machinary_uom
+                        machinaryobjget.save()
+
+                    if machinaryobjget.buyer_machinary_item_description != buyer_machinary_item_description:
+                        machinaryobjget.buyer_machinary_item_description = buyer_machinary_item_description
+                        machinaryobjget.save()
+
+                    if machinaryobjget.buyer_machinary_hsn_sac != buyer_machinary_hsn_sac:
+                        machinaryobjget.buyer_machinary_hsn_sac = buyer_machinary_hsn_sac
+                        machinaryobjget.save()
+
+                    if machinaryobjget.buyer_machinary_unit_price != buyer_machinary_unit_price:
+                        machinaryobjget.buyer_machinary_unit_price = buyer_machinary_unit_price
+                        machinaryobjget.save()
+
+                    if machinaryobjget.buyer_machinary_category != buyer_machinary_category:
+                        machinaryobjget.buyer_machinary_category = buyer_machinary_category
+                        machinaryobjget.save()
+
+                    if machinaryobjget.buyer_machinary_department != buyer_machinary_department:
+                        machinaryobjget.buyer_machinary_department = buyer_machinary_department
+                        machinaryobjget.save()
+
+                    if machinaryobjget.buyer_machinary_item_group != buyer_machinary_item_group:
+                        machinaryobjget.buyer_machinary_item_group = buyer_machinary_item_group
+                        machinaryobjget.save()
+
+                    if machinaryobjget.buyer_machinary_annual_consumption != buyer_machinary_annual_consumption:
+                        machinaryobjget.buyer_machinary_annual_consumption = buyer_machinary_annual_consumption
+                        machinaryobjget.save()
+
+                    if machinaryobjget.buyer_machinary_safety_stock != buyer_machinary_safety_stock:
+                        machinaryobjget.buyer_machinary_safety_stock = buyer_machinary_safety_stock
+                        machinaryobjget.save()
+
+                    if machinaryobjget.buyer_machinary_model_no != buyer_machinary_model_no:
+                        machinaryobjget.buyer_machinary_model_no = buyer_machinary_model_no
+                        machinaryobjget.save()
+
+                    if machinaryobjget.buyer_machinary_document != buyer_machinary_document:
+                        machinaryobjget.buyer_machinary_document = buyer_machinary_document
+                        machinaryobjget.save()
+
+                    if machinaryobjget.buyer_machinary_additional_specifications != buyer_machinary_additional_specifications:
+                        machinaryobjget.buyer_machinary_additional_specifications = buyer_machinary_additional_specifications
+                        machinaryobjget.save()
+
+                    if machinaryobjget.buyer_machinary_add_product_supplies != buyer_machinary_add_product_supplies:
+                        machinaryobjget.buyer_machinary_add_product_supplies = buyer_machinary_add_product_supplies
+                        machinaryobjget.save()
+                    machinaryres = BuyerMachinaryDetails.objects.filter(updated_by=userid, buyer_machinary_id=productid).values()
+                    return Response({'status': 202, 'message': 'Buyer Machinary Updated', 'data': machinaryres}, status=202)
+        else:
+            return Response({'status':200,'message':'Item type name is not correct,Please check'},status=200)
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)
+
+
+@api_view(['post'])
+def get_product_all_details_based_on_id_and_userid(request):
+    data=request.data
+    userid = data['userid']
+    productid = data['productid']
+    itemtype = data['itemtype']
+    try:
+        if itemtype=='Product':
+            productitemobj=BuyerProductDetails.objects.filter(updated_by_id=userid,buyer_product_id=productid,buyer_item_type=itemtype).values()
+            if len(productitemobj)>0:
+                return Response({'status':200,'message':'Buyer Product Details','data':productitemobj},status=200)
+            # else:
+            #     return Response({'status':204,'message':'Not Present'},status=204)
+        elif itemtype=='Service':
+            productserviceitemobj = BuyerServiceDetails.objects.filter(updated_by_id=userid, buyer_service_id=productid,
+                                                                buyer_service_item_type=itemtype).values()
+            if len(productserviceitemobj)>0:
+                return Response({'status': 200, 'message': 'Buyer Service Details', 'data': productserviceitemobj}, status=200)
+        elif itemtype=='Machinary & equipments':
+            productmachinaryitemobj=BuyerMachinaryDetails.objects.filter(updated_by_id=userid, buyer_machinary_id=productid,
+                                                                buyer_machinary_item_type=itemtype).values()
+            if len(productmachinaryitemobj)>0:
+                return Response({'status': 200, 'message': 'Buyer Machinary Details', 'data': productmachinaryitemobj},
+                                status=200)
+        else:
+            return Response({'status': 204, 'message': 'Item type is not correct',},
+                            status=204)
+
+
+
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)

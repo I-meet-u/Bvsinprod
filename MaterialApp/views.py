@@ -343,13 +343,13 @@ def get_itemtype_based_on_userid(request):
                 return Response({'status': 200, 'message': 'Buyer Product List','data':productobj}, status=200)
 
             elif itemtype == 'Service':
-                productobjservice = BuyerProductDetails.objects.filter(updated_by=userid,
-                                                                buyer_item_type=itemtype).values().order_by('buyer_product_id')
+                productobjservice = BuyerServiceDetails.objects.filter(updated_by=userid,
+                                                                buyer_service_item_type=itemtype).values().order_by('buyer_service_id')
                 return Response({'status': 200, 'message': 'Buyer Service List', 'data': productobjservice}, status=200)
-            elif itemtype == 'Machinery_and_Equipments':
-                productobjmachinary = BuyerProductDetails.objects.filter(updated_by=userid,
-                                                                       buyer_item_type=itemtype).values().order_by('buyer_product_id')
-                return Response({'status': 200, 'message': 'Buyer Service List', 'data': productobjmachinary}, status=200)
+            elif itemtype == 'Machinary & equipments':
+                productobjmachinary = BuyerMachinaryDetails.objects.filter(updated_by=userid,
+                                                                       buyer_machinary_item_type=itemtype).values().order_by('buyer_machinary_id')
+                return Response({'status': 200, 'message': 'Buyer Machinary List', 'data': productobjmachinary}, status=200)
             else:
                 return Response({'status': 204, 'error':'Not present or itemtype is wrong','data':[]}, status=204)
         else:

@@ -69,42 +69,6 @@ class BasicCompanyDetails(models.Model):
         db_table = "BasicCompanyDetails"
 
 
-class BillingAddress(models.Model):
-    # billing address model fields
-    bill_address = models.TextField(max_length=500)
-    bill_country = models.CharField(max_length=200)
-    bill_state=models.CharField(max_length=200)
-    bill_city = models.CharField(max_length=200)
-    bill_pincode = models.IntegerField()
-    bill_landmark = models.CharField(max_length=50, blank=True)
-    bill_location = models.CharField(max_length=200, blank=True)
-    created_on = models.DateTimeField(auto_now_add=True)
-    updated_on = models.DateTimeField(auto_now=True)
-    created_by = models.BigIntegerField()
-    updated_by = models.ForeignKey(SelfRegistration, on_delete=models.CASCADE,null=True,blank=True)
-    company_code = models.ForeignKey(BasicCompanyDetails,on_delete=models.CASCADE,null=True,blank=True)
-
-    class Meta:
-        db_table = "BillingAddress"
-
-
-class ShippingAddress(models.Model):
-    # shipping address model fields
-    ship_address = models.TextField(max_length=500)
-    ship_country = models.CharField(max_length=200)
-    ship_state = models.CharField(max_length=200)
-    ship_city = models.CharField(max_length=200)
-    ship_pincode = models.BigIntegerField()
-    ship_landmark = models.CharField(max_length=50, blank=True)
-    ship_location = models.CharField(max_length=200, blank=True)
-    created_on = models.DateTimeField(auto_now_add=True)
-    updated_on = models.DateTimeField(auto_now=True)
-    created_by = models.BigIntegerField()
-    updated_by = models.ForeignKey(SelfRegistration, on_delete=models.CASCADE,null=True,blank=True)
-    company_code = models.ForeignKey(BasicCompanyDetails,on_delete=models.CASCADE,null=True,blank=True)
-
-    class Meta:
-        db_table = "ShippingAddress"
 
 
 class IndustrialInfo(models.Model):
@@ -337,3 +301,45 @@ class CommunicationDetails(models.Model):
 
     class Meta:
         db_table = "CommunicationDetails"
+
+
+
+
+class BillingAddress(models.Model):
+    # billing address model fields
+    bill_address = models.TextField(max_length=500)
+    bill_country = models.CharField(max_length=200)
+    bill_state=models.CharField(max_length=200)
+    bill_city = models.CharField(max_length=200)
+    bill_pincode = models.IntegerField()
+    bill_landmark = models.CharField(max_length=50, blank=True)
+    bill_location = models.CharField(max_length=200, blank=True)
+    created_on = models.DateTimeField(auto_now_add=True)
+    updated_on = models.DateTimeField(auto_now=True)
+    created_by = models.BigIntegerField()
+    updated_by = models.ForeignKey(SelfRegistration, on_delete=models.CASCADE,null=True,blank=True)
+    company_code = models.ForeignKey(BasicCompanyDetails,on_delete=models.CASCADE,null=True,blank=True)
+    emp_company_code = models.ForeignKey(Employee_CompanyDetails, on_delete=models.CASCADE, null=True, blank=True)
+
+    class Meta:
+        db_table = "BillingAddress"
+
+
+class ShippingAddress(models.Model):
+    # shipping address model fields
+    ship_address = models.TextField(max_length=500)
+    ship_country = models.CharField(max_length=200)
+    ship_state = models.CharField(max_length=200)
+    ship_city = models.CharField(max_length=200)
+    ship_pincode = models.BigIntegerField()
+    ship_landmark = models.CharField(max_length=50, blank=True)
+    ship_location = models.CharField(max_length=200, blank=True)
+    created_on = models.DateTimeField(auto_now_add=True)
+    updated_on = models.DateTimeField(auto_now=True)
+    created_by = models.BigIntegerField()
+    updated_by = models.ForeignKey(SelfRegistration, on_delete=models.CASCADE,null=True,blank=True)
+    company_code = models.ForeignKey(BasicCompanyDetails,on_delete=models.CASCADE,null=True,blank=True)
+    emp_company_code = models.ForeignKey(Employee_CompanyDetails, on_delete=models.CASCADE, null=True, blank=True)
+
+    class Meta:
+        db_table = "ShippingAddress"

@@ -1288,7 +1288,7 @@ def changeempinddetails(request):
             empobj.emp_industry_to_serve=data['emp_industry_to_serve']
             empobj.emp_updated_by=SelfRegistration.objects.get(id=userid)
             empobj.save()
-        return Response({'status': 204, 'message': 'No data with this id'}, status=204)
+        return Response({'status': 200, 'message': 'ok'}, status=200)
 
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)

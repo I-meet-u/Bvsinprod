@@ -13,6 +13,7 @@ from rest_framework.exceptions import ValidationError
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 
+from MastersApp.models import MaincoreMaster
 from RegistrationApp.models import BasicCompanyDetails, IndustrialInfo, IndustrialHierarchy, BillingAddress
 from .models import *
 from .serializers import *
@@ -177,44 +178,35 @@ def external_vendor(request):
     ccode = []
     externalarray = []
 
+
     try:
-        regobj1 = SelfRegistration.objects.filter(id=userid).values()
-        regobj = SelfRegistration.objects.filter().values()
-        internalvendorobj = InternalVendor.objects.filter(updated_by_id=userid).values('company_code').order_by('internal_vendor_id')
-        for i in range(0, len(internalvendorobj)):
-            internalarray.append(internalvendorobj[i].get('company_code'))
-        for i in range(0, len(regobj)):
-            regid.append(regobj[i].get('id'))
-        basicobj1 = BasicCompanyDetails.objects.filter(updated_by__in=regid).values()
-        for i in range(0, len(basicobj1)):
-            if basicobj1[i].get('company_code') not in internalarray:
-                ccode.append(basicobj1[i].get('company_code'))
-        industryhierarchy = IndustrialHierarchy.objects.filter(company_code__in=ccode).values()
-        if len(industryhierarchy) > 0:
-            for j in range(0, len(industryhierarchy)):
-                regstatus = SelfRegistration.objects.filter(id=industryhierarchy[j].get('updated_by_id'),
-                                                        admin_approve="Approved").values()
-                x = industryhierarchy[j].get('company_code_id')
-                print(x)
-                if len(regstatus)>0:
-                    inudstryobj = IndustrialInfo.objects.filter(company_code=x).values()
-                    basicobj = BasicCompanyDetails.objects.filter(company_code=x).values()
-                    bill_obj = BillingAddress.objects.filter(company_code=x).values()
-                    externalarray.append({'maincore': industryhierarchy[j].get('maincore'),
-                                          'category': industryhierarchy[j].get('category'),
-                                          'subcategory': industryhierarchy[j].get('subcategory'),
-                                          'bill_city': basicobj[0].get('bill_city'),
-                                          'bill_state': bill_obj[0].get('bill_state'),
-                                          'nature_of_business': inudstryobj[0].get('nature_of_business'),
-                                          'industry_to_serve': inudstryobj[0].get('industry_to_serve'),
-                                          'company_code': basicobj[0].get('company_code'),
-                                          'company_name': basicobj[0].get('company_name')
+        regobj=SelfRegistration.objects.filter(admin_approve='Approved').values()
+        # print(len(regobj))
+        if len(regobj)>0:
+            for i in range(0,len(regobj)):
+                basicobj=BasicCompanyDetails.objects.get(updated_by_id=regobj[i].get('id'))
+                # print(basicobj.company_code)
+                industryobj=IndustrialInfo.objects.get(updated_by_id=regobj[i].get('id'),company_code=basicobj.company_code)
+                print(industryobj.company_code_id,'indsutry')
+                hierarchyobj = IndustrialHierarchy.objects.get(updated_by_id=regobj[i].get('id'))
+                billingobj=BillingAddress.objects.filter(updated_by_id=regobj[i].get('id')).values()
+                externalarray.append({'company_code':basicobj.company_code,
+                                      'company_name':basicobj.company_name,
+                                      'nature_of_business':industryobj.nature_of_business,
+                                      'industry_to_serve': industryobj.industry_to_serve,
+                                      'maincore': hierarchyobj.maincore,
+                                      'category': hierarchyobj.category,
+                                      'subcategory': hierarchyobj.subcategory,
+                                      'bill_city': billingobj[0].get('bill_city'),
+                                      'bill_state': billingobj[0].get('bill_state'),
 
-                                          })
+                                      })
 
-            return Response({'status': 200, 'message': 'External Vendor List', 'data': externalarray}, status=200)
+
+            return Response({'status': 200, 'message': 'External Vendor List', 'data': externalarray},status=200)
+
         else:
-            return Response({'status': 202, 'message': 'Not Present'}, status=202)
+            return Response({'status': 204, 'message': 'Not Present'}, status=204)
 
 
     except Exception as e:
@@ -352,42 +344,6 @@ def sendergetbuzrequestdata(request):
 
 
 @api_view(['post'])
-def searchinternalvendor(request):
-    data = request.data
-    ccode = data['ccode']
-    cname = data['cname']
-    city = data['city']
-    nob = data['nob']
-    state = data['state']
-    grp = data['grp']
-    maincore = data['maincore']
-    category = data['category']
-    subcategory = data['subcategory']
-
-    try:
-        if grp == "":
-
-            internalobj = InternalVendor.objects.filter(updated_by=data['userid'], company_code=ccode,
-                                                        company_name__icontains=cname, city__icontains=city,
-                                                        nature_of_business__icontains=nob, state__icontains=state,
-                                                        maincore__icontains=maincore, category__icontains=category,
-                                                        sub_category__icontains=subcategory,
-                                                        groups__isnull=True).values()
-        else:
-
-            internalobj = InternalVendor.objects.filter(updated_by=data['userid'], company_code=ccode,
-                                                        company_name__icontains=cname, city__icontains=city,
-                                                        nature_of_business__icontains=nob, state__icontains=state,
-                                                        maincore__icontains=maincore, category__icontains=category,
-                                                        sub_category__icontains=subcategory,
-                                                        groups__icontains=grp).values()
-
-        return Response({'status': 200, 'message': 'ok', 'data': internalobj}, status=200)
-    except Exception as e:
-        return Response({'status': 500, 'error': str(e)}, status=500)
-
-
-@api_view(['post'])
 @permission_classes((AllowAny,))
 def buzrequest(request):
     data = request.data
@@ -485,15 +441,60 @@ def update_business_status(request):
     statusval=data['statusval']
     try:
         businessobj = BusinessRequest.objects.filter(company_code=vendorcode,id=businessid).values().order_by('id')
+        print(len(businessobj))
+        if len(businessobj)>0:
 
-        for i in range(0, len(businessobj)):
-            businessobj = BusinessRequest.objects.get(id=businessobj[i].get('id'))
-            print(businessobj)
-            if businessobj.send_status!=statusval:
-                businessobj.send_status = statusval
-                businessobj.save()
-                return Response({'status': 200, 'message': 'Status Updated', 'data': businessobj.send_status},status=status.HTTP_200_OK)
-            else:
-                return Response({'status': 202, 'message': 'Already Updated'},status=status.HTTP_202_ACCEPTED)
+            for i in range(0, len(businessobj)):
+                businessobj = BusinessRequest.objects.get(id=businessobj[i].get('id'))
+                print(businessobj)
+                if businessobj.send_status!=statusval:
+                    businessobj.send_status = statusval
+                    businessobj.save()
+                    return Response({'status': 200, 'message': 'Status Updated', 'data': businessobj.send_status},status=status.HTTP_200_OK)
+                else:
+                    return Response({'status': 202, 'message': 'Already Updated'},status=status.HTTP_202_ACCEPTED)
+        else:
+            return Response({'status': 204, 'message': 'Data Not Present with this id'}, status=status.HTTP_204_NO_CONTENT)
+
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+
+@api_view(['post'])
+def searchinternalvendor(request):
+    data = request.data
+    ccode = data['ccode']
+    cname = data['cname']
+    city = data['city']
+    nob = data['nob']
+    state = data['state']
+    grp = data['grp']
+    maincore = data['maincore']
+    category = data['category']
+    subcategory = data['subcategory']
+    nature=[]
+
+    try:
+        nature.append(nob)
+        if grp == "":
+
+            internalobj = InternalVendor.objects.filter(updated_by=data['userid'], company_code=ccode,
+                                                        company_name__icontains=cname, city__icontains=city,
+                                                        nature_of_business__contains=nature, state__icontains=state,
+                                                        maincore__icontains=[maincore], category__icontains=category,
+                                                        sub_category__icontains=subcategory,
+                                                        groups__isnull=True).values()
+        else:
+
+            internalobj = InternalVendor.objects.filter(updated_by=data['userid'], company_code=ccode,
+                                                        company_name__icontains=cname, city__icontains=city,
+                                                        nature_of_business__icontains=nob, state__icontains=state,
+                                                        maincore__icontains=maincore, category__icontains=category,
+                                                        sub_category__icontains=subcategory,
+                                                        groups__icontains=grp).values()
+
+        return Response({'status': 200, 'message': 'ok', 'data': internalobj}, status=200)
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)
+

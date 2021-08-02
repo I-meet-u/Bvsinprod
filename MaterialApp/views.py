@@ -1065,10 +1065,10 @@ def vendor_product_based_on_category_name(request):
 def update_buyer_products(request):
     data=request.data
     userid=data['userid']
-    productid=data['productid']
     itemtype=data['itemtype']
     try:
         if itemtype=='Product':
+            buyer_product_id=data['buyer_product_id']
             buyer_item_name = data['buyer_item_name']
             buyer_item_description = data['buyer_item_description']
             buyer_hsn_sac = data['buyer_hsn_sac']
@@ -1084,7 +1084,7 @@ def update_buyer_products(request):
             buyer_additional_specifications = data['buyer_additional_specifications']
             buyer_add_product_supplies = data['buyer_add_product_supplies']
 
-            productobj= BuyerProductDetails.objects.filter(updated_by_id=userid,buyer_product_id=productid,buyer_item_type=itemtype).values()
+            productobj= BuyerProductDetails.objects.filter(updated_by_id=userid,buyer_product_id=buyer_product_id,buyer_item_type=itemtype).values()
             if len(productobj)>0:
                 productobjget=BuyerProductDetails.objects.get(buyer_product_id=productobj[0].get('buyer_product_id'))
                 if productobjget and productobjget.updated_by_id!=0:
@@ -1143,10 +1143,11 @@ def update_buyer_products(request):
                     if productobjget.buyer_add_product_supplies != buyer_add_product_supplies:
                         productobjget.buyer_add_product_supplies = buyer_add_product_supplies
                         productobjget.save()
-                    productres=BuyerProductDetails.objects.filter(updated_by=userid,buyer_product_id=productid).values()
+                    productres=BuyerProductDetails.objects.filter(updated_by=userid,buyer_product_id=buyer_product_id).values()
                     return Response({'status':202,'message':'Buyer Product Updated','data':productres},status=202)
 
         elif itemtype == 'Service':
+            buyer_service_id = data['buyer_service_id']
             buyer_service_item_name = data['buyer_service_item_name']
             buyer_service_item_description = data['buyer_service_item_description']
             buyer_service_hsn_sac = data['buyer_service_hsn_sac']
@@ -1161,7 +1162,7 @@ def update_buyer_products(request):
             buyer_service_document = data['buyer_service_document']
             buyer_service_additional_specifications = data['buyer_service_additional_specifications']
             buyer_service_add_product_supplies = data['buyer_service_add_product_supplies']
-            serviceobj = BuyerServiceDetails.objects.filter(updated_by_id=userid, buyer_service_id=productid,buyer_service_item_type=itemtype).values()
+            serviceobj = BuyerServiceDetails.objects.filter(updated_by_id=userid, buyer_service_id=buyer_service_id,buyer_service_item_type=itemtype).values()
             if len(serviceobj) > 0:
                 serviceobjget = BuyerServiceDetails.objects.get(buyer_service_id=serviceobj[0].get('buyer_service_id'))
                 if serviceobjget and serviceobjget.updated_by_id != 0:
@@ -1220,10 +1221,11 @@ def update_buyer_products(request):
                     if serviceobjget.buyer_service_add_product_supplies != buyer_service_add_product_supplies:
                         serviceobjget.buyer_service_add_product_supplies = buyer_service_add_product_supplies
                         serviceobjget.save()
-                    serviceres =  BuyerServiceDetails.objects.filter(updated_by=userid, buyer_service_id=productid).values()
+                    serviceres =  BuyerServiceDetails.objects.filter(updated_by=userid, buyer_service_id=buyer_service_id).values()
                     return Response({'status': 202, 'message': 'Buyer Service Updated', 'data': serviceres}, status=202)
 
         elif itemtype == 'Machinary & equipments':
+            buyer_machinary_id = data['buyer_machinary_id']
             buyer_machinary_item_name = data['buyer_machinary_item_name']
             buyer_machinary_item_description = data['buyer_machinary_item_description']
             buyer_machinary_uom = data['buyer_machinary_uom']
@@ -1238,7 +1240,7 @@ def update_buyer_products(request):
             buyer_machinary_document = data['buyer_machinary_document']
             buyer_machinary_additional_specifications = data['buyer_machinary_additional_specifications']
             buyer_machinary_add_product_supplies = data['buyer_machinary_add_product_supplies']
-            machinaryobj = BuyerMachinaryDetails.objects.filter(updated_by_id=userid, buyer_machinary_id=productid,
+            machinaryobj = BuyerMachinaryDetails.objects.filter(updated_by_id=userid, buyer_machinary_id=buyer_machinary_id,
                                                             buyer_machinary_item_type=itemtype).values()
             if len(machinaryobj) > 0:
                 machinaryobjget = BuyerMachinaryDetails.objects.get(buyer_machinary_id=machinaryobj[0].get('buyer_machinary_id'))
@@ -1298,7 +1300,7 @@ def update_buyer_products(request):
                     if machinaryobjget.buyer_machinary_add_product_supplies != buyer_machinary_add_product_supplies:
                         machinaryobjget.buyer_machinary_add_product_supplies = buyer_machinary_add_product_supplies
                         machinaryobjget.save()
-                    machinaryres = BuyerMachinaryDetails.objects.filter(updated_by=userid, buyer_machinary_id=productid).values()
+                    machinaryres = BuyerMachinaryDetails.objects.filter(updated_by=userid, buyer_machinary_id=buyer_machinary_id).values()
                     return Response({'status': 202, 'message': 'Buyer Machinary Updated', 'data': machinaryres}, status=202)
         else:
             return Response({'status':200,'message':'Item type name is not correct,Please check'},status=200)

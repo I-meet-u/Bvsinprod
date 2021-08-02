@@ -1295,4 +1295,42 @@ def changeempinddetails(request):
 
 
 
+@api_view(['put'])
+def changecompprofile(request):
+    try:
+        data=request.data
+        dept=data['dept']
+        desig=data['desig']
+        gstno=data['gstno']
+        cname=data['cname']
+        ctype=data['ctype']
+        cyear=data['cyear']
+        mloc=data['mloc']
+        industryscale=data['iscale']
+        currency=data['currency']
+        userid=data['userid']
+
+        regobj=SelfRegistration.objects.get(id=userid)
+        if regobj:
+            regobj.department=dept
+            regobj.designation=desig
+            regobj.save()
+            empobj=Employee_CompanyDetails.objects.get(emp_updated_by=userid)
+            empobj.emp_company_name=cname
+            empobj.emp_tax_id_or_vat=gstno
+            empobj.emp_company_established=cyear
+            empobj.emp_industrial_scale=industryscale
+            empobj.emp_market_location=mloc
+            empobj.emp_company_type=ctype
+            empobj.emp_currency=currency
+            empobj.emp_updated_by=SelfRegistration.objects.get(id=userid)
+            empobj.save()
+
+        return Response({'status': 200, 'message': 'ok'}, status=200)
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)
+
+
+
+
 

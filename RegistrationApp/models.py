@@ -81,8 +81,8 @@ class BillingAddress(models.Model):
     created_on = models.DateTimeField(auto_now_add=True)
     updated_on = models.DateTimeField(auto_now=True)
     created_by = models.BigIntegerField()
-    updated_by = models.ForeignKey(SelfRegistration, on_delete=models.CASCADE)
-    company_code = models.ForeignKey(BasicCompanyDetails,on_delete=models.CASCADE)
+    updated_by = models.ForeignKey(SelfRegistration, on_delete=models.CASCADE,null=True,blank=True)
+    company_code = models.ForeignKey(BasicCompanyDetails,on_delete=models.CASCADE,null=True,blank=True)
 
     class Meta:
         db_table = "BillingAddress"
@@ -100,8 +100,8 @@ class ShippingAddress(models.Model):
     created_on = models.DateTimeField(auto_now_add=True)
     updated_on = models.DateTimeField(auto_now=True)
     created_by = models.BigIntegerField()
-    updated_by = models.ForeignKey(SelfRegistration, on_delete=models.CASCADE)
-    company_code = models.ForeignKey(BasicCompanyDetails,on_delete=models.CASCADE)
+    updated_by = models.ForeignKey(SelfRegistration, on_delete=models.CASCADE,null=True,blank=True)
+    company_code = models.ForeignKey(BasicCompanyDetails,on_delete=models.CASCADE,null=True,blank=True)
 
     class Meta:
         db_table = "ShippingAddress"

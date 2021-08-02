@@ -176,7 +176,7 @@ class Employee_CompanyDetailsSerializers(serializers.ModelSerializer):
         print(validate_data)
         empobj = Employee_CompanyDetails.objects.count()
         if empobj == 0:
-            emp_company_code = '1100001'
+            emp_company_code = '2100001'
         else:
             empobj = Employee_CompanyDetails.objects.values_list('emp_company_code', flat=True).last()
             print(empobj)

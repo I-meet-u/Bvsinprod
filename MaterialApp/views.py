@@ -1473,3 +1473,38 @@ def get_product_all_details_based_on_id_and_userid(request):
 
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)
+
+@api_view(['post'])
+def buyer_product_search(request):
+    data=request.data
+    itemcode=data['itemcode']
+    itemtype = data['itemtype']
+    itemname=data['itemname']
+    itemdes = data['itemdes']
+    hsn = data['hsn']
+    uom = data['uom']
+    dep=data['dep']
+    cate=data['cate']
+    unitprice = data['unitprice']
+    itemgroup=data['itemgroup']
+    modelno=data['modelno']
+    valuearray=data['valuearray']
+    status=data['status']
+    buyerproductsearch=[]
+    try:
+        for i in range(0,len(valuearray)):
+            if itemcode.lower() in valuearray[i].get('itemcode').lower() \
+                    and itemtype.lower() in valuearray[i].get('itemtype').lower() \
+                    and itemname.lower() in valuearray[i].get('itemname').lower() \
+                and itemdes.lower() in valuearray[i].get('itemdes').lower() \
+                and hsn.lower() in valuearray[i].get('hsn').lower() \
+                and uom.lower() in valuearray[i].get('uom').lower()\
+                and dep.lower() in valuearray[i].get('dep').lower() \
+                and cate.lower() in valuearray[i].get('cate').lower()\
+                and unitprice.lower() in valuearray[i].get('unitprice').lower() \
+                and itemgroup.lower() in valuearray[i].get('itemgroup').lower() \
+                and modelno.lower() in valuearray[i].get('modelno').lower() and status.lower() in valuearray[i].get('status').lower():
+                buyerproductsearch.append(valuearray[i])
+        return Response({'status': 200, 'message': 'Buyer Product Search Success', 'data': buyerproductsearch}, status=200)
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)

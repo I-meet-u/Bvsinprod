@@ -348,31 +348,45 @@ def buzrequest(request):
     userbuzdata = []
 
     try:
-        basiccompoobj = BasicCompanyDetails.objects.get(updated_by=data['userid'])
+        basiccompoobj = BasicCompanyDetails.objects.get(updated_by_id=data['userid'])
         print(basiccompoobj.company_code)
         businessrequest=BusinessRequest.objects.filter(company_code=basiccompoobj.company_code).values().order_by('id')
         if len(businessrequest)>0:
             for i in range(0,len(businessrequest)):
-                regobj=SelfRegistration.objects.get(id=businessrequest[i].get('updated_by_id'))
-                basival=BasicCompanyDetails.objects.get(updated_by_id=businessrequest[i].get('updated_by_id'))
-                # industryinfoobj = IndustrialInfo.objects.filter(company_code_id=basival[0].get('company_code')).values().order_by('id')
-                billsaddrsobj = BillingAddress.objects.filter(company_code_id=basival[0].get('company_code')).order_by('id').values()
-                print(len(billsaddrsobj))
-                industryinfoobj = IndustrialInfo.objects.filter(company_code_id=basival[0].get('company_code')).values().order_by('id')
-                userbuzdata.append({'ccode':basival[0].get('company_code'),
-                                    'cname':basival[0].get('company_name'),
-                                    'gst_number':basival[0].get('gst_number'),
-                                    'profile_cover_photo':regobj[0].get('profile_cover_photo'),
-                                    'city': billsaddrsobj[0].get('bill_city'),
-                                    'Industry': industryinfoobj[0].get('industry_to_serve'),
-                                    'natureofbuz': industryinfoobj[0].get('nature_of_business'),
-                                    'state': billsaddrsobj[0].get('bill_state'),
-                                    'gst': basival[0].get('gst_number'),
-                                    'user_id':basival[0].get('updated_by_id'),
-                                    'business_id':businessrequest[i].get('id')
-
-
-                                    })
+                regobj=SelfRegistration.objects.filter(id=businessrequest[i].get('updated_by_id')).values()
+                # print(regobj[0].get('id'))
+                basival = BasicCompanyDetails.objects.get(updated_by_id=businessrequest[i].get('updated_by_id'))
+                print(basival.updated_by_id,'ds')
+                industryinfoobj = IndustrialInfo.objects.filter(company_code_id=basival.company_code).values()
+                billsaddrsobj = BillingAddress.objects.filter(company_code_id=basival.company_code,updated_by_id=businessrequest[i].get('updated_by_id')).values()
+                if not billsaddrsobj:
+                    states=""
+                    city=""
+                    userbuzdata.append({'profile_photo': regobj[0].get('profile_cover_photo'),
+                                        'ccode': basival.company_code,
+                                        'cname': basival.company_name,
+                                        'gst_number': basival.gst_number,
+                                        'Industry': industryinfoobj[0].get('industry_to_serve'),
+                                        'natureofbuz': industryinfoobj[0].get('nature_of_business'),
+                                        'business_id': businessrequest[i].get('id'),
+                                        'user_id': basival.updated_by_id,
+                                        'state':states,
+                                        'city':city
+                                        })
+                else:
+                    states= billsaddrsobj[0].get('bill_state')
+                    city=billsaddrsobj[0].get('bill_city')
+                    userbuzdata.append({'profile_photo': regobj[0].get('profile_cover_photo'),
+                                        'ccode': basival.company_code,
+                                        'cname': basival.company_name,
+                                        'gst_number': basival.gst_number,
+                                        'Industry': industryinfoobj[0].get('industry_to_serve'),
+                                        'natureofbuz': industryinfoobj[0].get('nature_of_business'),
+                                        'business_id': businessrequest[i].get('id'),
+                                        'user_id': basival.updated_by_id,
+                                        'state': states,
+                                        'city': city
+                                        })
             return Response({'status':200,'message':'ok','data':userbuzdata},status=200)
         else:
             return Response({'status': 204, 'message': 'Company code not present in busines request'}, status=204)

@@ -449,7 +449,8 @@ def update_business_status(request):
                 if businessobj.send_status!=statusval:
                     businessobj.send_status = statusval
                     businessobj.save()
-                    return Response({'status': 200, 'message': 'Status Updated', 'data': businessobj.send_status},status=status.HTTP_200_OK)
+                    businessval=BusinessRequest.objects.filter(id=businessid).values()
+                    return Response({'status': 200, 'message': 'Status Updated', 'data': businessval},status=status.HTTP_200_OK)
                 else:
                     return Response({'status': 202, 'message': 'Already Updated'},status=status.HTTP_202_ACCEPTED)
         else:

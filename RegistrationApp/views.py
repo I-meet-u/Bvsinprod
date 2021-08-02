@@ -1273,3 +1273,26 @@ def employee_registration_list_by_user_id(request):
 
     except Exception as e:
         return Response({'status':500,'error':str(e)},status=500)
+
+
+
+@api_view(['put'])
+def changeempinddetails(request):
+    try:
+        data=request.data
+        userid=data['emp_updated_by']
+        empobj=Employee_IndustryInfo.objects.get(emp_updated_by=userid)
+        if empobj:
+            empobj.emp_nature_of_business=data['emp_nature_of_business']
+            empobj.emp_supply_capabilites=data['emp_supply_capabilites']
+            empobj.emp_industry_to_serve=data['emp_industry_to_serve']
+            empobj.emp_updated_by=SelfRegistration.objects.get(id=userid)
+            empobj.save()
+        return Response({'status': 200, 'message': 'ok'}, status=200)
+
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)
+
+
+
+

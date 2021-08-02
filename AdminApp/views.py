@@ -12,8 +12,6 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.exceptions import ValidationError
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
-import mailchimp_transactional as MailchimpTransactional
-from mailchimp_transactional.api_client import ApiClientError
 
 from RegistrationApp.models import SelfRegistration, BasicCompanyDetails, IndustrialInfo, IndustrialHierarchy, \
     BankDetails, LegalDocuments
@@ -68,9 +66,6 @@ def admin_login(request):
     except ObjectDoesNotExist as e:
         return Response({'status': 404, 'error': "Email not exist"}, status=404)
 
-    except ApiClientError as error:
-        return Response({'status': 500, 'error': error}, status=500)
-
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)
 
@@ -112,29 +107,8 @@ class AdminInviteView(viewsets.ModelViewSet):
                     return Response(
                         {'status': 202, 'message': 'User Already Registered with this email and phone number'},
                         status=202)
-            if email!="":
-                mailchimp = MailchimpTransactional.Client('14kMF-44pCPZu8XbNkAzFA')
-                message = {
-                    "from_email": "admin@vendorsin.com",
-                    "subject": "Invitation Mail",
-                    "text":"You are invited",
-                    "to": [
-                        {
-                            "email": email,
-                            "type": "to"
-                        }
-                    ]
-                }
-                response = mailchimp.messages.send({"message": message})
-                print(response)
-                return super().create(request, *args, **kwargs)
-            else:
-                return Response({'status': 202, 'message': 'Email should not be empty'}, status=202)
-
-        except ApiClientError as error:
-            return Response({'status': 500, 'error': error}, status=500)
-        # except Exception as e:
-        #     return Response({'status': 500, 'error': str(e)}, status=500)
+        except Exception as e:
+            return Response({'status': 500, 'error': str(e)}, status=500)
 
 
 class CreateUserView(viewsets.ModelViewSet):
@@ -298,5 +272,3 @@ def admin_approve_pending_list(request):
 
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)
-
-

@@ -354,7 +354,6 @@ def buzrequest(request):
         if len(businessrequest)>0:
             for i in range(0,len(businessrequest)):
                 regobj=SelfRegistration.objects.filter(id=businessrequest[i].get('updated_by_id')).values()
-                # print(regobj[0].get('id'))
                 basival = BasicCompanyDetails.objects.get(updated_by_id=businessrequest[i].get('updated_by_id'))
                 print(basival.updated_by_id,'ds')
                 industryinfoobj = IndustrialInfo.objects.filter(company_code_id=basival.company_code).values()

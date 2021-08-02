@@ -1143,6 +1143,11 @@ def update_buyer_products(request):
                     if productobjget.buyer_add_product_supplies != buyer_add_product_supplies:
                         productobjget.buyer_add_product_supplies = buyer_add_product_supplies
                         productobjget.save()
+
+                    if productobjget.updated_by_id!=userid:
+                        productobjget.updated_by_id=userid
+                        productobjget.save()
+                        productobjget.updated_by_id=updated_item_code_settings_and_item_code
                     productres=BuyerProductDetails.objects.filter(updated_by=userid,buyer_product_id=buyer_product_id).values()
                     return Response({'status':202,'message':'Buyer Product Updated','data':productres},status=202)
 
@@ -1220,6 +1225,10 @@ def update_buyer_products(request):
 
                     if serviceobjget.buyer_service_add_product_supplies != buyer_service_add_product_supplies:
                         serviceobjget.buyer_service_add_product_supplies = buyer_service_add_product_supplies
+                        serviceobjget.save()
+
+                    if serviceobjget.updated_by_id!=userid:
+                        serviceobjget.updated_by_id=userid
                         serviceobjget.save()
                     serviceres =  BuyerServiceDetails.objects.filter(updated_by=userid, buyer_service_id=buyer_service_id).values()
                     return Response({'status': 202, 'message': 'Buyer Service Updated', 'data': serviceres}, status=202)
@@ -1299,6 +1308,10 @@ def update_buyer_products(request):
 
                     if machinaryobjget.buyer_machinary_add_product_supplies != buyer_machinary_add_product_supplies:
                         machinaryobjget.buyer_machinary_add_product_supplies = buyer_machinary_add_product_supplies
+                        machinaryobjget.save()
+
+                    if machinaryobjget.updated_by_id != userid:
+                        machinaryobjget.updated_by_id = userid
                         machinaryobjget.save()
                     machinaryres = BuyerMachinaryDetails.objects.filter(updated_by=userid, buyer_machinary_id=buyer_machinary_id).values()
                     return Response({'status': 202, 'message': 'Buyer Machinary Updated', 'data': machinaryres}, status=202)

@@ -436,11 +436,10 @@ def search_business_request_advance_search(request):
 @api_view(['put'])
 def update_business_status(request):
     data = request.data
-    vendorcode = data['vendorcode']
     businessid = data['businessid']
     statusval=data['statusval']
     try:
-        businessobj = BusinessRequest.objects.filter(company_code=vendorcode,id=businessid).values().order_by('id')
+        businessobj = BusinessRequest.objects.filter(id=businessid).values().order_by('id')
         print(len(businessobj))
         if len(businessobj)>0:
 

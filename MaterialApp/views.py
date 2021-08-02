@@ -401,17 +401,14 @@ def disable_buyer_product(request):
             userid = data['userid']
             buyerproductobj=BuyerProductDetails.objects.filter(buyer_product_id__in=buyerproductid,buyer_item_type=itemtype,updated_by_id=userid).values()
             if len(buyerproductobj)>0:
-                if buyerproductobj:
-                    for i in range(0,len(buyerproductobj)):
-                        buyerproductobjget=BuyerProductDetails.objects.get(buyer_product_id=buyerproductobj[i].get('buyer_product_id'))
-                        if buyerproductobjget.buyer_product_status=='Active':
-                            buyerproductobjget.buyer_product_status='Disabled'
-                            buyerproductobjget.save()
-                        else:
-                            return Response({'status': 202, 'message': 'Already status disabled'},status=202)
-                    return Response({'status':200,'message':'Buyer Product Master status changed to disabled'},status=200)
-                else:
-                    return Response({'status': 204, 'message': 'Not exist'}, status=204)
+                for i in range(0,len(buyerproductobj)):
+                    buyerproductobjget=BuyerProductDetails.objects.get(buyer_product_id=buyerproductobj[i].get('buyer_product_id'))
+                    if buyerproductobjget.buyer_product_status=='Active':
+                        buyerproductobjget.buyer_product_status='Disabled'
+                        buyerproductobjget.save()
+                    else:
+                        return Response({'status': 202, 'message': 'Already status disabled'},status=202)
+                return Response({'status':200,'message':'Buyer Product Master status changed to disabled'},status=200)
             else:
                 return Response({'status': 424, 'message': 'Not Present'},
                                 status=424)
@@ -420,46 +417,38 @@ def disable_buyer_product(request):
             userid = data['userid']
             buyerserviceobj = BuyerServiceDetails.objects.filter(buyer_service_id__in=buyerserviceid,buyer_service_item_type=itemtype,updated_by_id=userid).values()
             if len(buyerserviceobj) > 0:
-                if buyerserviceobj:
-                    for i in range(0, len(buyerserviceobj)):
-                        buyerserviceobjget = BuyerServiceDetails.objects.get(
-                            buyer_service_id=buyerserviceobj[i].get('buyer_service_id'))
-                        if buyerserviceobjget.buyer_service_status == 'Active':
-                            buyerserviceobjget.buyer_service_status = 'Disabled'
-                            buyerserviceobjget.save()
-                        else:
-                            return Response({'status': 202, 'message': 'Already status disabled'}, status=202)
-                    return Response({'status': 200, 'message': 'Buyer Service Master status changed to disabled'},
-                                    status=200)
-                else:
-                    return Response({'status': 204, 'message': 'Not exist'}, status=204)
+                for i in range(0, len(buyerserviceobj)):
+                    buyerserviceobjget = BuyerServiceDetails.objects.get(
+                        buyer_service_id=buyerserviceobj[i].get('buyer_service_id'))
+                    if buyerserviceobjget.buyer_service_status == 'Active':
+                        buyerserviceobjget.buyer_service_status = 'Disabled'
+                        buyerserviceobjget.save()
+                    else:
+                        return Response({'status': 202, 'message': 'Already status disabled'}, status=202)
+                return Response({'status': 200, 'message': 'Buyer Service Master status changed to disabled'},
+                                status=200)
             else:
-                return Response({'status': 424, 'message': 'Not Present'},
-                                status=424)
+                return Response({'status': 424, 'message': 'Not Present'},status=424)
         elif itemtype=='Machinary & equipments':
             buyermachinaryid = data['buyermachinaryid']
             userid = data['userid']
             buyermachinaryobj = BuyerMachinaryDetails.objects.filter(buyer_machinary_id__in=buyermachinaryid,buyer_machinary_item_type=itemtype,updated_by_id=userid).values()
             print(buyermachinaryobj)
             if len(buyermachinaryobj) > 0:
-                if buyermachinaryobj:
-                    for i in range(0, len(buyermachinaryobj)):
-                        buyermachinaryget = BuyerMachinaryDetails.objects.get(
-                            buyer_machinary_id=buyermachinaryobj[i].get('buyer_machinary_id'))
-                        if buyermachinaryget.buyer_machinary_product_status == 'Active':
-                            buyermachinaryget.buyer_machinary_product_status = 'Disabled'
-                            buyermachinaryget.save()
-                        else:
-                            return Response({'status': 202, 'message': 'Already status disabled'}, status=202)
-                    return Response({'status': 200, 'message': 'Buyer Machinary Master status changed to disabled'},
-                                    status=200)
-                else:
-                    return Response({'status': 204, 'message': 'Not exist'}, status=204)
+                for i in range(0, len(buyermachinaryobj)):
+                    buyermachinaryget = BuyerMachinaryDetails.objects.get(
+                        buyer_machinary_id=buyermachinaryobj[i].get('buyer_machinary_id'))
+                    if buyermachinaryget.buyer_machinary_product_status == 'Active':
+                        buyermachinaryget.buyer_machinary_product_status = 'Disabled'
+                        buyermachinaryget.save()
+                    else:
+                        return Response({'status': 202, 'message': 'Already status disabled'}, status=202)
+                return Response({'status': 200, 'message': 'Buyer Machinary Master status changed to disabled'},
+                                status=200)
             else:
-                return Response({'status': 424, 'message': 'Not Present'},
-                                status=424)
+                return Response({'status': 204, 'message': 'Not exist'}, status=204)
         else:
-            return Response({'message':'Please enter item type propery or mis-spelled item type'},status=204)
+            return Response({'status':424,'message':'Please enter item type propery or mis-spelled item type'},status=424)
 
     except Exception as e:
         return Response({'status':500,'error':str(e)},status=500)
@@ -471,20 +460,67 @@ def disable_buyer_product(request):
 def enable_buyer_product(request):
     # enable buyer product by changing status from Disabled to Active by passing primary key(buyerproductid)
     data=request.data
-    buyerproductid=data['buyerproductid']
+    itemtype=data['itemtype']
     try:
-        buyerproductobj=BuyerProductDetails.objects.filter(buyer_product_id__in=buyerproductid).values()
-        if buyerproductobj:
-            for i in range(0,len(buyerproductobj)):
-                buyerproductobjget=BuyerProductDetails.objects.get(buyer_product_id=buyerproductobj[i].get('buyer_product_id'))
-                if buyerproductobjget.buyer_product_status=='Disabled':
-                    buyerproductobjget.buyer_product_status='Active'
-                    buyerproductobjget.save()
-                else:
-                    return Response({'status': 202, 'message': 'Already status enabled'},status=202)
-            return Response({'status':200,'message':'Buyer Product Master status changed to enabled'},status=200)
+        if itemtype=='Product':
+            buyerproductid = data['buyerproductid']
+            userid=data['userid']
+
+            buyerproductobj=BuyerProductDetails.objects.filter(buyer_product_id__in=buyerproductid,buyer_item_type=itemtype,updated_by_id=userid).values()
+            if len(buyerproductobj)>0:
+                for i in range(0,len(buyerproductobj)):
+                    buyerproductobjget=BuyerProductDetails.objects.get(buyer_product_id=buyerproductobj[i].get('buyer_product_id'))
+                    if buyerproductobjget.buyer_product_status=='Disabled':
+                        buyerproductobjget.buyer_product_status='Active'
+                        buyerproductobjget.save()
+                    else:
+                        return Response({'status': 202, 'message': 'Already status enabled'},status=202)
+                return Response({'status':200,'message':'Buyer Product Master status changed to enabled'},status=200)
+            else:
+                return Response({'status': 204, 'message': 'Not exist'}, status=204)
+        elif itemtype=='Service':
+            buyerserviceid = data['buyerserviceid']
+            userid = data['userid']
+
+            buyerserviceobj = BuyerServiceDetails.objects.filter(buyer_service_id__in=buyerserviceid,
+                                                                 buyer_service_item_type=itemtype,
+                                                                 updated_by_id=userid).values()
+            if len(buyerserviceobj)>0:
+                for i in range(0, len(buyerserviceobj)):
+                    buyerserviceobjget = BuyerServiceDetails.objects.get(
+                        buyer_service_id=buyerserviceobj[i].get('buyer_service_id'))
+                    if buyerserviceobjget.buyer_service_status == 'Disabled':
+                        buyerserviceobjget.buyer_service_status = 'Active'
+                        buyerserviceobjget.save()
+                    else:
+                        return Response({'status': 202, 'message': 'Already status enabled'}, status=202)
+                return Response({'status': 200, 'message': 'Buyer Service  Master status changed to enabled'},
+                                status=200)
+            else:
+                return Response({'status': 204, 'message': 'Not exist'}, status=204)
+        elif itemtype=='Machinary & equipments':
+            buyermachinaryid = data['buyermachinaryid']
+            userid = data['userid']
+
+            buyermachinaryobj =  BuyerMachinaryDetails.objects.filter(buyer_machinary_id__in=buyermachinaryid,
+                                                                 buyer_machinary_item_type=itemtype,
+                                                                 updated_by_id=userid).values()
+            if len(buyermachinaryobj)>0:
+                for i in range(0, len(buyermachinaryobj)):
+                    buyermachinaryobjget = BuyerMachinaryDetails.objects.get(
+                        buyer_machinary_id=buyermachinaryobj[i].get('buyer_machinary_id'))
+                    if buyermachinaryobjget.buyer_machinary_product_status == 'Disabled':
+                        buyermachinaryobjget.buyer_machinary_product_status = 'Active'
+                        buyermachinaryobjget.save()
+                    else:
+                        return Response({'status': 202, 'message': 'Already status enabled'}, status=202)
+                return Response({'status': 200, 'message': 'Buyer Machinary  Master status changed to enabled'},
+                                status=200)
+            else:
+                return Response({'status': 204, 'message': 'Not exist'}, status=204)
         else:
-            return Response({'status': 204, 'message': 'Not exist'}, status=204)
+            return Response({'status':424,'message':'Item type is mispelled, Please check itemtype'},status=424)
+
     except Exception as e:
         return Response({'status':500,'error':str(e)},status=500)
 
@@ -496,17 +532,47 @@ def enable_buyer_product(request):
 def delete_buyer_product(request):
     # delete buyer_product  by passing primary key(buyerproductid)
     data = request.data
-    buyerproductid = data['buyerproductid']
+    itemtype=data['itemtype']
     try:
-        buyerproductobj = BuyerProductDetails.objects.filter(buyer_product_id__in=buyerproductid).values()
-        if buyerproductobj:
-            for i in range(0, len(buyerproductobj)):
-                buyerproductobjget = BuyerProductDetails.objects.get(buyer_product_id=buyerproductobj[i].get('buyer_product_id'))
-                if buyerproductobjget:
-                    buyerproductobjget.delete()
+        if itemtype=='Product':
+            buyerproductid = data['buyerproductid']
+            userid=data['userid']
+            buyerproductobj = BuyerProductDetails.objects.filter(buyer_product_id__in=buyerproductid,buyer_item_type=itemtype,updated_by_id=userid).values()
+            if len(buyerproductobj)>0:
+                for i in range(0, len(buyerproductobj)):
+                    buyerproductobjget = BuyerProductDetails.objects.get(buyer_product_id=buyerproductobj[i].get('buyer_product_id'))
+                    if buyerproductobjget:
+                        buyerproductobjget.delete()
 
-            return Response({'status': 204, 'message': 'Buyer Product Master data deleted'}, status=204)
-        return Response({'status':200,'message':'Buyer Product Master data not present or already deleted'},status=200)
+                return Response({'status': 204, 'message': 'Buyer Product Master data deleted'}, status=204)
+            else:
+                return Response({'status':200,'message':'Buyer Product Master data not present or already deleted'},status=200)
+        elif itemtype=='Service':
+            buyerserviceid = data['buyerserviceid']
+            userid=data['userid']
+            buyerserviceobj = BuyerServiceDetails.objects.filter(buyer_service_id__in=buyerserviceid,buyer_service_item_type=itemtype,updated_by_id=userid).values()
+            if len(buyerserviceobj)>0:
+                for i in range(0, len(buyerserviceobj)):
+                    buyerserviceobjget = BuyerServiceDetails.objects.get(buyer_service_id=buyerserviceobj[i].get('buyer_service_id'))
+                    if buyerserviceobjget:
+                        buyerserviceobjget.delete()
+
+                return Response({'status': 204, 'message': 'Buyer Service Master data deleted'}, status=204)
+            else:
+                return Response({'status':200,'message':'Buyer Service Master data not present or already deleted'},status=200)
+        elif itemtype=='Machinary & equipments':
+            buyermachinaryid = data['buyermachinaryid']
+            userid=data['userid']
+            buyermachinaryobj = BuyerMachinaryDetails.objects.filter(buyer_machinary_id__in=buyermachinaryid,buyer_machinary_item_type=itemtype,updated_by_id=userid).values()
+            if len(buyermachinaryobj)>0:
+                for i in range(0, len(buyermachinaryobj)):
+                    buyermachinaryobjget = BuyerMachinaryDetails.objects.get(buyer_machinary_id=buyermachinaryobj[i].get('buyer_machinary_id'))
+                    if buyermachinaryobjget:
+                        buyermachinaryobjget.delete()
+
+                return Response({'status': 204, 'message': 'Buyer Machinary Master data deleted'}, status=204)
+            else:
+                return Response({'status':200,'message':'Buyer Machinary Master data not present or already deleted'},status=200)
 
     except Exception as e:
         return Response({'status':500,'error':str(e)},status=500)

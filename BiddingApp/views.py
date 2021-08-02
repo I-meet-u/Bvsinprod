@@ -9,7 +9,7 @@ from rest_framework.parsers import MultiPartParser
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 
-from MaterialApp.models import BuyerProductDetails
+from MaterialApp.models import BuyerProductDetails, BuyerServiceDetails, BuyerMachinaryDetails
 from RegistrationApp.models import BasicCompanyDetails, BillingAddress
 from .serializers import *
 
@@ -134,24 +134,6 @@ class RfqCodeSettingsView(viewsets.ModelViewSet):
         if rfqnumberobj:
             return rfqnumberobj
         raise ValidationError({'message': 'Rfq Number details of particular user id is not exist', 'status': 204})
-
-
-@api_view(['post'])
-@permission_classes((AllowAny,))
-def get_buyer_product_based_on_userid_pk(request):
-    data = request.data
-    buyerproductid = data['buyerproductid']
-    userid = data['userid']
-    try:
-        buyerproductobj = BuyerProductDetails.objects.filter(buyer_product_id__in=buyerproductid,
-                                                             updated_by=userid).values()
-        if len(buyerproductobj) > 0:
-            return Response({'status': 200, 'message': 'Buyer Product List', 'data': buyerproductobj}, status=200)
-        else:
-            return Response({'status': 204, 'message': 'Buyer Product Details Not Present'}, status=204)
-    except Exception as e:
-        return Response({'status': 500, 'error': str(e)}, status=500)
-
 
 @api_view(['put'])
 @permission_classes((AllowAny,))
@@ -947,8 +929,35 @@ def get_source_items_list_by_source_user_id(request):
             return Response({'status': 200, 'message': 'Source Create Items List', 'data': sourceobj},
                             status=status.HTTP_200_OK)
         else:
-            return Response({'status': 204, 'message': 'Source Create Items List'}, status=status.HTTP_204_NO_CONTENT)
+            return Response({'status': 204, 'message': 'Not Found'}, status=status.HTTP_204_NO_CONTENT)
 
 
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+@api_view(['post'])
+@permission_classes((AllowAny,))
+def get_buyer_product_based_on_userid_pk(request):
+    data = request.data
+    buyerproductid = data['buyerproductid']
+    userid = data['userid']
+    try:
+        buyerproductobj = BuyerProductDetails.objects.filter(buyer_product_id__in=buyerproductid,
+                                                             updated_by=userid).values()
+        buyerserviceobj = BuyerServiceDetails.objects.filter(buyer_service_id__in=buyerproductid,
+                                                             updated_by_id=userid).values()
+        buyermachinaryobj = BuyerMachinaryDetails.objects.filter(buyer_machinary_id__in=buyerproductid,
+                                                             updated_by_id=userid).values()
+        if len(buyerproductobj) > 0:
+            return Response({'status': 200, 'message': 'Buyer Product List', 'data': buyerproductobj}, status=200)
+        elif len(buyerserviceobj)>0:
+                return Response({'status': 200, 'message': 'Buyer Service List', 'data': buyerserviceobj}, status=200)
+        elif len(buyermachinaryobj)>0:
+            return Response({'status': 200, 'message': 'Buyer Machinary List', 'data': buyermachinaryobj}, status=200)
+        else:
+            return Response({'status': 204, 'message': 'Not Present'}, status=204)
+
+
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)

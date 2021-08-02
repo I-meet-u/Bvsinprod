@@ -530,8 +530,6 @@ class Employee_CompanyDetailsView(viewsets.ModelViewSet):
     permission_classes = (AllowAny,)
     queryset = Employee_CompanyDetails.objects.all()
     serializer_class = Employee_CompanyDetailsSerializers
-    ordering_fields = ['emp_company_id']
-    ordering = ['emp_company_id']
 
     def get_queryset(self):
         # overriding get_queryset by passing user_id. Here user_id is nothing but updated_by
@@ -545,8 +543,6 @@ class EmployeeIndustrialInfoView(viewsets.ModelViewSet):
     permission_classes = (AllowAny,)
     queryset =Employee_IndustryInfo.objects.all()
     serializer_class=Employee_IndustryInfoSerializer
-    ordering_fields = ['id']
-    ordering = ['id']
 
     def get_queryset(self):
         # it determines the list of objects that you want to display by passing userid(updated_by)

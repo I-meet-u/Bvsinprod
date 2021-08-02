@@ -295,7 +295,7 @@ class Employee_IndustryInfo(models.Model):
     emp_created_on = models.DateTimeField(auto_now_add=True)
     emp_updated_on = models.DateTimeField(auto_now=True)
     emp_created_by = models.BigIntegerField()
-    emp_updated_by = models.ForeignKey(SelfRegistration, on_delete=models.CASCADE)
+    emp_updated_by = models.OneToOneField(SelfRegistration, on_delete=models.CASCADE)
     emp_company = models.OneToOneField(Employee_CompanyDetails, on_delete=models.CASCADE)
 
     class Meta:

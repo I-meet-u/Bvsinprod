@@ -1535,7 +1535,7 @@ def get_product_all_details_based_on_id_multiple_and_userid(request):
                 return Response({'status': 200, 'message': 'Buyer Machinary Details', 'data': productmachinaryitemobj},
                                 status=200)
         else:
-            return Response({'status': 204, 'message': 'Item type is not correct',},
+            return Response({'status': 204, 'message': 'Item type is not correct'},
                             status=204)
 
 

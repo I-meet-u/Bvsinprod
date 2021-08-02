@@ -180,12 +180,10 @@ def external_vendor(request):
 
 
     try:
-        regobj=SelfRegistration.objects.filter(admin_approve='Approved').values()
-        # print(len(regobj))
+        regobj=SelfRegistration.objects.filter(admin_approve='Approved').values().order_by('id')
         if len(regobj)>0:
             for i in range(0,len(regobj)):
                 basicobj=BasicCompanyDetails.objects.get(updated_by_id=regobj[i].get('id'))
-                # print(basicobj.company_code)
                 industryobj=IndustrialInfo.objects.get(updated_by_id=regobj[i].get('id'),company_code=basicobj.company_code)
                 print(industryobj.company_code_id,'indsutry')
                 hierarchyobj = IndustrialHierarchy.objects.get(updated_by_id=regobj[i].get('id'))
@@ -355,8 +353,8 @@ def buzrequest(request):
         businessrequest=BusinessRequest.objects.filter(company_code=basiccompoobj.company_code).values().order_by('id')
         if len(businessrequest)>0:
             for i in range(0,len(businessrequest)):
-                regobj=SelfRegistration.objects.filter(id=businessrequest[i].get('updated_by_id')).values()
-                basival=BasicCompanyDetails.objects.filter(updated_by_id=businessrequest[i].get('updated_by_id')).values().order_by('company_code')
+                regobj=SelfRegistration.objects.get(id=businessrequest[i].get('updated_by_id'))
+                basival=BasicCompanyDetails.objects.get(updated_by_id=businessrequest[i].get('updated_by_id'))
                 # industryinfoobj = IndustrialInfo.objects.filter(company_code_id=basival[0].get('company_code')).values().order_by('id')
                 billsaddrsobj = BillingAddress.objects.filter(company_code_id=basival[0].get('company_code')).order_by('id').values()
                 print(len(billsaddrsobj))

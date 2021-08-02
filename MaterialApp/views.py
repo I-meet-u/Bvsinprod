@@ -1514,22 +1514,22 @@ def buyer_product_search(request):
 def get_product_all_details_based_on_id_multiple_and_userid(request):
     data=request.data
     userid = data['userid']
-    productid = data['productid']
+    itemcode = data['itemcode']
     itemtype = data['itemtype']
     try:
         if itemtype=='Product':
-            productitemobj=BuyerProductDetails.objects.filter(updated_by_id=userid,buyer_product_id__in=productid,buyer_item_type=itemtype).values()
+            productitemobj=BuyerProductDetails.objects.filter(updated_by_id=userid,buyer_item_code__in=itemcode,buyer_item_type=itemtype).values()
             if len(productitemobj)>0:
                 return Response({'status':200,'message':'Buyer Product Details','data':productitemobj},status=200)
             # else:
             #     return Response({'status':204,'message':'Not Present'},status=204)
         elif itemtype=='Service':
-            productserviceitemobj = BuyerServiceDetails.objects.filter(updated_by_id=userid, buyer_service_id__in=productid,
+            productserviceitemobj = BuyerServiceDetails.objects.filter(updated_by_id=userid, buyer_service_item_code__in=itemcode,
                                                                 buyer_service_item_type=itemtype).values()
             if len(productserviceitemobj)>0:
                 return Response({'status': 200, 'message': 'Buyer Service Details', 'data': productserviceitemobj}, status=200)
         elif itemtype=='Machinary & equipments':
-            productmachinaryitemobj=BuyerMachinaryDetails.objects.filter(updated_by_id=userid, buyer_machinary_id__in=productid,
+            productmachinaryitemobj=BuyerMachinaryDetails.objects.filter(updated_by_id=userid, buyer_machinary_item_code__in=itemcode,
                                                                 buyer_machinary_item_type=itemtype).values()
             if len(productmachinaryitemobj)>0:
                 return Response({'status': 200, 'message': 'Buyer Machinary Details', 'data': productmachinaryitemobj},

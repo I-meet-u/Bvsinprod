@@ -1286,7 +1286,7 @@ def changeempinddetails(request):
             empobj.emp_nature_of_business=data['emp_nature_of_business']
             empobj.emp_supply_capabilites=data['emp_supply_capabilites']
             empobj.emp_industry_to_serve=data['emp_industry_to_serve']
-            empobj.emp_updated_by=userid
+            empobj.emp_updated_by=SelfRegistration.objects.get(id=userid)
             empobj.save()
         return Response({'status': 204, 'message': 'No data with this id'}, status=204)
 

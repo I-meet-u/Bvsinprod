@@ -40,6 +40,7 @@ urlpatterns = [
     path('status-vendor-reject/',views.status_vendor_reject),
     path('vendor-bidding-all-details/',views.vendor_bidding_all_details),
     path('get-vendor-published-leads/',views.get_vendor_published_leads),
-    path('open-leads-product-advance-search/',views.open_leads_product_advance_search)
+    path('open-leads-product-advance-search/',views.open_leads_product_advance_search),
+    path('get-source-based-on-item-type-user-id/',views.get_source_based_on_item_type_user_id)
 
 ]

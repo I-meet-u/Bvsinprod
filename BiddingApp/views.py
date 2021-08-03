@@ -961,3 +961,41 @@ def get_buyer_product_based_on_userid_pk(request):
 
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)
+
+
+@api_view(['post'])
+def get_source_based_on_item_type_user_id(request):
+    data=request.data
+    userid=data['userid']
+    itemtype=data['itemtype']
+    try:
+        if itemtype=='Product':
+            sourceobj=SourceList_CreateItems.objects.filter(updated_by_id=userid,item_type='Product').values()
+            if len(sourceobj)>0:
+                return Response({'status':200,'message':'Product Source List','data':sourceobj},status=status.HTTP_200_OK)
+            else:
+                return Response({'status': 204, 'message': 'Product Source Code Not Present'},status=status.HTTP_204_NO_CONTENT)
+        elif itemtype=='Service':
+            sourceobj=SourceList_CreateItems.objects.filter(updated_by_id=userid,item_type='Service').values()
+            if len(sourceobj)>0:
+                return Response({'status':200,'message':'Service Source List','data':sourceobj},status=status.HTTP_200_OK)
+            else:
+                return Response({'status': 204, 'message': 'Service Source Code Not Present'},status=status.HTTP_204_NO_CONTENT)
+        elif itemtype=='Equipment':
+            sourceobj=SourceList_CreateItems.objects.filter(updated_by_id=userid,item_type='Equipment').values()
+            if len(sourceobj)>0:
+                return Response({'status':200,'message':'Equipment Source List','data':sourceobj},status=status.HTTP_200_OK)
+            else:
+                return Response({'status': 204, 'message': 'Equipment Source Code Not Present'},status=status.HTTP_204_NO_CONTENT)
+        elif itemtype=='Machinery':
+            sourceobj=SourceList_CreateItems.objects.filter(updated_by_id=userid,item_type='Machinery').values()
+            if len(sourceobj)>0:
+                return Response({'status':200,'message':'Machinery Source List','data':sourceobj},status=status.HTTP_200_OK)
+            else:
+                return Response({'status': 204, 'message': 'Machinery Source Code Not Present'},status=status.HTTP_204_NO_CONTENT)
+        else:
+            return Response({'status':204,'message':'Mis Spelled itemtype name,Please check itemtype'},status=status.HTTP_204_NO_CONTENT)
+
+
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)

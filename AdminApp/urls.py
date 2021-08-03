@@ -16,8 +16,10 @@ urlpatterns = [
     path('create-user-status-update/',views.create_user_status_update),
     path('admin-email-otp-verify/',views.admin_email_otp_verify),
     path('registration-list/', views.registration_list),
-    path('admin-approval/',views.admin_approval),
+    path('admin-approval-from-pending/',views.admin_approval_from_pending),
+    path('admin-verify-from-approve/', views.admin_verify_from_approve),
     path('admin-pending-list/',views.admin_pending_list),
-    path('admin-approved-list/',views.admin_approved_list)
+    path('admin-approved-list/',views.admin_approved_list),
+    path('admin-approved-from-verify/',views.admin_approved_from_verify)
 
 ]

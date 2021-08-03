@@ -236,7 +236,7 @@ def registration_list(request):
 
 @api_view(['put'])
 @permission_classes([AllowAny])
-def admin_approval(request):
+def admin_approval_from_pending(request):
     data=request.data
     adminid = data['adminid']
     userid = data['userid']
@@ -244,28 +244,100 @@ def admin_approval(request):
         adminobj=AdminRegister.objects.get(admin_id=adminid)
         if adminobj:
             regobjdata=SelfRegistration.objects.filter(id=userid).values()
-            if regobjdata:
+            legaldoc=LegalDocuments.objects.filter(updated_by_id=userid).values()
+            if regobjdata and legaldoc:
                 regobj=SelfRegistration.objects.get(id=userid)
                 if regobj.admin_approve=='Pending':
                     regobj.admin_approve='Approved'
                     regobj.save()
                     return Response({'status': 200, 'message': 'Admin Approved'}, status=200)
                 else:
-                    return Response({'status': 202, 'message': 'Admin Already Approved'}, status=202)
+                    if regobj.admin_approve == 'Approved':
+                        return Response({'status': 202, 'message': 'Admin Already Approved'}, status=202)
+                    if regobj.admin_approve == 'Verified':
+                        return Response({'status': 202, 'message': 'Admin Already Verified'}, status=202)
             else:
-                return Response({'status': 200, 'message': 'user is not present or not registered'}, status=200)
+                return Response({'status': 200, 'message': 'user is not present or not registered or not present in legal info'}, status=200)
+        else:
+            return Response({'status':204,'message':'Admin Data Not Present for this Id'},status=204)
+    except Exception as e:
+        return Response({'status':500,'error':str(e)},status=500)
+
+@api_view(['put'])
+@permission_classes([AllowAny])
+def admin_verify_from_approve(request):
+    data=request.data
+    adminid = data['adminid']
+    userid = data['userid']
+    try:
+        adminobj=AdminRegister.objects.get(admin_id=adminid)
+        if adminobj:
+            regobjdata=SelfRegistration.objects.filter(id=userid).values()
+            legaldoc = LegalDocuments.objects.filter(updated_by_id=userid).values()
+            if regobjdata and legaldoc:
+                regobj=SelfRegistration.objects.get(id=userid)
+                if regobj.admin_approve=='Pending':
+                    regobj.admin_approve='Verified'
+                    regobj.save()
+                    return Response({'status': 200, 'message': 'Admin Verified'}, status=200)
+                else:
+                    if regobj.admin_approve == 'Verified':
+                        return Response({'status': 202, 'message': 'Admin Already Verified'}, status=202)
+                    elif regobj.admin_approve=='Approved':
+                        return Response({'status': 202, 'message': 'Admin Already Approved'}, status=202)
+            else:
+                return Response({'status': 200, 'message': 'user is not present or not registered or not present in legal info'}, status=200)
         else:
             return Response({'status':204,'message':'Not present for this particular admin id'},status=204)
     except Exception as e:
-        return Response({'status':500,'error':str(e)},status=500)
+        return Response({'status': 500, 'error': str(e)}, status=500)
+
+@api_view(['put'])
+@permission_classes([AllowAny])
+def admin_approved_from_verify(request):
+    data=request.data
+    adminid = data['adminid']
+    userid = data['userid']
+    try:
+        adminobj=AdminRegister.objects.get(admin_id=adminid)
+        if adminobj:
+            regobjdata=SelfRegistration.objects.filter(id=userid).values()
+            legaldoc = LegalDocuments.objects.filter(updated_by_id=userid).values()
+            if regobjdata and legaldoc:
+                regobj=SelfRegistration.objects.get(id=userid)
+                if regobj.admin_approve=='Verified':
+                    regobj.admin_approve='Approved'
+                    regobj.save()
+                    return Response({'status': 200, 'message': 'Admin verify changes to approved'}, status=200)
+                else:
+                    if regobj.admin_approve == 'Approved':
+                        return Response({'status': 202, 'message': 'Admin Already Approved'}, status=202)
+            else:
+                return Response({'status': 200, 'message': 'user is not present or not registered or not present in legal info'}, status=200)
+        else:
+            return Response({'status':204,'message':'Not present for this particular admin id'},status=204)
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)
 
 @api_view(['post'])
 @permission_classes([AllowAny])
 def admin_pending_list(request):
     adminid=request.data['adminid']
+    adminarray=[]
     try:
         regobj=SelfRegistration.objects.filter(admin_approve='Pending').values()
-        if regobj:
+        if len(regobj)>0:
+            # for i in range(0,len(regobj)):
+            #     basicobj=BasicCompanyDetails.objects.filter(updated_by_id=regobj[i].get('id')).values()
+            #     adminarray.append({"company_code":basicobj[0].get('company_code'),
+            #                        "company_name":basicobj[0].get('company_name'),
+            #                        "username":regobj[i].get('contact_person'),
+            #                        "user_type": regobj[i].get('user_type'),
+            #                        "email": regobj[i].get('username'),
+            #                        "phone_number": regobj[i].get('phone_number'),
+            #                        "nature_of_business": regobj[i].get('nature_of_business'),
+            #                        "business_type": regobj[i].get('business_to_serve')
+            #                        })
             return Response({'status': 200, 'message':'Pending List','data':regobj}, status=200)
         else:
             return Response({'status': 204, 'message': 'data not present'}, status=204)

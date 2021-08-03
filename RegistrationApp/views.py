@@ -1340,11 +1340,11 @@ def buyer_login(request):
     try:
         regobj=SelfRegistration.objects.get(username=emailid)
         if regobj:
-            if regobj.username==emailid and check_password(password,regobj.password):
+            if check_password(password,regobj.password) and regobj.username==emailid:
                 return Response({'status':200,'message':'Buyer Login Success'},status=200)
-        else:
-            return Response({'status': 424, 'message': 'Password entered is not correct,Please Check Once'},
-                            status=424)
+            else:
+                return Response({'status': 424, 'message': 'Password entered is not correct,Please Check Once'},
+                                status=424)
     except ObjectDoesNotExist as e:
         return Response({'status': 404, 'error': "Email not exist"}, status=404)
 

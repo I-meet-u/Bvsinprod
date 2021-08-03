@@ -265,7 +265,7 @@ def admin_approval_from_pending(request):
 
 @api_view(['put'])
 @permission_classes([AllowAny])
-def admin_verify_from_approve(request):
+def admin_verify_from_pending(request):
     data=request.data
     adminid = data['adminid']
     userid = data['userid']

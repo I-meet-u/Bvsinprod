@@ -1332,5 +1332,23 @@ def changecompprofile(request):
 
 
 
+@api_view(['post'])
+def buyer_login(request):
+    data=request.data
+    emailid=data['emailid']
+    password=data['password']
+    try:
+        regobj=SelfRegistration.objects.get(username=emailid)
+        if regobj:
+            if regobj.username==emailid and check_password(password,regobj.password):
+                return Response({'status':200,'message':'Buyer Login Success'},status=200)
+        else:
+            return Response({'status': 424, 'message': 'Password entered is not correct,Please Check Once'},
+                            status=424)
+    except ObjectDoesNotExist as e:
+        return Response({'status': 404, 'error': "Email not exist"}, status=404)
+
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)
 
 

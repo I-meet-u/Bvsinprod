@@ -69,7 +69,8 @@ urlpatterns = [
     path('employee-registration-list-by-user-id/',views.employee_registration_list_by_user_id),
 
     path('changeempinddetails/',views.changeempinddetails),
-    path('changecompprofile/',views.changecompprofile)
+    path('changecompprofile/',views.changecompprofile),
+    path('buyer-login/',views.buyer_login)
 
     # path('send_mail_template/',views.send_mail_template)
     # path('subscribe_email/', MailSubscriptionAPIView.as_view(),name='subscribe-email')

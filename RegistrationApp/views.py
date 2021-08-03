@@ -183,32 +183,30 @@ def change_password_with_email(request):
     try:
         user = SelfRegistration.objects.get(username=email)
         if user:
-            if check_password(password,user.password):
-                return Response({'status': 202, 'message': 'Password already present'}, status=202)
-            else:
-                user.set_password(password)
-                user.save()
 
-                headers = {
-                    'accept': 'application/json',
-                    'api-key': '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',
-                    'content-type': 'application/json',
-                }
-                data = '{ "sender":{ "name":"VENDORSIN COMMERCE PVT LTD", "email":"admin@vendorsin.com" }, "to":[ { "email":"' + email + '' \
-                                                                                                                                         '", "name":"Harish" } ], "subject":"Vendorsin Portal password was changed", "templateId":15 ,"contact":{"SMS":' + "" + '}''}'
+            user.set_password(password)
+            user.save()
+
+            headers = {
+                'accept': 'application/json',
+                'api-key': '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',
+                'content-type': 'application/json',
+            }
+            data = '{ "sender":{ "name":"VENDORSIN COMMERCE PVT LTD", "email":"admin@vendorsin.com" }, "to":[ { "email":"' + email + '' \
+                                                                                                                                     '", "name":"Harish" } ], "subject":"Vendorsin Portal password was changed", "templateId":15 ''}'
 
 
 
-                # data = '{ "sender":{ "name":"VENDORSIN COMMERCE PVT LTD", "email":"admin@vendorsin.com" },"subject":"This is my default subject line","templateId":96,"to":[ { "email":"harishshetty7459@gmail.com", "name":"harish" } ]'
+            # data = '{ "sender":{ "name":"VENDORSIN COMMERCE PVT LTD", "email":"admin@vendorsin.com" },"subject":"This is my default subject line","templateId":96,"to":[ { "email":"harishshetty7459@gmail.com", "name":"harish" } ]'
 
-                response = requests.post('https://api.sendinblue.com/v3/smtp/email', headers=headers, data=data)
-                print("----")
-                print(response)
-                print("----")
+            response = requests.post('https://api.sendinblue.com/v3/smtp/email', headers=headers, data=data)
+            print("----")
+            print(response)
+            print("----")
 
 
 
-                return Response({'status': 200, 'message': 'Password changed successfully'}, status=200)
+            return Response({'status': 200, 'message': 'Password changed successfully'}, status=200)
         else:
             return Response({'status': 424, 'message': "Email not exist"}, status=424)
     except Exception as e:

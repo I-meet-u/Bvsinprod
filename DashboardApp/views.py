@@ -314,29 +314,34 @@ def sendergetbuzrequestdata(request):
     businessrequestarray=[]
     try:
         buzobj = BusinessRequest.objects.filter(updated_by=userid).order_by('company_code').values()
-        for i in range(0,len(buzobj)-1):
-            print(i)
-            if buzobj[i].get('company_code')==buzobj[i+1].get('company_code'):
-                pass
-            else:
-                businessrequestarray.append({'company_code':buzobj[i].get('company_code'),
-                                             'company_name':buzobj[i].get('company_name'),
-                                             'city':buzobj[i].get('city'),
-                                             'state':buzobj[i].get('state'),
-                                             'nature_of_business':buzobj[i].get('nature_of_business'),
-                                             'supply_capabilites':buzobj[i].get('supply_capabilites'),
-                                             'industry_to_serve':buzobj[i].get('industry_to_serve'),
-                                             'maincore':buzobj[i].get('maincore'),
-                                             'category':buzobj[i].get('category'),
-                                             'sub_category':buzobj[i].get('sub_category'),
-                                             'send_status':buzobj[i].get('send_status'),
-                                             'created_by':buzobj[i].get('created_by'),
-                                             'updated_by':buzobj[i].get('updated_by')
+        if len(buzobj)>0:
+            for i in range(0,len(buzobj)-1):
+                print(i)
+                if buzobj[i].get('company_code')==buzobj[i+1].get('company_code'):
+                    pass
+                else:
+                    basicobj=BasicCompanyDetails.objects.filter(company_code=buzobj[i].get('company_code')).values()
+                    businessrequestarray.append({'company_code':buzobj[i].get('company_code'),
+                                                 'company_name':buzobj[i].get('company_name'),
+                                                 'city':buzobj[i].get('city'),
+                                                 'state':buzobj[i].get('state'),
+                                                 'nature_of_business':buzobj[i].get('nature_of_business'),
+                                                 'supply_capabilites':buzobj[i].get('supply_capabilites'),
+                                                 'industry_to_serve':buzobj[i].get('industry_to_serve'),
+                                                 'maincore':buzobj[i].get('maincore'),
+                                                 'category':buzobj[i].get('category'),
+                                                 'sub_category':buzobj[i].get('sub_category'),
+                                                 'send_status':buzobj[i].get('send_status'),
+                                                 'created_by':buzobj[i].get('created_by'),
+                                                 'updated_by':buzobj[i].get('updated_by'),
+                                                 'gst_number':basicobj[0].get('gst_number')
 
-                                             })
+                                                 })
 
-        businessrequestarray.append(buzobj[len(buzobj)-1])
-        return Response({'status': 200, 'message': 'ok', 'data': businessrequestarray}, status=200)
+            businessrequestarray.append(buzobj[len(buzobj)-1])
+            return Response({'status': 200, 'message': 'ok', 'data': businessrequestarray}, status=200)
+        else:
+            return Response({'status': 204, 'message': 'No data present in business request'}, status=204)
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)
 

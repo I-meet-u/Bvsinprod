@@ -370,7 +370,8 @@ def buzrequest(request):
                                         'business_id': businessrequest[i].get('id'),
                                         'user_id': basival.updated_by_id,
                                         'state':states,
-                                        'city':city
+                                        'city':city,
+                                        'status':businessrequest[i].get('send_status')
                                         })
                 else:
                     states= billsaddrsobj[0].get('bill_state')
@@ -384,7 +385,8 @@ def buzrequest(request):
                                         'business_id': businessrequest[i].get('id'),
                                         'user_id': basival.updated_by_id,
                                         'state': states,
-                                        'city': city
+                                        'city': city,
+                                        'status': businessrequest[i].get('send_status')
                                         })
             return Response({'status':200,'message':'ok','data':userbuzdata},status=200)
         else:

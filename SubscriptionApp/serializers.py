@@ -2,23 +2,9 @@ from rest_framework import serializers
 
 from .models import *
 
-class PlanModelSerializer(serializers.ModelSerializer):
+class RazorpayModelSerializer(serializers.ModelSerializer):
 
     class Meta:
-        model = PlanModel
+        model = RazorpayModel
         fields = '__all__'
         depth = 2
-
-class SubscriptionModelSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = SubscriptionModel
-        fields = '__all__'
-        depth = 2
-
-# class RazorpayModelSerializer(serializers.ModelSerializer):
-#
-#     class Meta:
-#         model = RazorpayModel
-#         fields = '__all__'
-#         depth = 2

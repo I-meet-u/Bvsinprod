@@ -700,6 +700,42 @@ def sendbluemail(request):
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)
 
+
+@api_view(['post'])
+@permission_classes((AllowAny,))
+def sendbluemailforgot(request):
+    data=request.data
+    email = data['email']
+    digits = "0123456789"
+    try:
+        emailuser = SelfRegistration.objects.get(username=email)
+        if emailuser:
+            OTP = ""
+            for i in range(6):
+                OTP += digits[math.floor(random.random() * 10)]
+            print(OTP)
+            emailuser.email_otp = OTP
+            emailuser.save()
+            headers = {
+                'accept': 'application/json',
+                'api-key': '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',
+                'content-type': 'application/json',
+            }
+            data = '{ "sender":{ "name":"VENDORSIN COMMERCE PVT LTD", "email":"admin@vendorsin.com" }, "to":[ { "email":"' + email + '' \
+                                                                                                                                     '", "name":"Harish" } ], "subject":"Reset Password Vendorsin Portals", "templateId":20,"params":{"OTP":' + OTP + '}''}'
+        # data = '{ "sender":{ "name":"VENDORSIN COMMERCE PVT LTD", "email":"admin@vendorsin.com" },"subject":"This is my default subject line","templateId":96,"to":[ { "email":"harishshetty7459@gmail.com", "name":"harish" } ]'
+
+            response = requests.post('https://api.sendinblue.com/v3/smtp/email', headers=headers, data=data)
+            print("----")
+            print(response)
+            print("----")
+
+        return Response({'status': 200, 'message': 'ok','data':OTP}, status=200)
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)
+
+
+
 @api_view(['post'])
 @permission_classes((AllowAny,))
 def sendSMS(request):

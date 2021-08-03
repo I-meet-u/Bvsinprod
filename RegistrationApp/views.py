@@ -1345,6 +1345,7 @@ def buyer_login(request):
             else:
                 return Response({'status': 424, 'message': 'Password entered is not correct,Please Check Once'},
                                 status=424)
+
     except ObjectDoesNotExist as e:
         return Response({'status': 404, 'error': "Email not exist"}, status=404)
 

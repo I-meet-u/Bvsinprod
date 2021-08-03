@@ -15,3 +15,10 @@ class SubscriptionModelSerializer(serializers.ModelSerializer):
         model = SubscriptionModel
         fields = '__all__'
         depth = 2
+
+# class RazorpayModelSerializer(serializers.ModelSerializer):
+#
+#     class Meta:
+#         model = RazorpayModel
+#         fields = '__all__'
+#         depth = 2

@@ -12,9 +12,9 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.exceptions import ValidationError
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
-
+from django.db.models import Q
 from RegistrationApp.models import SelfRegistration, BasicCompanyDetails, IndustrialInfo, IndustrialHierarchy, \
-    BankDetails, LegalDocuments
+    BankDetails, LegalDocuments, Employee_CompanyDetails, Employee_IndustryInfo
 from .models import *
 from AdminApp.serializers import AdminInviteSerializer, CreateUserSerializer, AdminRegisterSerializer, \
     PermissionsSerializer
@@ -453,3 +453,43 @@ def admin_verified_list(request):
             return Response({'status': 200, 'message': 'No data is verified by admin', 'data': adminarray}, status=200)
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)
+
+
+@api_view(['get'])
+@permission_classes([AllowAny])
+def employee_all_list(request):
+    data=request.data
+    emptydata=[]
+    try:
+        regobj=SelfRegistration.objects.filter(Q(user_type='Employee') |Q(user_type='Employer')).values()
+        print(len(regobj))
+        if len(regobj)>0:
+            for i in range(0,len(regobj)):
+                userval=regobj[i].get('id')
+                print(userval)
+                basicobj = Employee_CompanyDetails.objects.filter(emp_updated_by_id=userval).values()
+                if basicobj:
+                    industry_info = Employee_IndustryInfo.objects.filter(emp_updated_by_id=userval).values()
+                    if industry_info:
+                        emptydata.append({"id": userval,
+                                          "user_type": regobj[0].get('user_type'),
+                                          "emp_company_code": basicobj[0].get('emp_company_code'),
+                                          "registration_status": "Industry Info Details"})
+
+                    else:
+                        emptydata.append({"id":userval,
+                                          "user_type": regobj[0].get('user_type'),
+                                          "emp_company_code": basicobj[0].get('emp_company_code'),
+                                          "registration_status": "Basic Info Details"})
+
+                else:
+                    emptydata.append({"id": userval,
+                                      "user_type":regobj[0].get('user_type'),
+                                      "registration_status": "Self Registration",
+                                      })
+            return Response({'status': 200, 'message':'Employee and Employer Details','data':emptydata}, status=200)
+        else:
+            return Response({'status': 204, 'message': 'No data with this id'}, status=204)
+
+    except Exception as e:
+        return Response({'status':500,'error':str(e)},status=500)

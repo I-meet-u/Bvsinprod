@@ -999,3 +999,36 @@ def get_source_based_on_item_type_user_id(request):
 
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)
+
+
+@api_view(['post'])
+@permission_classes((AllowAny,))
+def source_list_advance_search(request):
+    data = request.data
+    itemcode = data['itemcode']
+    itemname = data['itemname']
+    itemdescription = data['itemdescription']
+    uom = data['uom']
+    presentcost = data['presentcost']
+    targetcost = data['targetcost']
+    annualconsumption = data['annualconsumption']
+    department = data['department']
+    priority=data['priority']
+    userid=data['userid']
+    try:
+        sourceobj = SourceList_CreateItems.objects.filter(updated_by_id=userid,
+                                                          item_code__icontains=itemcode,
+                                                          item_name__icontains=itemname,
+                                                          item_description__icontains=itemdescription,
+                                                          uom__icontains=uom,
+                                                          present_cost__icontains=presentcost,
+                                                          target_cost__icontains=targetcost,
+                                                          annual_consumption__icontains=annualconsumption,
+                                                          department__icontains=department,
+                                                          priority__icontains=priority
+
+                                                          ).values()
+        return Response({'status': 200, 'message': 'Source List Search Success', 'data': sourceobj}, status=200)
+
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)

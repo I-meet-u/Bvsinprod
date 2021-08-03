@@ -259,9 +259,10 @@ def admin_approval(request):
     except Exception as e:
         return Response({'status':500,'error':str(e)},status=500)
 
-@api_view(['get'])
+@api_view(['post'])
 @permission_classes([AllowAny])
 def admin_pending_list(request):
+    adminid=request.data['adminid']
     try:
         regobj=SelfRegistration.objects.filter(admin_approve='Pending').values()
         if regobj:
@@ -274,13 +275,14 @@ def admin_pending_list(request):
         return Response({'status': 500, 'error': str(e)}, status=500)
 
 
-@api_view(['get'])
+@api_view(['post'])
 @permission_classes([AllowAny])
 def admin_approved_list(request):
+    adminid = request.data['adminid']
     try:
         regobj=SelfRegistration.objects.filter(admin_approve='Approved').values()
         if regobj:
-            return Response({'status': 200, 'message':'Pending List','data':regobj}, status=200)
+            return Response({'status': 200, 'message':'Approved List','data':regobj}, status=200)
         else:
             return Response({'status': 204, 'message': 'data not present'}, status=204)
 

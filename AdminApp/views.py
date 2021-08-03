@@ -467,25 +467,44 @@ def employee_all_list(request):
             for i in range(0,len(regobj)):
                 userval=regobj[i].get('id')
                 print(userval)
-                basicobj = Employee_CompanyDetails.objects.filter(emp_updated_by_id=userval).values()
-                if basicobj:
+                empbasicobj = Employee_CompanyDetails.objects.filter(emp_updated_by_id=userval).values()
+                if empbasicobj:
                     industry_info = Employee_IndustryInfo.objects.filter(emp_updated_by_id=userval).values()
                     if industry_info:
                         emptydata.append({"id": userval,
-                                          "user_type": regobj[0].get('user_type'),
-                                          "emp_company_code": basicobj[0].get('emp_company_code'),
+                                          "user_type": regobj[i].get('user_type'),
+                                          "username":regobj[i].get('contact_person'),
+                                          "emp_company_code": empbasicobj[0].get('emp_company_code'),
+                                          "emp_company_name": empbasicobj[0].get('emp_company_name'),
+                                          "email": regobj[i].get('username'),
+                                          "phone_number": regobj[i].get('phone_number'),
+                                          "department": regobj[i].get('department'),
+                                          "designation": regobj[i].get('designation'),
                                           "registration_status": "Industry Info Details"})
 
                     else:
                         emptydata.append({"id":userval,
-                                          "user_type": regobj[0].get('user_type'),
-                                          "emp_company_code": basicobj[0].get('emp_company_code'),
+                                          "user_type": regobj[i].get('user_type'),
+                                          "username": regobj[i].get('contact_person'),
+                                          "emp_company_code": empbasicobj[0].get('emp_company_code'),
+                                          "emp_company_name": empbasicobj[0].get('emp_company_name'),
+                                          "email": regobj[i].get('username'),
+                                          "phone_number": regobj[i].get('phone_number'),
+                                          "department": regobj[i].get('department'),
+                                          "designation": regobj[i].get('designation'),
                                           "registration_status": "Basic Info Details"})
 
                 else:
                     emptydata.append({"id": userval,
-                                      "user_type":regobj[0].get('user_type'),
-                                      "registration_status": "Self Registration",
+                                      "user_type":regobj[i].get('user_type'),
+                                      "username": regobj[i].get('contact_person'),
+                                      "emp_company_code": "",
+                                      "emp_company_name": "",
+                                      "email": regobj[i].get('username'),
+                                      "phone_number": regobj[i].get('phone_number'),
+                                      "department": regobj[i].get('department'),
+                                      "designation": regobj[i].get('designation'),
+                                      "registration_status": "Self Registration"
                                       })
             return Response({'status': 200, 'message':'Employee and Employer Details','data':emptydata}, status=200)
         else:

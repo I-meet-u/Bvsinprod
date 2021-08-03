@@ -1185,53 +1185,99 @@ def registration_list_by_user_id(request):
     emptydata=[]
     try:
         regobj=SelfRegistration.objects.filter(username=data['email_id']).values()
-        if len(regobj)>0:
-            userval=regobj[0].get('id')
-            basicobj = BasicCompanyDetails.objects.filter(updated_by=userval).values()
-            if basicobj:
-                industry_info = IndustrialInfo.objects.filter(updated_by=userval).values()
-                if industry_info:
-                    industry_hierarchy = IndustrialHierarchy.objects.filter(updated_by=userval).values()
-                    if industry_hierarchy:
-                        bankdetails = BankDetails.objects.filter(updated_by=userval).values()
-                        if bankdetails:
-                            legalobj = LegalDocuments.objects.filter(updated_by=userval).values()
-                            if legalobj:
-                                emptydata.append({"id":userval,
-                                                  "user_type": regobj[0].get('user_type'),
-                                                  'company_code': basicobj[0].get('company_code'),
-                                                   "registration_status": "Legal Documents"})
+        print(regobj)
+        if regobj[0].get('user_type')!="Buyer":
+            if len(regobj)>0:
+                userval=regobj[0].get('id')
+                basicobj = BasicCompanyDetails.objects.filter(updated_by=userval).values()
+                if basicobj:
+                    industry_info = IndustrialInfo.objects.filter(updated_by=userval).values()
+                    if industry_info:
+                        industry_hierarchy = IndustrialHierarchy.objects.filter(updated_by=userval).values()
+                        if industry_hierarchy:
+                            bankdetails = BankDetails.objects.filter(updated_by=userval).values()
+                            if bankdetails:
+                                legalobj = LegalDocuments.objects.filter(updated_by=userval).values()
+                                if legalobj:
+                                    emptydata.append({"id":userval,
+                                                      "user_type": regobj[0].get('user_type'),
+                                                      'company_code': basicobj[0].get('company_code'),
+                                                       "registration_status": "Legal Documents"})
+                                else:
+                                    emptydata.append({"id":userval,
+                                                      "user_type": regobj[0].get('user_type'),
+                                                      'company_code': basicobj[0].get('company_code'),
+                                                      "registration_status": "Bank Details"})
+
                             else:
                                 emptydata.append({"id":userval,
                                                   "user_type": regobj[0].get('user_type'),
                                                   'company_code': basicobj[0].get('company_code'),
-                                                  "registration_status": "Bank Details"})
+                                                  "registration_status": "Industry hierarchy"})
 
                         else:
                             emptydata.append({"id":userval,
                                               "user_type": regobj[0].get('user_type'),
                                               'company_code': basicobj[0].get('company_code'),
-                                              "registration_status": "Industry hierarchy"})
-
+                                              "registration_status": "Seller Info"})
                     else:
                         emptydata.append({"id":userval,
                                           "user_type": regobj[0].get('user_type'),
-                                          'company_code': basicobj[0].get('company_code'),
-                                          "registration_status": "Seller Info"})
-                else:
-                    emptydata.append({"id":userval,
-                                      "user_type": regobj[0].get('user_type'),
-                                      'company_code':basicobj[0].get('company_code'),
-                                      "registration_status": "Basic Company Details"})
+                                          'company_code':basicobj[0].get('company_code'),
+                                          "registration_status": "Basic Company Details"})
 
-            else:
-                emptydata.append({"id": userval,
-                                  "user_type":regobj[0].get('user_type'),
-                                  "registration_status": "Self Registration",
-                                  })
-            return Response({'status': 200, 'message':'ok','data':emptydata}, status=200)
+                else:
+                    emptydata.append({"id": userval,
+                                      "user_type":regobj[0].get('user_type'),
+                                      "registration_status": "Self Registration",
+                                      })
+
+            return Response({'status': 200, 'message':'ok','data':emptydata,'usertype':regobj[0].get('user_type')}, status=200)
+
         else:
-            return Response({'status': 204, 'message': 'No data with this id'}, status=204)
+            print("buyer")
+            if len(regobj) > 0:
+                userval = regobj[0].get('id')
+                basicobj = BasicCompanyDetails.objects.filter(updated_by=userval).values()
+                if basicobj:
+                    if basicobj:
+                        industry_info = IndustrialInfo.objects.filter(updated_by=userval).values()
+                        if industry_info:
+                            bankdetails = BankDetails.objects.filter(updated_by=userval).values()
+                            if bankdetails:
+                                legalobj = LegalDocuments.objects.filter(updated_by=userval).values()
+                                if legalobj:
+                                    emptydata.append({"id": userval,
+                                                      "user_type": regobj[0].get('user_type'),
+                                                      'company_code': basicobj[0].get('company_code'),
+                                                      "registration_status": "Legal Documents"})
+                                else:
+                                    emptydata.append({"id": userval,
+                                                      "user_type": regobj[0].get('user_type'),
+                                                      'company_code': basicobj[0].get('company_code'),
+                                                      "registration_status": "Bank Details"})
+                            else:
+                                emptydata.append({"id": userval,
+                                                  "user_type": regobj[0].get('user_type'),
+                                                  'company_code': basicobj[0].get('company_code'),
+                                                  "registration_status": "Seller Info"})
+                        else:
+                            emptydata.append({"id": userval,
+                                              "user_type": regobj[0].get('user_type'),
+                                              'company_code': basicobj[0].get('company_code'),
+                                              "registration_status": "Basic Company Details"})
+                    else:
+                        emptydata.append({"id": userval,
+                                          "user_type": regobj[0].get('user_type'),
+                                          "registration_status": "Self Registration",
+                                          })
+
+
+
+
+
+            return Response({'status': 200, 'message': 'ok', 'data': emptydata, 'usertype': regobj[0].get('user_type')},
+                            status=200)
 
     except Exception as e:
         return Response({'status':500,'error':str(e)},status=500)

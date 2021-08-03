@@ -326,19 +326,37 @@ def admin_pending_list(request):
     adminarray=[]
     try:
         regobj=SelfRegistration.objects.filter(admin_approve='Pending').values()
+        print(len(regobj))
         if len(regobj)>0:
-            # for i in range(0,len(regobj)):
-            #     basicobj=BasicCompanyDetails.objects.filter(updated_by_id=regobj[i].get('id')).values()
-            #     adminarray.append({"company_code":basicobj[0].get('company_code'),
-            #                        "company_name":basicobj[0].get('company_name'),
-            #                        "username":regobj[i].get('contact_person'),
-            #                        "user_type": regobj[i].get('user_type'),
-            #                        "email": regobj[i].get('username'),
-            #                        "phone_number": regobj[i].get('phone_number'),
-            #                        "nature_of_business": regobj[i].get('nature_of_business'),
-            #                        "business_type": regobj[i].get('business_to_serve')
-            #                        })
-            return Response({'status': 200, 'message':'Pending List','data':regobj}, status=200)
+            for i in range(0,len(regobj)):
+                basicobj=BasicCompanyDetails.objects.filter(updated_by_id=regobj[i].get('id')).values()
+                if len(basicobj)>0:
+                    adminarray.append({
+                        "company_code":basicobj[0].get('company_code'),
+                        "company_name":basicobj[0].get('company_name'),
+                        "username":regobj[i].get('contact_person'),
+                        "user_type": regobj[i].get('user_type'),
+                        "email": regobj[i].get('username'),
+                        "phone_number": regobj[i].get('phone_number'),
+                        "nature_of_business": regobj[i].get('nature_of_business'),
+                        "business_type": regobj[i].get('business_to_serve'),
+                         "userid": regobj[i].get('id')
+
+                                       })
+                else:
+                    adminarray.append({
+                        "company_code": "",
+                        "company_name":"",
+                        "username": regobj[i].get('contact_person'),
+                        "user_type": regobj[i].get('user_type'),
+                        "email": regobj[i].get('username'),
+                        "phone_number": regobj[i].get('phone_number'),
+                        "nature_of_business": regobj[i].get('nature_of_business'),
+                        "business_type": regobj[i].get('business_to_serve'),
+                        "userid": regobj[i].get('id')
+                    })
+
+            return Response({'status': 200, 'message':'Pending List','data':adminarray}, status=200)
         else:
             return Response({'status': 204, 'message': 'data not present'}, status=204)
 
@@ -351,13 +369,78 @@ def admin_pending_list(request):
 @permission_classes([AllowAny])
 def admin_approved_list(request):
     adminid = request.data['adminid']
+    adminarray=[]
     try:
-        regobj=SelfRegistration.objects.filter(admin_approve='Approved').values()
-        if regobj:
-            return Response({'status': 200, 'message':'Approved List','data':regobj}, status=200)
-        else:
-            return Response({'status': 204, 'message': 'data not present'}, status=204)
+        regobj = SelfRegistration.objects.filter(admin_approve='Approved').values()
+        print(len(regobj))
+        if len(regobj) > 0:
+            for i in range(0, len(regobj)):
+                basicobj = BasicCompanyDetails.objects.filter(updated_by_id=regobj[i].get('id')).values()
+                if len(basicobj) > 0:
+                    adminarray.append({
+                        "company_code": basicobj[0].get('company_code'),
+                        "company_name": basicobj[0].get('company_name'),
+                        "username": regobj[i].get('contact_person'),
+                        "user_type": regobj[i].get('user_type'),
+                        "email": regobj[i].get('username'),
+                        "phone_number": regobj[i].get('phone_number'),
+                        "nature_of_business": regobj[i].get('nature_of_business'),
+                        "business_type": regobj[i].get('business_to_serve'),
+                        "userid":regobj[i].get('id')
+                    })
+                else:
+                    adminarray.append({
+                        "company_code": "",
+                        "company_name": "",
+                        "username": regobj[i].get('contact_person'),
+                        "user_type": regobj[i].get('user_type'),
+                        "email": regobj[i].get('username'),
+                        "phone_number": regobj[i].get('phone_number'),
+                        "nature_of_business": regobj[i].get('nature_of_business'),
+                        "business_type": regobj[i].get('business_to_serve'),
+                        "userid": regobj[i].get('id')
+                    })
+            return Response({'status': 200, 'message': 'Approved List', 'data': adminarray}, status=200)
 
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)
+
+@api_view(['post'])
+@permission_classes([AllowAny])
+def admin_verified_list(request):
+    adminid = request.data['adminid']
+    adminarray=[]
+    try:
+        regobj = SelfRegistration.objects.filter(admin_approve='Approved').values()
+        print(len(regobj))
+        if len(regobj) > 0:
+            for i in range(0, len(regobj)):
+                basicobj = BasicCompanyDetails.objects.filter(updated_by_id=regobj[i].get('id')).values()
+                if len(basicobj) > 0:
+                    adminarray.append({
+                        "company_code": basicobj[0].get('company_code'),
+                        "company_name": basicobj[0].get('company_name'),
+                        "username": regobj[i].get('contact_person'),
+                        "user_type": regobj[i].get('user_type'),
+                        "email": regobj[i].get('username'),
+                        "phone_number": regobj[i].get('phone_number'),
+                        "nature_of_business": regobj[i].get('nature_of_business'),
+                        "business_type": regobj[i].get('business_to_serve'),
+                        "userid": regobj[i].get('id')
+                    })
+                else:
+                    adminarray.append({
+                        "company_code": "",
+                        "company_name": "",
+                        "username": regobj[i].get('contact_person'),
+                        "user_type": regobj[i].get('user_type'),
+                        "email": regobj[i].get('username'),
+                        "phone_number": regobj[i].get('phone_number'),
+                        "nature_of_business": regobj[i].get('nature_of_business'),
+                        "business_type": regobj[i].get('business_to_serve'),
+                        "userid": regobj[i].get('id')
+                    })
+            return Response({'status': 200, 'message': 'Verified List', 'data': adminarray}, status=200)
 
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)

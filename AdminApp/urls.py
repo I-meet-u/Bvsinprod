@@ -18,8 +18,9 @@ urlpatterns = [
     path('registration-list/', views.registration_list),
     path('admin-approval-from-pending/',views.admin_approval_from_pending),
     path('admin-verify-from-approve/', views.admin_verify_from_approve),
+    path('admin-approved-from-verify/', views.admin_approved_from_verify),
     path('admin-pending-list/',views.admin_pending_list),
+    path('admin-verified-list/', views.admin_verified_list),
     path('admin-approved-list/',views.admin_approved_list),
-    path('admin-approved-from-verify/',views.admin_approved_from_verify)
 
 ]

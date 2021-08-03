@@ -17,6 +17,7 @@ urlpatterns = [
     path('admin-email-otp-verify/',views.admin_email_otp_verify),
     path('registration-list/', views.registration_list),
     path('admin-approval/',views.admin_approval),
-    path('admin-approve-pending-list/',views.admin_approve_pending_list)
+    path('admin-pending-list/',views.admin_pending_list),
+    path('admin-approved-list/',views.admin_approved_list)
 
 ]

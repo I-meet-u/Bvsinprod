@@ -261,9 +261,24 @@ def admin_approval(request):
 
 @api_view(['get'])
 @permission_classes([AllowAny])
-def admin_approve_pending_list(request):
+def admin_pending_list(request):
     try:
         regobj=SelfRegistration.objects.filter(admin_approve='Pending').values()
+        if regobj:
+            return Response({'status': 200, 'message':'Pending List','data':regobj}, status=200)
+        else:
+            return Response({'status': 204, 'message': 'data not present'}, status=204)
+
+
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)
+
+
+@api_view(['get'])
+@permission_classes([AllowAny])
+def admin_approved_list(request):
+    try:
+        regobj=SelfRegistration.objects.filter(admin_approve='Approved').values()
         if regobj:
             return Response({'status': 200, 'message':'Pending List','data':regobj}, status=200)
         else:

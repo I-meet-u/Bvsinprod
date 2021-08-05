@@ -649,3 +649,61 @@ def employee_verified_list(request):
             return Response({'status': 200, 'message': 'No verified data for Employee or Employer', 'data': adminarray}, status=200)
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)
+
+@api_view(['put'])
+@permission_classes([AllowAny])
+def employee_status_update_from_pending_to_approved(request):
+    data=request.data
+    adminid = data['adminid']
+    userid = data['userid']
+    try:
+        adminobj=AdminRegister.objects.get(admin_id=adminid)
+        if adminobj:
+            regobjdata=SelfRegistration.objects.filter(Q(user_type='Employee')|Q(user_type='Employer'),id=userid).values()
+            employeeobj=Employee_IndustryInfo.objects.filter(emp_updated_by_id=userid).values()
+            if regobjdata and employeeobj:
+                regobj=SelfRegistration.objects.get(id=userid)
+                if regobj.admin_approve=='Pending':
+                    regobj.admin_approve='Approved'
+                    regobj.save()
+                    return Response({'status': 200, 'message': 'Admin Approved'}, status=200)
+                else:
+                    if regobj.admin_approve == 'Approved':
+                        return Response({'status': 202, 'message': 'Admin Already Approved'}, status=202)
+                    if regobj.admin_approve == 'Verified':
+                        return Response({'status': 202, 'message': 'Admin Already Verified'}, status=202)
+            else:
+                return Response({'status': 200, 'message': 'user is not present or not registered or not present in industry info'}, status=200)
+        else:
+            return Response({'status':204,'message':'Admin Data Not Present for this Id'},status=204)
+    except Exception as e:
+        return Response({'status':500,'error':str(e)},status=500)
+
+@api_view(['put'])
+@permission_classes([AllowAny])
+def employee_status_update_from_pending_to_verified(request):
+    data=request.data
+    adminid = data['adminid']
+    userid = data['userid']
+    try:
+        adminobj=AdminRegister.objects.get(admin_id=adminid)
+        if adminobj:
+            regobjdata=SelfRegistration.objects.filter(Q(user_type='Employee')|Q(user_type='Employer'),id=userid).values()
+            employeeobj=Employee_IndustryInfo.objects.filter(emp_updated_by_id=userid).values()
+            if regobjdata and employeeobj:
+                regobj=SelfRegistration.objects.get(id=userid)
+                if regobj.admin_approve=='Pending':
+                    regobj.admin_approve='Verified'
+                    regobj.save()
+                    return Response({'status': 200, 'message': 'Admin Verified'}, status=200)
+                else:
+                    if regobj.admin_approve == 'Verified':
+                        return Response({'status': 202, 'message': 'Admin Already Verified'}, status=202)
+                    elif regobj.admin_approve=='Approved':
+                        return Response({'status': 202, 'message': 'Admin Already Approved'}, status=202)
+            else:
+                return Response({'status': 200, 'message': 'user is not present or not registered or not present in pending info'}, status=200)
+        else:
+            return Response({'status':204,'message':'Not present for this particular admin id'},status=204)
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)

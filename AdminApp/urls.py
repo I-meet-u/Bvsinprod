@@ -26,7 +26,10 @@ urlpatterns = [
 
     path('employee-pending-list/', views.employee_pending_list),
     path('employee-approved-list/',views.employee_approved_list),
-    path('employee-verified-list/',views.employee_verified_list)
+    path('employee-verified-list/',views.employee_verified_list),
+    path('employee-status-update-from-pending-to-approve/', views.employee_status_update_from_pending_to_approved),
+    path('employee-status-update-from-pending-to-verify/', views.employee_status_update_from_pending_to_verified),
+
 
 
 ]

@@ -49,7 +49,7 @@ class SelfRegistration_Sample(models.Model):
 
 class BasicCompanyDetails(models.Model):
     # basic details model fields
-    company_code = models.CharField(max_length=200, primary_key=True)
+    company_code = models.CharField(max_length=20, primary_key=True)
     gst_number = models.CharField(max_length=30)
     company_name = models.CharField(max_length=200)
     company_type = models.CharField(max_length=200)

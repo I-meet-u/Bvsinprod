@@ -342,9 +342,9 @@ class IndustrialInfoView(viewsets.ModelViewSet):
                                                       company_code=BasicCompanyDetails.objects.get(company_code=company_code)
 
                                                       )
-            regobj = SelfRegistration.objects.get(id=updated_by)
-            regobj.nature_of_business = industryobj.nature_of_business
-            regobj.save()
+            # regobj = SelfRegistration.objects.get(id=updated_by)
+            # regobj.nature_of_business = industryobj.nature_of_business
+            # regobj.save()
             return Response({'status': 201, 'message': 'Industry Info Created'}, status=201)
 
 

@@ -1426,3 +1426,28 @@ def buyer_login(request):
         return Response({'status': 500, 'error': str(e)}, status=500)
 
 
+@api_view(['post'])
+def employeelogin(request):
+    try:
+        data=request.data
+        email=data['email']
+        Regobj=SelfRegistration.objects.filter(username=email).values()
+        print(Regobj)
+        if Regobj:
+            empcompobj=Employee_CompanyDetails.objects.filter(emp_updated_by=Regobj[0].get('id')).values()
+            if empcompobj:
+                industryobj=Employee_IndustryInfo.objects.filter(emp_updated_by=Regobj[0].get('id')).values()
+                if industryobj:
+                    return Response({'status': 200, 'Regstatus': 'industryinfo'}, status=200)
+                else:
+                    return Response({'status': 200, 'Registatus': 'Companyinfo'}, status=200)
+
+            else:
+                return Response({'status': 200, 'Registatus': 'self Registration'}, status=200)
+
+        else:
+            return Response({'status': 200, 'Registatus': 'not exist'}, status=200)
+
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)
+

@@ -1436,14 +1436,15 @@ def employeelogin(request):
         if Regobj:
             empcompobj=Employee_CompanyDetails.objects.filter(emp_updated_by=Regobj[0].get('id')).values()
             if empcompobj:
+                print(empcompobj)
                 industryobj=Employee_IndustryInfo.objects.filter(emp_updated_by=Regobj[0].get('id')).values()
                 if industryobj:
-                    return Response({'status': 200, 'Regstatus': 'industryinfo','userid':Regobj[0].get('id')}, status=200)
+                    return Response({'status': 200, 'Regstatus': 'industryinfo','userid':Regobj[0].get('id'),'companycode':empcompobj[0].get('emp_company_code')}, status=200)
                 else:
-                    return Response({'status': 200, 'Registatus': 'Companyinfo','userid':Regobj[0].get('id')}, status=200)
+                    return Response({'status': 200, 'Registatus': 'Companyinfo','userid':Regobj[0].get('id'),'companycode':empcompobj[0].get('emp_company_code')}, status=200)
 
             else:
-                return Response({'status': 200, 'Registatus': 'self Registration','userid':Regobj[0].get('id')}, status=200)
+                return Response({'status': 200, 'Registatus': 'self Registration','userid':Regobj[0].get('id'),'companycode':'NA'}, status=200)
 
         else:
             return Response({'status': 200, 'Registatus': 'not exist'}, status=200)

@@ -81,7 +81,7 @@ class IndustrialInfo(models.Model):
     updated_on = models.DateTimeField(auto_now=True)
     created_by = models.BigIntegerField()
     updated_by = models.OneToOneField(SelfRegistration, on_delete=models.CASCADE)
-    company_code = models.ForeignKey(BasicCompanyDetails, on_delete=models.CASCADE)
+    company_code = models.OneToOneField(BasicCompanyDetails, on_delete=models.CASCADE,null=True)
 
     class Meta:
         db_table = "IndustrialInfo"

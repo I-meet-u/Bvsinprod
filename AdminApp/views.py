@@ -534,8 +534,8 @@ def employee_pending_list(request):
                         "user_type": regobj[i].get('user_type'),
                         "email": regobj[i].get('username'),
                         "phone_number": regobj[i].get('phone_number'),
-                        "nature_of_business": regobj[i].get('nature_of_business'),
-                        "business_type": regobj[i].get('business_to_serve'),
+                        "department": regobj[i].get('department'),
+                        "designation": regobj[i].get('designation'),
                         "userid": regobj[i].get('id'),
                         "status":regobj[i].get('admin_approve')
 
@@ -548,8 +548,8 @@ def employee_pending_list(request):
                         "user_type": regobj[i].get('user_type'),
                         "email": regobj[i].get('username'),
                         "phone_number": regobj[i].get('phone_number'),
-                        "nature_of_business": regobj[i].get('nature_of_business'),
-                        "business_type": regobj[i].get('business_to_serve'),
+                        "department": regobj[i].get('department'),
+                        "designation": regobj[i].get('designation'),
                         "userid": regobj[i].get('id'),
                         "status": regobj[i].get('admin_approve')
                     })
@@ -582,8 +582,8 @@ def employee_approved_list(request):
                         "user_type": regobj[i].get('user_type'),
                         "email": regobj[i].get('username'),
                         "phone_number": regobj[i].get('phone_number'),
-                        "nature_of_business": regobj[i].get('nature_of_business'),
-                        "business_type": regobj[i].get('business_to_serve'),
+                        "department": regobj[i].get('department'),
+                        "designation": regobj[i].get('designation'),
                         "userid":regobj[i].get('id'),
                         "status": regobj[i].get('admin_approve')
                     })
@@ -595,8 +595,8 @@ def employee_approved_list(request):
                         "user_type": regobj[i].get('user_type'),
                         "email": regobj[i].get('username'),
                         "phone_number": regobj[i].get('phone_number'),
-                        "nature_of_business": regobj[i].get('nature_of_business'),
-                        "business_type": regobj[i].get('business_to_serve'),
+                        "department": regobj[i].get('department'),
+                        "designation": regobj[i].get('designation'),
                         "userid": regobj[i].get('id'),
                         "status": regobj[i].get('admin_approve')
                     })
@@ -626,8 +626,8 @@ def employee_verified_list(request):
                         "user_type": regobj[i].get('user_type'),
                         "email": regobj[i].get('username'),
                         "phone_number": regobj[i].get('phone_number'),
-                        "nature_of_business": regobj[i].get('nature_of_business'),
-                        "business_type": regobj[i].get('business_to_serve'),
+                        "department": regobj[i].get('department'),
+                        "designation": regobj[i].get('designation'),
                         "userid": regobj[i].get('id'),
                         "status": regobj[i].get('admin_approve')
                     })
@@ -639,8 +639,8 @@ def employee_verified_list(request):
                         "user_type": regobj[i].get('user_type'),
                         "email": regobj[i].get('username'),
                         "phone_number": regobj[i].get('phone_number'),
-                        "nature_of_business": regobj[i].get('nature_of_business'),
-                        "business_type": regobj[i].get('business_to_serve'),
+                         "department": regobj[i].get('department'),
+                        "designation": regobj[i].get('designation'),
                         "userid": regobj[i].get('id'),
                         "status": regobj[i].get('admin_approve')
                     })

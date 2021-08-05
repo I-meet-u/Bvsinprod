@@ -22,6 +22,11 @@ urlpatterns = [
     path('admin-pending-list/',views.admin_pending_list),
     path('admin-verified-list/', views.admin_verified_list),
     path('admin-approved-list/',views.admin_approved_list),
-    path('employee-all-list/',views.employee_all_list)
+    path('employee-all-list/',views.employee_all_list),
+
+    path('employee-pending-list/', views.employee_pending_list),
+    path('employee-approved-list/',views.employee_approved_list),
+    path('employee-verified-list/',views.employee_verified_list)
+
 
 ]

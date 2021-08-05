@@ -153,9 +153,10 @@ def create_user_status_update(request):
 @permission_classes([AllowAny])
 def registration_list(request):
     data=request.data
-    emptydata=list()
+    emptydata=[]
     try:
-        regobj=SelfRegistration.objects.filter().values()
+        # regobj=SelfRegistration.objects.filter(Q(user_type='Vendor') |Q(user_type='Buyer') | Q(user_type='Both')).values()
+        regobj = SelfRegistration.objects.filter().values()
         for i in range(0, len(regobj)):
             x = regobj[i].get('id')
             basicobj = BasicCompanyDetails.objects.filter(updated_by=x).values()
@@ -406,7 +407,7 @@ def admin_approved_list(request):
                     })
             return Response({'status': 200, 'message': 'Approved List', 'data': adminarray}, status=200)
         else:
-            return Response({'status': 200, 'message': 'No data is approved by admin', 'data': adminarray}, status=200)
+            return Response({'status': 204,'message': 'No data is approved by admin', 'data': adminarray}, status=204)
 
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)
@@ -450,7 +451,7 @@ def admin_verified_list(request):
                     })
             return Response({'status': 200, 'message': 'Verified List', 'data': adminarray}, status=200)
         else:
-            return Response({'status': 200, 'message': 'No data is verified by admin', 'data': adminarray}, status=200)
+            return Response({'status': 204, 'message': 'No data is verified by admin', 'data': adminarray}, status=204)
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)
 
@@ -512,3 +513,139 @@ def employee_all_list(request):
 
     except Exception as e:
         return Response({'status':500,'error':str(e)},status=500)
+
+
+@api_view(['post'])
+@permission_classes([AllowAny])
+def employee_pending_list(request):
+    adminid=request.data['adminid']
+    emp_pending_array=[]
+    try:
+        regobj=SelfRegistration.objects.filter(Q(user_type='Employee')|Q(user_type='Employer'),admin_approve='Pending').values()
+        print(len(regobj))
+        if len(regobj)>0:
+            for i in range(0,len(regobj)):
+                empbasicobj=Employee_CompanyDetails.objects.filter(emp_updated_by_id=regobj[i].get('id')).values()
+                if len(empbasicobj)>0:
+                    emp_pending_array.append({
+                        "emp_company_code":empbasicobj[0].get('emp_company_code'),
+                        "emp_company_name":empbasicobj[0].get('emp_company_name'),
+                        "username":regobj[i].get('contact_person'),
+                        "user_type": regobj[i].get('user_type'),
+                        "email": regobj[i].get('username'),
+                        "phone_number": regobj[i].get('phone_number'),
+                        "nature_of_business": regobj[i].get('nature_of_business'),
+                        "business_type": regobj[i].get('business_to_serve'),
+                        "userid": regobj[i].get('id'),
+                        "status":regobj[i].get('admin_approve')
+
+                                       })
+                else:
+                    emp_pending_array.append({
+                        "emp_company_code": "",
+                        "emp_company_name":"",
+                        "username": regobj[i].get('contact_person'),
+                        "user_type": regobj[i].get('user_type'),
+                        "email": regobj[i].get('username'),
+                        "phone_number": regobj[i].get('phone_number'),
+                        "nature_of_business": regobj[i].get('nature_of_business'),
+                        "business_type": regobj[i].get('business_to_serve'),
+                        "userid": regobj[i].get('id'),
+                        "status": regobj[i].get('admin_approve')
+                    })
+
+            return Response({'status': 200, 'message':'Employee Pending List','data':emp_pending_array}, status=200)
+        else:
+            return Response({'status': 204, 'message': 'No Pending data for Employee or Employer'}, status=204)
+
+
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)
+
+
+@api_view(['post'])
+@permission_classes([AllowAny])
+def employee_approved_list(request):
+    adminid = request.data['adminid']
+    employeeapprovedlist=[]
+    try:
+        regobj = SelfRegistration.objects.filter(Q(user_type='Employee')|Q(user_type='Employer'),admin_approve='Approved').values()
+        print(len(regobj))
+        if len(regobj) > 0:
+            for i in range(0, len(regobj)):
+                empbasicobj = Employee_CompanyDetails.objects.filter(updated_by_id=regobj[i].get('id')).values()
+                if len(empbasicobj) > 0:
+                    employeeapprovedlist.append({
+                        "emp_company_code": empbasicobj[0].get('emp_company_code'),
+                        "emp_company_name": empbasicobj[0].get('emp_company_name'),
+                        "username": regobj[i].get('contact_person'),
+                        "user_type": regobj[i].get('user_type'),
+                        "email": regobj[i].get('username'),
+                        "phone_number": regobj[i].get('phone_number'),
+                        "nature_of_business": regobj[i].get('nature_of_business'),
+                        "business_type": regobj[i].get('business_to_serve'),
+                        "userid":regobj[i].get('id'),
+                        "status": regobj[i].get('admin_approve')
+                    })
+                else:
+                    employeeapprovedlist.append({
+                        "emp_company_code": "",
+                        "emp_company_name": "",
+                        "username": regobj[i].get('contact_person'),
+                        "user_type": regobj[i].get('user_type'),
+                        "email": regobj[i].get('username'),
+                        "phone_number": regobj[i].get('phone_number'),
+                        "nature_of_business": regobj[i].get('nature_of_business'),
+                        "business_type": regobj[i].get('business_to_serve'),
+                        "userid": regobj[i].get('id'),
+                        "status": regobj[i].get('admin_approve')
+                    })
+            return Response({'status': 200, 'message': 'Approved List', 'data': employeeapprovedlist}, status=200)
+        else:
+            return Response({'status': 204, 'message': 'No approved data for Employee or Employer', 'data': employeeapprovedlist}, status=204)
+
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)
+
+@api_view(['post'])
+@permission_classes([AllowAny])
+def employee_verified_list(request):
+    adminid = request.data['adminid']
+    adminarray=[]
+    try:
+        regobj = SelfRegistration.objects.filter(Q(user_type='Employee')|Q(user_type='Employer'),admin_approve='Verified').values()
+        print(len(regobj))
+        if len(regobj) > 0:
+            for i in range(0, len(regobj)):
+                empbasicobj = Employee_CompanyDetails.objects.filter(updated_by_id=regobj[i].get('id')).values()
+                if len(empbasicobj) > 0:
+                    adminarray.append({
+                        "emp_company_code": empbasicobj[0].get('company_code'),
+                        "emp_company_name": empbasicobj[0].get('company_name'),
+                        "username": regobj[i].get('contact_person'),
+                        "user_type": regobj[i].get('user_type'),
+                        "email": regobj[i].get('username'),
+                        "phone_number": regobj[i].get('phone_number'),
+                        "nature_of_business": regobj[i].get('nature_of_business'),
+                        "business_type": regobj[i].get('business_to_serve'),
+                        "userid": regobj[i].get('id'),
+                        "status": regobj[i].get('admin_approve')
+                    })
+                else:
+                    adminarray.append({
+                        "emp_company_code": "",
+                        "emp_company_name": "",
+                        "username": regobj[i].get('contact_person'),
+                        "user_type": regobj[i].get('user_type'),
+                        "email": regobj[i].get('username'),
+                        "phone_number": regobj[i].get('phone_number'),
+                        "nature_of_business": regobj[i].get('nature_of_business'),
+                        "business_type": regobj[i].get('business_to_serve'),
+                        "userid": regobj[i].get('id'),
+                        "status": regobj[i].get('admin_approve')
+                    })
+            return Response({'status': 200, 'message': 'Verified List', 'data': adminarray}, status=200)
+        else:
+            return Response({'status': 200, 'message': 'No verified data for Employee or Employer', 'data': adminarray}, status=200)
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)

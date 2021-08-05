@@ -19,6 +19,7 @@ urlpatterns = [
     path('admin-approval-from-pending/',views.admin_approval_from_pending),
     path('admin-verify-from-pending/', views.admin_verify_from_pending),
     path('admin-approved-from-verify/', views.admin_approved_from_verify),
+    path('admin-update-from-pending-to-reject/', views.admin_update_from_pending_to_reject),
     path('admin-pending-list/',views.admin_pending_list),
     path('admin-verified-list/', views.admin_verified_list),
     path('admin-approved-list/',views.admin_approved_list),
@@ -30,7 +31,10 @@ urlpatterns = [
     path('employee-status-update-from-pending-to-approve/', views.employee_status_update_from_pending_to_approved),
     path('employee-status-update-from-pending-to-verify/', views.employee_status_update_from_pending_to_verified),
     path('employee-status-update-from-approved-to-verified/',views.employee_status_update_from_approved_to_verified),
-    path('company-registration-list/',views.company_registration_list)
+    path('employee-status-update-from-pending-to-reject/',views.employee_status_update_from_pending_to_reject),
+    path('company-registration-list/',views.company_registration_list),
+    path('admin-reject-list/',views.admin_rejected_list),
+    path('employee-reject-list/',views.employee_rejected_list)
 
 
 

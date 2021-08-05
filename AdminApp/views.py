@@ -825,3 +825,146 @@ def company_registration_list(request):
         return Response({'status': 200, 'message': 'ok', 'data': emptydata}, status=200)
     except Exception as e:
         return Response({'status':500,'error':str(e)},status=500)
+
+
+@api_view(['put'])
+@permission_classes([AllowAny])
+def employee_status_update_from_pending_to_reject(request):
+    data=request.data
+    adminid = data['adminid']
+    userid = data['userid']
+    try:
+        adminobj=AdminRegister.objects.get(admin_id=adminid)
+        if adminobj:
+            regobjdata=SelfRegistration.objects.filter(Q(user_type='Employee')|Q(user_type='Employer'),id=userid).values()
+            if regobjdata:
+                regobj=SelfRegistration.objects.get(id=userid)
+                if regobj.admin_approve=='Pending':
+                    regobj.admin_approve='Reject'
+                    regobj.save()
+                    return Response({'status': 200, 'message': 'Admin Rejected'}, status=200)
+                else:
+                    if regobj.admin_approve == 'Reject':
+                        return Response({'status': 202, 'message': 'Admin Already Rejected'}, status=202)
+            else:
+                return Response({'status': 200, 'message': 'user is not present or not registered or not present'}, status=200)
+        else:
+            return Response({'status':204,'message':'Admin Data Not Present for this Id'},status=204)
+    except Exception as e:
+        return Response({'status':500,'error':str(e)},status=500)
+
+@api_view(['put'])
+@permission_classes([AllowAny])
+def admin_update_from_pending_to_reject(request):
+    data=request.data
+    adminid = data['adminid']
+    userid = data['userid']
+    try:
+        adminobj=AdminRegister.objects.get(admin_id=adminid)
+        if adminobj:
+            regobjdata=SelfRegistration.objects.filter(Q(user_type='Vendor') |Q(user_type='Buyer') | Q(user_type='Both'),id=userid).values()
+            if regobjdata:
+                regobj=SelfRegistration.objects.get(id=userid)
+                if regobj.admin_approve=='Pending':
+                    regobj.admin_approve='Reject'
+                    regobj.save()
+                    return Response({'status': 200, 'message': 'Admin Rejected'}, status=200)
+                else:
+                    if regobj.admin_approve == 'Approved':
+                        return Response({'status': 202, 'message': 'Admin Already Rejected'}, status=202)
+            else:
+                return Response({'status': 200, 'message': 'user is not present or not registered'}, status=200)
+        else:
+            return Response({'status':204,'message':'Not present for this particular admin id'},status=204)
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)
+
+
+
+
+@api_view(['post'])
+@permission_classes([AllowAny])
+def admin_rejected_list(request):
+    adminid = request.data['adminid']
+    adminarray=[]
+    try:
+        regobj = SelfRegistration.objects.filter(Q(user_type='Vendor') |Q(user_type='Buyer') | Q(user_type='Both'),admin_approve='Reject').values().order_by('id')
+        print(len(regobj))
+        if len(regobj) > 0:
+            for i in range(0, len(regobj)):
+                basicobj = BasicCompanyDetails.objects.filter(updated_by_id=regobj[i].get('id')).values()
+                if len(basicobj) > 0:
+                    adminarray.append({
+                        "company_code": basicobj[0].get('company_code'),
+                        "company_name": basicobj[0].get('company_name'),
+                        "username": regobj[i].get('contact_person'),
+                        "user_type": regobj[i].get('user_type'),
+                        "email": regobj[i].get('username'),
+                        "phone_number": regobj[i].get('phone_number'),
+                        "nature_of_business": regobj[i].get('nature_of_business'),
+                        "business_type": regobj[i].get('business_to_serve'),
+                        "userid": regobj[i].get('id'),
+                        "status": regobj[i].get('admin_approve')
+                    })
+                else:
+                    adminarray.append({
+                        "company_code": "",
+                        "company_name": "",
+                        "username": regobj[i].get('contact_person'),
+                        "user_type": regobj[i].get('user_type'),
+                        "email": regobj[i].get('username'),
+                        "phone_number": regobj[i].get('phone_number'),
+                        "nature_of_business": regobj[i].get('nature_of_business'),
+                        "business_type": regobj[i].get('business_to_serve'),
+                        "userid": regobj[i].get('id'),
+                        "status": regobj[i].get('admin_approve')
+                    })
+            return Response({'status': 200, 'message': 'Rejected List', 'data': adminarray}, status=200)
+        else:
+            return Response({'status': 204, 'message': 'No data is rejected by admin', 'data': adminarray}, status=204)
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)
+
+
+@api_view(['post'])
+@permission_classes([AllowAny])
+def employee_rejected_list(request):
+    adminid = request.data['adminid']
+    adminarray=[]
+    try:
+        regobj = SelfRegistration.objects.filter(Q(user_type='Employee')|Q(user_type='Employer'),admin_approve='Reject').values().order_by('id')
+        print(len(regobj))
+        if len(regobj) > 0:
+            for i in range(0, len(regobj)):
+                empbasicobj = Employee_CompanyDetails.objects.filter(emp_updated_by_id=regobj[i].get('id')).values()
+                if len(empbasicobj) > 0:
+                    adminarray.append({
+                        "emp_company_code": empbasicobj[0].get('emp_company_code'),
+                        "emp_company_name": empbasicobj[0].get('emp_company_name'),
+                        "username": regobj[i].get('contact_person'),
+                        "user_type": regobj[i].get('user_type'),
+                        "email": regobj[i].get('username'),
+                        "phone_number": regobj[i].get('phone_number'),
+                        "department": regobj[i].get('department'),
+                        "designation": regobj[i].get('designation'),
+                        "userid": regobj[i].get('id'),
+                        "status": regobj[i].get('admin_approve')
+                    })
+                else:
+                    adminarray.append({
+                        "emp_company_code": "",
+                        "emp_company_name": "",
+                        "username": regobj[i].get('contact_person'),
+                        "user_type": regobj[i].get('user_type'),
+                        "email": regobj[i].get('username'),
+                        "phone_number": regobj[i].get('phone_number'),
+                         "department": regobj[i].get('department'),
+                        "designation": regobj[i].get('designation'),
+                        "userid": regobj[i].get('id'),
+                        "status": regobj[i].get('admin_approve')
+                    })
+            return Response({'status': 200, 'message': 'Rejected List', 'data': adminarray}, status=200)
+        else:
+            return Response({'status': 200, 'message': 'No rejected data for Employee or Employer', 'data': adminarray}, status=200)
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)

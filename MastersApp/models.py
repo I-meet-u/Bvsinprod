@@ -11,8 +11,8 @@ from RegistrationApp.models import SelfRegistration
 class IndustryToServeMaster(models.Model):
     # industry to serve masters model and fields
     industry_id = models.BigAutoField(primary_key=True)
-    industry_name = models.CharField(max_length=50, unique=True)
-    industry_code = models.CharField(max_length=50, unique=True,null=True,blank=True)
+    industry_name = models.CharField(max_length=200, unique=True)
+    industry_code = models.CharField(max_length=200, unique=True,null=True,blank=True)
     is_verified = models.BooleanField(default=False)
     created_on = models.DateTimeField(auto_now_add=True)
     updated_on = models.DateTimeField(auto_now=True)
@@ -21,7 +21,7 @@ class IndustryToServeMaster(models.Model):
     created_by = models.BigIntegerField(null=True)
     updated_by_name = models.CharField(null=True, blank=True,max_length=100)
     created_by_name=models.CharField(null=True,blank=True,max_length=100)
-    status = models.CharField(max_length=30, default='Active')
+    status = models.CharField(max_length=100, default='Active')
     csv_industry=models.FileField(upload_to='MasterFile',null=True,blank=True)
     # history = HistoricalRecords()
 

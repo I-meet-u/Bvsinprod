@@ -206,7 +206,7 @@ def external_vendor(request):
 
                                           })
                 else:
-                    print('already there')
+                    print('already present')
 
             return Response({'status': 200, 'message': 'External Vendor List', 'data': externalarray},status=200)
 

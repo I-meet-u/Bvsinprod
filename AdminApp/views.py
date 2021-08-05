@@ -573,7 +573,7 @@ def employee_approved_list(request):
         print(len(regobj))
         if len(regobj) > 0:
             for i in range(0, len(regobj)):
-                empbasicobj = Employee_CompanyDetails.objects.filter(updated_by_id=regobj[i].get('id')).values()
+                empbasicobj = Employee_CompanyDetails.objects.filter(emp_updated_by_id=regobj[i].get('id')).values()
                 if len(empbasicobj) > 0:
                     employeeapprovedlist.append({
                         "emp_company_code": empbasicobj[0].get('emp_company_code'),
@@ -617,7 +617,7 @@ def employee_verified_list(request):
         print(len(regobj))
         if len(regobj) > 0:
             for i in range(0, len(regobj)):
-                empbasicobj = Employee_CompanyDetails.objects.filter(updated_by_id=regobj[i].get('id')).values()
+                empbasicobj = Employee_CompanyDetails.objects.filter(emp_updated_by_id=regobj[i].get('id')).values()
                 if len(empbasicobj) > 0:
                     adminarray.append({
                         "emp_company_code": empbasicobj[0].get('company_code'),

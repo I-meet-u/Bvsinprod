@@ -73,10 +73,10 @@ class BasicCompanyDetails(models.Model):
 
 class IndustrialInfo(models.Model):
     # industry info model fields
-    nature_of_business = ArrayField(models.CharField(max_length=800))
-    geographical_area = ArrayField(models.CharField(max_length=100))
-    supply_capabilites = ArrayField(models.CharField(max_length=800))
-    industry_to_serve = ArrayField(models.CharField(max_length=800))
+    nature_of_business = ArrayField(models.CharField(max_length=1000))
+    geographical_area = ArrayField(models.CharField(max_length=1000))
+    supply_capabilites = ArrayField(models.CharField(max_length=1000))
+    industry_to_serve = ArrayField(models.CharField(max_length=1000))
     created_on = models.DateTimeField(auto_now_add=True)
     updated_on = models.DateTimeField(auto_now=True)
     created_by = models.BigIntegerField()

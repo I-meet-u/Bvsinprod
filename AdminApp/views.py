@@ -244,7 +244,7 @@ def admin_approval_from_pending(request):
     try:
         adminobj=AdminRegister.objects.get(admin_id=adminid)
         if adminobj:
-            regobjdata=SelfRegistration.objects.filter(id=userid).values()
+            regobjdata=SelfRegistration.objects.filter(Q(user_type='Vendor') |Q(user_type='Buyer') | Q(user_type='Both'),id=userid).values()
             legaldoc=LegalDocuments.objects.filter(updated_by_id=userid).values()
             if regobjdata and legaldoc:
                 regobj=SelfRegistration.objects.get(id=userid)
@@ -273,7 +273,7 @@ def admin_verify_from_pending(request):
     try:
         adminobj=AdminRegister.objects.get(admin_id=adminid)
         if adminobj:
-            regobjdata=SelfRegistration.objects.filter(id=userid).values()
+            regobjdata=SelfRegistration.objects.filter(Q(user_type='Vendor') |Q(user_type='Buyer') | Q(user_type='Both'),id=userid).values()
             legaldoc = LegalDocuments.objects.filter(updated_by_id=userid).values()
             if regobjdata and legaldoc:
                 regobj=SelfRegistration.objects.get(id=userid)
@@ -302,7 +302,7 @@ def admin_approved_from_verify(request):
     try:
         adminobj=AdminRegister.objects.get(admin_id=adminid)
         if adminobj:
-            regobjdata=SelfRegistration.objects.filter(id=userid).values()
+            regobjdata=SelfRegistration.objects.filter(Q(user_type='Vendor') |Q(user_type='Buyer') | Q(user_type='Both'),id=userid).values()
             legaldoc = LegalDocuments.objects.filter(updated_by_id=userid).values()
             if regobjdata and legaldoc:
                 regobj=SelfRegistration.objects.get(id=userid)
@@ -326,7 +326,7 @@ def admin_pending_list(request):
     adminid=request.data['adminid']
     adminarray=[]
     try:
-        regobj=SelfRegistration.objects.filter(admin_approve='Pending').values()
+        regobj=SelfRegistration.objects.filter(Q(user_type='Vendor') |Q(user_type='Buyer') | Q(user_type='Both'),admin_approve='Pending').values().order_by('id')
         print(len(regobj))
         if len(regobj)>0:
             for i in range(0,len(regobj)):
@@ -374,7 +374,7 @@ def admin_approved_list(request):
     adminid = request.data['adminid']
     adminarray=[]
     try:
-        regobj = SelfRegistration.objects.filter(admin_approve='Approved').values()
+        regobj = SelfRegistration.objects.filter(Q(user_type='Vendor') |Q(user_type='Buyer') | Q(user_type='Both'),admin_approve='Approved').values().order_by('id')
         print(len(regobj))
         if len(regobj) > 0:
             for i in range(0, len(regobj)):
@@ -418,7 +418,7 @@ def admin_verified_list(request):
     adminid = request.data['adminid']
     adminarray=[]
     try:
-        regobj = SelfRegistration.objects.filter(admin_approve='Verified').values()
+        regobj = SelfRegistration.objects.filter(Q(user_type='Vendor') |Q(user_type='Buyer') | Q(user_type='Both'),admin_approve='Verified').values().order_by('id')
         print(len(regobj))
         if len(regobj) > 0:
             for i in range(0, len(regobj)):
@@ -462,7 +462,7 @@ def employee_all_list(request):
     data=request.data
     emptydata=[]
     try:
-        regobj=SelfRegistration.objects.filter(Q(user_type='Employee') |Q(user_type='Employer')).values()
+        regobj=SelfRegistration.objects.filter(Q(user_type='Employee') |Q(user_type='Employer')).values().order_by('id')
         print(len(regobj))
         if len(regobj)>0:
             for i in range(0,len(regobj)):
@@ -521,7 +521,7 @@ def employee_pending_list(request):
     adminid=request.data['adminid']
     emp_pending_array=[]
     try:
-        regobj=SelfRegistration.objects.filter(Q(user_type='Employee')|Q(user_type='Employer'),admin_approve='Pending').values()
+        regobj=SelfRegistration.objects.filter(Q(user_type='Employee')|Q(user_type='Employer'),admin_approve='Pending').values().order_by('id')
         print(len(regobj))
         if len(regobj)>0:
             for i in range(0,len(regobj)):
@@ -569,7 +569,7 @@ def employee_approved_list(request):
     adminid = request.data['adminid']
     employeeapprovedlist=[]
     try:
-        regobj = SelfRegistration.objects.filter(Q(user_type='Employee')|Q(user_type='Employer'),admin_approve='Approved').values()
+        regobj = SelfRegistration.objects.filter(Q(user_type='Employee')|Q(user_type='Employer'),admin_approve='Approved').values().order_by('id')
         print(len(regobj))
         if len(regobj) > 0:
             for i in range(0, len(regobj)):
@@ -613,7 +613,7 @@ def employee_verified_list(request):
     adminid = request.data['adminid']
     adminarray=[]
     try:
-        regobj = SelfRegistration.objects.filter(Q(user_type='Employee')|Q(user_type='Employer'),admin_approve='Verified').values()
+        regobj = SelfRegistration.objects.filter(Q(user_type='Employee')|Q(user_type='Employer'),admin_approve='Verified').values().order_by('id')
         print(len(regobj))
         if len(regobj) > 0:
             for i in range(0, len(regobj)):
@@ -721,12 +721,14 @@ def employee_status_update_from_approved_to_verified(request):
             employeeobj=Employee_IndustryInfo.objects.filter(emp_updated_by_id=userid).values()
             if regobjdata and employeeobj:
                 regobj=SelfRegistration.objects.get(id=userid)
-                if regobj.admin_approve=='Approved':
-                    regobj.admin_approve='Verified'
+                if regobj.admin_approve=='Verified':
+                    regobj.admin_approve='Approved'
                     regobj.save()
-                    return Response({'status': 200, 'message': 'Admin Verified'}, status=200)
+                    return Response({'status': 200, 'message': 'Admin Approved'}, status=200)
                 else:
-                    if regobj.admin_approve == 'Verified':
+                    if regobj.admin_approve == 'Approved':
+                        return Response({'status': 202, 'message': 'Admin Already Approved'}, status=202)
+                    elif regobj.admin_approve == 'Verified':
                         return Response({'status': 202, 'message': 'Admin Already Verified'}, status=202)
             else:
                 return Response({'status': 200, 'message': 'user is not present or not registered or not present in industry info'}, status=200)
@@ -734,3 +736,92 @@ def employee_status_update_from_approved_to_verified(request):
             return Response({'status':204,'message':'Not present for this particular admin id'},status=204)
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)
+
+
+
+
+
+@api_view(['get'])
+@permission_classes([AllowAny])
+def company_registration_list(request):
+    data=request.data
+    emptydata=[]
+    try:
+        regobj=SelfRegistration.objects.filter(Q(user_type='Vendor') |Q(user_type='Buyer') | Q(user_type='Both')).values().order_by('id')
+        for i in range(0, len(regobj)):
+            x = regobj[i].get('id')
+            basicobj = BasicCompanyDetails.objects.filter(updated_by=x).values()
+            if basicobj:
+                print('basic', x)
+                industry_info = IndustrialInfo.objects.filter(updated_by=x).values()
+                if industry_info:
+                    industry_hierarchy = IndustrialHierarchy.objects.filter(updated_by=x).values()
+                    if industry_hierarchy:
+                        bankdetails = BankDetails.objects.filter(updated_by=x).values()
+                        if bankdetails:
+                            legalobj = LegalDocuments.objects.filter(updated_by=x).values()
+                            if legalobj:
+                                emptydata.append({"id":x ,
+                                        "company_code":basicobj[0].get('company_code'),
+                                        "company_name":basicobj[0].get('company_name'),
+                                        "username": regobj[i].get('contact_person'),
+                                        "user_type": regobj[i].get('user_type'),
+                                        "email": regobj[i].get('username'),
+                                        "phone_number": regobj[i].get('phone_number'),
+                                        "nature_of_business": regobj[i].get('nature_of_business'),
+                                        "business_type": regobj[i].get('business_to_serve'),
+                                        "registration_status": "Registration completed"})
+                            else:
+                                emptydata.append({"id": x,
+                                                  "company_code": basicobj[0].get('company_code'),
+                                                  "company_name": basicobj[0].get('company_name'),
+                                                  "username": regobj[i].get('contact_person'),
+                                                  "user_type": regobj[i].get('user_type'),
+                                                  "email": regobj[i].get('username'),
+                                                  "phone_number": regobj[i].get('phone_number'),
+                                                  "nature_of_business": regobj[i].get('nature_of_business'),
+                                                  "business_type": regobj[i].get('business_to_serve'),
+                                                  "registration_status": "Bank Details"})
+
+                        else:
+                            emptydata.append({"id": x,
+                                              "company_code": basicobj[0].get('company_code'),
+                                              "company_name": basicobj[0].get('company_name'),
+                                              "username": regobj[i].get('contact_person'),
+                                              "user_type": regobj[i].get('user_type'),
+                                              "email": regobj[i].get('username'),
+                                              "phone_number": regobj[i].get('phone_number'),
+                                              "nature_of_business": regobj[i].get('nature_of_business'),
+                                              "business_type": regobj[i].get('business_to_serve'),
+                                              "registration_status": "Industry hierarchy"})
+
+                    else:
+                        emptydata.append({"id": x,
+                                          "company_code": basicobj[0].get('company_code'),
+                                          "company_name": basicobj[0].get('company_name'),
+                                          "username": regobj[i].get('contact_person'),
+                                          "user_type": regobj[i].get('user_type'),
+                                          "email": regobj[i].get('username'),
+                                          "phone_number": regobj[i].get('phone_number'),
+                                          "nature_of_business": regobj[i].get('nature_of_business'),
+                                          "business_type": regobj[i].get('business_to_serve'),
+                                          "registration_status": "Seller info"})
+
+
+
+
+                else:
+                    emptydata.append({"id": x,
+                                      "company_code": basicobj[0].get('company_code'),
+                                      "company_name": basicobj[0].get('company_name'),
+                                      "username": regobj[i].get('contact_person'),
+                                      "user_type": regobj[i].get('user_type'),
+                                      "email": regobj[i].get('username'),
+                                      "phone_number": regobj[i].get('phone_number'),
+                                      "nature_of_business": regobj[i].get('nature_of_business'),
+                                      "business_type": regobj[i].get('business_to_serve'),
+                                      "registration_status": "company details"})
+
+        return Response({'status': 200, 'message': 'ok', 'data': emptydata}, status=200)
+    except Exception as e:
+        return Response({'status':500,'error':str(e)},status=500)

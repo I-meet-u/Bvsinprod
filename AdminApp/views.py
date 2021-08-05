@@ -481,7 +481,7 @@ def employee_all_list(request):
                                           "phone_number": regobj[i].get('phone_number'),
                                           "department": regobj[i].get('department'),
                                           "designation": regobj[i].get('designation'),
-                                          "registration_status": "Industry Info Details"})
+                                          "registration_status": "Registration Completed"})
 
                     else:
                         emptydata.append({"id":userval,
@@ -493,7 +493,7 @@ def employee_all_list(request):
                                           "phone_number": regobj[i].get('phone_number'),
                                           "department": regobj[i].get('department'),
                                           "designation": regobj[i].get('designation'),
-                                          "registration_status": "Basic Info Details"})
+                                          "registration_status": "Basic Info Details Completed"})
 
                 else:
                     emptydata.append({"id": userval,
@@ -505,7 +505,7 @@ def employee_all_list(request):
                                       "phone_number": regobj[i].get('phone_number'),
                                       "department": regobj[i].get('department'),
                                       "designation": regobj[i].get('designation'),
-                                      "registration_status": "Self Registration"
+                                      "registration_status": "Upto Registration or Only in Registration"
                                       })
             return Response({'status': 200, 'message':'Employee and Employer Details','data':emptydata}, status=200)
         else:

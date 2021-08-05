@@ -721,12 +721,14 @@ def employee_status_update_from_approved_to_verified(request):
             employeeobj=Employee_IndustryInfo.objects.filter(emp_updated_by_id=userid).values()
             if regobjdata and employeeobj:
                 regobj=SelfRegistration.objects.get(id=userid)
-                if regobj.admin_approve=='Approved':
-                    regobj.admin_approve='Verified'
+                if regobj.admin_approve=='Verified':
+                    regobj.admin_approve='Approved'
                     regobj.save()
-                    return Response({'status': 200, 'message': 'Admin Verified'}, status=200)
+                    return Response({'status': 200, 'message': 'Admin Approved'}, status=200)
                 else:
-                    if regobj.admin_approve == 'Verified':
+                    if regobj.admin_approve == 'Approved':
+                        return Response({'status': 202, 'message': 'Admin Already Approved'}, status=202)
+                    elif regobj.admin_approve == 'Verified':
                         return Response({'status': 202, 'message': 'Admin Already Verified'}, status=202)
             else:
                 return Response({'status': 200, 'message': 'user is not present or not registered or not present in industry info'}, status=200)

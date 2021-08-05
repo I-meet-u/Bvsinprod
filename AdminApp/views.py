@@ -620,8 +620,8 @@ def employee_verified_list(request):
                 empbasicobj = Employee_CompanyDetails.objects.filter(emp_updated_by_id=regobj[i].get('id')).values()
                 if len(empbasicobj) > 0:
                     adminarray.append({
-                        "emp_company_code": empbasicobj[0].get('company_code'),
-                        "emp_company_name": empbasicobj[0].get('company_name'),
+                        "emp_company_code": empbasicobj[0].get('emp_company_code'),
+                        "emp_company_name": empbasicobj[0].get('emp_company_name'),
                         "username": regobj[i].get('contact_person'),
                         "user_type": regobj[i].get('user_type'),
                         "email": regobj[i].get('username'),

@@ -333,7 +333,7 @@ class IndustrialInfoView(viewsets.ModelViewSet):
         industry_to_serve=request.data.get('industry_to_serve',None)
         company_code=request.data.get('company_code',None)
         try:
-            industryobj=IndustrialInfo.objects.create(nature_of_business=nature_of_business,
+            industryobj=IndustrialInfo.objects.update_or_create(nature_of_business=nature_of_business,
                                                       geographical_area=geographical_area,
                                                       supply_capabilites=supply_capabilites,
                                                       industry_to_serve=industry_to_serve,

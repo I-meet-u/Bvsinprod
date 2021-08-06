@@ -610,9 +610,6 @@ class VendorProduct_BasicDetailsView(viewsets.ModelViewSet):
         brand_make=request.data.get('brand_make')
         country_of_origin = request.data.get('country_of_origin')
         currency = request.data.get('currency')
-        model_no=request.data.get('model_no')
-        part_no=request.data.get('part_no')
-        alternative_parts_no=request.data.get('alternative_parts_no')
         pricing=request.data.get('pricing')
         request_on_quote=request.data.get('request_on_quote')
         price_range=request.data.get('price_range')
@@ -627,14 +624,14 @@ class VendorProduct_BasicDetailsView(viewsets.ModelViewSet):
                 if len(vendordetailsobj)>0:
                     vendorobj = VendorProduct_BasicDetails.objects.create(core_sector=core_sector,category=category,sub_category=sub_category,item_type=item_type,item_group=item_group,item_code=vendordetailsobj[0].get('numeric'),product_category=product_category,item_name=item_name,item_description=item_description,
                                                                           final_selling_price=final_selling_price,numeric=vendordetailsobj[0].get('numeric') + 1,add_image1=add_image1, add_image2=add_image2,add_image3=add_image3, add_image4=add_image4,
-                                                                          uom=uom, quantity=quantity, hsn_sac=hsn_sac,unit_price=unit_price, discount=discount, tax=tax,brand_make=brand_make,country_of_origin=country_of_origin,currency=currency,model_no=model_no,part_no=part_no,alternative_parts_no=alternative_parts_no,
+                                                                          uom=uom, quantity=quantity, hsn_sac=hsn_sac,unit_price=unit_price, discount=discount, tax=tax,brand_make=brand_make,country_of_origin=country_of_origin,currency=currency,
                                                                           pricing=pricing,request_on_quote=request_on_quote,price_range=price_range,sku_id=sku_id,
                                                                           created_by=userid,updated_by=SelfRegistration.objects.get(id=userid))
                 else:
                     print('not exist')
                     vendorobj = VendorProduct_BasicDetails.objects.create(core_sector=core_sector, category=category,sub_category=sub_category,item_type=item_type, item_group=item_group,item_code=100001,product_category=product_category,item_name=item_name,item_description=item_description,
                                                                           final_selling_price=final_selling_price,numeric=100002, add_image1=add_image1,add_image2=add_image2, add_image3=add_image3,add_image4=add_image4,
-                                                                          uom=uom, quantity=quantity, hsn_sac=hsn_sac,unit_price=unit_price, discount=discount,tax=tax, brand_make=brand_make,country_of_origin=country_of_origin,currency=currency, model_no=model_no,part_no=part_no,alternative_parts_no=alternative_parts_no,
+                                                                          uom=uom, quantity=quantity, hsn_sac=hsn_sac,unit_price=unit_price, discount=discount,tax=tax, brand_make=brand_make,country_of_origin=country_of_origin,currency=currency,
                                                                           pricing=pricing,request_on_quote=request_on_quote,price_range=price_range,sku_id=sku_id,created_by=userid,updated_by=SelfRegistration.objects.get(id=userid))
 
                 return Response({'status': 201, 'message': 'Vendor Product  Created Auto'}, status=201)

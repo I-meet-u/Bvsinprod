@@ -42,6 +42,7 @@ urlpatterns = [
     path('get-vendor-published-leads/',views.get_vendor_published_leads),
     path('open-leads-product-advance-search/',views.open_leads_product_advance_search),
     path('get-source-based-on-item-type-user-id/',views.get_source_based_on_item_type_user_id),
-    path('source-list-advance-search/',views.source_list_advance_search)
+    path('source-list-advance-search/',views.source_list_advance_search),
+    path('bidding-data-response-count/',views.bidding_data_responses_count),
 
 ]

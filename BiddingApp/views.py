@@ -492,6 +492,7 @@ class VendorBiddingBuyerProductDetailsView(viewsets.ModelViewSet):
                                                                     'vendor_total_amount'),
                                                                 vendor_document=vendorproductdetails[i].get(
                                                                     'vendor_document'),
+                                                                vendor_code=vendorproductdetails[i].get('vendor_code'),
                                                                 updated_by=SelfRegistration.objects.get(id=userid),
                                                                 created_by=userid)
             return Response({'status': 201, 'message': 'Vendor Bidding Buyer Produt Details are Created'}, status=201)
@@ -1030,5 +1031,99 @@ def source_list_advance_search(request):
                                                           ).values()
         return Response({'status': 200, 'message': 'Source List Search Success', 'data': sourceobj}, status=200)
 
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)
+
+# @api_view(['post'])
+# def total_all_response_product(request):
+#     data = request.data
+#     pendingarray = []
+#     rfq_number = data['rfq_number']
+#     responses = data['responses']
+#     updated_by = data['updated_by']
+#
+#     try:
+#         if responses == 'Pending':
+#             vendobj = SelectVendorsForBiddingProduct.objects.filter(rfq_number=rfq_number, updated_by_id=updated_by,
+#                                                                vendor_status=responses).values()
+#             print(len(vendobj))
+#             for i in range(0, len(vendobj)):
+#                 ccode = vendobj[i].get('vendor_code')
+#                 print(ccode)
+#                 rfq_number = vendobj[i].get('rfq_number')
+#                 print(rfq_number)
+#                 basicobj = BasicCompanyDetails.objects.filter(company_code=ccode).values('company_name')
+#                 print(basicobj)
+#                 for i in range(0, len(basicobj)):
+#                     pendingarray.append({'company_code': ccode,
+#                                          'company_name': basicobj[i].get('company_name'),
+#                                          'rfq_number': rfq_number
+#                                          })
+#         elif responses == 'Reject':
+#             vendobj = SelectVendorsForBiddingProduct.objects.filter(rfq_number=rfq_number, updated_by_id=updated_by,
+#                                                                vendor_status=responses).values()
+#             print(len(vendobj))
+#             for i in range(0, len(vendobj)):
+#                 ccode = vendobj[i].get('vendor_code')
+#                 print(ccode)
+#                 rfq_number = vendobj[i].get('rfq_number')
+#                 print(rfq_number)
+#                 basicobj = BasicCompanyDetails.objects.filter(company_code=ccode).values('company_name')
+#                 print(basicobj)
+#                 for i in range(0, len(basicobj)):
+#                     pendingarray.append({'company_code': ccode,
+#                                          'company_name': basicobj[i].get('company_name'),
+#                                          'rfq_number': rfq_number
+#                                          })
+#
+#         return Response({'status': 200, 'message': 'List', 'data': pendingarray}, status=200)
+#     except Exception as e:
+#         return Response({'status': 500, 'error': str(e)}, status=500)
+
+
+@api_view(['post'])
+# @permission_classes((AllowAny,))
+def bidding_data_responses_count(request):
+    data = request.data
+    totalresponse = []
+    accepted = 0
+    rejected = 0
+    pending = 0
+    totalsent = 0
+    rfxarray = []
+    try:
+        uservendorrfxdetails = SelectVendorsForBiddingProduct.objects.filter(updated_by_id=data['userid']).values()
+        for i in range(0, len(uservendorrfxdetails)):
+            if uservendorrfxdetails[i].get('rfq_number') not in rfxarray:
+                rfxarray.append(uservendorrfxdetails[i].get('rfq_number'))
+        for i in range(0, len(rfxarray)):
+            biddingbasicdatadetails = BuyerProductBidding.objects.get(user_rfq_number=rfxarray[i])
+
+            rfxdetails = SelectVendorsForBiddingProduct.objects.filter(rfq_number=rfxarray[i]).values().order_by(
+                'rfq_number')
+            for j in range(0, len(rfxdetails)):
+                totalsent = totalsent + 1
+                if (rfxdetails[j].get('vendorbiddingresponcestatus') == "Accept"):
+                    accepted = accepted + 1
+                if (rfxdetails[j].get('vendorbiddingresponcestatus') == "Reject"):
+                    rejected = rejected + 1
+                if (rfxdetails[j].get('vendorbiddingresponcestatus') == "Pending"):
+                    pending = pending + 1
+            totalresponse.append({'rfq_number': rfxarray[i],
+                                  'rfq_title': biddingbasicdatadetails.product_rfq_title,
+                                  'total_sent': totalsent,
+                                  'total_response': accepted + rejected,
+                                  'pending': pending,
+                                  'total_rejected': rejected,
+                                  'total_accepted': accepted,
+                                  'publish_date': biddingbasicdatadetails.product_publish_date,
+                                  'deadline_date': biddingbasicdatadetails.product_deadline_date,
+                                  'department_master': biddingbasicdatadetails.product_department})
+            print(biddingbasicdatadetails.product_rfq_title)
+            pending = 0
+            totalsent = 0
+            accepted = 0
+            rejected = 0
+        return Response({'status': 200, 'message': 'Response List', 'data': totalresponse}, status=200)
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)

@@ -149,6 +149,7 @@ class VendorBiddingBuyerProductDetails(models.Model):
     updated_on = models.DateTimeField(auto_now=True)
     created_by = models.BigIntegerField(null=True,blank=True)
     vendor_rfq_number=models.CharField(max_length=100,null=True,blank=True)
+    vendor_code=models.CharField(max_length=200,null=True,blank=True)
     updated_by = models.ForeignKey(SelfRegistration, on_delete=models.CASCADE)
     history = HistoricalRecords()
 

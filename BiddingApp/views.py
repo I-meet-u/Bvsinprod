@@ -1127,3 +1127,58 @@ def bidding_data_responses_count(request):
         return Response({'status': 200, 'message': 'Response List', 'data': totalresponse}, status=200)
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)
+
+
+@api_view(['put'])
+@permission_classes((AllowAny,))
+def status_vendor_accept(request):
+    data = request.data
+    rfq_number = data['rfq_number']
+    userid = data['userid']
+    try:
+        basicobj = BasicCompanyDetails.objects.get(updated_by_id=userid)
+        vends = SelectVendorsForBiddingProduct.objects.filter(rfq_number__icontains=rfq_number,vendor_code=basicobj.company_code).values().order_by('rfq_number')
+        if len(vends)>0:
+            for i in range(0, len(vends)):
+                vendobj = SelectVendorsForBiddingProduct.objects.get(id=vends[i].get('id'))
+                print(vendobj)
+                if vendobj.vendor_status == 'Pending':
+                    vendobj.vendor_status = 'Accept'
+                    vendobj.save()
+                    return Response(
+                        {'status': 200, 'message': 'Status Accepted', 'data': vendobj.vendor_status},
+                        status=200)
+                else:
+                    return Response({'status': 202, 'error': 'Already Accepted'}, status=202)
+        return Response({'status':204,'message':'Not Present','data':vends},status=204)
+
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)
+
+
+@api_view(['put'])
+@permission_classes((AllowAny,))
+def status_vendor_reject(request):
+    data = request.data
+    rfq_number = data['rfq_number']
+    userid = data['userid']
+    try:
+        basicobj=BasicCompanyDetails.objects.get(updated_by_id=userid)
+        vends = SelectVendorsForBiddingProduct.objects.filter(rfq_number__icontains=rfq_number,vendor_code=basicobj.company_code).values().order_by('rfq_number')
+        print(vends)
+        if len(vends)>0:
+            for i in range(0, len(vends)):
+                vendobjvalues = SelectVendorsForBiddingProduct.objects.get(id=vends[i].get('id'))
+                print(vendobjvalues)
+                if vendobjvalues.vendor_status == 'Pending':
+                    vendobjvalues.vendor_status = 'Reject'
+                    vendobjvalues.save()
+                    return Response(
+                        {'status': 200, 'message': 'Status Rejected', 'data': vendobjvalues.vendor_status},
+                        status=200)
+                else:
+                    return Response({'status': 202, 'error': 'Already Rejected'}, status=202)
+        return Response({'status': 204, 'message': 'Not Present'}, status=204)
+
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)

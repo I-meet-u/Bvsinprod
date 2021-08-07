@@ -1355,3 +1355,138 @@ def get_ccode_by_userid(request):
             return Response({'status': 204, 'message': 'company code not present'}, status=204)
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)
+
+
+# @api_view(['post'])
+# def price_analysis_product(request):
+#     data = request.data
+#     rfq_number = data['rfq_number']
+#     vendor_code = data['vendor_code']
+#     vendorcodesarray = []
+#     vendorbidarray = []
+#     try:
+#         priceobj = SelectVendorsForBiddingProduct.objects.filter(rfq_number=rfq_number, vendor_code__in=vendor_code,
+#                                                             vendor_status='Accept').values('vendor_code')
+#         print(len(priceobj))
+#         for i in range(0, len(priceobj)):
+#             vendorcodesarray.append(priceobj[i].get('vendor_code'))
+#             print('select', vendorcodesarray)
+#         productobj = VendorBiddingBuyerProductDetails.objects.filter(vendor_rfq_number=rfq_number,
+#                                                                      vendor_code__in=vendorcodesarray).values()
+#         print(len(productobj))
+#         if len(productobj)>0:
+#             for k in range(0, len(productobj)):
+#                 vendorbidarray.append({
+#                     'vendor_product_id': productobj[k].get('id'),
+#                     'vendor_item_code': productobj[k].get('vendor_item_code'),
+#                     'vendor_item_name': productobj[k].get('vendor_item_name'),
+#                     'vendor_item_description': productobj[k].get('vendor_item_description'),
+#                     'buyer_quantity': productobj[k].get('buyer_quantity'),
+#                     'vendor_quantity': productobj[k].get('vendor_quantity'),
+#                     'vendor_rate': productobj[k].get('vendor_rate'),
+#                     'vendor_uom': productobj[k].get('vendor_uom'),
+#                     'vendor_total_amount': productobj[k].get('vendor_total_amount')
+#
+#                 })
+#             return Response({'status': 200, 'message': 'ok', 'data': vendorbidarray}, status=200)
+#         else:
+#             return Response({'status': 204, 'message': 'No details present'}, status=204)
+#     except Exception as e:
+#         return Response({'status': 500, 'error': str(e)}, status=500)
+
+
+# ------------------------price analysis of vendor side--------------------------
+# @api_view(['post'])
+# def vendor_bidding_list_for_price_analysis(request):
+#     data = request.data
+#     rfq_number = data['rfq_number']
+#     vendorcode = data['vendorcode']
+#     vendorcodesarray = []
+#     vendorbidarray_bidetails = []
+#     try:
+#         priceobj = SelectVendorsForBiddingProduct.objects.filter(rfq_number=rfq_number, vendor_code__in=vendorcode,
+#                                                             vendor_status='Accept').values('vendor_code')
+#         print(len(priceobj))
+#         for i in range(0, len(priceobj)):
+#             vendorcodesarray.append(priceobj[i].get('vendor_code'))
+#             print('select', vendorcodesarray)
+#
+#         venobj = VendorProductBidding.objects.filter(vendor_user_rfq_number=rfq_number).values()
+#         print(len(venobj))
+#         for i in range(0, len(venobj)):
+#             basicobj = BasicCompanyDetails.objects.filter(company_code__in=vendorcodesarray).values()
+#             venobj = VendorProductBidding.objects.filter(vendor_user_rfq_number=rfq_number,
+#                                                            vendor_code__in=vendorcodesarray).values()
+#             for i in range(0, len(venobj)):
+#                 basicobj = BasicCompanyDetails.objects.filter(company_code__in=vendorcodesarray).values()
+#                 vendorbidarray_bidetails.append({'rfq_number': rfq_number,
+#                                                  'rfq_status': venobj[i].get('rfq_status'),
+#                                                  'rfq_title': venobj[i].get('rfq_title'),
+#                                                  'payment_terms': venobj[i].get('payment_terms'),
+#                                                  'delivery_period': venobj[i].get('delivery_period'),
+#                                                  'freight_transportation': venobj[i].get('freight_transportation'),
+#                                                  'packaging_forwarding': venobj[i].get('packaging_forwarding'),
+#                                                  'transit_insurance': venobj[i].get('transit_insurance'),
+#                                                  'test_certificate': venobj[i].get('test_certificate'),
+#                                                  'warranty_guarantee': venobj[i].get('warranty_guarantee'),
+#                                                  'validity': venobj[i].get('validity'),
+#                                                  'company_name': basicobj[i].get('company_name'),
+#                                                  'bill_city': basicobj[i].get('bill_city')
+#                                                  })
+#             return Response({'status': 200, 'message': 'ok', 'data': vendorbidarray_bidetails}, status=200)
+#
+#
+#     except Exception as e:
+#         return Response({'status': 500, 'error': str(e)}, status=500)
+
+
+@api_view(['post'])
+def price_analysis_product(request):
+    data = request.data
+    resarray = []
+    rfq_number = data['rfq_number']
+    vendor_code = data['vendor_code']
+
+    try:
+        biddingbuyerproductdetailsobj = BiddingBuyerProductDetails.objects.filter(buyer_rfq_number=rfq_number).values()
+        # print(biddingbuyerproductdetailsobj)
+        for i in range(0, len(biddingbuyerproductdetailsobj)):
+            resarray.append({'product_code': biddingbuyerproductdetailsobj[i].get('buyer_item_code'),
+                             'product_name': biddingbuyerproductdetailsobj[i].get('buyer_item_name'),
+                             'Material_Description': biddingbuyerproductdetailsobj[i].get('buyer_item_description'),
+                             'UOM': biddingbuyerproductdetailsobj[i].get('buyer_uom'),
+                             'Quantity': biddingbuyerproductdetailsobj[i].get('buyer_quantity')})
+
+            vpdetails = VendorBiddingBuyerProductDetails.objects.filter(vendor_rfq_number=rfq_number, vendor_code__in=vendor_code,
+                                                                        vendor_item_code=biddingbuyerproductdetailsobj[
+                                                                            i].get('buyer_item_code')).values().order_by('vendor_code')
+
+            for j in range(0, len(vpdetails)):
+
+                resarray[i].setdefault('ccode' + str(j), vpdetails[j].get('vendor_code'))
+                resarray[i].setdefault('rate' + str(j), vpdetails[j].get('vendor_rate'))
+                resarray[i].setdefault('tax' + str(j), vpdetails[j].get('vendor_tax'))
+                resarray[i].setdefault('discount' + str(j), vpdetails[j].get('vendor_discount'))
+                resarray[i].setdefault('totalcost' + str(j), vpdetails[j].get('vendor_total_amount'))
+            print("---------------------------------")
+            # for j in range(0,len())
+
+        return Response({'status': 200, 'message': 'Success', 'data': resarray}, status=200)
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)
+
+
+# @api_view(['post'])
+# def priceanalysishsbvendorslist(request):
+#     data = request.data
+#     resarray = []
+#     rfq = data['rfq_number']
+#     compcodearray = data['compcodearray']
+#
+#     try:
+#         selectedvendorsforbiddingobj = vendorbiddingbuyerproductdetails.objects.filter(rfq_number=rfq,
+#                                                                                        vendorcode__in=compcodearray).values()
+#         print(len(selectedvendorsforbiddingobj))
+#         return Response({'status': 200, 'message': 'Success', 'data': selectedvendorsforbiddingobj}, status=200)
+#     except Exception as e:
+#         return Response({'status': 500, 'error': str(e)}, status=500)

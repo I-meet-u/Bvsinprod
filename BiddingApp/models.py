@@ -125,6 +125,7 @@ class VendorProductBidding(models.Model):
     updated_on = models.DateTimeField(auto_now=True)
     created_by = models.BigIntegerField()
     updated_by = models.ForeignKey(SelfRegistration, on_delete=models.CASCADE)
+    vendor_code=models.CharField(max_length=100,null=True,blank=True)
     history=HistoricalRecords()
 
     class Meta:
@@ -172,6 +173,63 @@ class VendorRfqTermsDescription(models.Model):
     class Meta:
         db_table = "VendorRfqTermsDescription"
 
+
+
+
+# class Awards(models.Model):
+#     rfq_number = models.CharField(max_length=50)
+#     company_code =ArrayField(models.CharField(max_length=200),null=True,blank=True)
+#     company_name=models.CharField(max_length=200,null=True,blank=True)
+#     order_quantity=models.CharField(max_length=100,null=True,blank=True)
+#     bid_quantity = models.CharField(max_length=100, null=True, blank=True)
+#     frieght_cost=models.CharField(max_length=500, null=True, blank=True)
+#     p_f_charge=models.CharField(max_length=500, null=True, blank=True)
+#     totalamount=models.CharField(max_length=200, null=True, blank=True)
+#     rfq_title = models.CharField(max_length=100, null=True, blank=True)
+#     rfq_status = models.CharField(max_length=100, null=True, default="Pending", blank=True)
+#     product_code=ArrayField(models.CharField(max_length=200),null=True,blank=True)
+#     product_name = models.CharField(max_length=100, null=True, blank=True)
+#     daterange = models.DateField(null=True,blank=True)
+#     product_description = models.CharField(max_length=200, null=True, blank=True)
+#     awarded_date = models.DateField(auto_now=True, null=True, blank=True)
+#     publish_date=models.DateField(null=True, blank=True)
+#     deadline_date=models.DateField(null=True, blank=True)
+#     awardstatus=models.CharField(max_length=100,null=True,blank=True,default='Pending')
+#     createdon = models.DateTimeField(null=True, auto_now_add=True, blank=True)
+#     updatedon = models.DateTimeField(auto_now=True, null=True, blank=True)
+#     updatedby = models.ForeignKey(SelfRegistration, on_delete=models.CASCADE,null=True,blank=True)
+#     postatus=models.CharField(max_length=100,default='Pending',blank=True,null=True)
+#     history = HistoricalRecords()
+#
+#     class Meta:
+#         db_table = "Awards"
+
+
+# --------------------------------POModel-------------------------------------------------------------------------
+
+# class PurchaseOrder(models.Model):
+#
+#     rfq_number = models.CharField(max_length=50, null=True, blank=True)
+#     rfq_title = models.CharField(max_length=100, null=True, blank=True)
+#     PO_num = models.CharField(max_length=50, null=True, blank=True)
+#     PO_date = models.DateField()
+#     delievery_date = models.DateField()
+#     PO_expirydate = models.DateField()
+#     remind = models.DateField(null=True,blank=True)
+#     delievery_days = models.CharField(max_length=100,null=True,blank=True)
+#     vendorcode = models.CharField(max_length=30)
+#     company_name = models.CharField(max_length=100, null=True, blank=True)
+#     subject = models.TextField()
+#     attachment1 = models.FileField(upload_to='POfile', null=True, blank=True)
+#     attachment2 = models.FileField(upload_to='POfile', null=True, blank=True)
+#     attachment3 = models.FileField(upload_to='POfile', null=True, blank=True)
+#     createdon = models.DateTimeField(null=True, auto_now_add=True, blank=True)
+#     updatedon = models.DateTimeField(auto_now=True, null=True, blank=True)
+#     updatedby = models.ForeignKey(SelfRegistration, on_delete=models.CASCADE, null=True, blank=True)
+#     history = HistoricalRecords()
+#
+#     class Meta:
+#         db_table = "PurchaseOrder"
 
 
 class SourceList_CreateItems(models.Model):

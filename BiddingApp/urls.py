@@ -50,6 +50,7 @@ urlpatterns = [
     path('accepted-response-list/',views.accepted_response_list),
     path('pending-response-list/',views.pending_response_list),
     path('rejected-response-list/', views.rejected_response_list),
-    path('get-ccode_by_userid/',views.get_ccode_by_userid)
+    path('get-ccode_by_userid/',views.get_ccode_by_userid),
+    path('price-analysis-product/',views.price_analysis_product)
 
 ]

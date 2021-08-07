@@ -54,7 +54,8 @@ urlpatterns = [
     path('price-analysis-product/',views.price_analysis_product),
     path('price-analysis-vendor-list/',views.price_analysis_vendor_list),
     path('vendor-query-description/',views.vendor_query_description),
-    path('company_names_get_by_ccode/',views.company_names_get_by_ccode)
+    path('company_names_get_by_ccode/',views.company_names_get_by_ccode),
+    path('buyer-bidlist-based-on-rfqnumber/',views.buyer_bidlist_based_on_rfqnumber)
 
 
 ]

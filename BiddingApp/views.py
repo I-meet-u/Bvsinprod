@@ -1493,10 +1493,10 @@ def price_analysis_vendor_list(request):
 
 
 @api_view(['post'])
-def bidlist_basedonrfqnumber(request):
+def buyer_bidlist_based_on_rfqnumber(request):
     data = request.data
     try:
-        bidrfqobj = BuyerProductBidding.objects.filter(user_rfq_number=data['rfq_number']).values().order_by('rfq_number')
+        bidrfqobj = BuyerProductBidding.objects.filter(user_rfq_number=data['rfq_number']).values().order_by('product_bidding_id')
         if len(bidrfqobj)>0:
             return Response({'status': 200, 'message': 'Buyer Bidding List', 'data': bidrfqobj}, status=200)
         else:

@@ -1091,13 +1091,15 @@ def bidding_data_responses_count(request):
     pending = 0
     totalsent = 0
     rfxarray = []
+    userid=data['userid']
     try:
-        uservendorrfxdetails = SelectVendorsForBiddingProduct.objects.filter(updated_by_id=data['userid']).values()
+        uservendorrfxdetails = SelectVendorsForBiddingProduct.objects.filter(updated_by_id=userid).values()
         for i in range(0, len(uservendorrfxdetails)):
             if uservendorrfxdetails[i].get('rfq_number') not in rfxarray:
                 rfxarray.append(uservendorrfxdetails[i].get('rfq_number'))
         for i in range(0, len(rfxarray)):
             biddingbasicdatadetails = BuyerProductBidding.objects.get(user_rfq_number=rfxarray[i])
+            basicobj=BasicCompanyDetails.objects.filter(updated_by_id=userid).values()
 
             rfxdetails = SelectVendorsForBiddingProduct.objects.filter(rfq_number=rfxarray[i]).values().order_by(
                 'rfq_number')
@@ -1111,6 +1113,7 @@ def bidding_data_responses_count(request):
                     pending = pending + 1
             totalresponse.append({'rfq_number': rfxarray[i],
                                   'rfq_title': biddingbasicdatadetails.product_rfq_title,
+                                  'rfq_type':biddingbasicdatadetails.product_rfq_type,
                                   'total_sent': totalsent,
                                   'total_response': accepted + rejected,
                                   'pending': pending,
@@ -1118,7 +1121,11 @@ def bidding_data_responses_count(request):
                                   'total_accepted': accepted,
                                   'publish_date': biddingbasicdatadetails.product_publish_date,
                                   'deadline_date': biddingbasicdatadetails.product_deadline_date,
-                                  'department_master': biddingbasicdatadetails.product_department})
+                                  'department_master': biddingbasicdatadetails.product_department,
+                                  'company_code':basicobj[0].get('company_code'),
+                                  'company_name':basicobj[0].get('company_name')
+
+                                  })
             print(biddingbasicdatadetails.product_rfq_title)
             pending = 0
             totalsent = 0
@@ -1182,3 +1189,38 @@ def status_vendor_reject(request):
 
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)
+
+#
+# @api_view(['post'])
+# def getSelectedVendorsByUserIdProduct(request):
+#     data = request.data
+#     userid = data['userid']
+#     rfqnumber = data['rfqnumber']
+#     selectarray = []
+#     try:
+#         selectobj = SelectVendorsForBiddingProduct.objects.filter(updated_by_id=userid, rfq_number=rfqnumber).values().order_by(
+#             'vendorcode')
+#         print(len(selectobj))
+#         if selectobj:
+#             for i in range(0, len(selectobj)):
+#                 basicobj = BasicCompanyDetails.objects.get(company_code=selectobj[i].get('vendorcode'))
+#                 print(basicobj.user_id_id)
+#                 regobj = Registration.objects.get(id=basicobj.user_id_id)
+#                 selectarray.append({'rfq_number': selectobj[i].get('rfq_number'),
+#                                     'vendorcode': basicobj.company_code,
+#                                     'company_name': basicobj.company_name,
+#                                     'updatedby_id': selectobj[i].get('updatedby_id'),
+#                                     'vendorbiddingresponcestatus': selectobj[i].get('vendorbiddingresponcestatus'),
+#                                     'company_type': basicobj.company_type,
+#                                     'natureofbusiness': basicobj.natureofbuz,
+#                                     'bill_state': basicobj.bill_state,
+#                                     'email': regobj.username,
+#                                     'phoneno': regobj.user_phoneno
+#                                     })
+#
+#             return Response({'status': 200, 'message': 'Selected Vendors Of Products List', 'data': selectarray},
+#                             status=200)
+#         else:
+#             return Response({'status': 204, 'message': 'No content'}, status=204)
+#     except Exception as e:
+#         return Response({'status': 500, 'error': str(e)}, status=500)

@@ -1249,7 +1249,7 @@ def accepted_response_list(request):
                     productdetailsvalue = VendorBiddingBuyerProductDetails.objects.filter(vendor_rfq_number=rfq_number,
                                                                                       vendor_code=ccode).values()
                     if len(productdetailsvalue) == 0:
-                        raise ValueError({'message': 'No Data Present', 'status': 204})
+                        raise ValueError({'message': 'vendor not present in vendor product details', 'status': 204})
                     else:
 
                         for i in range(0, len(productdetailsvalue)):
@@ -1260,7 +1260,8 @@ def accepted_response_list(request):
                                                   'order_quantity': orderqtsum,
                                                   'total_discount': discountsum,
                                                   'total_rate': ratesum,
-                                                  'finalamount': productdetailsvalue[i].get('vendor_final_amount'),
+                                                  'final_amount': productdetailsvalue[i].get('vendor_final_amount'),
+                                                  'total_amount': productdetailsvalue[i].get('vendor_total_amount'),
                                                   'company_code': ccode,
                                                   'company_name': cname
                                                   })
@@ -1271,5 +1272,86 @@ def accepted_response_list(request):
         else:
             return Response({'status': 202, 'message': 'No accepted data present'}, status=202)
 
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)
+
+
+
+@api_view(['post'])
+def pending_response_list(request):
+    data = request.data
+    pendingarray = []
+    rfq_number = data['rfq_number']
+    responses = data['responses']
+    updated_by = data['updated_by']
+
+    try:
+        if responses == 'Pending':
+            vendobj = SelectVendorsForBiddingProduct.objects.filter(rfq_number=rfq_number, updated_by_id=updated_by,
+                                                               vendor_status=responses).values()
+            if len(vendobj)>0:
+                for i in range(0, len(vendobj)):
+                    ccode = vendobj[i].get('vendor_code')
+                    print(ccode)
+                    rfq_number = vendobj[i].get('rfq_number')
+                    print(rfq_number)
+                    basicobj = BasicCompanyDetails.objects.filter(company_code=ccode).values('company_name')
+                    print(basicobj)
+                    for i in range(0, len(basicobj)):
+                        pendingarray.append({'company_code': ccode,
+                                             'company_name': basicobj[i].get('company_name'),
+                                             'rfq_number': rfq_number
+                                             })
+                return Response({'status': 200, 'message': 'Pending List', 'data': pendingarray}, status=200)
+            else:
+                return Response({'status': 204, 'message': 'vendors not present'}, status=204)
+        else:
+            return Response({'status':204,'message':"Check response spelling is mis-spelled or entered response is not correct"},status=204)
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)
+
+@api_view(['post'])
+def rejected_response_list(request):
+    data=request.data
+    rfq_number = data['rfq_number']
+    responses = data['responses']
+    updated_by = data['updated_by']
+    rejectedarray = []
+
+    try:
+        if responses == 'Reject':
+            vendobj = SelectVendorsForBiddingProduct.objects.filter(rfq_number=rfq_number, updated_by_id=updated_by,
+                                                                    vendor_status=responses).values()
+            if len(vendobj)>0:
+                for i in range(0, len(vendobj)):
+                    ccode = vendobj[i].get('vendor_code')
+                    print(ccode)
+                    rfq_number = vendobj[i].get('rfq_number')
+                    print(rfq_number)
+                    basicobj = BasicCompanyDetails.objects.filter(company_code=ccode).values('company_name')
+                    print(basicobj)
+                    for i in range(0, len(basicobj)):
+                        rejectedarray.append({'company_code': ccode,
+                                             'company_name': basicobj[i].get('company_name'),
+                                             'rfq_number': rfq_number
+                                             })
+                return Response({'status': 200, 'message': 'Rejected List', 'data': rejectedarray}, status=200)
+            else:
+                return Response({'status': 204, 'message': 'vendors not present'}, status=204)
+        else:
+            return Response({'status': 204, 'message': "Check response spelling is mis-spelled or entered response is not correct"},status=204)
+
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)
+
+@api_view(['post'])
+def get_ccode_by_userid(request):
+    data=request.data
+    try:
+        basicobj=BasicCompanyDetails.objects.filter(updated_by_id=data['userid']).values('company_code')
+        if len(basicobj)>0:
+            return Response({'status': 200, 'message': 'Company Code', 'data': basicobj}, status=200)
+        else:
+            return Response({'status': 204, 'message': 'company code not present'}, status=204)
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)

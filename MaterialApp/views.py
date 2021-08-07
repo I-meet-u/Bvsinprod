@@ -38,14 +38,12 @@ class VendorProduct_TechnicalSpecificationsView(viewsets.ModelViewSet):
     def create(self, request, *args, **kwargs):
         technicaldetailslist = request.data['technicaldetails']
         updated_by = request.data.get('updated_by',None)
-        print(updated_by)
         try:
             if updated_by is None:
                 return Response({'status': 204, 'message': 'Enter user id or user id not exist'}, status=204)
             for i in range(0, len(technicaldetailslist)):
                 VendorProduct_TechnicalSpecifications.objects.create(item_specification=technicaldetailslist[i].get('item_specification'),
                                                                       item_description=technicaldetailslist[i].get('item_description'),
-                                                                      description=technicaldetailslist[i].get('description'),
                                                                       vendor_products=VendorProduct_BasicDetails.objects.get(vendor_product_id=technicaldetailslist[i].get('vendor_products')),
                                                                       updated_by=SelfRegistration.objects.get(id=updated_by),
                                                                       created_by=updated_by)
@@ -70,7 +68,6 @@ class VendorProduct_ProductFeaturesView(viewsets.ModelViewSet):
                 VendorProduct_ProductFeatures.objects.create(
                     product_item_specification=productfeatureslist[i].get('product_item_specification'),
                     product_item_description=productfeatureslist[i].get('product_item_description'),
-                    description=productfeatureslist[i].get('description'),
                     vendor_products=VendorProduct_BasicDetails.objects.get(vendor_product_id=productfeatureslist[i].get('vendor_products')),
                     updated_by=SelfRegistration.objects.get(id=updated_by),
                     created_by=updated_by
@@ -636,8 +633,11 @@ class VendorProduct_BasicDetailsView(viewsets.ModelViewSet):
                                                                           uom=uom, quantity=quantity, hsn_sac=hsn_sac,unit_price=unit_price, discount=discount,tax=tax, brand_make=brand_make,country_of_origin=country_of_origin,currency=currency,
                                                                           price_range_from=price_range_from,price_range_to=price_range_to,
                                                                           pricing=pricing,request_on_quote=request_on_quote,sku_id=sku_id,created_by=userid,updated_by=SelfRegistration.objects.get(id=userid))
+                product_obj={
+                    'vendor_product_id':vendorobj.vendor_product_id
+                }
 
-                return Response({'status': 201, 'message': 'Vendor Product  Created Auto'}, status=201)
+                return Response({'status': 201, 'message': 'Vendor Product  Created Auto','data':product_obj}, status=201)
 
 
             else:
@@ -658,7 +658,11 @@ class VendorProduct_BasicDetailsView(viewsets.ModelViewSet):
                                                                               country_of_origin=country_of_origin,currency=currency,price_range_from=price_range_from,price_range_to=price_range_to,
                                                                               pricing=pricing,request_on_quote=request_on_quote,sku_id=sku_id, created_by=userid,updated_by=SelfRegistration.objects.get(id=userid))
 
-                return Response({'status': 201, 'message': 'Vendor Product  Created'}, status=201)
+                    product_obj = {
+                        'vendor_product_id': vendorobj.vendor_product_id
+                    }
+
+                return Response({'status': 201, 'message': 'Vendor Product  Created','data':product_obj}, status=201)
             # else:
             #     return Response({'status': 204, 'message': 'Not Present or enter type name properly'}, status=204)
         except Exception as e:

@@ -87,7 +87,7 @@ class VendorProduct_TechnicalSpecifications(models.Model):
 
     item_specification = models.CharField(max_length=100, blank=True)
     item_description = models.TextField(null=True,blank=True)
-    description = models.TextField(null=True,blank=True)
+    # description = models.TextField(null=True,blank=True)
     created_on = models.DateTimeField(auto_now_add=True)
     updated_on = models.DateTimeField(auto_now=True)
     created_by = models.BigIntegerField()
@@ -102,7 +102,7 @@ class VendorProduct_TechnicalSpecifications(models.Model):
 class VendorProduct_ProductFeatures(models.Model):
     product_item_specification = models.CharField(max_length=100, blank=True)
     product_item_description = models.TextField(null=True, blank=True)
-    description = models.TextField(null=True, blank=True)
+    # description = models.TextField(null=True, blank=True)
     created_on = models.DateTimeField(auto_now_add=True)
     updated_on = models.DateTimeField(auto_now=True)
     created_by = models.BigIntegerField()

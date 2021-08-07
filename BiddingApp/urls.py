@@ -45,6 +45,7 @@ urlpatterns = [
     path('source-list-advance-search/',views.source_list_advance_search),
     path('bidding-data-response-count/',views.bidding_data_responses_count),
     path('status-vendor-accept/',views.status_vendor_accept),
-    path('status-vendor-reject/', views.status_vendor_reject)
+    path('status-vendor-reject/', views.status_vendor_reject),
+    path('selected-vendors-product-list/',views.selected_vendors_product_list)
 
 ]

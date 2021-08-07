@@ -1190,37 +1190,38 @@ def status_vendor_reject(request):
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)
 
-#
-# @api_view(['post'])
-# def getSelectedVendorsByUserIdProduct(request):
-#     data = request.data
-#     userid = data['userid']
-#     rfqnumber = data['rfqnumber']
-#     selectarray = []
-#     try:
-#         selectobj = SelectVendorsForBiddingProduct.objects.filter(updated_by_id=userid, rfq_number=rfqnumber).values().order_by(
-#             'vendorcode')
-#         print(len(selectobj))
-#         if selectobj:
-#             for i in range(0, len(selectobj)):
-#                 basicobj = BasicCompanyDetails.objects.get(company_code=selectobj[i].get('vendorcode'))
-#                 print(basicobj.user_id_id)
-#                 regobj = Registration.objects.get(id=basicobj.user_id_id)
-#                 selectarray.append({'rfq_number': selectobj[i].get('rfq_number'),
-#                                     'vendorcode': basicobj.company_code,
-#                                     'company_name': basicobj.company_name,
-#                                     'updatedby_id': selectobj[i].get('updatedby_id'),
-#                                     'vendorbiddingresponcestatus': selectobj[i].get('vendorbiddingresponcestatus'),
-#                                     'company_type': basicobj.company_type,
-#                                     'natureofbusiness': basicobj.natureofbuz,
-#                                     'bill_state': basicobj.bill_state,
-#                                     'email': regobj.username,
-#                                     'phoneno': regobj.user_phoneno
-#                                     })
-#
-#             return Response({'status': 200, 'message': 'Selected Vendors Of Products List', 'data': selectarray},
-#                             status=200)
-#         else:
-#             return Response({'status': 204, 'message': 'No content'}, status=204)
-#     except Exception as e:
-#         return Response({'status': 500, 'error': str(e)}, status=500)
+
+@api_view(['post'])
+def selected_vendors_product_list(request):
+    data = request.data
+    userid = data['userid']
+    rfqnumber = data['rfqnumber']
+    selectarray = []
+    try:
+        selectobj = SelectVendorsForBiddingProduct.objects.filter(updated_by_id=userid, rfq_number=rfqnumber).values().order_by(
+            'vendor_code')
+        print(len(selectobj))
+        if selectobj:
+            for i in range(0, len(selectobj)):
+                basicobj = BasicCompanyDetails.objects.get(company_code=selectobj[i].get('vendor_code'))
+                billobj=BillingAddress.objects.filter(updated_by_id=basicobj.updated_by_id).values()
+                print(basicobj.updated_by_id)
+                regobj = SelfRegistration.objects.get(id=basicobj.updated_by_id)
+                selectarray.append({'rfq_number': selectobj[i].get('rfq_number'),
+                                    'vendorcode': basicobj.company_code,
+                                    'company_name': basicobj.company_name,
+                                    'userid': selectobj[i].get('updated_by_id'),
+                                    'vendor_status': selectobj[i].get('vendor_status'),
+                                    'company_type': basicobj.company_type,
+                                    'nature_of_business': regobj.nature_of_business,
+                                    'bill_state': billobj[0].get('bill_state'),
+                                    'email': regobj.username,
+                                    'phoneno': regobj.phone_number
+                                    })
+
+            return Response({'status': 200, 'message': 'Selected Vendors Of Products List', 'data': selectarray},
+                            status=200)
+        else:
+            return Response({'status': 204, 'message': 'No content'}, status=204)
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)

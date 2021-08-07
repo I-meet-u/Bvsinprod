@@ -58,7 +58,7 @@ class VendorProduct_GeneralDetails(models.Model):
     department = models.CharField(max_length=400, blank=True)
     guarantee=models.CharField(max_length=400, blank=True)
     not_covered_w_g = models.CharField(max_length=400, blank=True)
-    min_order_quantity = models.CharField(max_length=400, blank=True)
+    # min_order_quantity = models.CharField(max_length=400, blank=True)
     after_sale_service=models.CharField(max_length=400, blank=True)
     available_stock = models.CharField(max_length=100, blank=True)
     packing_type = models.CharField(max_length=400, blank=True)

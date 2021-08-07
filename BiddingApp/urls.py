@@ -51,6 +51,10 @@ urlpatterns = [
     path('pending-response-list/',views.pending_response_list),
     path('rejected-response-list/', views.rejected_response_list),
     path('get-ccode_by_userid/',views.get_ccode_by_userid),
-    path('price-analysis-product/',views.price_analysis_product)
+    path('price-analysis-product/',views.price_analysis_product),
+    path('price-analysis-vendor-list/',views.price_analysis_vendor_list),
+    path('vendor-query-description/',views.vendor_query_description),
+    path('company_names_get_by_ccode/',views.company_names_get_by_ccode)
+
 
 ]

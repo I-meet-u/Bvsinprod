@@ -1476,17 +1476,75 @@ def price_analysis_product(request):
         return Response({'status': 500, 'error': str(e)}, status=500)
 
 
-# @api_view(['post'])
-# def priceanalysishsbvendorslist(request):
-#     data = request.data
-#     resarray = []
-#     rfq = data['rfq_number']
-#     compcodearray = data['compcodearray']
-#
-#     try:
-#         selectedvendorsforbiddingobj = vendorbiddingbuyerproductdetails.objects.filter(rfq_number=rfq,
-#                                                                                        vendorcode__in=compcodearray).values()
-#         print(len(selectedvendorsforbiddingobj))
-#         return Response({'status': 200, 'message': 'Success', 'data': selectedvendorsforbiddingobj}, status=200)
-#     except Exception as e:
-#         return Response({'status': 500, 'error': str(e)}, status=500)
+@api_view(['post'])
+def price_analysis_vendor_list(request):
+    data = request.data
+    rfq_number = data['rfq_number']
+    vendor_code = data['vendor_code']
+
+    try:
+        vendorbidobj = VendorBiddingBuyerProductDetails.objects.filter(vendor_rfq_number=rfq_number,vendor_code__in=vendor_code).values()
+        if len(vendorbidobj)>0:
+            return Response({'status': 200, 'message': 'Vendor List Success','data':vendorbidobj}, status=200)
+        else:
+            return Response({'status': 204, 'message': 'Not Present'}, status=204)
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)
+
+
+@api_view(['post'])
+def bidlist_basedonrfqnumber(request):
+    data = request.data
+    try:
+        bidrfqobj = BuyerProductBidding.objects.filter(user_rfq_number=data['rfq_number']).values().order_by('rfq_number')
+        if len(bidrfqobj)>0:
+            return Response({'status': 200, 'message': 'Buyer Bidding List', 'data': bidrfqobj}, status=200)
+        else:
+            return Response({'status': 204, 'message': 'Not Present'}, status=204)
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)
+
+@api_view(['post'])
+def vendor_query_description(request):
+    data = request.data
+    rfq_number = data['rfq_number']
+    userid=data['userid']
+    resarray = []
+    try:
+        vendorbidobj = VendorRfqTermsDescription.objects.filter(vendor_rfq_number=rfq_number).values()
+        if len(vendorbidobj)>0:
+            for i in range(0, len(vendorbidobj)):
+                basicobj = BasicCompanyDetails.objects.get(updated_by_id=userid)
+                resarray.append({'cname':basicobj.company_name,
+                                 'vendor_terms':vendorbidobj[i].get('vendor_terms'),
+                                 'vendor_description':vendorbidobj[i].get('vendor_description')
+                                 })
+            return Response({'status': 200, 'message': 'Success', 'data': resarray}, status=200)
+        else:
+            return Response({'status': 204, 'message': 'Not Present'}, status=204)
+
+
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)
+
+
+
+@api_view(['post'])
+def company_names_get_by_ccode(request):
+    data = request.data
+    ccodearray = data['ccodearray']
+    cnamearray = []
+    try:
+        basicdata = BasicCompanyDetails.objects.filter(company_code__in=ccodearray).order_by('company_code').values()
+        if len(basicdata)>0:
+            for i in range(0, len(basicdata)):
+                print(basicdata[i].get('company_code'))
+                cnamearray.append({'compcode': basicdata[i].get('company_code'),
+                                   'compname': basicdata[i].get('company_name')})
+
+            return Response({'status': 200, 'message': 'Success', 'data': cnamearray}, status=200)
+        else:
+            return Response({'status': 204, 'message': 'Not Present'}, status=204)
+
+    except Exception as e:
+        return Response({'sttaus': 500, 'error': str(e)}, status=500)

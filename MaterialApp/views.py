@@ -18,21 +18,15 @@ from .serializers import *
 
 
 class VendorProduct_GeneralDetailsView(viewsets.ModelViewSet):
-    permission_classes = [permissions.AllowAny]
     queryset = VendorProduct_GeneralDetails.objects.all()
     serializer_class = VendorProduct_GeneralDetailsSerializer
-    ordering_fields = ['id']
-    ordering = ['id']
 
 
 
 
 class VendorProduct_TechnicalSpecificationsView(viewsets.ModelViewSet):
-    permission_classes = [permissions.AllowAny]
     queryset = VendorProduct_TechnicalSpecifications.objects.all()
     serializer_class = VendorProduct_TechnicalSpecificationsSerialzer
-    ordering_fields = ['id']
-    ordering = ['id']
 
 
     def create(self, request, *args, **kwargs):
@@ -53,11 +47,8 @@ class VendorProduct_TechnicalSpecificationsView(viewsets.ModelViewSet):
             return Response({'status': 500, 'error': str(e)}, status=500)
 
 class VendorProduct_ProductFeaturesView(viewsets.ModelViewSet):
-    permission_classes = [permissions.AllowAny]
     queryset = VendorProduct_ProductFeatures.objects.all()
     serializer_class = VendorProduct_ProductFeaturesSerializer
-    ordering_fields = ['id']
-    ordering = ['id']
 
     def create(self, request, *args, **kwargs):
         productfeatureslist = request.data['productfeatureslist']
@@ -81,12 +72,9 @@ class VendorProduct_ProductFeaturesView(viewsets.ModelViewSet):
 
 
 class VendorProduct_DocumentsView(viewsets.ModelViewSet):
-    permission_classes = [permissions.AllowAny]
     queryset = VendorProduct_Documents.objects.all()
     serializer_class = VendorProduct_DocumentsSerializer
     parser_classes = [MultiPartParser]
-    ordering_fields = ['id']
-    ordering = ['id']
 
 
 

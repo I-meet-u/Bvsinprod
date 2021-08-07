@@ -116,8 +116,12 @@ class VendorProduct_ProductFeatures(models.Model):
 
 
 class VendorProduct_Documents(models.Model):
-    document=models.FileField(upload_to='vendorproductimage',null=True,blank=True)
-    document_description=models.TextField(null=True,blank=True)
+    document1=models.FileField(upload_to='vendorproductimage',null=True,blank=True)
+    document_description1=models.TextField(null=True,blank=True)
+    document2 = models.FileField(upload_to='vendorproductimage', null=True, blank=True)
+    document_description2 = models.TextField(null=True, blank=True)
+    document3 = models.FileField(upload_to='vendorproductimage', null=True, blank=True)
+    document_description3 = models.TextField(null=True, blank=True)
     created_on = models.DateTimeField(auto_now_add=True)
     updated_on = models.DateTimeField(auto_now=True)
     created_by = models.BigIntegerField()

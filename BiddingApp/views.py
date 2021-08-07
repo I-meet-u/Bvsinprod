@@ -1103,11 +1103,11 @@ def bidding_data_responses_count(request):
                 'rfq_number')
             for j in range(0, len(rfxdetails)):
                 totalsent = totalsent + 1
-                if (rfxdetails[j].get('vendorbiddingresponcestatus') == "Accept"):
+                if (rfxdetails[j].get('vendor_status') == "Accept"):
                     accepted = accepted + 1
-                if (rfxdetails[j].get('vendorbiddingresponcestatus') == "Reject"):
+                if (rfxdetails[j].get('vendor_status') == "Reject"):
                     rejected = rejected + 1
-                if (rfxdetails[j].get('vendorbiddingresponcestatus') == "Pending"):
+                if (rfxdetails[j].get('vendor_status') == "Pending"):
                     pending = pending + 1
             totalresponse.append({'rfq_number': rfxarray[i],
                                   'rfq_title': biddingbasicdatadetails.product_rfq_title,

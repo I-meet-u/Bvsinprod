@@ -612,7 +612,9 @@ class VendorProduct_BasicDetailsView(viewsets.ModelViewSet):
         currency = request.data.get('currency')
         pricing=request.data.get('pricing')
         request_on_quote=request.data.get('request_on_quote')
-        price_range=request.data.get('price_range')
+        # price_range=request.data.get('price_range')
+        price_range_from=request.data.get('price_range_from')
+        price_range_to=request.data.get('price_range_to')
         sku_id = request.data.get('sku_id')
         userid = request.data.get('userid')
         type = request.data.get('type')
@@ -625,14 +627,15 @@ class VendorProduct_BasicDetailsView(viewsets.ModelViewSet):
                     vendorobj = VendorProduct_BasicDetails.objects.create(core_sector=core_sector,category=category,sub_category=sub_category,item_type=item_type,item_group=item_group,item_code=vendordetailsobj[0].get('numeric'),product_category=product_category,item_name=item_name,item_description=item_description,
                                                                           final_selling_price=final_selling_price,numeric=vendordetailsobj[0].get('numeric') + 1,add_image1=add_image1, add_image2=add_image2,add_image3=add_image3, add_image4=add_image4,
                                                                           uom=uom, quantity=quantity, hsn_sac=hsn_sac,unit_price=unit_price, discount=discount, tax=tax,brand_make=brand_make,country_of_origin=country_of_origin,currency=currency,
-                                                                          pricing=pricing,request_on_quote=request_on_quote,price_range=price_range,sku_id=sku_id,
+                                                                          pricing=pricing,request_on_quote=request_on_quote,sku_id=sku_id,price_range_from=price_range_from,price_range_to=price_range_to,
                                                                           created_by=userid,updated_by=SelfRegistration.objects.get(id=userid))
                 else:
                     print('not exist')
                     vendorobj = VendorProduct_BasicDetails.objects.create(core_sector=core_sector, category=category,sub_category=sub_category,item_type=item_type, item_group=item_group,item_code=100001,product_category=product_category,item_name=item_name,item_description=item_description,
                                                                           final_selling_price=final_selling_price,numeric=100002, add_image1=add_image1,add_image2=add_image2, add_image3=add_image3,add_image4=add_image4,
                                                                           uom=uom, quantity=quantity, hsn_sac=hsn_sac,unit_price=unit_price, discount=discount,tax=tax, brand_make=brand_make,country_of_origin=country_of_origin,currency=currency,
-                                                                          pricing=pricing,request_on_quote=request_on_quote,price_range=price_range,sku_id=sku_id,created_by=userid,updated_by=SelfRegistration.objects.get(id=userid))
+                                                                          price_range_from=price_range_from,price_range_to=price_range_to,
+                                                                          pricing=pricing,request_on_quote=request_on_quote,sku_id=sku_id,created_by=userid,updated_by=SelfRegistration.objects.get(id=userid))
 
                 return Response({'status': 201, 'message': 'Vendor Product  Created Auto'}, status=201)
 
@@ -646,14 +649,14 @@ class VendorProduct_BasicDetailsView(viewsets.ModelViewSet):
                         vendorobj = VendorProduct_BasicDetails.objects.create(core_sector=core_sector,category=category,sub_category=sub_category,item_type=item_type,item_group=item_group, item_code=item_code,product_category=product_category,item_name=item_name, item_description=item_description,
                                                                               final_selling_price=final_selling_price,numeric='100001', add_image1=add_image1,add_image2=add_image2,add_image3=add_image3,add_image4=add_image4,
                                                                               uom=uom, quantity=quantity,hsn_sac=hsn_sac, unit_price=unit_price,discount=discount, tax=tax,brand_make=brand_make,country_of_origin=country_of_origin,
-                                                                              currency=currency,
-                                                                              pricing=pricing,request_on_quote=request_on_quote,price_range=price_range,sku_id=sku_id, created_by=userid,updated_by=SelfRegistration.objects.get(id=userid))
+                                                                              currency=currency,price_range_from=price_range_from,price_range_to=price_range_to,
+                                                                              pricing=pricing,request_on_quote=request_on_quote,sku_id=sku_id, created_by=userid,updated_by=SelfRegistration.objects.get(id=userid))
 
                     else:
                         vendorobj = VendorProduct_BasicDetails.objects.create(core_sector=core_sector, category=category,sub_category=sub_category,item_type=item_type,item_group=item_group,item_code=item_code,product_category=product_category,item_name=item_name,item_description=item_description,final_selling_price=final_selling_price,numeric=vendordetailsobj[0].get('numeric'), add_image1=add_image1,
                                                                               add_image2=add_image2,add_image3=add_image3,add_image4=add_image4,uom=uom, quantity=quantity,hsn_sac=hsn_sac, unit_price=unit_price,discount=discount,tax=tax,brand_make=brand_make,
-                                                                              country_of_origin=country_of_origin,currency=currency,
-                                                                              pricing=pricing,request_on_quote=request_on_quote,price_range=price_range,sku_id=sku_id, created_by=userid,updated_by=SelfRegistration.objects.get(id=userid))
+                                                                              country_of_origin=country_of_origin,currency=currency,price_range_from=price_range_from,price_range_to=price_range_to,
+                                                                              pricing=pricing,request_on_quote=request_on_quote,sku_id=sku_id, created_by=userid,updated_by=SelfRegistration.objects.get(id=userid))
 
                 return Response({'status': 201, 'message': 'Vendor Product  Created'}, status=201)
             # else:

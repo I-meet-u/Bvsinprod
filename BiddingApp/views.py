@@ -1225,3 +1225,51 @@ def selected_vendors_product_list(request):
             return Response({'status': 204, 'message': 'No content'}, status=204)
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)
+
+@api_view(['post'])
+def accepted_response_list(request):
+    data = request.data
+    rfq_number = data['rfq_number']
+    updated_by = data['updated_by']
+    responses = data['responses']
+    responselistarray = []
+
+    try:
+        if responses == 'Accept':
+            vendobj = SelectVendorsForBiddingProduct.objects.filter(rfq_number=rfq_number, updated_by_id=updated_by,
+                                                               vendor_status=responses).values()
+            if len(vendobj) > 0:
+                for i in range(0, len(vendobj)):
+                    ratesum = 0
+                    orderqtsum = 0
+                    discountsum = 0
+                    ccode = vendobj[i].get('vendor_code')
+                    basicobj = BasicCompanyDetails.objects.get(company_code=ccode)
+                    cname = basicobj.company_name
+                    productdetailsvalue = VendorBiddingBuyerProductDetails.objects.filter(vendor_rfq_number=rfq_number,
+                                                                                      vendor_code=ccode).values()
+                    if len(productdetailsvalue) == 0:
+                        raise ValueError({'message': 'No Data Present', 'status': 204})
+                    else:
+
+                        for i in range(0, len(productdetailsvalue)):
+                            orderqtsum = orderqtsum + int(productdetailsvalue[i].get('buyer_quantity'))
+                            ratesum = ratesum + int(productdetailsvalue[i].get('vendor_rate'))
+                            discountsum = discountsum + int(productdetailsvalue[i].get('vendor_discount'))
+                        responselistarray.append({'rfq_number': rfq_number,
+                                                  'order_quantity': orderqtsum,
+                                                  'total_discount': discountsum,
+                                                  'total_rate': ratesum,
+                                                  'finalamount': productdetailsvalue[i].get('vendor_final_amount'),
+                                                  'company_code': ccode,
+                                                  'company_name': cname
+                                                  })
+                return Response({'status': 200, 'message': 'Response List Product', 'data': responselistarray},
+                                status=200)
+            else:
+                return Response({'status': 204, 'message': 'No details found'}, status=204)
+        else:
+            return Response({'status': 202, 'message': 'No accepted data present'}, status=202)
+
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)

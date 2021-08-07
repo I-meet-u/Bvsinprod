@@ -33,5 +33,6 @@ urlpatterns = [
     path('update-buyer-products/',views.update_buyer_products),
     path('get-product-all-details-based-on-id-and-userid/',views.get_product_all_details_based_on_id_and_userid),
     path('buyer-product-search/',views.buyer_product_search),
+    path('advance-search-vendor-product/',views.advance_search_vendor_product),
     path('get_product_all_details_based_on_id_multiple_and_userid/',views.get_product_all_details_based_on_id_multiple_and_userid)
     ]

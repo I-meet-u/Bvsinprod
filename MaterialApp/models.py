@@ -35,7 +35,7 @@ class VendorProduct_BasicDetails(models.Model):
     tax = models.CharField(max_length=100, null=True, blank=True)
     hsn_sac = models.CharField(max_length=100, null=True, blank=True)
     currency = models.CharField(max_length=50, blank=True,null=True)
-    # price_range = models.CharField(max_length=200, null=True, blank=True)
+    status = models.CharField(max_length=200, null=True, blank=True,default='Pending')
     price_range_from = models.CharField(max_length=200, null=True, blank=True)
     price_range_to = models.CharField(max_length=200, null=True, blank=True)
     quantity=models.CharField(max_length=100,null=True, blank=True)

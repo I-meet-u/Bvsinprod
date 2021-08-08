@@ -1516,7 +1516,8 @@ def vendor_query_description(request):
                 basicobj = BasicCompanyDetails.objects.get(updated_by_id=vendorbidobj[i].get('updated_by_id'))
                 resarray.append({'cname':basicobj.company_name,
                                  'vendor_terms':vendorbidobj[i].get('vendor_terms'),
-                                 'vendor_description':vendorbidobj[i].get('vendor_description')
+                                 'vendor_description':vendorbidobj[i].get('vendor_description'),
+                                 'vendor_response':vendorbidobj[i].get('vendor_response')
                                  })
             return Response({'status': 200, 'message': 'Success', 'data': resarray}, status=200)
         else:

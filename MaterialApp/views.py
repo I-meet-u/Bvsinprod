@@ -571,6 +571,11 @@ class VendorProduct_BasicDetailsView(viewsets.ModelViewSet):
     serializer_class = VendorProduct_BasicDetailsSerializer
     parser_classes = [MultiPartParser]
 
+    def get_queryset(self):
+        vendorproductobj = VendorProduct_BasicDetails.objects.filter(updated_by=self.request.GET.get('updated_by')).order_by('vendor_product_id')
+        if vendorproductobj:
+            return vendorproductobj
+        raise ValidationError({'message': 'Vendor Product Details Not Present', 'status': 204})
 
 
 

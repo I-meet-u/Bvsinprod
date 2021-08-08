@@ -1508,13 +1508,12 @@ def buyer_bidlist_based_on_rfqnumber(request):
 def vendor_query_description(request):
     data = request.data
     rfq_number = data['rfq_number']
-    userid=data['userid']
     resarray = []
     try:
         vendorbidobj = VendorRfqTermsDescription.objects.filter(vendor_rfq_number=rfq_number).values()
         if len(vendorbidobj)>0:
             for i in range(0, len(vendorbidobj)):
-                basicobj = BasicCompanyDetails.objects.get(updated_by_id=userid)
+                basicobj = BasicCompanyDetails.objects.get(updated_by_id=vendorbidobj[i].get('updated_by_id'))
                 resarray.append({'cname':basicobj.company_name,
                                  'vendor_terms':vendorbidobj[i].get('vendor_terms'),
                                  'vendor_description':vendorbidobj[i].get('vendor_description')
@@ -1548,3 +1547,144 @@ def company_names_get_by_ccode(request):
 
     except Exception as e:
         return Response({'sttaus': 500, 'error': str(e)}, status=500)
+
+
+# @api_view(['post'])
+# def award_product_create(request):
+#     data=request.data
+#     rfq_number = data['rfq_number']
+#     productvendordetails = data['productvendordetails']
+#     totalproductarray = []
+#     userid = data['userid']
+#     try:
+#         award_obj=Awards.objects.filter(rfq_number=rfq_number).values()
+#         if len(award_obj)==0:
+#             if productvendordetails:
+#                 for i in range(0, len(productvendordetails)):
+#                     totalamountsum = 0
+#                     ratesum = 0
+#                     orderqtsum = 0
+#                     discountsum = 0
+#                     # bidquantitysum=0
+#                     pcode = productvendordetails[i].get('productcode')
+#                     print(type(pcode))
+#
+#                     ccode = productvendordetails[i].get('vendorcode')
+#                     for product in pcode:
+#                         for codes in ccode:
+#                             print('ok----')
+#                             bidobj = VendorProductBidding.objects.get(vendor_product_rfq_number=rfq_number, vendor_code=codes)
+#                             basicobj = BasicCompanyDetails.objects.get(company_code=codes)
+#                             cname = basicobj.company_name
+#                             rfq_number = bidobj.rfq_number
+#                             frieght = bidobj.freight_transportation
+#                             pandf = bidobj.packaging_forwarding
+#                             publishdate = bidobj.publish_date
+#                             deadlinedate = bidobj.deadline_date
+#                             rfqtitle = bidobj.rfq_title
+#                             rfqstatus = bidobj.rfq_status
+#                         productdetails = VendorBiddingBuyerProductDetails.objects.get(vendor_rfq_number=rfq_number,
+#                                                                                       vendor_code=codes,
+#                                                                                       vendor_item_code=product)
+#                         if not productdetails:
+#                             return Response({'status': 204, 'message': 'No product details of vendor'}, status=204)
+#
+#                         discountsum = discountsum + int(productdetails.discount)
+#                         totalamountsum = totalamountsum + float(productdetails.totalamount)
+#                         orderqtsum = orderqtsum + int(productdetails.productquantity)
+#                         ratesum = ratesum + int(productdetails.rate)
+#                         pname = productdetails.product_name
+#                         pdesc = productdetails.product_description
+#                         # bidquantitysum=bidquantitysum+int(productdetails.bidquantity)
+#                     print('-----------ok---------------')
+#                     awardobj = Awards.objects.filter(rfq_number=rfq_number,company_code=ccode,product_code=pcode).values()
+#                     if len(awardobj) > 0 and awardobj:
+#                         print(len(awardobj))
+#                         return Response({'status': 204, 'message': 'already present'}, status=204)
+#                     else:
+#                         awardobj1=Awards.objects.create(rfq_number=rfq_number,
+#                                               company_code=ccode,
+#                                               company_name=cname,
+#                                               order_quantity=orderqtsum,
+#                                               frieght_cost=frieght,
+#                                               p_f_charge=pandf,
+#                                               totalamount=totalamountsum,
+#                                               rfq_title=rfqtitle,
+#                                               rfq_status=rfqstatus,
+#                                               product_code=pcode,
+#                                               product_name=pname,
+#                                               product_description=pdesc,
+#                                               publish_date=publishdate,
+#                                               updatedby=SelfRegistration.objects.get(id=userid),
+#                                               deadline_date=deadlinedate)
+#
+#         else:
+#             print("already present")
+#             for i in range(0,len(award_obj)):
+#                 award_obj_delete=Awards.objects.get(id=award_obj[i].get('id'))
+#                 award_obj_delete.delete()
+#
+#             if productvendordetails:
+#                 for i in range(0, len(productvendordetails)):
+#                     totalamountsum = 0
+#                     ratesum = 0
+#                     orderqtsum = 0
+#                     discountsum = 0
+#                     # bidquantitysum=0
+#                     pcode = productvendordetails[i].get('productcode')
+#                     print(type(pcode))
+#
+#                     ccode = productvendordetails[i].get('vendorcode')
+#                     for product in pcode:
+#                         for codes in ccode:
+#                             print('ok----')
+#                             bidobj = VendorProductBidding.objects.get(vendor_rfq_number=rfq_number, vendor_code=codes)
+#                             basicobj = BasicCompanyDetails.objects.get(company_code=codes)
+#                             cname = basicobj.company_name
+#                             rfq_number = bidobj.rfq_number
+#                             frieght = bidobj.freight_transportation
+#                             pandf = bidobj.packaging_forwarding
+#                             publishdate = bidobj.publish_date
+#                             deadlinedate = bidobj.deadline_date
+#                             rfqtitle = bidobj.rfq_title
+#                             rfqstatus = bidobj.rfq_status
+#                         productdetails = VendorBiddingBuyerProductDetails.objects.get(vendor_rfq_number=rfq_number,
+#                                                                                       vendor_code=codes,
+#                                                                                       vendor_item_code=product)
+#                         if not productdetails:
+#                             return Response({'status': 204, 'message': 'No product details of vendor'}, status=204)
+#
+#                         discountsum = discountsum + int(productdetails.discount)
+#                         totalamountsum = totalamountsum + float(productdetails.totalamount)
+#                         orderqtsum = orderqtsum + int(productdetails.productquantity)
+#                         ratesum = ratesum + int(productdetails.rate)
+#                         pname = productdetails.product_name
+#                         pdesc = productdetails.product_description
+#                         # bidquantitysum=bidquantitysum+int(productdetails.bidquantity)
+#                     print('-----------ok---------------')
+#                     awardobj = Awards.objects.filter(rfq_number=rfq_number,company_code=ccode,product_code=pcode).values()
+#                     if len(awardobj) > 0 and awardobj:
+#                         print(len(awardobj))
+#                         return Response({'status': 204, 'message': 'already present'}, status=204)
+#                     else:
+#                         awardobj1=Awards.objects.create(rfq_number=rfq_number,
+#                                               company_code=ccode,
+#                                               company_name=cname,
+#                                               order_quantity=orderqtsum,
+#                                               frieght_cost=frieght,
+#                                               p_f_charge=pandf,
+#                                               totalamount=totalamountsum,
+#                                               rfq_title=rfqtitle,
+#                                               rfq_status=rfqstatus,
+#                                               product_code=pcode,
+#                                               product_name=pname,
+#                                               product_description=pdesc,
+#                                               publish_date=publishdate,
+#                                               updatedby=Registration.objects.get(id=userid),
+#                                               deadline_date=deadlinedate)
+#
+#
+#
+#         return Response({'status': 200, 'message': 'Award Created'}, status=200)
+#     except Exception as e:
+#         return Response({'status': 500, 'error': str(e)}, status=500)

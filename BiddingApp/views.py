@@ -1604,7 +1604,7 @@ def award_product_create(request):
                         return Response({'status': 204, 'message': 'already present'}, status=204)
                     else:
                         awardobj1=Awards.objects.create(rfq_number=rfq_number,
-                                              company_code=ccode,
+                                              company_code=codes,
                                               company_name=cname,
                                               order_quantity=orderqtsum,
                                               # frieght_cost=frieght,
@@ -1665,13 +1665,13 @@ def award_product_create(request):
                         pdesc = productdetails.vendor_item_description
                         # bidquantitysum=bidquantitysum+int(productdetails.bidquantity)
                     print('-----------ok---------------')
-                    awardobj = Awards.objects.filter(rfq_number=rfq_number,company_code=ccode,product_code=pcode).values()
+                    awardobj = Awards.objects.filter(rfq_number=rfq_number,company_code=codes,product_code=pcode).values()
                     if len(awardobj) > 0 and awardobj:
                         print(len(awardobj))
                         return Response({'status': 204, 'message': 'already present'}, status=204)
                     else:
                         awardobj1=Awards.objects.create(rfq_number=rfq_number,
-                                              company_code=ccode,
+                                              company_code=codes,
                                               company_name=cname,
                                               order_quantity=orderqtsum,
                                               # frieght_cost=frieght,

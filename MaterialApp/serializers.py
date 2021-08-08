@@ -5,10 +5,27 @@ from .models import *
 
 
 class VendorProduct_BasicDetailsSerializer(serializers.ModelSerializer):
+    item_code = serializers.SerializerMethodField()
+
+    def get_item_code(self, obj):
+        return obj.item_code
 
     class Meta:
         model=VendorProduct_BasicDetails
         fields='__all__'
+    def create(self, validate_data):
+        # to add any extra details into the object before saving
+        print(validate_data)
+        vendorobj = VendorProduct_BasicDetails.objects.count()
+        if vendorobj == 0:
+            item_code = '100001'
+        else:
+            vendorobj = VendorProduct_BasicDetails.objects.values_list('item_code', flat=True).last()
+            item_code = int(vendorobj) + 1
+            print(item_code)
+        values = VendorProduct_BasicDetails.objects.create(item_code=item_code, **validate_data)
+        return values
+
 
 
 class VendorProduct_GeneralDetailsSerializer(serializers.ModelSerializer):

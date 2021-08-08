@@ -17,6 +17,7 @@ class VendorProduct_BasicDetails(models.Model):
     item_type = models.CharField(max_length=100, null=True)
     item_group = models.CharField(max_length=100, null=True)
     item_code = models.CharField(max_length=100, null=True, unique=True)
+    item_code_manual=models.CharField(max_length=100,null=True,blank=True)
     product_category=models.CharField(max_length=100, null=True,blank=True)
     final_selling_price = models.CharField(max_length=80, null=True,blank=True)
     item_name = models.CharField(max_length=100, null=True,blank=True)

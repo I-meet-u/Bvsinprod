@@ -57,7 +57,8 @@ urlpatterns = [
     path('company_names_get_by_ccode/',views.company_names_get_by_ccode),
     path('buyer-bidlist-based-on-rfqnumber/',views.buyer_bidlist_based_on_rfqnumber),
     path('award-total-count-product/',views.award_total_count_product),
-    path('award-product-create/',views.award_product_create)
+    path('award-product-create/',views.award_product_create),
+    path('award-get-list-of-vendor/',views.award_get_list_of_vendor)
 
 
 ]

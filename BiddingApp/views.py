@@ -1616,7 +1616,7 @@ def award_product_create(request):
                                               product_name=pname,
                                               product_description=pdesc,
                                               publish_date=publishdate,
-                                              updatedby=SelfRegistration.objects.get(id=userid),
+                                              updated_by=SelfRegistration.objects.get(id=userid),
                                               deadline_date=deadlinedate)
 
         else:
@@ -1683,7 +1683,7 @@ def award_product_create(request):
                                               product_name=pname,
                                               product_description=pdesc,
                                               publish_date=publishdate,
-                                              updatedby=SelfRegistration.objects.get(id=userid),
+                                              updated_by=SelfRegistration.objects.get(id=userid),
                                               deadline_date=deadlinedate)
 
 
@@ -1758,5 +1758,44 @@ def award_total_count_product(request):
                 # return Response({'status':204,'message':'already present'},status=204)
 
             return Response({'status': 200, 'message': 'List Success', 'data': totalproductarray}, status=200)
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)
+
+
+@api_view(['post'])
+def award_get_list_of_vendor(request):
+    data = request.data
+    # vendorcode = data['vendorcode']
+    userid=data['userid']
+    awardarray = []
+    try:
+        # strvendor = str(vendorcode)
+        # print(strvendor)
+        awardobj = Awards.objects.filter(updated_by=userid).values()
+        print(awardobj)
+        if len(awardobj) > 0:
+            for i in range(0,len(awardobj)):
+                awardeecode = awardobj[i].get('company_code')
+                basicobj = BasicCompanyDetails.objects.get(company_code=awardeecode)
+                print(basicobj, 'userbasic')
+                awardarray.append({
+                    'rfq_number':awardobj[i].get('rfq_number'),
+                   'rfq_title': awardobj[i].get('rfq_title'),
+                    'company_code': basicobj.company_code,
+                    'company_name':basicobj.company_name,
+                   'awarded_date': awardobj[i].get('awarded_date'),
+                   'publish_date': awardobj[i].get('publish_date'),
+                   'deadline_date': awardobj[i].get('deadline_date'),
+                   'awardstatus': awardobj[i].get('awardstatus'),
+                   # 'frieght_cost': awardobj[i].get('frieght_cost'),
+                   # 'p_f_charge': awardobj[i].get('p_f_charge'),
+                   'order_quantity': awardobj[i].get('order_quantity'),
+                   'totalamount': awardobj[i].get('totalamount'),
+                   'product_code': awardobj[i].get('product_code')
+                })
+            # return Response({'status': 200, 'message': 'ok', 'data': awardarray}, status=200)
+        else:
+            return Response({'status': 202, 'message': 'No data'}, status=202)
+        return Response({'status': 200, 'message': 'ok', 'data': awardarray}, status=200)
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)

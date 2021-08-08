@@ -572,6 +572,8 @@ class VendorProduct_BasicDetailsView(viewsets.ModelViewSet):
     parser_classes = [MultiPartParser]
 
 
+
+
 @api_view(['put'])
 @permission_classes((AllowAny,))
 def updated_item_code_settings_and_item_code(request):

@@ -294,11 +294,13 @@ def basic_details_by_company_name(request):
     try:
         basicobj=BasicCompanyDetails.objects.filter(company_code__icontains=company_code).values().order_by('company_code')
         for i in range(0,len(basicobj)):
+
             basicarray.append(basicobj[i].get('company_code'))
         if len(basicobj)!=0:
+            regobj=SelfRegistration.objects.filter(id=basicobj[0].get('updated_by_id')).order_by('id').values('profile_cover_photo')
             industryinfoobj=IndustrialInfo.objects.filter(company_code__in=basicarray).values().order_by('company_code')
             industryhierarchyobj = IndustrialHierarchy.objects.filter(company_code__in=basicarray).values().order_by('company_code')
-            basicdetailsall = chain(basicobj,industryinfoobj, industryhierarchyobj)
+            basicdetailsall = chain(regobj,basicobj,industryinfoobj, industryhierarchyobj)
             return Response({'status': 200, 'message': 'company list', 'data': basicdetailsall}, status=200)
         else:
             return Response({'status': 204, 'message': 'basic company details not present for this company name'}, status=204)

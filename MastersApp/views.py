@@ -260,6 +260,11 @@ class CountryMasterView(viewsets.ModelViewSet):
     #
     #     raise ValidationError({'message': 'Country Master details not exist', 'status': 204})
 
+class DivisionMasterView(viewsets.ModelViewSet):
+    # division viewsets
+    permission_classes = (AllowAny,)
+    queryset = DivisionMaster.objects.all().order_by('division_id')
+    serializer_class = DivisionMasterSerializer
 
 @api_view(['post'])
 @permission_classes((AllowAny,))

@@ -661,3 +661,22 @@ class PerformanceGuaranteesMaster(models.Model):
 
     class Meta:
         db_table = "PerformanceGuaranteesMaster"
+
+class DivisionMaster(models.Model):
+    #  division master model and fields
+    division_id = models.BigAutoField(primary_key=True)
+    division_code = models.CharField(max_length=40, null=True, blank=True)
+    division_name = models.CharField(max_length=100, unique=True, blank=True)
+    is_verified = models.BooleanField(default=False)
+    created_on = models.DateTimeField(auto_now_add=True)
+    updated_on = models.DateTimeField(auto_now=True)
+    admin_order = models.CharField(max_length=50, null=True)
+    status = models.CharField(max_length=30, default='Active', null=True)
+    admins = models.ForeignKey(AdminRegister, on_delete=models.CASCADE, null=True)
+    updated_by = models.ForeignKey(CreateUser, on_delete=models.CASCADE, null=True)
+    created_by = models.BigIntegerField(null=True,blank=True)
+    updated_by_name = models.CharField(null=True, blank=True, max_length=100)
+    created_by_name = models.CharField(null=True, blank=True, max_length=100)
+
+    class Meta:
+        db_table = "DivisionMaster"

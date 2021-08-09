@@ -539,3 +539,21 @@ class PerformanceGuaranteesMasterSerializer(serializers.ModelSerializer):
             performance_code = int(performanceobj.performance_code) + 1
         values = PerformanceGuaranteesMaster.objects.create(performance_code=performance_code, **validate_data)
         return values
+
+class  DivisionMasterSerializer(serializers.ModelSerializer):
+    # division master serializer
+    class Meta:
+        model = DivisionMaster
+        fields = '__all__'
+
+    def create(self, validate_data):
+        # to add any extra details into the object before saving
+        print(validate_data)
+        divisionobj = DivisionMaster.objects.count()
+        if divisionobj == 0:
+            division_code = '2110'
+        else:
+            divisionobj = DivisionMaster.objects.last()
+            division_code = int(divisionobj.division_code) + 1
+        values = DivisionMaster.objects.create(division_code=division_code, **validate_data)
+        return values

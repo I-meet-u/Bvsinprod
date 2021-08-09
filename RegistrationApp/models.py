@@ -273,7 +273,7 @@ class ContactDetails(models.Model):
     created_on = models.DateTimeField(auto_now_add=True)
     updated_on = models.DateTimeField(auto_now=True)
     created_by = models.BigIntegerField()
-    updated_by = models.OneToOneField(SelfRegistration, on_delete=models.CASCADE)
+    updated_by = models.ForeignKey(SelfRegistration, on_delete=models.CASCADE)
 
     class Meta:
         db_table = "ContactDetails"

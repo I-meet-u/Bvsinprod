@@ -264,7 +264,7 @@ class Employee_IndustryInfo(models.Model):
 
 class ContactDetails(models.Model):
     name=models.CharField(max_length=100,null=True,blank=True)
-    currency=models.CharField(max_length=100,null=True,blank=True)
+    division=models.CharField(max_length=100,null=True,blank=True)
     department = models.CharField(max_length=200, null=True, blank=True)
     designation = models.CharField(max_length=200, null=True, blank=True)
     region = models.CharField(max_length=200, null=True, blank=True)
@@ -280,20 +280,14 @@ class ContactDetails(models.Model):
 
 
 class CommunicationDetails(models.Model):
-    name=models.CharField(max_length=100,null=True,blank=True)
-    currency=models.CharField(max_length=100,null=True,blank=True)
-    department = models.CharField(max_length=200, null=True, blank=True)
-    designation = models.CharField(max_length=200, null=True, blank=True)
-    region = models.CharField(max_length=200, null=True, blank=True)
-    email_id = models.CharField(max_length=100, null=True, blank=True)
-    phone_number = models.CharField(max_length=20, null=True, blank=True)
-    unit_address=models.TextField(null=True,blank=True)
-    unit_name= models.CharField(max_length=100, null=True, blank=True)
-    address=models.TextField(null=True,blank=True)
-    state=models.CharField(max_length=50, null=True, blank=True)
-    city=models.CharField(max_length=80, null=True, blank=True)
-    pincode=models.CharField(max_length=12, null=True, blank=True)
-    landmark=models.CharField(max_length=150,null=True,blank=True)
+    unit_name=models.CharField(max_length=150,null=True,blank=True)
+    state = models.CharField(max_length=50, null=True, blank=True)
+    address = models.TextField(null=True, blank=True)
+    city = models.CharField(max_length=80, null=True, blank=True)
+    landmark = models.CharField(max_length=150, null=True, blank=True)
+    pincode = models.CharField(max_length=12, null=True, blank=True)
+    country= models.CharField(max_length=150, null=True, blank=True)
+    location = models.CharField(max_length=500, null=True, blank=True)
     created_on = models.DateTimeField(auto_now_add=True)
     updated_on = models.DateTimeField(auto_now=True)
     created_by = models.BigIntegerField()

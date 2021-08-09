@@ -1016,15 +1016,25 @@ class ContactDetailsViewset(viewsets.ModelViewSet):
     queryset = ContactDetails.objects.all()
     serializer_class = ContactDetailsSerializer
     permission_classes = (AllowAny,)
-    ordering_fields = ['id']
-    ordering = ['id']
+
+    def get_queryset(self):
+        # overriding get_queryset by passing updated_by
+        contactobj = ContactDetails.objects.filter(updated_by=self.request.GET.get('updated_by')).order_by('id')
+        if not contactobj:
+            raise ValidationError({'message': 'Contact Details not exist', 'status': 204})
+        return contactobj
 
 class CommunicationDetailsViewset(viewsets.ModelViewSet):
     queryset = CommunicationDetails.objects.all()
     serializer_class = CommunicationDetailsSerializer
     permission_classes = (AllowAny,)
-    ordering_fields = ['id']
-    ordering = ['id']
+
+    def get_queryset(self):
+        # overriding get_queryset by passing updated_by
+        communicationobj = CommunicationDetails.objects.filter(updated_by=self.request.GET.get('updated_by')).order_by('id')
+        if not communicationobj:
+            raise ValidationError({'message': 'Communication Details not exist', 'status': 204})
+        return communicationobj
 
 
 @api_view(['post'])

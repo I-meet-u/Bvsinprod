@@ -979,7 +979,6 @@ def add_data_based_on_user_type_to_create_user(request):
         if len(regobjdata)>0:
             if regobjdata[0].get('user_type')=='Vendor':
                 regvalue=SelfRegistration.objects.get(user_type='Vendor',id=userid)
-                createobj=CreateUser.objects.count()
                 if regvalue:
                     CreateUser.objects.create(contact_name=regvalue.contact_person,
                                               user_type=regvalue.user_type,
@@ -994,8 +993,6 @@ def add_data_based_on_user_type_to_create_user(request):
 
                                               )
                     return Response({'status': 200, 'message': 'Vendor Data added to create user'}, status=200)
-                else:
-                    return Response({'status': 202, 'message': 'Vendor Data  already added to create user'}, status=202)
             elif regobjdata[0].get('user_type')=='Buyer':
                 regvalue=SelfRegistration.objects.get(user_type='Buyer',id=userid)
                 if regvalue:

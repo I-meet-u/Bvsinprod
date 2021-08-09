@@ -1472,3 +1472,15 @@ def advance_search_vendor_product(request):
         return Response({'status':200,'message':'Vendor Product Advance Search','data':advancesearchobj},status=200)
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)
+
+@api_view(['post'])
+def fetch_vendor_product_basic_details_by_category(request):
+    data=request.data
+    try:
+        vendorobj=VendorProduct_BasicDetails.objects.filter(category=data['category_name']).values().order_by('vendor_product_id')
+        if len(vendorobj)>0:
+            return Response({'status': 200, 'message': 'Vendor Product Basic Details List', 'data':vendorobj},status=200)
+        else:
+            return Response({'status': 204, 'message': 'Not Present'},status=204)
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)

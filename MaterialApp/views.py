@@ -1455,9 +1455,9 @@ def get_product_all_details_based_on_id_multiple_and_userid(request):
 @api_view(['post'])
 def advance_search_vendor_product(request):
     data=request.data
-    item_code=data['item_code']
+    # item_code=data['item_code']
     item_name=data['item_name']
-    item_description=data['item_description']
+    uom=data['uom']
     maincore=data['maincore']
     category=data['category']
     subcategory=data['subcategory']
@@ -1466,10 +1466,8 @@ def advance_search_vendor_product(request):
     hsn_sac=data['hsn_sac']
     userid=data['userid']
     try:
-        advancesearchobj=VendorProduct_BasicDetails.objects.filter(updated_by_id=userid).filter(item_code__icontains=item_code)\
-            .filter(item_name__icontains=item_name)\
-            .filter(item_description__icontains=item_description)\
-            .filter(core_sector__icontains=maincore).filter(category__icontains=category).filter(sub_category__icontains=subcategory)\
+        advancesearchobj=VendorProduct_BasicDetails.objects.filter(updated_by_id=userid).filter(item_name__icontains=item_name)\
+            .filter(uom__icontains=uom).filter(core_sector__icontains=maincore).filter(category__icontains=category).filter(sub_category__icontains=subcategory)\
             .filter(status__icontains=status).filter(currency__icontains=currency).filter(hsn_sac__icontains=hsn_sac).values()
         return Response({'status':200,'message':'Vendor Product Advance Search','data':advancesearchobj},status=200)
     except Exception as e:

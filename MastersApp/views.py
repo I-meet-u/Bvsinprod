@@ -1,6 +1,7 @@
 
 from itertools import chain
 
+from django.db.models import Q
 from django.shortcuts import render
 from rest_framework import viewsets, status, generics, permissions
 from rest_framework.decorators import api_view, permission_classes

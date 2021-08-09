@@ -968,3 +968,70 @@ def employee_rejected_list(request):
             return Response({'status': 200, 'message': 'No rejected data for Employee or Employer', 'data': adminarray}, status=200)
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)
+
+
+@api_view(['post'])
+def add_data_based_on_user_type_to_create_user(request):
+    data=request.data
+    userid=data['userid']
+    try:
+        regobjdata = SelfRegistration.objects.filter(id=userid,admin_approve='Approved').values()
+        if len(regobjdata)>0:
+            if regobjdata[0].get('user_type')=='Vendor':
+                regvalue=SelfRegistration.objects.get(user_type='Vendor',id=userid)
+                createobj=CreateUser.objects.count()
+                if regvalue:
+                    CreateUser.objects.create(contact_name=regvalue.contact_person,
+                                              user_type=regvalue.user_type,
+                                              country=regvalue.country,
+                                              business_to_serve=regvalue.business_to_serve,
+                                              nature_of_business=regvalue.nature_of_business,
+                                              mobile=regvalue.phone_number,
+                                              email=regvalue.username,
+                                              admins=AdminRegister.objects.get(admin_id=1)
+
+
+
+                                              )
+                    return Response({'status': 200, 'message': 'Vendor Data added to create user'}, status=200)
+                else:
+                    return Response({'status': 202, 'message': 'Vendor Data  already added to create user'}, status=202)
+            elif regobjdata[0].get('user_type')=='Buyer':
+                regvalue=SelfRegistration.objects.get(user_type='Buyer',id=userid)
+                if regvalue:
+                    CreateUser.objects.create(contact_name=regvalue.contact_person,
+                                              user_type=regvalue.user_type,
+                                              country=regvalue.country,
+                                              business_to_serve=regvalue.business_to_serve,
+                                              nature_of_business=regvalue.nature_of_business,
+                                              mobile=regvalue.phone_number,
+                                              email=regvalue.username,
+                                              admins=AdminRegister.objects.get(admin_id=1)
+
+
+
+                                              )
+                return Response({'status': 200, 'message': 'Buyer Data added to create user'}, status=200)
+            elif regobjdata[0].get('user_type') == 'Both':
+                regvalue = SelfRegistration.objects.get(user_type='Both', id=userid)
+                if regvalue:
+                    CreateUser.objects.create(contact_name=regvalue.contact_person,
+                                              user_type=regvalue.user_type,
+                                              country=regvalue.country,
+                                              business_to_serve=regvalue.business_to_serve,
+                                              nature_of_business=regvalue.nature_of_business,
+                                              mobile=regvalue.phone_number,
+                                              email=regvalue.username,
+                                              admins=AdminRegister.objects.get(admin_id=1)
+
+                                              )
+                return Response({'status': 200, 'message': 'Both Data added to create user'}, status=200)
+            else:
+                return Response({'status': 202, 'message': 'user type not present'}, status=204)
+        else:
+            return Response({'status':204,'message':'Not Present'},status=204)
+
+
+
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)

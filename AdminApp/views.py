@@ -971,6 +971,7 @@ def employee_rejected_list(request):
 
 
 @api_view(['post'])
+@permission_classes((AllowAny,))
 def add_data_based_on_user_type_to_create_user(request):
     data=request.data
     userid=data['userid']

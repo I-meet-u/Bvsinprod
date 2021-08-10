@@ -202,7 +202,7 @@ def external_vendor(request):
                                           'subcategory':"",
                                           'bill_city': billingobj[0].get('bill_city'),
                                           'bill_state': billingobj[0].get('bill_state'),
-                                          'user_type':regobj[i].get('user_type')
+                                          # 'user_type':regobj[i].get('user_type')
 
                                           })
                 else:
@@ -228,7 +228,7 @@ def external_vendor(request):
                                           'subcategory': hierarchyobj.subcategory,
                                           'bill_city': billingobj[0].get('bill_city'),
                                           'bill_state': billingobj[0].get('bill_state'),
-                                          'user_type': regobjdata[i].get('user_type')
+                                          # 'user_type': regobjdata[i].get('user_type')
 
                                           })
                 else:

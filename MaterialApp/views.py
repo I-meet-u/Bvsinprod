@@ -1382,6 +1382,7 @@ def advance_search_vendor_product(request):
         return Response({'status': 500, 'error': str(e)}, status=500)
 
 @api_view(['post'])
+@permission_classes((AllowAny,))
 def fetch_vendor_product_basic_details_by_category(request):
     data=request.data
     try:

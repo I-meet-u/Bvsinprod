@@ -553,116 +553,116 @@ class EmployeeIndustrialInfoView(viewsets.ModelViewSet):
 
 
 
-@api_view(['post'])
-# @permission_classes((AllowAny,))
-def sendOtpmail(request):
-    data=request.data
-    phone=data['phone']
-    email=data['email']
-    sendotpvar=data['sendotpvar']
-    digits = "0123456789"
-    try:
-        if sendotpvar=="email":
-
-            user = SelfRegistration.objects.get(username=email)
-            if user:
-                pass
-                OTP = ""
-                for i in range(6):
-                    OTP += digits[math.floor(random.random() * 10)]
-                print(OTP)
-                user.phone_otp = OTP
-                user.save()
-                OTP="333333"
-                headers = {
-                    'accept': 'application/json',
-                    'api-key': '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',
-                    'content-type': 'application/json',
-                }
-                data = '{ "sender":{ "name":"VENDORSIN COMMERCE PVT LTD", "email":"admin@vendorsin.com" }, "to":[ { "email":"'+email+'' \
-                                                                                                                                 '", "name":"Harish" } ], "subject":"OTP Confirmation", "templateId":1 ,"params":{"OTP":'+OTP+'}''}'
-
-
-            # data = '{ "sender":{ "name":"VENDORSIN COMMERCE PVT LTD", "email":"admin@vendorsin.com" },"subject":"This is my default subject line","templateId":96,"to":[ { "email":"harishshetty7459@gmail.com", "name":"harish" } ]'
-
-                response = requests.post('https://api.sendinblue.com/v3/smtp/email', headers=headers, data=data)
-                print("----")
-                print(response)
-                print("----")
-
-        if sendotpvar=="phone":
-            phoneuser = SelfRegistration.objects.get(phone_number=phone)
-            if phoneuser:
-                OTP = "234543"
-                for i in range(6):
-                    OTP += digits[math.floor(random.random() * 10)]
-                print(OTP)
-                user.phone_otp = OTP
-                user.save()
-
-                apikey = 'YTU3NjhmMDdmYjFlYzA2OWY0YzhlNjA3YmEyYjMxNGM='
-                numbers = '918095994214'
-                message = OTP + ' Is The OTP To Verify Your Mobile Number On VENDORSIN COMMERCE Self Registration Portal. Do Not Share It With Anyone .'
-                sender = 'VSINVC'
-
-                data = urllib.parse.urlencode({'apikey': apikey, 'numbers': numbers,
-                                               'message': message, 'sender': sender,
-                                               'Template Name': 'REGISTRATION OTP'})
-                data = data.encode('utf-8')
-                request = urllib.request.Request("https://api.textlocal.in/send/?")
-                f = urllib.request.urlopen(request, data)
-                fr = f.read()
-                print(fr)
-
-        if sendotpvar=="Both":
-            emailuser = SelfRegistration.objects.get(username=email)
-            if emailuser:
-                OTP = ""
-                for i in range(6):
-                    OTP += digits[math.floor(random.random() * 10)]
-                print(OTP)
-                emailuser.email_otp = OTP
-                emailuser.save()
-                headers = {
-                    'accept': 'application/json',
-                    'api-key': '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',
-                    'content-type': 'application/json',
-                }
-                data = '{ "sender":{ "name":"VENDORSIN COMMERCE PVT LTD", "email":"admin@vendorsin.com" }, "to":[ { "email":"' + email + '' \
-                                                                                                                                         '", "name":"Harish" } ], "subject":"VENDORSIN Registration OTP", "templateId":6 ,"params":{"OTP":' + OTP + '}''}'
-
-                response = requests.post('https://api.sendinblue.com/v3/smtp/email', headers=headers, data=data)
-                print("----")
-                print(response)
-                print("----")
-
-
-            phoneuser = SelfRegistration.objects.get(phone_number=phone)
-            if phoneuser:
-                OTP=""
-                for i in range(6):
-                    OTP += digits[math.floor(random.random() * 10)]
-                print(OTP)
-                phoneuser.phone_otp = OTP
-                phoneuser.save()
-
-                apikey = 'YTU3NjhmMDdmYjFlYzA2OWY0YzhlNjA3YmEyYjMxNGM='
-                numbers = '91'+phone
-                message = OTP + ' Is The OTP To Verify Your Mobile Number On VENDORSIN COMMERCE Self Registration Portal. Do Not Share It With Anyone .'
-                sender = 'VSINVC'
-
-                data = urllib.parse.urlencode({'apikey': apikey, 'numbers': numbers,
-                                               'message': message, 'sender': sender})
-                data = data.encode('utf-8')
-                request = urllib.request.Request("https://api.textlocal.in/send/?")
-                f = urllib.request.urlopen(request, data)
-                fr = f.read()
-                print(fr)
-
-
-            return Response({'status': 200, 'message': 'ok'}, status=200)
-    except Exception as e:
-        return Response({'status': 500, 'error': str(e)}, status=500)
+# @api_view(['post'])
+# # @permission_classes((AllowAny,))
+# def sendOtpmail(request):
+#     data=request.data
+#     phone=data['phone']
+#     email=data['email']
+#     sendotpvar=data['sendotpvar']
+#     digits = "0123456789"
+#     try:
+#         if sendotpvar=="email":
+#
+#             user = SelfRegistration.objects.get(username=email)
+#             if user:
+#                 pass
+#                 OTP = ""
+#                 for i in range(6):
+#                     OTP += digits[math.floor(random.random() * 10)]
+#                 print(OTP)
+#                 user.phone_otp = OTP
+#                 user.save()
+#                 OTP="333333"
+#                 headers = {
+#                     'accept': 'application/json',
+#                     'api-key': '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',
+#                     'content-type': 'application/json',
+#                 }
+#                 data = '{ "sender":{ "name":"VENDORSIN COMMERCE PVT LTD", "email":"admin@vendorsin.com" }, "to":[ { "email":"'+email+'' \
+#                                                                                                                                  '", "name":"Harish" } ], "subject":"OTP Confirmation", "templateId":1 ,"params":{"OTP":'+OTP+'}''}'
+#
+#
+#             # data = '{ "sender":{ "name":"VENDORSIN COMMERCE PVT LTD", "email":"admin@vendorsin.com" },"subject":"This is my default subject line","templateId":96,"to":[ { "email":"harishshetty7459@gmail.com", "name":"harish" } ]'
+#
+#                 response = requests.post('https://api.sendinblue.com/v3/smtp/email', headers=headers, data=data)
+#                 print("----")
+#                 print(response)
+#                 print("----")
+#
+#         if sendotpvar=="phone":
+#             phoneuser = SelfRegistration.objects.get(phone_number=phone)
+#             if phoneuser:
+#                 OTP = "234543"
+#                 for i in range(6):
+#                     OTP += digits[math.floor(random.random() * 10)]
+#                 print(OTP)
+#                 user.phone_otp = OTP
+#                 user.save()
+#
+#                 apikey = 'YTU3NjhmMDdmYjFlYzA2OWY0YzhlNjA3YmEyYjMxNGM='
+#                 numbers = '918095994214'
+#                 message = OTP + ' Is The OTP To Verify Your Mobile Number On VENDORSIN COMMERCE Self Registration Portal. Do Not Share It With Anyone .'
+#                 sender = 'VSINVC'
+#
+#                 data = urllib.parse.urlencode({'apikey': apikey, 'numbers': numbers,
+#                                                'message': message, 'sender': sender,
+#                                                'Template Name': 'REGISTRATION OTP'})
+#                 data = data.encode('utf-8')
+#                 request = urllib.request.Request("https://api.textlocal.in/send/?")
+#                 f = urllib.request.urlopen(request, data)
+#                 fr = f.read()
+#                 print(fr)
+#
+#         if sendotpvar=="Both":
+#             emailuser = SelfRegistration.objects.get(username=email)
+#             if emailuser:
+#                 OTP = ""
+#                 for i in range(6):
+#                     OTP += digits[math.floor(random.random() * 10)]
+#                 print(OTP)
+#                 emailuser.email_otp = OTP
+#                 emailuser.save()
+#                 headers = {
+#                     'accept': 'application/json',
+#                     'api-key': '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',
+#                     'content-type': 'application/json',
+#                 }
+#                 data = '{ "sender":{ "name":"VENDORSIN COMMERCE PVT LTD", "email":"admin@vendorsin.com" }, "to":[ { "email":"' + email + '' \
+#                                                                                                                                          '", "name":"Harish" } ], "subject":"VENDORSIN Registration OTP", "templateId":6 ,"params":{"OTP":' + OTP + '}''}'
+#
+#                 response = requests.post('https://api.sendinblue.com/v3/smtp/email', headers=headers, data=data)
+#                 print("----")
+#                 print(response)
+#                 print("----")
+#
+#
+#             phoneuser = SelfRegistration.objects.get(phone_number=phone)
+#             if phoneuser:
+#                 OTP=""
+#                 for i in range(6):
+#                     OTP += digits[math.floor(random.random() * 10)]
+#                 print(OTP)
+#                 phoneuser.phone_otp = OTP
+#                 phoneuser.save()
+#
+#                 apikey = 'YTU3NjhmMDdmYjFlYzA2OWY0YzhlNjA3YmEyYjMxNGM='
+#                 numbers = '91'+phone
+#                 message = OTP + ' Is The OTP To Verify Your Mobile Number On VENDORSIN COMMERCE Self Registration Portal. Do Not Share It With Anyone .'
+#                 sender = 'VSINVC'
+#
+#                 data = urllib.parse.urlencode({'apikey': apikey, 'numbers': numbers,
+#                                                'message': message, 'sender': sender})
+#                 data = data.encode('utf-8')
+#                 request = urllib.request.Request("https://api.textlocal.in/send/?")
+#                 f = urllib.request.urlopen(request, data)
+#                 fr = f.read()
+#                 print(fr)
+#
+#
+#             return Response({'status': 200, 'message': 'ok'}, status=200)
+#     except Exception as e:
+#         return Response({'status': 500, 'error': str(e)}, status=500)
 
 
 
@@ -1464,3 +1464,66 @@ def employeelogin(request):
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)
 
+
+
+@api_view(['post'])
+# @permission_classes((AllowAny,))
+def sendOtpmail(request):
+    data=request.data
+    phone=data['phone']
+    email=data['email']
+    sendotpvar=data['sendotpvar']
+    digits = "0123456789"
+    try:
+        if sendotpvar=="Both":
+            emailuser = SelfRegistration.objects.get(username=email)
+            if emailuser:
+                OTP = ""
+                for i in range(6):
+                    OTP += digits[math.floor(random.random() * 10)]
+                print(OTP)
+                emailuser.email_otp = OTP
+                emailuser.save()
+                headers = {
+                    'accept': 'application/json',
+                    'api-key': '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',
+                    'content-type': 'application/json',
+                }
+                data = '{ "sender":{ "name":"VENDORSIN COMMERCE PVT LTD", "email":"admin@vendorsin.com" }, "to":[ { "email":"' + email + '' \
+                                                                                                                                         '", "name":"Harish" } ], "subject":"VENDORSIN Registration OTP", "templateId":6 ,"params":{"OTP":' + OTP + '}''}'
+
+                response = requests.post('https://api.sendinblue.com/v3/smtp/email', headers=headers, data=data)
+                print("----")
+                print(response)
+                print("----")
+
+
+            phoneuser = SelfRegistration.objects.get(phone_number=phone)
+            if phoneuser:
+                OTP=""
+                for i in range(6):
+                    OTP += digits[math.floor(random.random() * 10)]
+                print(OTP)
+                phoneuser.phone_otp = OTP
+                phoneuser.save()
+
+                apikey = 'YTU3NjhmMDdmYjFlYzA2OWY0YzhlNjA3YmEyYjMxNGM='
+                numbers = '91'+phone
+                message = OTP + ' Is The OTP To Verify Your Mobile Number On VENDORSIN COMMERCE Self Registration Portal. Do Not Share It With Anyone .'
+                sender = 'VSINVC'
+
+                data = urllib.parse.urlencode({'apikey': apikey, 'numbers': numbers,
+                                               'message': message, 'sender': sender})
+                data = data.encode('utf-8')
+                request = urllib.request.Request("https://api.textlocal.in/send/?")
+                f = urllib.request.urlopen(request, data)
+                fr = f.read()
+                print(fr)
+
+
+            return Response({'status': 200, 'message': 'ok'}, status=200)
+        else:
+            return Response({'status': 204,'message': 'Not Present'}, status=204)
+
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)

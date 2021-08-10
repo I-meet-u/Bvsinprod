@@ -742,7 +742,7 @@ def employee_status_update_from_approved_to_verified(request):
 
 
 @api_view(['get'])
-@permission_classes([AllowAny])
+# @permission_classes([AllowAny])
 def company_registration_list(request):
     data=request.data
     emptydata=[]

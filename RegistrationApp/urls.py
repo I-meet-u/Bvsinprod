@@ -60,7 +60,7 @@ urlpatterns = [
     path('uploaduserprofile/',views.uploaduserprofile),
     path('phone-otp-verify/',views.phone_otp_verify),
     path('email-otp-verify/',views.email_otp_verify),
-    path('employee-login/',views.employee_login),
+    # path('employee-login/',views.employee_login),
     path('get-profile-photo/', views.get_profile_photo),
     path('getcompanycode/',views.getcompanycode),
     path('update-basic-details/',views.update_basic_details),

@@ -20,7 +20,7 @@ from .models import *
 class BuyerProductBiddingView(viewsets.ModelViewSet):
     queryset = BuyerProductBidding.objects.all()
     serializer_class = BuyerProductBiddingSerializer
-    permission_classes = [permissions.AllowAny]
+    # permission_classes = [permissions.AllowAny]
     ordering_fields = ['product_bidding_id']
     ordering = ['product_bidding_id']
 
@@ -75,7 +75,7 @@ class BuyerProductBiddingView(viewsets.ModelViewSet):
 class BiddingBuyerProductDetailsView(viewsets.ModelViewSet):
     queryset = BiddingBuyerProductDetails.objects.all()
     serializer_class = BiddingBuyerProductDetailsSerializer
-    permission_classes = [permissions.AllowAny]
+    # permission_classes = [permissions.AllowAny]
     ordering_fields = ['id']
     ordering = ['id']
 
@@ -111,7 +111,7 @@ class BiddingBuyerProductDetailsView(viewsets.ModelViewSet):
 
 
 class RfqCodeSettingsView(viewsets.ModelViewSet):
-    permission_classes = [permissions.AllowAny]
+    # permission_classes = [permissions.AllowAny]
     queryset = RfqCodeSettings.objects.all()
     serializer_class = RfqCodeSettingsSerializer
     ordering_fields = ['id']
@@ -136,7 +136,7 @@ class RfqCodeSettingsView(viewsets.ModelViewSet):
         raise ValidationError({'message': 'Rfq Number details of particular user id is not exist', 'status': 204})
 
 @api_view(['put'])
-@permission_classes((AllowAny,))
+# @permission_classes((AllowAny,))
 def updated_rfq_code_settings_and_rfq_number(request):
     data = request.data
     userid = data['userid']
@@ -192,7 +192,7 @@ def updated_rfq_code_settings_and_rfq_number(request):
 
 
 class RfqTermsDescriptionView(viewsets.ModelViewSet):
-    permission_classes = [permissions.AllowAny]
+    # permission_classes = [permissions.AllowAny]
     queryset = RfqTermsDescription.objects.all()
     serializer_class = RfqTermsDescriptionSerializer
     ordering_fields = ['id']
@@ -223,7 +223,7 @@ class RfqTermsDescriptionView(viewsets.ModelViewSet):
 class SelectVendorsForBiddingProductView(viewsets.ModelViewSet):
     queryset = SelectVendorsForBiddingProduct.objects.all()
     serializer_class = SelectVendorsForBiddingProductSerializer
-    permission_classes = [permissions.AllowAny]
+    # permission_classes = [permissions.AllowAny]
     parser = [MultiPartParser]
 
     def create(self, request, *args, **kwargs):
@@ -256,7 +256,7 @@ class SelectVendorsForBiddingProductView(viewsets.ModelViewSet):
 
 
 @api_view(['post'])
-@permission_classes((AllowAny,))
+# @permission_classes((AllowAny,))
 def rfq_bid_list_summary_advance_search(request):
     data = request.data
     user_rfq_number = data['user_rfq_number']
@@ -288,7 +288,7 @@ def rfq_bid_list_summary_advance_search(request):
 
 
 @api_view(['post'])
-@permission_classes((AllowAny,))
+# @permission_classes((AllowAny,))
 def rfq_type_based_list(request):
     data = request.data
     userid = data['userid']
@@ -320,7 +320,7 @@ def rfq_type_based_list(request):
 class BiddingTermMasterSettingsView(viewsets.ModelViewSet):
     queryset = BiddingTermMasterSettings.objects.all()
     serializer_class = BiddingTermMasterSettingsSerializer
-    permission_classes = [permissions.AllowAny]
+    # permission_classes = [permissions.AllowAny]
     ordering_fields = ['id']
     ordering = ['id']
 
@@ -351,7 +351,7 @@ class BiddingTermMasterSettingsView(viewsets.ModelViewSet):
 
 
 @api_view(['post'])
-@permission_classes((AllowAny,))
+# @permission_classes((AllowAny,))
 def get_buyer_product_bid_by_user_rfq(request):
     data = request.data
     rfqnumber = data['rfqnumber']
@@ -369,7 +369,7 @@ def get_buyer_product_bid_by_user_rfq(request):
 
 
 @api_view(['post'])
-@permission_classes((AllowAny,))
+# @permission_classes((AllowAny,))
 def get_buyer_product_details_by_user_rfq(request):
     data = request.data
     rfqnumber = data['rfqnumber']
@@ -388,7 +388,7 @@ def get_buyer_product_details_by_user_rfq(request):
 
 
 @api_view(['post'])
-@permission_classes((AllowAny,))
+# @permission_classes((AllowAny,))
 def get_buyer_bid_terms_by_user_rfq(request):
     data = request.data
     rfqnumber = data['rfqnumber']
@@ -406,7 +406,7 @@ def get_buyer_bid_terms_by_user_rfq(request):
 
 
 @api_view(['post'])
-@permission_classes((AllowAny,))
+# @permission_classes((AllowAny,))
 def open_bid_list_buyer_publish_list(request):
     data = request.data
     userid = data['userid']
@@ -448,7 +448,7 @@ def open_bid_list_buyer_publish_list(request):
 
 
 class VendorProductBiddingView(viewsets.ModelViewSet):
-    permission_classes = [permissions.AllowAny]
+    # permission_classes = [permissions.AllowAny]
     queryset = VendorProductBidding.objects.all()
     serializer_class = VendorProductBiddingSerializer
     ordering_fields = ['vendor_product_bidding_id']
@@ -456,7 +456,7 @@ class VendorProductBiddingView(viewsets.ModelViewSet):
 
 
 class VendorBiddingBuyerProductDetailsView(viewsets.ModelViewSet):
-    permission_classes = [permissions.AllowAny]
+    # permission_classes = [permissions.AllowAny]
     queryset = VendorBiddingBuyerProductDetails.objects.all()
     serializer_class = VendorBiddingBuyerProductDetailsSerializer
     ordering_fields = ['id']
@@ -509,7 +509,7 @@ class VendorBiddingBuyerProductDetailsView(viewsets.ModelViewSet):
 
 
 class VendorRfqTermsDescriptionView(viewsets.ModelViewSet):
-    permission_classes = [permissions.AllowAny]
+    # permission_classes = [permissions.AllowAny]
     queryset = VendorRfqTermsDescription.objects.all()
     serializer_class = VendorRfqTermsDescriptionSerializer
     ordering_fields = ['id']
@@ -542,7 +542,7 @@ class VendorRfqTermsDescriptionView(viewsets.ModelViewSet):
 
 
 @api_view(['put'])
-@permission_classes((AllowAny,))
+# @permission_classes((AllowAny,))
 def update_buyer_bid_status_pending_to_publish(request):
     data = request.data
     user_rfq_number = data['user_rfq_number']
@@ -938,7 +938,7 @@ def get_source_items_list_by_source_user_id(request):
 
 
 @api_view(['post'])
-@permission_classes((AllowAny,))
+# @permission_classes((AllowAny,))
 def get_buyer_product_based_on_userid_pk(request):
     data = request.data
     buyerproductid = data['buyerproductid']
@@ -1003,7 +1003,7 @@ def get_source_based_on_item_type_user_id(request):
 
 
 @api_view(['post'])
-@permission_classes((AllowAny,))
+# @permission_classes((AllowAny,))
 def source_list_advance_search(request):
     data = request.data
     itemcode = data['itemcode']
@@ -1137,7 +1137,7 @@ def bidding_data_responses_count(request):
 
 
 @api_view(['put'])
-@permission_classes((AllowAny,))
+# @permission_classes((AllowAny,))
 def status_vendor_accept(request):
     data = request.data
     rfq_number = data['rfq_number']
@@ -1164,7 +1164,7 @@ def status_vendor_accept(request):
 
 
 @api_view(['put'])
-@permission_classes((AllowAny,))
+# @permission_classes((AllowAny,))
 def status_vendor_reject(request):
     data = request.data
     rfq_number = data['rfq_number']

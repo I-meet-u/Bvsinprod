@@ -20,7 +20,7 @@ from .serializers import *
 
 
 class InviteVendorView(viewsets.ModelViewSet):
-    permission_classes = [permissions.AllowAny]
+    # permission_classes = [permissions.AllowAny]
     queryset = InviteVendor.objects.all()
     serializer_class = InviteVendorSerializer
     ordering_fields = ['invite_id']
@@ -57,7 +57,7 @@ class InviteVendorView(viewsets.ModelViewSet):
 
 
 class BusinessRequestView(viewsets.ModelViewSet):
-    permission_classes = [permissions.AllowAny]
+    # permission_classes = [permissions.AllowAny]
     queryset = BusinessRequest.objects.all()
     serializer_class = BusinessRequestSerializer
     ordering_fields = ['id']
@@ -65,7 +65,7 @@ class BusinessRequestView(viewsets.ModelViewSet):
 
 
 class InternalVendorView(viewsets.ModelViewSet):
-    permission_classes = [permissions.AllowAny]
+    # permission_classes = [permissions.AllowAny]
     queryset = InternalVendor.objects.all()
     serializer_class = InternalVendorSerializer
     ordering_fields = ['internal_vendor_id']
@@ -117,7 +117,7 @@ def getinternalvendor(request):
 
 
 class InternalBuyerView(viewsets.ModelViewSet):
-    permission_classes = [permissions.AllowAny]
+    # permission_classes = [permissions.AllowAny]
     queryset = InternalBuyer.objects.all()
     serializer_class = InternalBuyerSerializer
     ordering_fields = ['internal_buyer_id']
@@ -125,7 +125,7 @@ class InternalBuyerView(viewsets.ModelViewSet):
 
 
 @api_view(['post'])
-@permission_classes((AllowAny,))
+# @permission_classes((AllowAny,))
 def get_all_details_for_business_request(request):
     data = request.data
     regid = []
@@ -169,7 +169,7 @@ def get_all_details_for_business_request(request):
 
 
 @api_view(['post'])
-@permission_classes((AllowAny,))
+# @permission_classes((AllowAny,))
 def external_vendor(request):
     data = request.data
     userid = data['userid']
@@ -246,7 +246,7 @@ def external_vendor(request):
 
 
 @api_view(['post'])
-@permission_classes([AllowAny, ])
+# @permission_classes([AllowAny, ])
 def advance_search_invite_vendor(request):
     # advance search invite vendor
     data = request.data
@@ -272,7 +272,7 @@ def advance_search_invite_vendor(request):
 
 
 @api_view(['post'])
-@permission_classes([AllowAny, ])
+# @permission_classes([AllowAny, ])
 def advance_search_external_vendor(request):
     # external vendor advance search
     data = request.data
@@ -304,7 +304,7 @@ def advance_search_external_vendor(request):
 
 
 @api_view(['post'])
-@permission_classes((AllowAny,))
+# @permission_classes((AllowAny,))
 def buzrequestcreate(request):
     data = request.data
     compcode = data['compcode']
@@ -378,7 +378,7 @@ def sendergetbuzrequestdata(request):
 
 
 @api_view(['post'])
-@permission_classes((AllowAny,))
+# @permission_classes((AllowAny,))
 def buzrequest(request):
     data = request.data
     userbuzdata = []
@@ -433,7 +433,7 @@ def buzrequest(request):
 
 
 @api_view(['post'])
-@permission_classes((AllowAny,))
+# @permission_classes((AllowAny,))
 def business_request_accept_reject_advance_search(request):
     data = request.data
     company_code = data['company_code']
@@ -458,7 +458,7 @@ def business_request_accept_reject_advance_search(request):
 
 
 @api_view(['post'])
-@permission_classes((AllowAny,))
+# @permission_classes((AllowAny,))
 def search_business_request_advance_search(request):
     # business request advance search
     data = request.data

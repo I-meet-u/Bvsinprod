@@ -62,7 +62,7 @@ class SelfRegistrationSampleView(viewsets.ModelViewSet):
 
 class LegalDocumentsView(viewsets.ModelViewSet):
     # legal document view
-    permission_classes = (AllowAny,)
+    # permission_classes = (AllowAny,)
     queryset = LegalDocuments.objects.all()
     serializer_class = LegalDocumentsSerializers
     parser_classes = [MultiPartParser]
@@ -92,7 +92,7 @@ class Logout(APIView):
 
 
 @api_view(['post'])
-@permission_classes([AllowAny])
+# @permission_classes([AllowAny])
 def get_token_key_by_userid(request):
     # geting token by userid
     data = request.data
@@ -105,7 +105,7 @@ def get_token_key_by_userid(request):
         return Response({'status': 500, 'error': str(e)}, status=500)
 
 @api_view(['post'])
-@permission_classes([AllowAny])
+# @permission_classes([AllowAny])
 def get_userid_by_token(request):
     # get user_id by passing token
     data = request.data
@@ -118,7 +118,7 @@ def get_userid_by_token(request):
 
 
 @api_view(['post'])
-@permission_classes((AllowAny,))
+# @permission_classes((AllowAny,))
 def change_email(request):
     # passing userid and already presented email and changing email to another email
     data=request.data
@@ -135,7 +135,7 @@ def change_email(request):
         return Response({'status': 500, 'error': str(e)}, status=500)
 
 @api_view(['post'])
-@permission_classes((AllowAny,))
+# @permission_classes((AllowAny,))
 def change_phonenumber(request):
     # change phone number by using userid and already presented phone and changed to new phone number
     data=request.data
@@ -154,7 +154,7 @@ def change_phonenumber(request):
 
 
 @api_view(['post'])
-@permission_classes((AllowAny,))
+# @permission_classes((AllowAny,))
 def change_password_with_phone_number(request):
     # change password by using phone_number
     data = request.data
@@ -173,7 +173,7 @@ def change_password_with_phone_number(request):
 
 
 @api_view(['post'])
-@permission_classes((AllowAny,))
+# @permission_classes((AllowAny,))
 def change_password_with_email(request):
     # change password by using email_id
     data = request.data
@@ -216,7 +216,7 @@ def change_password_with_email(request):
 
 
 @api_view(['post'])
-@permission_classes((AllowAny,))
+# @permission_classes((AllowAny,))
 def otp_session_time_out_of_phone_and_email(request):
     #otp session time out for both phone and email by using user_id
     data=request.data
@@ -234,7 +234,7 @@ def otp_session_time_out_of_phone_and_email(request):
         return Response({'status':500,'error':str(e)},status=500)
 
 @api_view(['post'])
-@permission_classes((AllowAny,))
+# @permission_classes((AllowAny,))
 def phone_otp_session_out(request):
     # otp session time out for both phone  by using user_id
     data=request.data
@@ -251,7 +251,7 @@ def phone_otp_session_out(request):
         return Response({'status': 500, 'error': str(e)}, status=500)
 
 @api_view(['post'])
-@permission_classes((AllowAny,))
+# @permission_classes((AllowAny,))
 def email_otp_session_out(request):
     # otp session time out for both email by using user_id
     data = request.data
@@ -285,7 +285,7 @@ class BasicCompanyDetailsView(viewsets.ModelViewSet):
 
 class BillingAddressView(viewsets.ModelViewSet):
     # billing address viewsets
-    permission_classes = (AllowAny,)
+    # permission_classes = (AllowAny,)
     queryset = BillingAddress.objects.all()
     serializer_class = BillingAddressSerializer
     ordering_fields = ['id']
@@ -302,7 +302,7 @@ class BillingAddressView(viewsets.ModelViewSet):
 
 class ShippingAddressView(viewsets.ModelViewSet):
     # shipping address viewsets
-    permission_classes = (AllowAny,)
+    # permission_classes = (AllowAny,)
     queryset = ShippingAddress.objects.all()
     serializer_class = ShippingAddressSerializer
     ordering_fields = ['id']
@@ -318,7 +318,7 @@ class ShippingAddressView(viewsets.ModelViewSet):
 
 class IndustrialInfoView(viewsets.ModelViewSet):
     # industrail info viewsets
-    permission_classes = (AllowAny,)
+    # permission_classes = (AllowAny,)
     queryset =IndustrialInfo.objects.all()
     serializer_class=IndustrialInfoSerializer
     ordering_fields = ['id']
@@ -365,7 +365,7 @@ class IndustrialInfoView(viewsets.ModelViewSet):
 
 class IndustrialHierarchyView(viewsets.ModelViewSet):
     # industrial hierarchy viewsets
-    permission_classes = (AllowAny,)
+    # permission_classes = (AllowAny,)
     queryset =IndustrialHierarchy.objects.all()
     serializer_class=IndustrialHierarchySerializer
     ordering_fields = ['id']
@@ -380,7 +380,7 @@ class IndustrialHierarchyView(viewsets.ModelViewSet):
 
 class BankDetailsView(viewsets.ModelViewSet):
     # bank details viewsets
-    permission_classes = (AllowAny,)
+    # permission_classes = (AllowAny,)
     queryset =BankDetails.objects.all()
     serializer_class=BankDetailsSerializer
     ordering_fields = ['id']
@@ -394,7 +394,7 @@ class BankDetailsView(viewsets.ModelViewSet):
         return bankobj
 
 @api_view(['post'])
-@permission_classes((AllowAny,))
+# @permission_classes((AllowAny,))
 def list_documents_user(request):
     data = request.data
     msme = data['msme']
@@ -433,7 +433,7 @@ def list_documents_user(request):
 
 class BasicCompanyDetailsOthersView(viewsets.ModelViewSet):
     # basic company info viewset
-    permission_classes = (AllowAny,)
+    # permission_classes = (AllowAny,)
     queryset = BasicCompanyDetails_Others.objects.all()
     serializer_class = BasicCompanyDetailsOthersSerializers
     ordering_fields = ['id']
@@ -447,7 +447,7 @@ class BasicCompanyDetailsOthersView(viewsets.ModelViewSet):
         return basicobj
 
 @api_view(['post'])
-@permission_classes((AllowAny,))
+# @permission_classes((AllowAny,))
 def all_basic_data(request):
     data=request.data
     user_id=data['user_id']
@@ -527,7 +527,7 @@ def all_basic_data(request):
 
 class Employee_CompanyDetailsView(viewsets.ModelViewSet):
     # employee company info viewset
-    permission_classes = (AllowAny,)
+    # permission_classes = (AllowAny,)
     queryset = Employee_CompanyDetails.objects.all()
     serializer_class = Employee_CompanyDetailsSerializers
 
@@ -540,7 +540,7 @@ class Employee_CompanyDetailsView(viewsets.ModelViewSet):
 
 class EmployeeIndustrialInfoView(viewsets.ModelViewSet):
     # industrail info viewsets
-    permission_classes = (AllowAny,)
+    # permission_classes = (AllowAny,)
     queryset =Employee_IndustryInfo.objects.all()
     serializer_class=Employee_IndustryInfoSerializer
 
@@ -554,7 +554,7 @@ class EmployeeIndustrialInfoView(viewsets.ModelViewSet):
 
 
 @api_view(['post'])
-@permission_classes((AllowAny,))
+# @permission_classes((AllowAny,))
 def sendOtpmail(request):
     data=request.data
     phone=data['phone']
@@ -667,7 +667,7 @@ def sendOtpmail(request):
 
 
 @api_view(['post'])
-@permission_classes((AllowAny,))
+# @permission_classes((AllowAny,))
 def sendbluemail(request):
     data=request.data
     email = data['email']
@@ -702,7 +702,7 @@ def sendbluemail(request):
 
 
 @api_view(['post'])
-@permission_classes((AllowAny,))
+# @permission_classes((AllowAny,))
 def sendbluemailforgot(request):
     data=request.data
     email = data['email']
@@ -737,7 +737,7 @@ def sendbluemailforgot(request):
 
 
 @api_view(['post'])
-@permission_classes((AllowAny,))
+# @permission_classes((AllowAny,))
 def sendSMS(request):
     data=request.data
     digits = "0123456789"
@@ -771,7 +771,7 @@ def sendSMS(request):
 
 
 @api_view(['post'])
-@permission_classes((AllowAny,))
+# @permission_classes((AllowAny,))
 def checkotp(request):
     data=request.data
     userid=data['userid']
@@ -787,7 +787,7 @@ def checkotp(request):
         return Response({'status': 500, 'error': str(e)}, status=500)
 
 @api_view(['post'])
-@permission_classes((AllowAny,))
+# @permission_classes((AllowAny,))
 def checkemailotp(request):
     data = request.data
     userid = data['userid']
@@ -804,7 +804,7 @@ def checkemailotp(request):
 
 
 @api_view(['post'])
-@permission_classes((AllowAny,))
+# @permission_classes((AllowAny,))
 def checkphoneotp(request):
     data=request.data
     userid=data['userid']
@@ -822,7 +822,7 @@ def checkphoneotp(request):
 
 
 @api_view(['post'])
-@permission_classes((AllowAny,))
+# @permission_classes((AllowAny,))
 def checkotpemailt(request):
     data=request.data
     userid=data['userid']
@@ -838,7 +838,7 @@ def checkotpemailt(request):
         return Response({'status': 500, 'error': str(e)}, status=500)
 
 @api_view(['post'])
-@permission_classes((AllowAny,))
+# @permission_classes((AllowAny,))
 def changeemail(request):
     data=request.data
     userid=data['userid']
@@ -879,7 +879,7 @@ def changeemail(request):
         return Response({'status': 500, 'error': str(e)}, status=500)
 
 @api_view(['post'])
-@permission_classes((AllowAny,))
+# @permission_classes((AllowAny,))
 def changephone(request):
     data = request.data
     userid = data['userid']
@@ -920,7 +920,7 @@ def changephone(request):
 
 # -------------------------------------user-dp-upload----------------------------------------------------
 @api_view(['post'])
-@permission_classes((AllowAny,))
+# @permission_classes((AllowAny,))
 def uploaduserprofile(request):
     data = request.data
     try:
@@ -936,7 +936,7 @@ def uploaduserprofile(request):
 
 
 @api_view(['post'])
-@permission_classes((AllowAny,))
+# @permission_classes((AllowAny,))
 def phone_otp_verify(request):
     data=request.data
     phoneotp=data['phoneotp']
@@ -952,7 +952,7 @@ def phone_otp_verify(request):
 
 
 @api_view(['post'])
-@permission_classes((AllowAny,))
+# @permission_classes((AllowAny,))
 def email_otp_verify(request):
     data=request.data
     emailotp=data['emailotp']
@@ -969,31 +969,31 @@ def email_otp_verify(request):
 
 
 
+# @api_view(['post'])
+# # @permission_classes((AllowAny,))
+# def employee_login(request):
+#     data = request.data
+#     password = data['password']
+#     email_id = data['email_id']
+#     try:
+#         employeeobj = SelfRegistration.objects.get(email_id=email_id)
+#         if employeeobj:
+#             if check_password(password, employeeobj.password) and employeeobj.email_id == email_id:
+#                 return Response({'status': 200, 'message': 'Employee Logged in successfully'}, status=200)
+#             else:
+#                 return Response({'status': 424, 'message': 'Password entered is not correct,Please Check Once'},
+#                             status=424)
+#
+#     except ObjectDoesNotExist as e:
+#         return Response({'status': 404, 'error': "Email not exist"}, status=404)
+#
+#     except Exception as e:
+#         return Response({'status': 500, 'error': str(e)}, status=500)
+
+
+
 @api_view(['post'])
-@permission_classes((AllowAny,))
-def employee_login(request):
-    data = request.data
-    password = data['password']
-    email_id = data['email_id']
-    try:
-        employeeobj = EmployeeRegistration.objects.get(email_id=email_id)
-        if employeeobj:
-            if check_password(password, employeeobj.password) and employeeobj.email_id == email_id:
-                return Response({'status': 200, 'message': 'Employee Logged in successfully'}, status=200)
-            else:
-                return Response({'status': 424, 'message': 'Password entered is not correct,Please Check Once'},
-                            status=424)
-
-    except ObjectDoesNotExist as e:
-        return Response({'status': 404, 'error': "Email not exist"}, status=404)
-
-    except Exception as e:
-        return Response({'status': 500, 'error': str(e)}, status=500)
-
-
-
-@api_view(['post'])
-@permission_classes((AllowAny,))
+# @permission_classes((AllowAny,))
 def getcompanycode(request):
     data=request.data
     usercompcode=""
@@ -1015,7 +1015,7 @@ def getcompanycode(request):
 class ContactDetailsViewset(viewsets.ModelViewSet):
     queryset = ContactDetails.objects.all()
     serializer_class = ContactDetailsSerializer
-    permission_classes = (AllowAny,)
+    # permission_classes = (AllowAny,)
 
     def get_queryset(self):
         # overriding get_queryset by passing updated_by
@@ -1027,7 +1027,7 @@ class ContactDetailsViewset(viewsets.ModelViewSet):
 class CommunicationDetailsViewset(viewsets.ModelViewSet):
     queryset = CommunicationDetails.objects.all()
     serializer_class = CommunicationDetailsSerializer
-    permission_classes = (AllowAny,)
+    # permission_classes = (AllowAny,)
 
     def get_queryset(self):
         # overriding get_queryset by passing updated_by
@@ -1324,7 +1324,7 @@ def registration_list_by_user_id(request):
 
 
 @api_view(['post'])
-@permission_classes([AllowAny])
+# @permission_classes([AllowAny])
 def employee_registration_list_by_user_id(request):
     data=request.data
     emptydata=[]

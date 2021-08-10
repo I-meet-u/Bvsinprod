@@ -77,98 +77,6 @@ class VendorProduct_DocumentsView(viewsets.ModelViewSet):
     parser_classes = [MultiPartParser]
 
 
-
-# class VendorProduct_BasicDetailsView(viewsets.ModelViewSet):
-#     permission_classes = [permissions.AllowAny]
-#     queryset = VendorProduct_BasicDetails.objects.all()
-#     serializer_class = VendorProduct_BasicDetailsSerializer
-#     parser_classes = [MultiPartParser]
-#     ordering_fields = ['vendor_product_id']
-#     ordering = ['vendor_product_id']
-#
-#     def create(self, request, *args, **kwargs):
-#         data=request.data
-#         core_sector = data['core_sector']
-#         category = data['category']
-#         sub_category = data['sub_category']
-#         product_category = data['product_category']
-#         product_type=data['product_type']
-#         item_type = data['item_type']
-#         item_name = data['item_name']
-#         item_description=data['item_description']
-#         final_selling_price = data['final_selling_price']
-#         add_image1 = data['add_image1']
-#         add_image2 = data['add_image2']
-#         add_image3 = data['add_image3']
-#         add_image4 = data['add_image4']
-#         uom = data['uom']
-#         quantity = data['quantity']
-#         hsn_sac = data['hsn_sac']
-#         unit_price = data['unit_price']
-#         discount = data['discount']
-#         tax = data['tax']
-#         sku_id = data['sku_id']
-#         country_of_origin = data['country_of_origin']
-#         currency = data['currency']
-#         userid = data['userid']
-#         type = data['type']
-#         try:
-#
-#             vedordetailsobj = VendorProduct_BasicDetails.objects.filter(updated_by=userid).order_by('-numeric').values()
-#             if type == 'auto':
-#                 if vedordetailsobj:
-#                     vendorobj = VendorProduct_BasicDetails.objects.create(core_sector=core_sector, category=category,sub_category=sub_category,product_category=product_category,product_type=product_type,item_type=item_type,item_code=vedordetailsobj[0].get('numeric'),item_name=item_name,item_description=item_description,
-#                                                                           final_selling_price=final_selling_price,
-#                                                                           numeric=vedordetailsobj[0].get('numeric') + 1,add_image1=add_image1, add_image2=add_image2,add_image3=add_image3, add_image4=add_image4,
-#                                                                           uom=uom, quantity=quantity, hsn_sac=hsn_sac,unit_price=unit_price, discount=discount, tax=tax,sku_id=sku_id,country_of_origin=country_of_origin,
-#                                                                           currency=currency,created_by=userid,updated_by=SelfRegistration.objects.get(id=userid))
-#                 else:
-#                     print('not exist')
-#                     vendorobj = VendorProduct_BasicDetails.objects.create(core_sector=core_sector, category=category,sub_category=sub_category,product_category=product_category,product_type=product_type,item_type=item_type, item_code=100001,item_name=item_name,item_description=item_description,
-#                                                                           final_selling_price=final_selling_price,numeric=100002, add_image1=add_image1,add_image2=add_image2, add_image3=add_image3,add_image4=add_image4,
-#                                                                           uom=uom, quantity=quantity,hsn_sac=hsn_sac,unit_price=unit_price,discount=discount, tax=tax, sku_id=sku_id,
-#                                                                           country_of_origin=country_of_origin,currency=currency,created_by=userid,
-#                                                                           updated_by=SelfRegistration.objects.get(id=userid))
-#             if type == 'manual':
-#                 item_code = data['item_code']
-#                 vendorobj=VendorProduct_BasicDetails.objects.count()
-#                 if vendorobj==0:
-#                     print('s')
-#                     vendorobj = VendorProduct_BasicDetails.objects.create(core_sector=core_sector, category=category,sub_category=sub_category,product_category=product_category,item_name=item_name,product_type=product_type, item_type=item_type,item_code=item_code,item_description=item_description,
-#                                                                           final_selling_price=final_selling_price,numeric='100001',add_image1=add_image1, add_image2=add_image2,add_image3=add_image3, add_image4=add_image4,
-#                                                                           uom=uom, quantity=quantity, hsn_sac=hsn_sac,unit_price=unit_price, discount=discount, tax=tax,sku_id=sku_id,country_of_origin=country_of_origin,
-#                                                                           currency=currency,created_by=userid,updated_by=SelfRegistration.objects.get(id=userid))
-#                 else:
-#                     vendorobj = VendorProduct_BasicDetails.objects.create(core_sector=core_sector,
-#                                                                           category=category,sub_category=sub_category,product_category=product_category,item_name=item_name,product_type=product_type,
-#                                                                           item_type=item_type, item_code=item_code,item_description=item_description,
-#                                                                           final_selling_price=final_selling_price,numeric=vedordetailsobj[0].get('numeric'), add_image1=add_image1,
-#                                                                           add_image2=add_image2,add_image3=add_image3,add_image4=add_image4,uom=uom, quantity=quantity,hsn_sac=hsn_sac, unit_price=unit_price,
-#                                                                           discount=discount, tax=tax, sku_id=sku_id,country_of_origin=country_of_origin,
-#                                                                           currency=currency, created_by=userid,updated_by=SelfRegistration.objects.get(id=userid))
-#
-#
-#             return Response({'status': 201, 'message': 'Vendor Product  Created'}, status=201)
-#         except Exception as e:
-#             return Response({'status': 500, 'error': str(e)}, status=500)
-
-
-
-# class BuyerProductDetailsView(viewsets.ModelViewSet):
-#     permission_classes = [permissions.AllowAny]
-#     queryset = BuyerProductDetails.objects.all()
-#     serializer_class = BuyerProductDetailsSerializer
-#     parser_classes = [MultiPartParser]
-#     ordering_fields = ['buyer_product_id']
-#     ordering = ['buyer_product_id']
-#
-#     def get_queryset(self):
-#         buyerproductobj=BuyerProductDetails.objects.filter(updated_by=self.request.GET.get('updated_by'))
-#         if buyerproductobj:
-#             return buyerproductobj
-#         raise ValidationError({'message':'Buyer Product Details Not Present','status':204})
-
-
 @api_view(['post'])
 @permission_classes((AllowAny,))
 def buyer_product_create(request):
@@ -198,7 +106,7 @@ def buyer_product_create(request):
 
 
 @api_view(['post'])
-@permission_classes((AllowAny,))
+# @permission_classes((AllowAny,))
 def buyer_service_create(request):
     data=request.data
     userid=data['userid']
@@ -243,7 +151,7 @@ def buyer_service_create(request):
 
 
 @api_view(['post'])
-@permission_classes((AllowAny,))
+# @permission_classes((AllowAny,))
 def buyer_machinary_create(request):
     data=request.data
     userid=data['userid']
@@ -287,7 +195,7 @@ def buyer_machinary_create(request):
 
 
 class ItemCodeSettingsView(viewsets.ModelViewSet):
-    permission_classes = [permissions.AllowAny]
+    # permission_classes = [permissions.AllowAny]
     queryset = ItemCodeSettings.objects.all()
     serializer_class = ItemCodeSettingsSerializer
     ordering = ['id']
@@ -317,7 +225,7 @@ class ItemCodeSettingsView(viewsets.ModelViewSet):
 
 
 @api_view(['post'])
-@permission_classes((AllowAny,))
+# @permission_classes((AllowAny,))
 def get_itemtype_based_on_userid(request):
     data=request.data
     userid=data['userid']
@@ -346,7 +254,7 @@ def get_itemtype_based_on_userid(request):
         return Response({'status': 500, 'error': str(e)}, status=500)
 
 @api_view(['post'])
-@permission_classes((AllowAny,))
+# @permission_classes((AllowAny,))
 def item_code_settings_list(request):
     data=request.data
     userid=data['userid']
@@ -376,7 +284,7 @@ def item_code_settings_list(request):
 
 #-----------------------------------------------------------------------
 @api_view(['put'])
-@permission_classes([AllowAny,])
+# @permission_classes([AllowAny,])
 def disable_buyer_product(request):
     # disable buyer product by changing status from Active to Disabled by passing primary key(buyerproductid)
     data=request.data
@@ -443,7 +351,7 @@ def disable_buyer_product(request):
 
 
 @api_view(['put'])
-@permission_classes([AllowAny,])
+# @permission_classes([AllowAny,])
 def enable_buyer_product(request):
     # enable buyer product by changing status from Disabled to Active by passing primary key(buyerproductid)
     data=request.data
@@ -515,7 +423,7 @@ def enable_buyer_product(request):
 
 
 @api_view(['post'])
-@permission_classes([AllowAny,])
+# @permission_classes([AllowAny,])
 def delete_buyer_product(request):
     # delete buyer_product  by passing primary key(buyerproductid)
     data = request.data
@@ -566,7 +474,7 @@ def delete_buyer_product(request):
 
 
 class VendorProduct_BasicDetailsView(viewsets.ModelViewSet):
-    permission_classes = [permissions.AllowAny]
+    # permission_classes = [permissions.AllowAny]
     queryset = VendorProduct_BasicDetails.objects.all()
     serializer_class = VendorProduct_BasicDetailsSerializer
     parser_classes = [MultiPartParser]
@@ -694,7 +602,7 @@ def updated_item_code_settings_and_item_code(request):
 
 
 @api_view(['post'])
-@permission_classes((AllowAny,))
+# @permission_classes((AllowAny,))
 def get_item_code_details_by_userid_itemtype(request):
     data=request.data
     item_type=data['item_type']
@@ -809,7 +717,7 @@ class BuyerProductDetailsView(viewsets.ModelViewSet):
 
 
 class BuyerServiceDetailsView(viewsets.ModelViewSet):
-    permission_classes = [permissions.AllowAny]
+    # permission_classes = [permissions.AllowAny]
     queryset = BuyerServiceDetails.objects.all()
     serializer_class = BuyerServiceDetailsSerializer
     # parser_classes = (MultiPartParser,)
@@ -898,7 +806,7 @@ class BuyerServiceDetailsView(viewsets.ModelViewSet):
 
 
 class BuyerMachinaryDetailsView(viewsets.ModelViewSet):
-    permission_classes = [permissions.AllowAny]
+    # permission_classes = [permissions.AllowAny]
     queryset = BuyerMachinaryDetails.objects.all()
     serializer_class = BuyerMachinaryDetailsSerializer
     # parser_classes = (MultiPartParser,)
@@ -988,7 +896,7 @@ class BuyerMachinaryDetailsView(viewsets.ModelViewSet):
 
 
 @api_view(['post'])
-@permission_classes((AllowAny,))
+# @permission_classes((AllowAny,))
 def advance_search_buyer_product(request):
     # advance search buyer product
     data = request.data
@@ -1023,7 +931,7 @@ def advance_search_buyer_product(request):
 
 
 @api_view(['post'])
-@permission_classes((AllowAny,))
+# @permission_classes((AllowAny,))
 def t_codes_datas(request):
     data=request.data
     searchdata=data['searchdata']

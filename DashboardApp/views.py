@@ -167,28 +167,28 @@ def get_all_details_for_business_request(request):
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)
 
+
 @api_view(['post'])
 @permission_classes((AllowAny,))
 def external_vendor(request):
     data = request.data
-    regid = []
     userid = data['userid']
     internalarray = []
-    ccode = []
     externalarray = []
 
 
     try:
-        regobj=SelfRegistration.objects.filter(admin_approve='Approved').values().order_by('id')
+        regobj=SelfRegistration.objects.filter(admin_approve='Approved',user_type='Buyer').values().order_by('id')
+        print(len(regobj))
         internalobj=InternalVendor.objects.filter().values()
         for i in range(0,len(internalobj)):
             internalarray.append(internalobj[i].get('company_code'))
+
         if len(regobj)>0:
             for i in range(0,len(regobj)):
                 basicobj=BasicCompanyDetails.objects.get(updated_by_id=regobj[i].get('id'))
                 industryobj=IndustrialInfo.objects.get(updated_by_id=regobj[i].get('id'),company_code=basicobj.company_code)
-                # print(industryobj.company_code_id,'indsutry')
-                hierarchyobj = IndustrialHierarchy.objects.get(updated_by_id=regobj[i].get('id'))
+                # hierarchyobj = IndustrialHierarchy.objects.get(updated_by_id=regobj[i].get('id'))
                 billingobj=BillingAddress.objects.filter(updated_by_id=regobj[i].get('id')).values()
                 if basicobj.company_code not in internalarray:
                     print('ok')
@@ -197,110 +197,50 @@ def external_vendor(request):
                                           'company_name':basicobj.company_name,
                                           'nature_of_business':industryobj.nature_of_business,
                                           'industry_to_serve': industryobj.industry_to_serve,
+                                          'maincore': "",
+                                          'category': "",
+                                          'subcategory':"",
+                                          'bill_city': billingobj[0].get('bill_city'),
+                                          'bill_state': billingobj[0].get('bill_state'),
+                                          'user_type':regobj[i].get('user_type')
+
+                                          })
+                else:
+                    print('already present')
+        regobjdata= SelfRegistration.objects.filter(Q(user_type='Vendor')| Q(user_type='Both'),admin_approve='Approved').values().order_by('id')
+
+        if len(regobjdata)>0:
+            for i in range(0, len(regobjdata)):
+                basicobj = BasicCompanyDetails.objects.get(updated_by_id=regobjdata[i].get('id'))
+                industryobj = IndustrialInfo.objects.get(updated_by_id=regobjdata[i].get('id'),
+                                                         company_code=basicobj.company_code)
+                hierarchyobj = IndustrialHierarchy.objects.get(updated_by_id=regobjdata[i].get('id'))
+                billingobj = BillingAddress.objects.filter(updated_by_id=regobjdata[i].get('id')).values()
+                if basicobj.company_code not in internalarray:
+                    print('ok')
+
+                    externalarray.append({'company_code': basicobj.company_code,
+                                          'company_name': basicobj.company_name,
+                                          'nature_of_business': industryobj.nature_of_business,
+                                          'industry_to_serve': industryobj.industry_to_serve,
                                           'maincore': hierarchyobj.maincore,
                                           'category': hierarchyobj.category,
                                           'subcategory': hierarchyobj.subcategory,
                                           'bill_city': billingobj[0].get('bill_city'),
                                           'bill_state': billingobj[0].get('bill_state'),
+                                          'user_type': regobjdata[i].get('user_type')
 
                                           })
                 else:
                     print('already present')
 
-            return Response({'status': 200, 'message': 'External Vendor List', 'data': externalarray},status=200)
-
+            return Response({'status': 200, 'message': 'External Vendor List', 'data': externalarray}, status=200)
         else:
             return Response({'status': 204, 'message': 'Not Present'}, status=204)
 
 
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)
-
-# @api_view(['post'])
-# @permission_classes((AllowAny,))
-# def external_vendor(request):
-#     data = request.data
-#     userid = data['userid']
-#     internalarray = []
-#     newexternalarray=[]
-#     externalarray = []
-#
-#
-#     try:
-#         regobjbuyer=SelfRegistration.objects.filter(admin_approve='Approved').values().order_by('id')
-#
-#         internalobj=InternalVendor.objects.filter().values()
-#         for i in range(0,len(internalobj)):
-#             internalarray.append(internalobj[i].get('company_code'))
-#         if len(regobjbuyer)>0:
-#             if len(regobjbuyer) > 0:
-#                 for i in range(0,len(regobjbuyer)):
-#                     if regobjbuyer[i].get('user_type')=='Buyer':
-#                         basicobj=BasicCompanyDetails.objects.get(updated_by_id=regobjbuyer[i].get('id'))
-#                         industryobj=IndustrialInfo.objects.get(updated_by_id=regobjbuyer[i].get('id'),company_code=basicobj.company_code)
-#                         billingobj=BillingAddress.objects.filter(updated_by_id=regobjbuyer[i].get('id')).values()
-#                         if basicobj.company_code not in internalarray:
-#                             print('ok')
-#
-#                             externalarray.append({'company_code':basicobj.company_code,
-#                                                   'company_name':basicobj.company_name,
-#                                                   'nature_of_business':industryobj.nature_of_business,
-#                                                   'industry_to_serve': industryobj.industry_to_serve,
-#                                                   'bill_city': billingobj[0].get('bill_city'),
-#                                                   'bill_state': billingobj[0].get('bill_state'),
-#                                                   'user_type':regobjbuyer[i].get('user_type')
-#
-#                                                   })
-#                         else:
-#                             print('already present')
-#                     if regobjbuyer[i].get('user_type')=="":
-#                         pass
-#                 return Response({'status': 200, 'message': 'External Buyer List', 'data': externalarray},status=200)
-#             else:
-#                 return Response({'status': 204, 'message': 'Not Present'}, status=204)
-#
-#         elif len(regobjvendorandboth)>0:
-#             internalobj = InternalVendor.objects.filter().values()
-#             for i in range(0, len(internalobj)):
-#                 internalarray.append(internalobj[i].get('company_code'))
-#             if len(regobjvendorandboth) > 0:
-#                 for i in range(0, len(regobjvendorandboth)):
-#                     basicobj = BasicCompanyDetails.objects.get(updated_by_id=regobjvendorandboth[i].get('id'))
-#                     industryobj = IndustrialInfo.objects.get(updated_by_id=regobjvendorandboth[i].get('id'),
-#                                                              company_code=basicobj.company_code)
-#                     # print(industryobj.company_code_id,'indsutry')
-#                     hierarchyobj = IndustrialHierarchy.objects.get(updated_by_id=regobjvendorandboth[i].get('id'))
-#                     billingobj = BillingAddress.objects.filter(updated_by_id=regobjvendorandboth[i].get('id')).values()
-#                     if basicobj.company_code not in internalarray:
-#                         print('ok')
-#
-#                         newexternalarray.append({'company_code': basicobj.company_code,
-#                                               'company_name': basicobj.company_name,
-#                                               'nature_of_business': industryobj.nature_of_business,
-#                                               'industry_to_serve': industryobj.industry_to_serve,
-#                                               'maincore': hierarchyobj.maincore,
-#                                               'category': hierarchyobj.category,
-#                                               'subcategory': hierarchyobj.subcategory,
-#                                               'bill_city': billingobj[0].get('bill_city'),
-#                                               'bill_state': billingobj[0].get('bill_state'),
-#                                                  'user_type': regobjvendorandboth[i].get('user_type')
-#
-#                                               })
-#                     else:
-#                         print('already present')
-#
-#                 return Response({'status': 200, 'message': 'External Vendor List', 'data': newexternalarray}, status=200)
-#             else:
-#                 return Response({'status': 204, 'message': 'Not Present'},
-#                                 status=204)
-#
-#         # return Response({'status': 200, 'message': 'External Vendor List', 'data': regobjvendorandboth}, status=200)
-#
-#
-#
-#     except Exception as e:
-#         return Response({'status': 500, 'error': str(e)}, status=500)
-
 
 
 

@@ -1395,6 +1395,48 @@ def fetch_vendor_product_basic_details_by_category(request):
         return Response({'status': 500, 'error': str(e)}, status=500)
 
 
+# @api_view(['post'])
+# def get_previous_value_of_buyer_details(request):
+#     data=request.data
+#     userid=data['userid']
+#     itemtype=data['itemtype']
+#     try:
+#         if itemtype=='Product':
+#             buyerproductobj=BuyerProductDetails.objects.filter(buyer_item_type=itemtype,updated_by_id=userid).last()
+#             if buyerproductobj:
+#                 buyer_product={
+#                     'buyer_product_item_code':buyerproductobj.buyer_item_code,
+#                     'user_id':buyerproductobj.updated_by_id
+#                 }
+#                 return Response({'status': 200, 'message': 'Buyer Product List','data':buyer_product},status=200)
+#             else:
+#                 return Response({'status': 204, 'message': 'Not Present'}, status=204)
+#         elif itemtype=='Service':
+#             buyerserviceobj = BuyerServiceDetails.objects.filter(buyer_service_item_type=itemtype, updated_by_id=userid).last()
+#             if buyerserviceobj:
+#                 buyer_service = {
+#                     'buyer_service_item_code': buyerserviceobj.buyer_service_item_code,
+#                     'user_id': buyerserviceobj.updated_by_id
+#                 }
+#                 return Response({'status': 200, 'message': 'Buyer Service List', 'data': buyer_service}, status=200)
+#             else:
+#                 return Response({'status': 204, 'message': 'Not Present'}, status=204)
+#         elif itemtype=='Machinary & equipments':
+#             buyermachinaryobj = BuyerMachinaryDetails.objects.filter(buyer_machinary_item_type=itemtype, updated_by_id=userid).last()
+#             if buyermachinaryobj:
+#                 buyer_machinary = {
+#                     'buyer_machinary_item_code': buyermachinaryobj.buyer_machinary_item_code,
+#                     'user_id': buyermachinaryobj.updated_by_id
+#                 }
+#                 return Response({'status': 200, 'message': 'Buyer Machinary List', 'data': buyer_machinary}, status=200)
+#             else:
+#                 return Response({'status': 204, 'message': 'Not Present'}, status=204)
+#         else:
+#             return Response({'status': 204, 'message': 'item_type is mis-spelled or not present'}, status=204)
+#
+#     except Exception as e:
+#         return Response({'status': 500, 'error': str(e)}, status=500)
+
 @api_view(['post'])
 def get_previous_value_of_buyer_details(request):
     data=request.data
@@ -1410,7 +1452,17 @@ def get_previous_value_of_buyer_details(request):
                 }
                 return Response({'status': 200, 'message': 'Buyer Product List','data':buyer_product},status=200)
             else:
-                return Response({'status': 204, 'message': 'Not Present'}, status=204)
+                itemcodesettings = ItemCodeSettings.objects.filter(item_type=itemtype, updated_by_id=userid).values()
+                if len(itemcodesettings)>0:
+                    product_item_code={
+                        'buyer_product_item_code':itemcodesettings[0].get('code_format'),
+                        'user_id':itemcodesettings[0].get('updated_by_id')
+                    }
+                    return Response({'status': 200, 'message': 'Code Settings Product','data':product_item_code}, status=200)
+                else:
+                    return Response({'status': 204, 'message':'Code Settings for Product for this particular user id is not present,Please set your code in code settings'}, status=204)
+
+
         elif itemtype=='Service':
             buyerserviceobj = BuyerServiceDetails.objects.filter(buyer_service_item_type=itemtype, updated_by_id=userid).last()
             if buyerserviceobj:
@@ -1420,17 +1472,41 @@ def get_previous_value_of_buyer_details(request):
                 }
                 return Response({'status': 200, 'message': 'Buyer Service List', 'data': buyer_service}, status=200)
             else:
-                return Response({'status': 204, 'message': 'Not Present'}, status=204)
+                itemcodesettings = ItemCodeSettings.objects.filter(item_type=itemtype, updated_by_id=userid).values()
+                if len(itemcodesettings) > 0:
+                    service_item_code = {
+                        'buyer_service_item_code': itemcodesettings[0].get('code_format'),
+                        'user_id': itemcodesettings[0].get('updated_by_id')
+                    }
+                    return Response({'status': 200, 'message': 'Code Settings Service', 'data': service_item_code},
+                                    status=200)
+                else:
+                    return Response({'status': 204,
+                                     'message': 'Code Settings for Service for this particular user id is not present,Please set your code in code settings'},
+                                    status=204)
+
         elif itemtype=='Machinary & equipments':
-            buyermachinaryobj = BuyerMachinaryDetails.objects.filter(buyer_machinary_item_type=itemtype, updated_by_id=userid).last()
-            if buyermachinaryobj:
-                buyer_machinary = {
-                    'buyer_machinary_item_code': buyermachinaryobj.buyer_machinary_item_code,
-                    'user_id': buyermachinaryobj.updated_by_id
-                }
-                return Response({'status': 200, 'message': 'Buyer Machinary List', 'data': buyer_machinary}, status=200)
-            else:
-                return Response({'status': 204, 'message': 'Not Present'}, status=204)
+                buyermachinaryobj = BuyerMachinaryDetails.objects.filter(buyer_machinary_item_type=itemtype, updated_by_id=userid).last()
+                if buyermachinaryobj:
+                    buyer_machinary = {
+                        'buyer_machinary_item_code': buyermachinaryobj.buyer_machinary_item_code,
+                        'user_id': buyermachinaryobj.updated_by_id
+                    }
+                    return Response({'status': 200, 'message': 'Buyer Machinary List', 'data': buyer_machinary}, status=200)
+                else:
+                    itemcodesettings = ItemCodeSettings.objects.filter(item_type=itemtype,
+                                                                       updated_by_id=userid).values()
+                    if len(itemcodesettings) > 0:
+                        machinary_item_code = {
+                            'buyer_machinary_item_code': itemcodesettings[0].get('code_format'),
+                            'user_id': itemcodesettings[0].get('updated_by_id')
+                        }
+                        return Response({'status': 200, 'message': 'Code Settings Machinary', 'data': machinary_item_code},
+                                        status=200)
+                    else:
+                        return Response({'status': 204,
+                                         'message': 'Code Settings for Machinary for this partiuclar user id is not present,Please set your code in code settings'},
+                                        status=204)
         else:
             return Response({'status': 204, 'message': 'item_type is mis-spelled or not present'}, status=204)
 

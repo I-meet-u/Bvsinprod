@@ -381,16 +381,23 @@ def get_all_company_products_services(request):
                 return Response({'status': 200, 'message': 'Vendor Product List', 'data': getarray}, status=200)
             else:
                 return Response({'status': 204, 'message': 'Vendor Product Lists are Not Present'}, status=204)
-        # elif search_type == 'Services':
-        #     serviceobj = VendorProduct_BasicDetails.objects.filter(item_type='Service').values()
-        #     if len(serviceobj) > 0:
-        #         for i in range(0, len(serviceobj)):
-        #             getarray.append({'name': serviceobj[i].get('item_name'),
-        #                              'product_code':serviceobj[i].get('item_code')
-        #                              })
-        #         return Response({'status': 200, 'message': 'Vendor Service List', 'data': getarray}, status=200)
-        #     else:
-        #         return Response({'status': 204, 'message': 'Vendor Service Lists are Not Present'}, status=204)
+        elif search_type == 'All':
+            alldata = VendorProduct_BasicDetails.objects.filter(item_type='Product').values()
+            if len(alldata) > 0:
+                for i in range(0, len(alldata)):
+                    getarray.append({'name': alldata[i].get('item_name'),
+                                     'product_code':alldata[i].get('item_code')
+                                     })
+            basicobj = BasicCompanyDetails.objects.filter().values()
+            if len(basicobj) > 0:
+                for i in range(0, len(basicobj)):
+                    getarray.append({'name': basicobj[i].get('company_name'),
+                                     'ccode': basicobj[i].get('company_code')
+                                     })
+
+                return Response({'status': 200, 'message': 'Vendor All List', 'data': getarray}, status=200)
+            else:
+                return Response({'status': 204, 'message': 'Vendor All Lists are Not Present'}, status=204)
         else:
             return Response({'status': 204, 'message': 'search type value is mis-spelled or not present'}, status=204)
 

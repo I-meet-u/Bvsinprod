@@ -308,6 +308,11 @@ def rfq_type_based_list(request):
                                                                        product_rfq_type=product_rfq_type).values().order_by(
                     'product_bidding_id')
                 return Response({'status': 200, 'message': 'Rfq Type Service', 'data': rfqtypeserviceobj}, status=200)
+            elif product_rfq_type == 'Machinary & equipments':
+                rfqtypemachinaryobj = BuyerProductBidding.objects.filter(updated_by=userid,
+                                                                       product_rfq_type=product_rfq_type).values().order_by(
+                    'product_bidding_id')
+                return Response({'status': 200, 'message': 'Rfq Type Machinary', 'data': rfqtypemachinaryobj}, status=200)
 
             else:
                 return Response({'status': 204, 'error': 'Not present or rfq_type is wrong', 'data': []}, status=204)

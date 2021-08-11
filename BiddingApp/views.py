@@ -1799,3 +1799,39 @@ def award_get_list_of_vendor(request):
         return Response({'status': 200, 'message': 'ok', 'data': awardarray}, status=200)
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)
+
+
+class BiddingBuyerServiceDetailsView(viewsets.ModelViewSet):
+    queryset = BiddingBuyerServiceDetails.objects.all()
+    serializer_class = BiddingBuyerServiceDetailsSerializer
+    # permission_classes = [permissions.AllowAny]
+
+    def create(self, request, *args, **kwargs):
+        servicedetails = request.data['servicedetails']
+        service_buyer_rfq_number = request.data.get('service_buyer_rfq_number', None)
+        userid = request.data.get('userid', None)
+        try:
+            for i in range(0, len(servicedetails)):
+                BiddingBuyerServiceDetails.objects.create(service_buyer_rfq_number=service_buyer_rfq_number,
+                                                          service_buyer_item_code=servicedetails[i].get('service_item_code'),
+                                                          service_buyer_item_name=servicedetails[i].get('service_item_name'),
+                                                          service_buyer_item_description=servicedetails[i].get(
+                                                              'service_item_description'),
+                                                          service_buyer_uom=servicedetails[i].get('service_uom'),
+                                                          service_buyer_category=servicedetails[i].get('service_category'),
+                                                          service_buyer_quantity=servicedetails[i].get('service_quantity'),
+                                                          service_buyer_document=servicedetails[i].get('service_document'),
+                                                          updated_by=SelfRegistration.objects.get(id=userid),
+                                                          created_by=userid)
+
+            return Response({'status': 201, 'message': 'Service Details Are Created'}, status=201)
+        except Exception as e:
+            return Response({'status': 500, 'error': str(e)}, status=500)
+
+    def get_queryset(self):
+        buyerproductdetailsobj = BiddingBuyerProductDetails.objects.filter(
+            updated_by=self.request.GET.get('updated_by'))
+        if buyerproductdetailsobj:
+            return buyerproductdetailsobj
+        raise ValidationError(
+            {'message': 'Buyer Bidding Product details of particular user id is not exist', 'status': 204})

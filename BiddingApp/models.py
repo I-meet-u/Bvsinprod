@@ -232,6 +232,24 @@ class Awards(models.Model):
 #     class Meta:
 #         db_table = "PurchaseOrder"
 
+class BiddingBuyerServiceDetails(models.Model):
+    service_buyer_item_code= models.CharField(max_length=100,null=True,blank=True)
+    service_buyer_item_name = models.CharField(max_length=100)
+    service_buyer_item_description = models.TextField(null=True,blank=True)
+    service_buyer_uom = models.CharField(max_length=100, null=True,blank=True)
+    service_buyer_category = models.CharField(max_length=500,null=True)
+    service_buyer_quantity = models.CharField(max_length=100)
+    service_buyer_document=models.FileField(upload_to='BuyerServiceFiles',null=True,blank=True)
+    created_on = models.DateTimeField(auto_now_add=True)
+    updated_on = models.DateTimeField(auto_now=True)
+    created_by = models.BigIntegerField()
+    service_buyer_rfq_number=models.CharField(max_length=100)
+    updated_by = models.ForeignKey(SelfRegistration, on_delete=models.CASCADE)
+    history = HistoricalRecords()
+
+    class Meta:
+        db_table='BiddingBuyerServiceDetails'
+
 
 class SourceList_CreateItems(models.Model):
     item_type=models.CharField(max_length=80)

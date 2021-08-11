@@ -64,6 +64,11 @@ class VendorRfqTermsDescriptionSerializer(serializers.ModelSerializer):
         model=VendorRfqTermsDescription
         fields='__all__'
 
+class BiddingBuyerServiceDetailsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model=BiddingBuyerServiceDetails
+        fields='__all__'
+
 class SourceList_CreateItemsSerializer(serializers.ModelSerializer):
     class Meta:
         model=SourceList_CreateItems

@@ -31,6 +31,7 @@ urlpatterns = [
     # path('getallcompanydetails_companycode/',views.getallcompanydetails_companycode)
     path('category-list-by-maincore/',views.category_list_by_maincore),
     path('basic-details-by-company_name/',views.basic_details_by_company_name),
-    path('maincore-by-id/',views.maincore_by_id)
+    path('maincore-by-id/',views.maincore_by_id),
+    path('get-all-company-products-services/', views.get_all_company_products_services)
 
 ]

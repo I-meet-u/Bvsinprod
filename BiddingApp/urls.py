@@ -16,6 +16,7 @@ router.register('vendor-rfq-terms-description',views.VendorRfqTermsDescriptionVi
 router.register('source-list-create-items',views.SourceList_CreateItemViewSet)
 router.register('source-publish',views.SourcePublishViewSet)
 router.register('buyer-bidding-service-details',views.BiddingBuyerServiceDetailsView)
+router.register('buyer-bidding-machinary-details',views.BiddingBuyerMachinaryDetailsView)
 
 urlpatterns = [
     path('bidding-router-urls/',include(router.urls)),

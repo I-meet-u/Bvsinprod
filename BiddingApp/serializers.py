@@ -69,6 +69,11 @@ class BiddingBuyerServiceDetailsSerializer(serializers.ModelSerializer):
         model=BiddingBuyerServiceDetails
         fields='__all__'
 
+class BiddingBuyerMachinaryDetailsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model=BiddingBuyerMachinaryDetails
+        fields='__all__'
+
 class SourceList_CreateItemsSerializer(serializers.ModelSerializer):
     class Meta:
         model=SourceList_CreateItems

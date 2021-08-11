@@ -203,6 +203,7 @@ class RfqTermsDescriptionView(viewsets.ModelViewSet):
         dictsqueries = request.data['dictsqueries']
         print(type(dictsqueries))
         product_biddings = request.data.get('product_biddings', None)
+        rfq_type=request.data.get('rfq_type',None)
         updated_by = request.data.get('updated_by', None)
         try:
             for i in range(0, len(dictsqueries)):
@@ -212,6 +213,7 @@ class RfqTermsDescriptionView(viewsets.ModelViewSet):
                                                        description=dictsqueries[i][keys],
                                                        product_biddings=BuyerProductBidding.objects.get(
                                                            product_bidding_id=product_biddings),
+                                                       rfq_type=rfq_type,
                                                        updated_by=SelfRegistration.objects.get(id=updated_by),
                                                        created_by=updated_by)
 
@@ -1813,14 +1815,19 @@ class BiddingBuyerServiceDetailsView(viewsets.ModelViewSet):
         try:
             for i in range(0, len(servicedetails)):
                 BiddingBuyerServiceDetails.objects.create(service_buyer_rfq_number=service_buyer_rfq_number,
-                                                          service_buyer_item_code=servicedetails[i].get('service_item_code'),
-                                                          service_buyer_item_name=servicedetails[i].get('service_item_name'),
+                                                          service_buyer_item_code=servicedetails[i].get(
+                                                              'buyer_service_item_code'),
+                                                          service_buyer_item_name=servicedetails[i].get(
+                                                              'buyer_service_item_name'),
                                                           service_buyer_item_description=servicedetails[i].get(
-                                                              'service_item_description'),
-                                                          service_buyer_uom=servicedetails[i].get('service_uom'),
-                                                          service_buyer_category=servicedetails[i].get('service_category'),
-                                                          service_buyer_quantity=servicedetails[i].get('service_quantity'),
-                                                          service_buyer_document=servicedetails[i].get('service_document'),
+                                                              'buyer_service_item_description'),
+                                                          service_buyer_uom=servicedetails[i].get('buyer_service_uom'),
+                                                          service_buyer_category=servicedetails[i].get(
+                                                              'buyer_service_category'),
+                                                          service_buyer_quantity=servicedetails[i].get(
+                                                              'service_quantity'),
+                                                          service_buyer_document=servicedetails[i].get(
+                                                              'buyer_service_document'),
                                                           updated_by=SelfRegistration.objects.get(id=userid),
                                                           created_by=userid)
 
@@ -1829,9 +1836,46 @@ class BiddingBuyerServiceDetailsView(viewsets.ModelViewSet):
             return Response({'status': 500, 'error': str(e)}, status=500)
 
     def get_queryset(self):
-        buyerproductdetailsobj = BiddingBuyerProductDetails.objects.filter(
-            updated_by=self.request.GET.get('updated_by'))
-        if buyerproductdetailsobj:
-            return buyerproductdetailsobj
+        buyerservicedetailsobj = BiddingBuyerServiceDetails.objects.filter(
+            updated_by=self.request.GET.get('updated_by')).order_by('id')
+        if buyerservicedetailsobj:
+            return buyerservicedetailsobj
         raise ValidationError(
-            {'message': 'Buyer Bidding Product details of particular user id is not exist', 'status': 204})
+            {'message': 'Buyer Bidding Service details of particular user id is not exist', 'status': 204})
+
+
+
+class BiddingBuyerMachinaryDetailsView(viewsets.ModelViewSet):
+    queryset = BiddingBuyerMachinaryDetails.objects.all()
+    serializer_class = BiddingBuyerMachinaryDetailsSerializer
+    # permission_classes = [permissions.AllowAny]
+
+    def create(self, request, *args, **kwargs):
+        machinarydetails = request.data['machinarydetails']
+        machinary_buyer_rfq_number = request.data.get('machinary_buyer_rfq_number', None)
+        userid = request.data.get('userid', None)
+        try:
+            for i in range(0, len(machinarydetails)):
+                BiddingBuyerMachinaryDetails.objects.create(machinary_buyer_rfq_number=machinary_buyer_rfq_number,
+                                                          machinary_buyer_item_code=machinarydetails[i].get('buyer_machinary_item_code'),
+                                                          machinary_buyer_item_name=machinarydetails[i].get('buyer_machinary_item_name'),
+                                                          machinary_buyer_item_description=machinarydetails[i].get(
+                                                              'buyer_machinary_item_description'),
+                                                          machinary_buyer_uom=machinarydetails[i].get('buyer_machinary_uom'),
+                                                          machinary_buyer_category=machinarydetails[i].get('buyer_machinary_category'),
+                                                          machinary_buyer_quantity=machinarydetails[i].get('machinary_quantity'),
+                                                          machinary_buyer_document=machinarydetails[i].get('buyer_machinary_document'),
+                                                          updated_by=SelfRegistration.objects.get(id=userid),
+                                                          created_by=userid)
+
+            return Response({'status': 201, 'message': 'Machinary Details Are Created'}, status=201)
+        except Exception as e:
+            return Response({'status': 500, 'error': str(e)}, status=500)
+
+    def get_queryset(self):
+        buyermachinarydetailsobj = BiddingBuyerMachinaryDetails.objects.filter(
+            updated_by=self.request.GET.get('updated_by')).order_by('id')
+        if buyermachinarydetailsobj:
+            return buyermachinarydetailsobj
+        raise ValidationError(
+            {'message': 'Buyer Bidding Machinary details of particular user id is not exist', 'status': 204})

@@ -1447,7 +1447,7 @@ def get_previous_value_of_buyer_details(request):
             buyerproductobj=BuyerProductDetails.objects.filter(buyer_item_type=itemtype,updated_by_id=userid).last()
             if buyerproductobj:
                 buyer_product={
-                    'buyer_product_item_code':buyerproductobj.buyer_item_code,
+                    'item_code':buyerproductobj.buyer_item_code,
                     'user_id':buyerproductobj.updated_by_id
                 }
                 return Response({'status': 200, 'message': 'Buyer Product List','data':buyer_product},status=200)
@@ -1455,7 +1455,7 @@ def get_previous_value_of_buyer_details(request):
                 itemcodesettings = ItemCodeSettings.objects.filter(item_type=itemtype, updated_by_id=userid).values()
                 if len(itemcodesettings)>0:
                     product_item_code={
-                        'buyer_product_item_code':itemcodesettings[0].get('code_format'),
+                        'item_code':itemcodesettings[0].get('code_format'),
                         'user_id':itemcodesettings[0].get('updated_by_id')
                     }
                     return Response({'status': 200, 'message': 'Code Settings Product','data':product_item_code}, status=200)
@@ -1467,7 +1467,7 @@ def get_previous_value_of_buyer_details(request):
             buyerserviceobj = BuyerServiceDetails.objects.filter(buyer_service_item_type=itemtype, updated_by_id=userid).last()
             if buyerserviceobj:
                 buyer_service = {
-                    'buyer_service_item_code': buyerserviceobj.buyer_service_item_code,
+                    'item_code': buyerserviceobj.buyer_service_item_code,
                     'user_id': buyerserviceobj.updated_by_id
                 }
                 return Response({'status': 200, 'message': 'Buyer Service List', 'data': buyer_service}, status=200)
@@ -1475,7 +1475,7 @@ def get_previous_value_of_buyer_details(request):
                 itemcodesettings = ItemCodeSettings.objects.filter(item_type=itemtype, updated_by_id=userid).values()
                 if len(itemcodesettings) > 0:
                     service_item_code = {
-                        'buyer_service_item_code': itemcodesettings[0].get('code_format'),
+                        'item_code': itemcodesettings[0].get('code_format'),
                         'user_id': itemcodesettings[0].get('updated_by_id')
                     }
                     return Response({'status': 200, 'message': 'Code Settings Service', 'data': service_item_code},
@@ -1489,7 +1489,7 @@ def get_previous_value_of_buyer_details(request):
                 buyermachinaryobj = BuyerMachinaryDetails.objects.filter(buyer_machinary_item_type=itemtype, updated_by_id=userid).last()
                 if buyermachinaryobj:
                     buyer_machinary = {
-                        'buyer_machinary_item_code': buyermachinaryobj.buyer_machinary_item_code,
+                        'item_code': buyermachinaryobj.buyer_machinary_item_code,
                         'user_id': buyermachinaryobj.updated_by_id
                     }
                     return Response({'status': 200, 'message': 'Buyer Machinary List', 'data': buyer_machinary}, status=200)
@@ -1498,7 +1498,7 @@ def get_previous_value_of_buyer_details(request):
                                                                        updated_by_id=userid).values()
                     if len(itemcodesettings) > 0:
                         machinary_item_code = {
-                            'buyer_machinary_item_code': itemcodesettings[0].get('code_format'),
+                            'item_code': itemcodesettings[0].get('code_format'),
                             'user_id': itemcodesettings[0].get('updated_by_id')
                         }
                         return Response({'status': 200, 'message': 'Code Settings Machinary', 'data': machinary_item_code},

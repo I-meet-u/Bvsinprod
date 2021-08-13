@@ -37,6 +37,7 @@ urlpatterns = [
     path('fetch-vendor-product-general-details/', views.fetch_vendor_product_general_details),
     path('fetch-vendor-product-technical-details/', views.fetch_vendor_product_technical_details),
     path('fetch-vendor-product-product_features-details/', views.fetch_vendor_product_productfeatures_details),
-    path('fetch-vendor-product-document-details/', views.fetch_vendor_product_document_details)
+    path('fetch-vendor-product-document-details/', views.fetch_vendor_product_document_details),
+    path('get-vendor-details-by-sub-category/', views.get_vendor_details_by_sub_category)
 
 ]

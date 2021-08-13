@@ -1446,3 +1446,26 @@ def fetch_vendor_product_document_details(request):
                             status=status.HTTP_204_NO_CONTENT)
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+@api_view(['post'])
+@permission_classes((AllowAny,))
+def get_vendor_details_by_sub_category(request):
+    data=request.data
+    subcategoryname=data['subcategoryname']
+    vendordetails=[]
+    ccodearray=[]
+    try:
+        vendorobj = VendorProduct_BasicDetails.objects.filter(sub_category__icontains=subcategoryname).distinct('sub_category','company_code').values()
+        for i in range(0,len(vendorobj)):
+            print()
+            basicobj=BasicCompanyDetails.objects.get(company_code=vendorobj[i].get('company_code'))
+            regobj=SelfRegistration.objects.get(id=basicobj.updated_by_id)
+            vendordetails.append({
+                'company_name':basicobj.company_name,
+                'name':regobj.contact_person
+            })
+        return Response({'status': 200, 'message': 'ok','data':vendordetails},status=status.HTTP_200_OK)
+
+
+    except Exception as e:
+        return Response({'status':500,'error':str(e)},status=status.HTTP_500_INTERNAL_SERVER_ERROR)

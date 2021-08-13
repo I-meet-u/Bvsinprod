@@ -527,7 +527,7 @@ class BuyerProductDetailsView(viewsets.ModelViewSet):
         buyer_document = request.data.get('buyer_document', None)
         buyer_additional_specifications = request.data.get('buyer_additional_specifications', None)
         buyer_add_product_supplies = request.data.get('buyer_add_product_supplies', None)
-        numeric=request.data.get('numeric',None)
+        # numeric=request.data.get('numeric',None)
         userid = request.data.get('userid', None)
         try:
             itemcodesettingsobj = ItemCodeSettings.objects.filter(updated_by=userid, item_type='Product').order_by(

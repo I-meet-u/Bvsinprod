@@ -9,6 +9,7 @@ from rest_framework.response import Response
 from LandingPageApp.models import CompanyReview, CompanyRating
 from LandingPageApp.serializers import CompanyReviewSerializer, CompanyRatingSerializer
 from MastersApp.models import MaincoreMaster, CategoryMaster, SubCategoryMaster
+from MaterialApp.models import VendorProduct_BasicDetails
 from RegistrationApp.models import SelfRegistration, BasicCompanyDetails, IndustrialHierarchy, BillingAddress, \
     IndustrialInfo
 
@@ -351,7 +352,6 @@ class CompanyRatingViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.AllowAny]
     queryset = CompanyRating.objects.all()
     serializer_class = CompanyRatingSerializer
-
 
 
 @api_view(['post'])

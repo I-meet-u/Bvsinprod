@@ -59,10 +59,23 @@ class VendorBiddingBuyerProductDetailsSerializer(serializers.ModelSerializer):
         model=VendorBiddingBuyerProductDetails
         fields='__all__'
 
+class VendorBiddingBuyerServiceDetailsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model=VendorBiddingBuyerServiceDetails
+        fields='__all__'
+
+
+class VendorBiddingBuyerMachinaryDetailsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model=VendorBiddingBuyerMachinaryDetails
+        fields='__all__'
+
+
 class VendorRfqTermsDescriptionSerializer(serializers.ModelSerializer):
     class Meta:
         model=VendorRfqTermsDescription
         fields='__all__'
+
 
 class BiddingBuyerServiceDetailsSerializer(serializers.ModelSerializer):
     class Meta:
@@ -73,6 +86,7 @@ class BiddingBuyerMachinaryDetailsSerializer(serializers.ModelSerializer):
     class Meta:
         model=BiddingBuyerMachinaryDetails
         fields='__all__'
+
 
 class SourceList_CreateItemsSerializer(serializers.ModelSerializer):
     class Meta:

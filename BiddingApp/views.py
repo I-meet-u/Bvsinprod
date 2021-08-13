@@ -103,7 +103,7 @@ class BiddingBuyerProductDetailsView(viewsets.ModelViewSet):
 
     def get_queryset(self):
         buyerproductdetailsobj = BiddingBuyerProductDetails.objects.filter(
-            updated_by=self.request.GET.get('updated_by'))
+            updated_by=self.request.GET.get('updated_by')).order_by('id')
         if buyerproductdetailsobj:
             return buyerproductdetailsobj
         raise ValidationError(
@@ -213,8 +213,8 @@ class RfqTermsDescriptionView(viewsets.ModelViewSet):
                                                        description=dictsqueries[i][keys],
                                                        product_biddings=BuyerProductBidding.objects.get(
                                                            product_bidding_id=product_biddings),
-                                                       rfq_type=rfq_type,
                                                        updated_by=SelfRegistration.objects.get(id=updated_by),
+                                                       rfq_type=rfq_type,
                                                        created_by=updated_by)
 
             return Response({'status': 201, 'message': 'Terms and Descriptions are created'}, status=201)
@@ -502,18 +502,122 @@ class VendorBiddingBuyerProductDetailsView(viewsets.ModelViewSet):
                                                                 vendor_code=vendorproductdetails[i].get('vendor_code'),
                                                                 updated_by=SelfRegistration.objects.get(id=userid),
                                                                 created_by=userid)
-            return Response({'status': 201, 'message': 'Vendor Bidding Buyer Produt Details are Created'}, status=201)
+            return Response({'status': 201, 'message': 'Vendor Bidding Buyer Product Details are Created'}, status=201)
         except Exception as e:
             return Response({'status': 500, 'error': str(e)}, status=500)
 
     def get_queryset(self):
         vendorproductdetailsobj = VendorBiddingBuyerProductDetails.objects.filter(
-            updated_by=self.request.GET.get('updated_by'))
+            updated_by=self.request.GET.get('updated_by')).order_by('id')
         if vendorproductdetailsobj:
             return vendorproductdetailsobj
         raise ValidationError(
             {'message': 'Vendor Bidding Product details of particular user id is not exist', 'status': 204})
 
+
+
+class VendorBiddingBuyerServiceDetailsView(viewsets.ModelViewSet):
+    # permission_classes = [permissions.AllowAny]
+    queryset = VendorBiddingBuyerServiceDetails.objects.all()
+    serializer_class = VendorBiddingBuyerServiceDetailsSerializer
+
+    def create(self, request, *args, **kwargs):
+        vendorservicedetails = request.data['vendorservicedetails']
+        vendor_service_rfq_number = request.data.get('vendor_service_rfq_number', None)
+        userid = request.data.get('userid', None)
+        try:
+            for i in range(0, len(vendorservicedetails)):
+                VendorBiddingBuyerServiceDetails.objects.create(vendor_service_rfq_number=vendor_service_rfq_number,
+                                                                vendor_service_item_code=vendorservicedetails[i].get(
+                                                                    'vendor_service_item_code'),
+                                                                vendor_service_item_name=vendorservicedetails[i].get(
+                                                                    'vendor_service_item_name'),
+                                                                vendor_service_item_description=vendorservicedetails[i].get(
+                                                                    'vendor_service_item_description'),
+                                                                vendor_service_uom=vendorservicedetails[i].get('vendor_service_uom'),
+                                                                vendor_service_category=vendorservicedetails[i].get(
+                                                                    'vendor_service_category'),
+                                                                buyer_service_quantity=vendorservicedetails[i].get(
+                                                                    'buyer_service_quantity'),
+                                                                vendor_service_quantity=vendorservicedetails[i].get(
+                                                                    'vendor_service_quantity'),
+                                                                vendor_service_rate=vendorservicedetails[i].get('vendor_service_rate'),
+                                                                vendor_service_tax=vendorservicedetails[i].get('vendor_service_tax'),
+                                                                vendor_service_discount=vendorservicedetails[i].get(
+                                                                    'vendor_service_discount'),
+                                                                vendor_service_final_amount=vendorservicedetails[i].get(
+                                                                    'vendor_service_final_amount'),
+                                                                vendor_service_total_amount=vendorservicedetails[i].get(
+                                                                    'vendor_service_total_amount'),
+                                                                vendor_service_document=vendorservicedetails[i].get(
+                                                                    'vendor_service_document'),
+                                                                vendor_code=vendorservicedetails[i].get('vendor_code'),
+                                                                updated_by=SelfRegistration.objects.get(id=userid),
+                                                                created_by=userid)
+            return Response({'status': 201, 'message': 'Vendor Bidding Buyer Service Details are Created'}, status=201)
+        except Exception as e:
+            return Response({'status': 500, 'error': str(e)}, status=500)
+
+    def get_queryset(self):
+        vendorservicedetailsobj = VendorBiddingBuyerServiceDetails.objects.filter(
+            updated_by=self.request.GET.get('updated_by')).order_by('id')
+        if vendorservicedetailsobj:
+            return vendorservicedetailsobj
+        raise ValidationError(
+            {'message': 'Vendor Bidding Service details of particular user id is not exist', 'status': 204})
+
+
+class VendorBiddingBuyerMachinaryDetailsView(viewsets.ModelViewSet):
+    # permission_classes = [permissions.AllowAny]
+    queryset = VendorBiddingBuyerMachinaryDetails.objects.all()
+    serializer_class = VendorBiddingBuyerMachinaryDetailsSerializer
+    ordering_fields = ['id']
+    ordering = ['id']
+
+    def create(self, request, *args, **kwargs):
+        vendormachinarydetails = request.data['vendormachinarydetails']
+        vendor_machinary_rfq_number = request.data.get('vendor_machinary_rfq_number', None)
+        userid = request.data.get('userid', None)
+        try:
+            for i in range(0, len(vendormachinarydetails)):
+                VendorBiddingBuyerMachinaryDetails.objects.create(vendor_machinary_rfq_number=vendor_machinary_rfq_number,
+                                                                vendor_machinary_item_code=vendormachinarydetails[i].get(
+                                                                    'vendor_machinary_item_code'),
+                                                                vendor_machinary_item_name=vendormachinarydetails[i].get(
+                                                                    'vendor_machinary_item_name'),
+                                                                vendor_machinary_item_description=vendormachinarydetails[i].get(
+                                                                    'vendor_machinary_item_description'),
+                                                                vendor_machinary_uom=vendormachinarydetails[i].get('vendor_machinary_uom'),
+                                                                vendor_machinary_category=vendormachinarydetails[i].get(
+                                                                    'vendor_machinary_category'),
+                                                                buyer_machinary_quantity=vendormachinarydetails[i].get(
+                                                                    'buyer_machinary_quantity'),
+                                                                vendor_machinary_quantity=vendormachinarydetails[i].get(
+                                                                    'vendor_machinary_quantity'),
+                                                                vendor_machinary_rate=vendormachinarydetails[i].get('vendor_machinary_rate'),
+                                                                vendor_machinary_tax=vendormachinarydetails[i].get('vendor_machinary_tax'),
+                                                                vendor_machinary_discount=vendormachinarydetails[i].get(
+                                                                    'vendor_machinary_discount'),
+                                                                vendor_machinary_final_amount=vendormachinarydetails[i].get(
+                                                                    'vendor_machinary_final_amount'),
+                                                                vendor_machinary_total_amount=vendormachinarydetails[i].get(
+                                                                    'vendor_machinary_total_amount'),
+                                                                vendor_machinary_document=vendormachinarydetails[i].get(
+                                                                    'vendor_machinary_document'),
+                                                                vendor_code=vendormachinarydetails[i].get('vendor_code'),
+                                                                updated_by=SelfRegistration.objects.get(id=userid),
+                                                                created_by=userid)
+            return Response({'status': 201, 'message': 'Vendor Bidding Buyer Machinary Details are Created'}, status=201)
+        except Exception as e:
+            return Response({'status': 500, 'error': str(e)}, status=500)
+
+    def get_queryset(self):
+        vendormachinarydetailsobj = VendorBiddingBuyerMachinaryDetails.objects.filter(
+            updated_by=self.request.GET.get('updated_by')).order_by('id')
+        if vendormachinarydetailsobj:
+            return vendormachinarydetailsobj
+        raise ValidationError(
+            {'message': 'Vendor Bidding Machinary details of particular user id is not exist', 'status': 204})
 
 class VendorRfqTermsDescriptionView(viewsets.ModelViewSet):
     # permission_classes = [permissions.AllowAny]
@@ -689,21 +793,22 @@ def get_vendor_published_leads(request):
     selectsarray = []
     try:
         basic = BasicCompanyDetails.objects.get(updated_by_id=userid)
-        selects = SelectVendorsForBiddingProduct.objects.filter(vendor_code=ccode).values()
+        print(basic.company_code)
+        selects = SelectVendorsForBiddingProduct.objects.filter(vendor_code=basic.company_code,vendor_status='Accept').values().order_by('id')
+        print(len(selects))
         if len(selects) > 0:
             for i in range(0, len(selects)):
                 selectsarray.append(selects[i].get('rfq_number'))
 
-            bidobj = BuyerProductBidding.objects.filter(user_rfq_number__in=selectsarray).values().order_by(
+            bidobj = BuyerProductBidding.objects.filter(user_rfq_number__in=selectsarray,product_rfq_status="Published").values().order_by(
                 'user_rfq_number')
             print(len(bidobj))
             for i in range(0, len(selects)):
-                print(bidobj[i].get('updated_by_id'))
                 basicobj = BasicCompanyDetails.objects.get(updated_by_id=bidobj[i].get('updated_by_id'))
                 vendorpublishleads.append({'user_rfq_number': bidobj[i].get('user_rfq_number'),
                                            'vendor_code': basicobj.company_code,
                                            'vendor_status': selects[i].get('vendor_status'),
-                                           'updatedby': selects[i].get('updatedby_id'),
+                                           'updatedby': selects[i].get('updated_by_id'),
                                            'product_bidding_id': bidobj[i].get('product_bidding_id'),
                                            'product_rfq_status': bidobj[i].get('product_rfq_status'),
                                            'product_rfq_type': bidobj[i].get('product_rfq_type'),
@@ -716,6 +821,7 @@ def get_vendor_published_leads(request):
                                            'company_name': basicobj.company_name
 
                                            })
+
             return Response({'status': 200, 'message': 'Getting data', 'data': vendorpublishleads}, status=200)
         else:
             return Response({'status': 202, 'message': 'No Data Found'}, status=202)
@@ -1884,3 +1990,32 @@ class BiddingBuyerMachinaryDetailsView(viewsets.ModelViewSet):
             return buyermachinarydetailsobj
         raise ValidationError(
             {'message': 'Buyer Bidding Machinary details of particular user id is not exist', 'status': 204})
+
+
+@api_view(['post'])
+def fetch_buyer_service_details_by_userid_rfq(request):
+    data=request.data
+    rfqnumber=data['rfq_number']
+    try:
+        buyerservice=BiddingBuyerServiceDetails.objects.filter(service_buyer_rfq_number=rfqnumber).values().order_by('id')
+        if len(buyerservice)>0:
+            return Response({'status':200,'message':'Buyer Service Bidding Details','data':buyerservice},status=status.HTTP_200_OK)
+        else:
+            return Response({'status': 204, 'message': 'Buyer Service Bidding Details Not Present'},
+                    status=status.HTTP_204_NO_CONTENT)
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)
+
+@api_view(['post'])
+def fetch_buyer_machinary_details_by_userid_rfq(request):
+    data=request.data
+    rfqnumber=data['rfq_number']
+    try:
+        buyermachinary=BiddingBuyerMachinaryDetails.objects.filter(machinary_buyer_rfq_number=rfqnumber).values().order_by('id')
+        if len(buyermachinary)>0:
+            return Response({'status':200,'message':'Buyer Machinary Bidding Details','data':buyermachinary},status=status.HTTP_200_OK)
+        else:
+            return Response({'status': 204, 'message': 'Buyer Machinary Bidding Details Not Present'},
+                    status=status.HTTP_204_NO_CONTENT)
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)

@@ -15,9 +15,6 @@ router.register('buyer-machinary-details', views.BuyerMachinaryDetailsView)
 router.register('item-code-settings', views.ItemCodeSettingsView)
 urlpatterns = [
     path('vendor-product-router-urls/',include(router.urls)),
-    path('buyer-product-create/',views.buyer_product_create),
-    path('buyer-service-create/', views.buyer_service_create),
-    path('buyer-machinary-create/', views.buyer_machinary_create),
     path('get-itemtype-based-on-userid/',views.get_itemtype_based_on_userid),
     path('item-code-settings-list/',views.item_code_settings_list),
     path('disable-buyer-product/',views.disable_buyer_product),
@@ -36,5 +33,10 @@ urlpatterns = [
     path('advance-search-vendor-product/',views.advance_search_vendor_product),
     path('get_product_all_details_based_on_id_multiple_and_userid/',views.get_product_all_details_based_on_id_multiple_and_userid),
     path('fetch-vendor-product-basic-details-by-category/', views.fetch_vendor_product_basic_details_by_category),
-    path('get-previous-value-of-buyer-details/',views.get_previous_value_of_buyer_details)
-    ]
+    path('get-previous-value-of-buyer-details/',views.get_previous_value_of_buyer_details),
+    path('fetch-vendor-product-general-details/', views.fetch_vendor_product_general_details),
+    path('fetch-vendor-product-technical-details/', views.fetch_vendor_product_technical_details),
+    path('fetch-vendor-product-product_features-details/', views.fetch_vendor_product_productfeatures_details),
+    path('fetch-vendor-product-document-details/', views.fetch_vendor_product_document_details)
+
+]

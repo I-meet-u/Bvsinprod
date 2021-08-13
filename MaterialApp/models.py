@@ -45,6 +45,7 @@ class VendorProduct_BasicDetails(models.Model):
     created_on = models.DateTimeField(auto_now_add=True)
     updated_on = models.DateTimeField(auto_now=True)
     created_by = models.BigIntegerField()
+    vendor_code=models.CharField(max_length=100,null=True,blank=True)
     updated_by = models.ForeignKey(SelfRegistration, on_delete=models.CASCADE)
     history = HistoricalRecords()
 

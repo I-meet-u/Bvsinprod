@@ -84,7 +84,7 @@ class RfqTermsDescription(models.Model):
 
 
 class SelectVendorsForBiddingProduct(models.Model):
-    rfq_number = models.CharField(max_length=50)
+    rfq_number = models.CharField(max_length=50,null=True,blank=True)
     vendor_code=models.CharField(max_length=80)
     vendor_status=models.CharField(max_length=50,default='Pending')
     created_on = models.DateTimeField(auto_now_add=True)
@@ -270,6 +270,56 @@ class BiddingBuyerMachinaryDetails(models.Model):
     class Meta:
         db_table='BiddingBuyerMachinaryDetails'
 
+class VendorBiddingBuyerServiceDetails(models.Model):
+    vendor_service_item_code= models.CharField(max_length=100,null=True,blank=True)
+    vendor_service_item_name = models.CharField(max_length=100)
+    vendor_service_item_description = models.TextField(null=True,blank=True)
+    vendor_service_uom = models.CharField(max_length=100, null=True,blank=True)
+    vendor_service_category = models.CharField(max_length=500,null=True,blank=True)
+    buyer_service_quantity = models.CharField(max_length=100,null=True,blank=True)
+    vendor_service_quantity = models.CharField(max_length=100,null=True,blank=True)
+    vendor_service_rate = models.CharField(max_length=100,null=True,blank=True)
+    vendor_service_tax = models.CharField(max_length=100,null=True,blank=True)
+    vendor_service_discount = models.CharField(max_length=100,null=True,blank=True)
+    vendor_service_final_amount = models.CharField(max_length=80,null=True,blank=True)
+    vendor_service_total_amount= models.CharField(max_length=80,null=True,blank=True)
+    vendor_service_document=models.FileField(upload_to='BuyerProductFiles',null=True,blank=True)
+    created_on = models.DateTimeField(auto_now_add=True,null=True,blank=True)
+    updated_on = models.DateTimeField(auto_now=True)
+    created_by = models.BigIntegerField(null=True,blank=True)
+    vendor_service_rfq_number=models.CharField(max_length=100,null=True,blank=True)
+    vendor_code=models.CharField(max_length=200,null=True,blank=True)
+    updated_by = models.ForeignKey(SelfRegistration, on_delete=models.CASCADE)
+    history = HistoricalRecords()
+
+    class Meta:
+        db_table='VendorBiddingBuyerServiceDetails'
+
+
+class VendorBiddingBuyerMachinaryDetails(models.Model):
+    vendor_machinary_item_code= models.CharField(max_length=100,null=True,blank=True)
+    vendor_machinary_item_name = models.CharField(max_length=100)
+    vendor_machinary_item_description = models.TextField(null=True,blank=True)
+    vendor_machinary_uom = models.CharField(max_length=100, null=True,blank=True)
+    vendor_machinary_category = models.CharField(max_length=500,null=True,blank=True)
+    buyer_machinary_quantity = models.CharField(max_length=100,null=True,blank=True)
+    vendor_machinary_quantity = models.CharField(max_length=100,null=True,blank=True)
+    vendor_machinary_rate = models.CharField(max_length=100,null=True,blank=True)
+    vendor_machinary_tax = models.CharField(max_length=100,null=True,blank=True)
+    vendor_machinary_discount = models.CharField(max_length=100,null=True,blank=True)
+    vendor_machinary_final_amount = models.CharField(max_length=80,null=True,blank=True)
+    vendor_machinary_total_amount= models.CharField(max_length=80,null=True,blank=True)
+    vendor_machinary_document=models.FileField(upload_to='BuyerProductFiles',null=True,blank=True)
+    created_on = models.DateTimeField(auto_now_add=True,null=True,blank=True)
+    updated_on = models.DateTimeField(auto_now=True)
+    created_by = models.BigIntegerField(null=True,blank=True)
+    vendor_machinary_rfq_number=models.CharField(max_length=100,null=True,blank=True)
+    vendor_code=models.CharField(max_length=200,null=True,blank=True)
+    updated_by = models.ForeignKey(SelfRegistration, on_delete=models.CASCADE)
+    history = HistoricalRecords()
+
+    class Meta:
+        db_table='VendorBiddingBuyerMachinaryDetails'
 
 class SourceList_CreateItems(models.Model):
     item_type=models.CharField(max_length=80)

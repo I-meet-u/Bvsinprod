@@ -175,50 +175,18 @@ def external_vendor(request):
     userid = data['userid']
     internalarray = []
     externalarray = []
-
-
     try:
-        regobj=SelfRegistration.objects.filter(admin_approve='Approved',user_type='Buyer').values().order_by('id')
-        print(len(regobj))
-        internalobj=InternalVendor.objects.filter().values()
-        for i in range(0,len(internalobj)):
-            internalarray.append(internalobj[i].get('company_code'))
-
-        if len(regobj)>0:
-            for i in range(0,len(regobj)):
-                basicobj=BasicCompanyDetails.objects.get(updated_by_id=regobj[i].get('id'))
-                industryobj=IndustrialInfo.objects.get(updated_by_id=regobj[i].get('id'),company_code=basicobj.company_code)
-                # hierarchyobj = IndustrialHierarchy.objects.get(updated_by_id=regobj[i].get('id'))
-                billingobj=BillingAddress.objects.filter(updated_by_id=regobj[i].get('id')).values()
-                if basicobj.company_code not in internalarray:
-                    print('ok')
-
-                    externalarray.append({'company_code':basicobj.company_code,
-                                          'company_name':basicobj.company_name,
-                                          'nature_of_business':industryobj.nature_of_business,
-                                          'industry_to_serve': industryobj.industry_to_serve,
-                                          'maincore': "",
-                                          'category': "",
-                                          'subcategory':"",
-                                          'bill_city': billingobj[0].get('bill_city'),
-                                          'bill_state': billingobj[0].get('bill_state'),
-                                          # 'user_type':regobj[i].get('user_type')
-
-                                          })
-                else:
-                    print('already present')
         regobjdata= SelfRegistration.objects.filter(Q(user_type='Vendor')| Q(user_type='Both'),admin_approve='Approved').values().order_by('id')
-
+        internalobj = InternalVendor.objects.filter().values()
+        for i in range(0, len(internalobj)):
+            internalarray.append(internalobj[i].get('company_code'))
         if len(regobjdata)>0:
             for i in range(0, len(regobjdata)):
                 basicobj = BasicCompanyDetails.objects.get(updated_by_id=regobjdata[i].get('id'))
-                industryobj = IndustrialInfo.objects.get(updated_by_id=regobjdata[i].get('id'),
-                                                         company_code=basicobj.company_code)
+                industryobj = IndustrialInfo.objects.get(updated_by_id=regobjdata[i].get('id'),company_code=basicobj.company_code)
                 hierarchyobj = IndustrialHierarchy.objects.get(updated_by_id=regobjdata[i].get('id'))
                 billingobj = BillingAddress.objects.filter(updated_by_id=regobjdata[i].get('id')).values()
                 if basicobj.company_code not in internalarray:
-                    print('ok')
-
                     externalarray.append({'company_code': basicobj.company_code,
                                           'company_name': basicobj.company_name,
                                           'nature_of_business': industryobj.nature_of_business,
@@ -227,12 +195,8 @@ def external_vendor(request):
                                           'category': hierarchyobj.category,
                                           'subcategory': hierarchyobj.subcategory,
                                           'bill_city': billingobj[0].get('bill_city'),
-                                          'bill_state': billingobj[0].get('bill_state'),
-                                          # 'user_type': regobjdata[i].get('user_type')
-
+                                          'bill_state': billingobj[0].get('bill_state')
                                           })
-                else:
-                    print('already present')
 
             return Response({'status': 200, 'message': 'External Vendor List', 'data': externalarray}, status=200)
         else:

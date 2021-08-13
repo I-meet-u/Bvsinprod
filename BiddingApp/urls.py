@@ -13,10 +13,14 @@ router.register('bidding-term-master-settings',views.BiddingTermMasterSettingsVi
 router.register('vendor-product-bidding',views.VendorProductBiddingView)
 router.register('vendor-bidding-product-details',views.VendorBiddingBuyerProductDetailsView)
 router.register('vendor-rfq-terms-description',views.VendorRfqTermsDescriptionView)
-router.register('source-list-create-items',views.SourceList_CreateItemViewSet)
-router.register('source-publish',views.SourcePublishViewSet)
+
 router.register('buyer-bidding-service-details',views.BiddingBuyerServiceDetailsView)
 router.register('buyer-bidding-machinary-details',views.BiddingBuyerMachinaryDetailsView)
+
+router.register('vendor-bidding-service-details',views.VendorBiddingBuyerServiceDetailsView)
+router.register('vendor-bidding-machinary-details',views.VendorBiddingBuyerMachinaryDetailsView)
+router.register('source-list-create-items',views.SourceList_CreateItemViewSet)
+router.register('source-publish',views.SourcePublishViewSet)
 
 urlpatterns = [
     path('bidding-router-urls/',include(router.urls)),
@@ -60,7 +64,9 @@ urlpatterns = [
     path('buyer-bidlist-based-on-rfqnumber/',views.buyer_bidlist_based_on_rfqnumber),
     path('award-total-count-product/',views.award_total_count_product),
     path('award-product-create/',views.award_product_create),
-    path('award-get-list-of-vendor/',views.award_get_list_of_vendor)
+    path('award-get-list-of-vendor/',views.award_get_list_of_vendor),
+    path('fetch-buyer-service-details-by-userid-rfq/',views.fetch_buyer_service_details_by_userid_rfq),
+    path('fetch-buyer-machinary-details-by-userid-rfq/',views.fetch_buyer_machinary_details_by_userid_rfq)
 
 
 ]

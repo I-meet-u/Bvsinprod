@@ -1464,3 +1464,39 @@ def employeelogin(request):
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)
 
+
+@api_view(['post'])
+def delete_contact_details(request):
+    data=request.data
+    contactpk=data['contactpk']
+    try:
+        contactobj=ContactDetails.objects.filter(id__in=contactpk).values()
+        if len(contactobj)>0:
+            for i in range(0,len(contactobj)):
+                contactdel=ContactDetails.objects.get(id=contactobj[i].get('id'))
+                contactdel.delete()
+            return Response({'status':200,'message':'Contact Details are deleted'},status=200)
+        else:
+            return Response({'status': 204, 'message': 'Contact details are not present or it is already deleted'}, status=204)
+
+
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)
+
+@api_view(['post'])
+def delete_communication_details(request):
+    data=request.data
+    communicationpk=data['communicationpk']
+    try:
+        communicationobj=CommunicationDetails.objects.filter(id__in=communicationpk).values()
+        if len(communicationobj)>0:
+            for i in range(0,len(communicationobj)):
+                coummunicationdel=CommunicationDetails.objects.get(id=communicationobj[i].get('id'))
+                coummunicationdel.delete()
+            return Response({'status':200,'message':'Communication Details are deleted'},status=200)
+        else:
+            return Response({'status': 204, 'message': 'Communication details are not present or it is already deleted'}, status=204)
+
+
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)

@@ -73,7 +73,9 @@ urlpatterns = [
     path('changecompprofile/',views.changecompprofile),
     path('buyer-login/',views.buyer_login),
     path('sendbluemailforgot/',views.sendbluemailforgot),
-    path('employeelogin/',views.employeelogin)
+    path('employeelogin/',views.employeelogin),
+    path('delete-contact-details/', views.delete_contact_details),
+    path('delete-communication-details/', views.delete_communication_details)
 
     # path('send_mail_template/',views.send_mail_template)
     # path('subscribe_email/', MailSubscriptionAPIView.as_view(),name='subscribe-email')

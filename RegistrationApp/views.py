@@ -1466,6 +1466,7 @@ def employeelogin(request):
 
 
 @api_view(['post'])
+@permission_classes((AllowAny,))
 def delete_contact_details(request):
     data=request.data
     contactpk=data['contactpk']
@@ -1484,6 +1485,7 @@ def delete_contact_details(request):
         return Response({'status': 500, 'error': str(e)}, status=500)
 
 @api_view(['post'])
+@permission_classes((AllowAny,))
 def delete_communication_details(request):
     data=request.data
     communicationpk=data['communicationpk']

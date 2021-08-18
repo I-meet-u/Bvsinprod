@@ -154,7 +154,7 @@ def change_phonenumber(request):
 
 
 @api_view(['post'])
-# @permission_classes((AllowAny,))
+@permission_classes((AllowAny,))
 def change_password_with_phone_number(request):
     # change password by using phone_number
     data = request.data
@@ -173,7 +173,7 @@ def change_password_with_phone_number(request):
 
 
 @api_view(['post'])
-# @permission_classes((AllowAny,))
+@permission_classes((AllowAny,))
 def change_password_with_email(request):
     # change password by using email_id
     data = request.data
@@ -667,7 +667,7 @@ def sendOtpmail(request):
 
 
 @api_view(['post'])
-# @permission_classes((AllowAny,))
+@permission_classes((AllowAny,))
 def sendbluemail(request):
     data=request.data
     email = data['email']
@@ -936,7 +936,7 @@ def uploaduserprofile(request):
 
 
 @api_view(['post'])
-# @permission_classes((AllowAny,))
+@permission_classes((AllowAny,))
 def phone_otp_verify(request):
     data=request.data
     phoneotp=data['phoneotp']
@@ -952,7 +952,7 @@ def phone_otp_verify(request):
 
 
 @api_view(['post'])
-# @permission_classes((AllowAny,))
+@permission_classes((AllowAny,))
 def email_otp_verify(request):
     data=request.data
     emailotp=data['emailotp']
@@ -1466,7 +1466,7 @@ def employeelogin(request):
 
 
 @api_view(['post'])
-@permission_classes((AllowAny,))
+# @permission_classes((AllowAny,))
 def delete_contact_details(request):
     data=request.data
     contactpk=data['contactpk']
@@ -1485,7 +1485,7 @@ def delete_contact_details(request):
         return Response({'status': 500, 'error': str(e)}, status=500)
 
 @api_view(['post'])
-@permission_classes((AllowAny,))
+# @permission_classes((AllowAny,))
 def delete_communication_details(request):
     data=request.data
     communicationpk=data['communicationpk']

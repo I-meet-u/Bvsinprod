@@ -936,7 +936,7 @@ def uploaduserprofile(request):
 
 
 @api_view(['post'])
-@permission_classes((AllowAny,))
+# @permission_classes((AllowAny,))
 def phone_otp_verify(request):
     data=request.data
     phoneotp=data['phoneotp']
@@ -952,7 +952,7 @@ def phone_otp_verify(request):
 
 
 @api_view(['post'])
-@permission_classes((AllowAny,))
+# @permission_classes((AllowAny,))
 def email_otp_verify(request):
     data=request.data
     emailotp=data['emailotp']

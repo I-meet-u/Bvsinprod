@@ -702,7 +702,7 @@ def sendbluemail(request):
 
 
 @api_view(['post'])
-@permission_classes((AllowAny,))
+# @permission_classes((AllowAny,))
 def sendbluemailforgot(request):
     data=request.data
     email = data['email']
@@ -737,7 +737,7 @@ def sendbluemailforgot(request):
 
 
 @api_view(['post'])
-@permission_classes((AllowAny,))
+# @permission_classes((AllowAny,))
 def sendSMS(request):
     data=request.data
     digits = "0123456789"

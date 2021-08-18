@@ -118,7 +118,7 @@ def get_userid_by_token(request):
 
 
 @api_view(['post'])
-# @permission_classes((AllowAny,))
+@permission_classes((AllowAny,))
 def change_email(request):
     # passing userid and already presented email and changing email to another email
     data=request.data
@@ -135,7 +135,7 @@ def change_email(request):
         return Response({'status': 500, 'error': str(e)}, status=500)
 
 @api_view(['post'])
-# @permission_classes((AllowAny,))
+@permission_classes((AllowAny,))
 def change_phonenumber(request):
     # change phone number by using userid and already presented phone and changed to new phone number
     data=request.data
@@ -771,7 +771,7 @@ def sendSMS(request):
 
 
 @api_view(['post'])
-@permission_classes((AllowAny,))
+# @permission_classes((AllowAny,))
 def checkotp(request):
     data=request.data
     userid=data['userid']
@@ -787,7 +787,7 @@ def checkotp(request):
         return Response({'status': 500, 'error': str(e)}, status=500)
 
 @api_view(['post'])
-@permission_classes((AllowAny,))
+# @permission_classes((AllowAny,))
 def checkemailotp(request):
     data = request.data
     userid = data['userid']
@@ -804,7 +804,7 @@ def checkemailotp(request):
 
 
 @api_view(['post'])
-@permission_classes((AllowAny,))
+# @permission_classes((AllowAny,))
 def checkphoneotp(request):
     data=request.data
     userid=data['userid']
@@ -822,7 +822,7 @@ def checkphoneotp(request):
 
 
 @api_view(['post'])
-@permission_classes((AllowAny,))
+# @permission_classes((AllowAny,))
 def checkotpemailt(request):
     data=request.data
     userid=data['userid']
@@ -879,7 +879,7 @@ def changeemail(request):
         return Response({'status': 500, 'error': str(e)}, status=500)
 
 @api_view(['post'])
-# @permission_classes((AllowAny,))
+@permission_classes((AllowAny,))
 def changephone(request):
     data = request.data
     userid = data['userid']

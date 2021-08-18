@@ -667,7 +667,7 @@ def sendOtpmail(request):
 
 
 @api_view(['post'])
-@permission_classes((AllowAny,))
+# @permission_classes((AllowAny,))
 def sendbluemail(request):
     data=request.data
     email = data['email']

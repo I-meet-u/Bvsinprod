@@ -737,7 +737,7 @@ def sendbluemailforgot(request):
 
 
 @api_view(['post'])
-# @permission_classes((AllowAny,))
+@permission_classes((AllowAny,))
 def sendSMS(request):
     data=request.data
     digits = "0123456789"
@@ -879,7 +879,7 @@ def changeemail(request):
         return Response({'status': 500, 'error': str(e)}, status=500)
 
 @api_view(['post'])
-@permission_classes((AllowAny,))
+# @permission_classes((AllowAny,))
 def changephone(request):
     data = request.data
     userid = data['userid']

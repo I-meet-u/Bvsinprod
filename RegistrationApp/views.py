@@ -154,7 +154,7 @@ def change_phonenumber(request):
 
 
 @api_view(['post'])
-@permission_classes((AllowAny,))
+# @permission_classes((AllowAny,))
 def change_password_with_phone_number(request):
     # change password by using phone_number
     data = request.data
@@ -173,7 +173,7 @@ def change_password_with_phone_number(request):
 
 
 @api_view(['post'])
-@permission_classes((AllowAny,))
+# @permission_classes((AllowAny,))
 def change_password_with_email(request):
     # change password by using email_id
     data = request.data

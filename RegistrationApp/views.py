@@ -702,7 +702,7 @@ def sendbluemail(request):
 
 
 @api_view(['post'])
-# @permission_classes((AllowAny,))
+@permission_classes((AllowAny,))
 def sendbluemailforgot(request):
     data=request.data
     email = data['email']

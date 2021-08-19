@@ -344,8 +344,8 @@ class PFChargesMaster(models.Model):
 class FrieghtChargesMaster(models.Model):
     # frieght_models and fields
     frieght_id = models.BigAutoField(primary_key=True)
-    frieght_code = models.CharField(max_length=30,unique=True)
-    frieght_description = models.CharField(max_length=200)
+    frieght_code = models.CharField(max_length=30,unique=True,null=True,blank=True)
+    frieght_description = models.CharField(max_length=200,unique=True)
     is_verified = models.BooleanField(default=False)
     created_on = models.DateTimeField(auto_now_add=True)
     updated_on = models.DateTimeField(auto_now=True)

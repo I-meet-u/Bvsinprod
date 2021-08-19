@@ -2575,3 +2575,19 @@ def sac_masters_user_id(request):
             return Response({'status':204,'message':'No HSN data present'},status=204)
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)
+
+
+
+@api_view(['post'])
+@permission_classes([AllowAny,])
+def getfrightdeialswithvendorsindata(request):
+    data=request.data
+    userid=data['userid']
+    try:
+        frightobjuser=FrieghtChargesMaster.objects.filter(updated_by=userid).values()
+        frightobjvendorsin=FrieghtChargesMaster.objects.filter(updated_by__isnull=True).values().order_by('frieght_id')
+        finalres=list(chain(frightobjuser, frightobjvendorsin))
+
+        return Response({'status': 200, 'message': 'ok','data':finalres}, status=200)
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)

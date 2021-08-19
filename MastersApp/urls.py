@@ -189,7 +189,8 @@ urlpatterns = [
     path('sac-master-get-by-userid/', views.sac_masters_user_id),
     path('getfrightdeialswithvendorsindata/',views.getfrightdeialswithvendorsindata),
     path('getfrightbasedonid/',views.getfrightbasedonid),
-    path('updatefright/',views.updatefright)
+    path('updatefright/',views.updatefright),
+    path('getdesinationdeailsid/',views.getdesinationdeailsid)
 
 ]
 

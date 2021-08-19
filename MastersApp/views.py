@@ -2623,4 +2623,21 @@ def updatefright(request):
         return Response({'status': 500, 'error': str(e)}, status=500)
 
 
+@api_view(['post'])
+def getdesinationdeailsid(request):
+    data=request.data
+    did=data['did']
+    try:
+        desiobj=DesignationMaster.objects.filter(designation_id=did).valueS()
+        if desiobj:
+            return Response({'status': 200, 'message': 'updated', }, status=200)
+        else:
+            return Response({'status': 202, 'message': 'ID Not exist', }, status=202)
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)
+
+
+
+
+
 

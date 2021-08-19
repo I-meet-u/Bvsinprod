@@ -2591,3 +2591,16 @@ def getfrightdeialswithvendorsindata(request):
         return Response({'status': 200, 'message': 'ok','data':finalres}, status=200)
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)
+
+
+@api_view(['post'])
+# @permission_classes([AllowAny,])
+def getfrightbasedonid(request):
+    data=request.data
+    pid=data['pid']
+    try:
+        finalres=FrieghtChargesMaster.objects.filter(frieght_id=pid).values()
+        return Response({'status': 200, 'message': 'ok', 'data': finalres}, status=200)
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)
+

@@ -187,7 +187,8 @@ urlpatterns = [
 
     path('hsn-master-get-by-userid/',views.hsn_masters_user_id),
     path('sac-master-get-by-userid/', views.sac_masters_user_id),
-    path('getfrightdeialswithvendorsindata/',views.getfrightdeialswithvendorsindata)
+    path('getfrightdeialswithvendorsindata/',views.getfrightdeialswithvendorsindata),
+    path('getfrightbasedonid/',views.getfrightbasedonid)
 
 ]
 

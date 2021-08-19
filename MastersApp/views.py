@@ -2541,10 +2541,10 @@ def hsn_masters_user_id(request):
     data=request.data
     userid = data['userid']
     try:
-        hsnobj = HSNMaster.objects.filter(updated_by=userid).values()
-        hsnadmin=HSNMaster.objects.filter(admins=1).values()
+        hsnobj = HSNMaster.objects.filter(updated_by=userid).values().order_by('hsn_id')
+        hsnadmin=HSNMaster.objects.filter(admins=1).values().order_by('hsn_id')
         hsnval=list(chain(hsnobj,hsnadmin))
-        if len(hsnval)==0:
+        if len(hsnobj)==0:
             return Response({'status': 200, 'message': 'HSN masters data', 'data': hsnadmin}, status=200)
         if len(hsnadmin) == 0:
             return Response({'status': 200, 'message': 'HSN admins datas', 'data': hsnobj}, status=200)

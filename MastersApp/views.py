@@ -2614,7 +2614,7 @@ def updatefright(request):
         friobj=FrieghtChargesMaster.objects.get(frieght_id=id)
         if friobj:
             friobj.frieght_description=data['frieght_description']
-            friobj.updated_by=data['userid']
+            friobj.updated_by=SelfRegistration.objects.get(id=data['userid'])
             friobj.save()
             return Response({'status': 200, 'message': 'updated',}, status=200)
         else:

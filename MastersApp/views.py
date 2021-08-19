@@ -2628,7 +2628,7 @@ def getdesinationdeailsid(request):
     data=request.data
     did=data['did']
     try:
-        desiobj=DesignationMaster.objects.filter(designation_id=did).value()
+        desiobj=DesignationMaster.objects.filter(designation_id=did).values()
         if desiobj:
             return Response({'status': 200, 'message': 'ID exist','data':desiobj}, status=200)
         else:

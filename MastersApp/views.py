@@ -2637,6 +2637,24 @@ def getdesinationdeailsid(request):
         return Response({'status': 500, 'error': str(e)}, status=500)
 
 
+@api_view(['put'])
+@permission_classes([AllowAny,])
+def updatedesignation(request):
+    data=request.data
+    id=data['id']
+    try:
+        desigobject=DesignationMaster.objects.get(designation_id=id)
+        if desigobject:
+            desigobject.designation_name=data['designame']
+            desigobject.designation_level=data['deigvelevel']
+            desigobject.updated_by=SelfRegistration.objects.get(id=data["userid"])
+            desigobject.save()
+            return Response({'status': 200, 'message': 'updated'}, status=200)
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)
+
+
+
 
 
 

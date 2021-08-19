@@ -190,7 +190,8 @@ urlpatterns = [
     path('getfrightdeialswithvendorsindata/',views.getfrightdeialswithvendorsindata),
     path('getfrightbasedonid/',views.getfrightbasedonid),
     path('updatefright/',views.updatefright),
-    path('getdesinationdeailsid/',views.getdesinationdeailsid)
+    path('getdesinationdeailsid/',views.getdesinationdeailsid),
+    path('updatedesignation/',views.updatedesignation)
 
 ]
 

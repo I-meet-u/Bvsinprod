@@ -283,7 +283,7 @@ class HSNMaster(models.Model):
 class SACMaster(models.Model):
     # sac_master models and fields
     sac_id = models.BigAutoField(primary_key=True)
-    sac_code = models.CharField(max_length=30, null=True, blank=True)
+    sac_code = models.CharField(max_length=30, null=True, blank=True,unique=True)
     gst_rate_percentage = models.CharField(max_length=200)
     description_of_goods = models.TextField(null=True,blank=True)
     is_verified = models.BooleanField(default=False)

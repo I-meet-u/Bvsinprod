@@ -2604,3 +2604,22 @@ def getfrightbasedonid(request):
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)
 
+
+@api_view(['put'])
+@permission_classes([AllowAny,])
+def updatefright(request):
+    data=request.data
+    id=data['fid']
+    try:
+        friobj=FrieghtChargesMaster.objects.get(frieght_id=id)
+        if friobj:
+            friobj.frieght_description=data['frieght_description']
+            friobj.save()
+            return Response({'status': 200, 'message': 'updated',}, status=200)
+        else:
+            return Response({'status': 202, 'message': 'ID Not exist',}, status=202)
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)
+
+
+

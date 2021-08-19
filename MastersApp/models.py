@@ -34,8 +34,8 @@ class IndustryToServeMaster(models.Model):
 class NatureOfBusinessMaster(models.Model):
     # nature of business master model and fields
     nature_of_business_id = models.BigAutoField(primary_key=True)
-    nature_of_business_code=models.CharField(max_length=80,null=True)
-    nature_of_business_name = models.CharField(max_length=200, unique=True)
+    nature_of_business_code=models.CharField(max_length=80,null=True,unique=True,blank=True)
+    nature_of_business_name = models.CharField(max_length=200)
     nature_of_business_description = models.TextField(null=True)
     is_verified = models.BooleanField(default=False)
     created_on = models.DateTimeField(auto_now_add=True)
@@ -58,7 +58,7 @@ class NatureOfBusinessMaster(models.Model):
 class SupplyCapabilitiesMaster(models.Model):
     # supply capability master model and fields
     supply_capability_id = models.BigAutoField(primary_key=True)
-    supply_capability_name = models.CharField(max_length=50,unique=True)
+    supply_capability_name = models.CharField(max_length=50,null=True,blank=True)
     supply_capability_code = models.CharField(max_length=50,unique=True,null=True,blank=True)
     is_verified = models.BooleanField(default=False)
     created_on = models.DateTimeField(auto_now_add=True)
@@ -345,7 +345,7 @@ class FrieghtChargesMaster(models.Model):
     # frieght_models and fields
     frieght_id = models.BigAutoField(primary_key=True)
     frieght_code = models.CharField(max_length=30,unique=True)
-    frieght_description = models.CharField(max_length=200,null=True,blank=True)
+    frieght_description = models.CharField(max_length=200)
     is_verified = models.BooleanField(default=False)
     created_on = models.DateTimeField(auto_now_add=True)
     updated_on = models.DateTimeField(auto_now=True)
@@ -364,7 +364,7 @@ class WarrantyMaster(models.Model):
     # warranty_master models and fields
     warranty_id = models.BigAutoField(primary_key=True)
     warranty_code = models.CharField(max_length=30,unique=True)
-    warranty_description = models.CharField(max_length=200,null=True,blank=True)
+    warranty_description = models.CharField(max_length=200)
     is_verified = models.BooleanField(default=False)
     created_on = models.DateTimeField(auto_now_add=True)
     updated_on = models.DateTimeField(auto_now=True)
@@ -383,7 +383,7 @@ class GuaranteeMaster(models.Model):
     # guarantee_master models and fields
     guarantee_id = models.BigAutoField(primary_key=True)
     guarantee_code = models.CharField(max_length=30,unique=True)
-    guarantee_description = models.CharField(max_length=200,null=True,blank=True)
+    guarantee_description = models.CharField(max_length=200)
     is_verified = models.BooleanField(default=False)
     created_on = models.DateTimeField(auto_now_add=True)
     updated_on = models.DateTimeField(auto_now=True)
@@ -402,7 +402,7 @@ class DeliveryMaster(models.Model):
     # delivery_master models and fields
     delivery_id = models.BigAutoField(primary_key=True)
     delivery_code = models.CharField(max_length=30,unique=True)
-    delivery_description = models.CharField(max_length=200,null=True,blank=True)
+    delivery_description = models.CharField(max_length=200)
     is_verified = models.BooleanField(default=False)
     created_on = models.DateTimeField(auto_now_add=True)
     updated_on = models.DateTimeField(auto_now=True)
@@ -441,7 +441,7 @@ class CountryMaster(models.Model):
 class ItemGroupMaster(models.Model):
     # item_group_master models and fields
     item_group_id = models.BigAutoField(primary_key=True)
-    item_group_code = models.CharField(max_length=30,null=True)
+    item_group_code = models.CharField(max_length=30,unique=True,null=True,blank=True)
     item_groups = models.CharField(max_length=200,null=True,blank=True)
     is_verified = models.BooleanField(default=False)
     created_on = models.DateTimeField(auto_now_add=True)
@@ -463,8 +463,8 @@ class ItemGroupMaster(models.Model):
 class TransitInsuranceMaster(models.Model):
     # transit_insurance models and fields
     transit_id = models.BigAutoField(primary_key=True)
-    transit_code = models.CharField(max_length=30,null=True)
-    transit_name = models.CharField(max_length=200, unique=True)
+    transit_code = models.CharField(max_length=30,unique=True,null=True,blank=True)
+    transit_name = models.CharField(max_length=200)
     is_verified = models.BooleanField(default=False)
     created_on = models.DateTimeField(auto_now_add=True)
     updated_on = models.DateTimeField(auto_now=True)
@@ -483,8 +483,8 @@ class TransitInsuranceMaster(models.Model):
 class ValidityMaster(models.Model):
     # validity_master models and fields
     validity_id = models.BigAutoField(primary_key=True)
-    validity_code = models.CharField(max_length=30,null=True)
-    validity_name = models.CharField(max_length=200, unique=True)
+    validity_code = models.CharField(max_length=30,unique=True,null=True,blank=True)
+    validity_name = models.CharField(max_length=200)
     is_verified = models.BooleanField(default=False)
     created_on = models.DateTimeField(auto_now_add=True)
     updated_on = models.DateTimeField(auto_now=True)
@@ -504,8 +504,8 @@ class ValidityMaster(models.Model):
 class PaymentMaster(models.Model):
     # payment_master models and fields
     payment_id = models.BigAutoField(primary_key=True)
-    payment_code = models.CharField(max_length=30,null=True)
-    payment_terms = models.CharField(max_length=200, unique=True)
+    payment_code = models.CharField(max_length=30,unique=True,null=True,blank=True)
+    payment_terms = models.CharField(max_length=200)
     is_verified = models.BooleanField(default=False)
     created_on = models.DateTimeField(auto_now_add=True)
     updated_on = models.DateTimeField(auto_now=True)
@@ -524,8 +524,8 @@ class PaymentMaster(models.Model):
 class RfqCategoryMaster(models.Model):
     # rfq category master model and fields
     rfq_category_id = models.BigAutoField(primary_key=True)
-    rfq_category_code = models.CharField(max_length=40, null=True, blank=True)
-    rfq_category_name = models.CharField(max_length=100, unique=True)
+    rfq_category_code = models.CharField(max_length=40,unique=True,null=True,blank=True)
+    rfq_category_name = models.CharField(max_length=100)
     is_verified = models.BooleanField(default=False)
     created_on = models.DateTimeField(auto_now_add=True)
     updated_on = models.DateTimeField(auto_now=True)
@@ -544,8 +544,8 @@ class RfqCategoryMaster(models.Model):
 class PriceBasisMaster(models.Model):
     # price basis master model and fields
     price_basis_id = models.BigAutoField(primary_key=True)
-    price_basis_code = models.CharField(max_length=40, null=True, blank=True)
-    price_basis_name = models.CharField(max_length=100, unique=True)
+    price_basis_code = models.CharField(max_length=40, unique=True,null=True,blank=True)
+    price_basis_name = models.CharField(max_length=100)
     is_verified = models.BooleanField(default=False)
     created_on = models.DateTimeField(auto_now_add=True)
     updated_on = models.DateTimeField(auto_now=True)
@@ -564,8 +564,8 @@ class PriceBasisMaster(models.Model):
 class InspectionMaster(models.Model):
     # inspection master model and fields
     inspection_id = models.BigAutoField(primary_key=True)
-    inspection_code = models.CharField(max_length=40, null=True, blank=True)
-    inspection_name = models.CharField(max_length=100, unique=True)
+    inspection_code = models.CharField(max_length=40,unique=True,null=True,blank=True)
+    inspection_name = models.CharField(max_length=100)
     is_verified = models.BooleanField(default=False)
     created_on = models.DateTimeField(auto_now_add=True)
     updated_on = models.DateTimeField(auto_now=True)
@@ -584,8 +584,8 @@ class InspectionMaster(models.Model):
 class LiquidatedDamageMaster(models.Model):
     #  liquidated master model and fields
     liquidated_id = models.BigAutoField(primary_key=True)
-    liquidated_code = models.CharField(max_length=40, null=True, blank=True)
-    liquidated_name = models.CharField(max_length=100, unique=True)
+    liquidated_code = models.CharField(max_length=40, null=True, blank=True,unique=True)
+    liquidated_name = models.CharField(max_length=100)
     is_verified = models.BooleanField(default=False)
     created_on = models.DateTimeField(auto_now_add=True)
     updated_on = models.DateTimeField(auto_now=True)
@@ -605,8 +605,8 @@ class LiquidatedDamageMaster(models.Model):
 class TaxesAndDutiesMaster(models.Model):
     #  taxes and duties master model and fields
     tax_duties_id = models.BigAutoField(primary_key=True)
-    tax_duties_code = models.CharField(max_length=40, null=True, blank=True)
-    tax_duties_name = models.CharField(max_length=100, unique=True)
+    tax_duties_code = models.CharField(max_length=40,unique=True,null=True, blank=True)
+    tax_duties_name = models.CharField(max_length=100)
     is_verified = models.BooleanField(default=False)
     created_on = models.DateTimeField(auto_now_add=True)
     updated_on = models.DateTimeField(auto_now=True)
@@ -626,8 +626,8 @@ class TaxesAndDutiesMaster(models.Model):
 class TestAndQapMaster(models.Model):
     #  test and qap master model and fields
     test_qap_id = models.BigAutoField(primary_key=True)
-    test_qap_code = models.CharField(max_length=40, null=True, blank=True)
-    test_qap_name = models.CharField(max_length=100, unique=True)
+    test_qap_code = models.CharField(max_length=40, unique=True,null=True, blank=True)
+    test_qap_name = models.CharField(max_length=100)
     is_verified = models.BooleanField(default=False)
     created_on = models.DateTimeField(auto_now_add=True)
     updated_on = models.DateTimeField(auto_now=True)
@@ -646,8 +646,8 @@ class TestAndQapMaster(models.Model):
 class PerformanceGuaranteesMaster(models.Model):
     #  peroformance guarantee master model and fields
     performance_id = models.BigAutoField(primary_key=True)
-    performance_code = models.CharField(max_length=40, null=True, blank=True)
-    performance_name = models.CharField(max_length=100, unique=True)
+    performance_code = models.CharField(max_length=40, unique=True, null=True, blank=True)
+    performance_name = models.CharField(max_length=100)
     is_verified = models.BooleanField(default=False)
     created_on = models.DateTimeField(auto_now_add=True)
     updated_on = models.DateTimeField(auto_now=True)
@@ -665,8 +665,8 @@ class PerformanceGuaranteesMaster(models.Model):
 class DivisionMaster(models.Model):
     #  division master model and fields
     division_id = models.BigAutoField(primary_key=True)
-    division_code = models.CharField(max_length=40, null=True, blank=True)
-    division_name = models.CharField(max_length=100, unique=True)
+    division_code = models.CharField(max_length=40, unique=True,null=True, blank=True)
+    division_name = models.CharField(max_length=100)
     is_verified = models.BooleanField(default=False)
     created_on = models.DateTimeField(auto_now_add=True)
     updated_on = models.DateTimeField(auto_now=True)

@@ -185,7 +185,8 @@ urlpatterns = [
     # path('history-currency-master/', views.currency_master_history),
     path('currency-master-get-by-userid/', views.currency_master_user_id),
 
-    path('hsn-master-get-by-userid/',views.hsn_masters_user_id)
+    path('hsn-master-get-by-userid/',views.hsn_masters_user_id),
+    path('sac-master-get-by-userid/', views.sac_masters_user_id)
 
 ]
 

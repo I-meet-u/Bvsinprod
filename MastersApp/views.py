@@ -2554,3 +2554,24 @@ def hsn_masters_user_id(request):
             return Response({'status':204,'message':'No HSN data present'},status=204)
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)
+
+
+@api_view(['post'])
+@permission_classes([AllowAny,])
+def sac_masters_user_id(request):
+    data=request.data
+    userid = data['userid']
+    try:
+        sacobj = SACMaster.objects.filter(updated_by=userid).values().order_by('sac_id')
+        sacadmin=SACMaster.objects.filter(admins=1).values().order_by('sac_id')
+        sacval=list(chain(sacobj,sacadmin))
+        if len(sacobj)==0:
+            return Response({'status': 200, 'message': 'SAC masters data', 'data': sacadmin}, status=200)
+        if len(sacadmin) == 0:
+            return Response({'status': 200, 'message': 'SAC admins datas', 'data': sacobj}, status=200)
+        elif len(sacobj)!=0 and len(sacadmin)!=0:
+            return Response({'status': 200, 'message': 'SAC all datas', 'data':sacval}, status=200)
+        else:
+            return Response({'status':204,'message':'No HSN data present'},status=204)
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)

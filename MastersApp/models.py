@@ -195,7 +195,7 @@ class DepartmentMaster(models.Model):
     # department master models and fields
     department_id = models.BigAutoField(primary_key=True)
     department_code = models.CharField(max_length=30, null=True, blank=True)
-    department_short_text = models.CharField(max_length=30, unique=True)
+    department_short_text = models.CharField(max_length=30, unique=True,null=True,blank=True)
     department_name = models.CharField(max_length=200)
     is_verified = models.BooleanField(default=False)
     created_on = models.DateTimeField(auto_now_add=True)
@@ -364,7 +364,7 @@ class WarrantyMaster(models.Model):
     # warranty_master models and fields
     warranty_id = models.BigAutoField(primary_key=True)
     warranty_code = models.CharField(max_length=30,unique=True,null=True,blank=True)
-    warranty_description = models.CharField(max_length=200)
+    warranty_description = models.TextField(unique=True)
     is_verified = models.BooleanField(default=False)
     created_on = models.DateTimeField(auto_now_add=True)
     updated_on = models.DateTimeField(auto_now=True)
@@ -383,7 +383,7 @@ class GuaranteeMaster(models.Model):
     # guarantee_master models and fields
     guarantee_id = models.BigAutoField(primary_key=True)
     guarantee_code = models.CharField(max_length=30,unique=True,null=True,blank=True)
-    guarantee_description = models.CharField(max_length=200)
+    guarantee_description = models.TextField(unique=True)
     is_verified = models.BooleanField(default=False)
     created_on = models.DateTimeField(auto_now_add=True)
     updated_on = models.DateTimeField(auto_now=True)

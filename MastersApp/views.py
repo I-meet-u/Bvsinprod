@@ -2606,7 +2606,7 @@ def getfrightbasedonid(request):
 
 
 @api_view(['put'])
-@permission_classes([AllowAny,])
+# @permission_classes([AllowAny,])
 def updatefright(request):
     data=request.data
     id=data['fid']

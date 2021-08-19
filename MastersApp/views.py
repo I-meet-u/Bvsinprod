@@ -2579,7 +2579,7 @@ def sac_masters_user_id(request):
 
 
 @api_view(['post'])
-@permission_classes([AllowAny,])
+# @permission_classes([AllowAny,])
 def getfrightdeialswithvendorsindata(request):
     data=request.data
     userid=data['userid']

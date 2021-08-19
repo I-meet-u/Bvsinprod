@@ -363,7 +363,7 @@ class FrieghtChargesMaster(models.Model):
 class WarrantyMaster(models.Model):
     # warranty_master models and fields
     warranty_id = models.BigAutoField(primary_key=True)
-    warranty_code = models.CharField(max_length=30,unique=True)
+    warranty_code = models.CharField(max_length=30,unique=True,null=True,blank=True)
     warranty_description = models.CharField(max_length=200)
     is_verified = models.BooleanField(default=False)
     created_on = models.DateTimeField(auto_now_add=True)
@@ -382,7 +382,7 @@ class WarrantyMaster(models.Model):
 class GuaranteeMaster(models.Model):
     # guarantee_master models and fields
     guarantee_id = models.BigAutoField(primary_key=True)
-    guarantee_code = models.CharField(max_length=30,unique=True)
+    guarantee_code = models.CharField(max_length=30,unique=True,null=True,blank=True)
     guarantee_description = models.CharField(max_length=200)
     is_verified = models.BooleanField(default=False)
     created_on = models.DateTimeField(auto_now_add=True)
@@ -401,7 +401,7 @@ class GuaranteeMaster(models.Model):
 class DeliveryMaster(models.Model):
     # delivery_master models and fields
     delivery_id = models.BigAutoField(primary_key=True)
-    delivery_code = models.CharField(max_length=30,unique=True)
+    delivery_code = models.CharField(max_length=30,unique=True,null=True,blank=True)
     delivery_description = models.CharField(max_length=200)
     is_verified = models.BooleanField(default=False)
     created_on = models.DateTimeField(auto_now_add=True)

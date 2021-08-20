@@ -327,26 +327,6 @@ def rfq_type_based_list(request):
 class BiddingTermMasterSettingsView(viewsets.ModelViewSet):
     queryset = BiddingTermMasterSettings.objects.all()
     serializer_class = BiddingTermMasterSettingsSerializer
-    # permission_classes = [permissions.AllowAny]
-    ordering_fields = ['id']
-    ordering = ['id']
-
-    def create(self, request, *args, **kwargs):
-        datavalues = request.data['datavalues']
-        updated_by = request.data.get('updated_by', None)
-        try:
-            for i in range(0, len(datavalues)):
-                print(datavalues[i], 'datavalues')
-                for keys in datavalues[i]:
-                    BiddingTermMasterSettings.objects.create(terms_name=keys,
-                                                             terms_description=datavalues[i][keys],
-                                                             updated_by=SelfRegistration.objects.get(id=updated_by),
-                                                             created_by=updated_by)
-
-            return Response({'status': 201, 'message': 'Bidding Terms and Descriptions Settings are created'},
-                            status=201)
-        except Exception as e:
-            return Response({'status': 500, 'message': str(e)}, status=500)
 
     def get_queryset(self):
         biddingtermsmastersettings = BiddingTermMasterSettings.objects.filter(
@@ -355,6 +335,23 @@ class BiddingTermMasterSettingsView(viewsets.ModelViewSet):
             return biddingtermsmastersettings
         raise ValidationError(
             {'message': 'Bidding  Term Master details of particular user id is not exist', 'status': 204})
+
+
+@api_view(['post'])
+def add_terms_to_bidding_terms_settings(request):
+    data=request.data
+    termnames=data['termnames']
+    userid=data['userid']
+    try:
+        for i in range(0,len(termnames)):
+            termobj=BiddingTermMasterSettings.objects.create(terms_name=termnames[i],
+                                                             created_by=userid,
+                                                             updated_by=SelfRegistration.objects.get(id=userid)
+
+                                                             )
+        return Response({'status':201,'message':'Bidding Terms Created'},status=201)
+    except Exception as e:
+        return Response({'status': 500, 'message': str(e)}, status=500)
 
 
 @api_view(['post'])

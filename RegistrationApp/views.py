@@ -771,7 +771,7 @@ def sendSMS(request):
 
 
 @api_view(['post'])
-# @permission_classes((AllowAny,))
+@permission_classes((AllowAny,))
 def checkotp(request):
     data=request.data
     userid=data['userid']
@@ -787,7 +787,7 @@ def checkotp(request):
         return Response({'status': 500, 'error': str(e)}, status=500)
 
 @api_view(['post'])
-# @permission_classes((AllowAny,))
+@permission_classes((AllowAny,))
 def checkemailotp(request):
     data = request.data
     userid = data['userid']
@@ -804,7 +804,7 @@ def checkemailotp(request):
 
 
 @api_view(['post'])
-# @permission_classes((AllowAny,))
+@permission_classes((AllowAny,))
 def checkphoneotp(request):
     data=request.data
     userid=data['userid']
@@ -822,7 +822,7 @@ def checkphoneotp(request):
 
 
 @api_view(['post'])
-# @permission_classes((AllowAny,))
+@permission_classes((AllowAny,))
 def checkotpemailt(request):
     data=request.data
     userid=data['userid']

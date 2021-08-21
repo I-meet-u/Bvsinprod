@@ -2016,3 +2016,57 @@ def fetch_buyer_machinary_details_by_userid_rfq(request):
                     status=status.HTTP_204_NO_CONTENT)
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)
+
+
+
+@api_view(['post'])
+def get_buyer_bid_list_by_userid(request):
+    data=request.data
+    userid=data['userid']
+    from_registration=data['from_registration']
+    try:
+        if from_registration=='True':
+            bidobj=BuyerProductBidding.objects.filter(updated_by_id=userid,from_registration=from_registration).values()
+            if len(bidobj)>0:
+                return Response(
+                    {'status': 200, 'message': 'Buyer Bid List from Registration', 'data':bidobj},status=200)
+            else:
+                return Response({'status': 204, 'message': 'Not Present'}, status=204)
+        else:
+            if from_registration=='False':
+                bidobjvalues = BuyerProductBidding.objects.filter(updated_by_id=userid,
+                                                            from_registration=from_registration).values()
+                if len(bidobjvalues) > 0:
+                    return Response({'status': 200, 'message': 'Buyer Bid List', 'data': bidobjvalues}, status=200)
+                else:
+                    return Response({'status': 204, 'message': 'Not Present'}, status=204)
+
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)
+
+@api_view(['post'])
+def get_previous_value_of_rfq_details(request):
+    data=request.data
+    userid=data['userid']
+    try:
+        buyerproductobj=BuyerProductBidding.objects.filter(updated_by_id=userid).last()
+        if buyerproductobj:
+            buyer_product={
+                'rfq_number':buyerproductobj.user_rfq_number,
+                'user_id':buyerproductobj.updated_by_id
+            }
+            return Response({'status': 200, 'message': 'Buyer Bidding Product List','data':buyer_product},status=200)
+        else:
+            rfqcodesettings = RfqCodeSettings.objects.filter(updated_by_id=userid).last()
+            if rfqcodesettings:
+                rfq_number_settings={
+                    'rfq_number':rfqcodesettings.prefix+rfqcodesettings.suffix+rfqcodesettings.numeric,
+                    'user_id':rfqcodesettings.updated_by_id
+                }
+                return Response({'status': 200, 'message': 'Code Settings','data':rfq_number_settings}, status=200)
+            else:
+                return Response({'status': 204, 'message':'Code Settings for this particular user id is not present,Please set your code in rfq code settings'}, status=204)
+
+
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)

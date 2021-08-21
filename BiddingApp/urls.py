@@ -67,7 +67,8 @@ urlpatterns = [
     path('award-get-list-of-vendor/',views.award_get_list_of_vendor),
     path('fetch-buyer-service-details-by-userid-rfq/',views.fetch_buyer_service_details_by_userid_rfq),
     path('fetch-buyer-machinary-details-by-userid-rfq/',views.fetch_buyer_machinary_details_by_userid_rfq),
-    path('add-terms-to-bidding-terms-settings/', views.add_terms_to_bidding_terms_settings)
+    path('add-terms-to-bidding-terms-settings/', views.add_terms_to_bidding_terms_settings),
+    path('get-previous-value-of-rfq_details/',views.get_previous_value_of_rfq_details),
 
 
 ]

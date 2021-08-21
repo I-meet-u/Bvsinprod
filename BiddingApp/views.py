@@ -17,12 +17,65 @@ from .models import *
 
 
 # Create your views here.
+# class BuyerProductBiddingView(viewsets.ModelViewSet):
+#     queryset = BuyerProductBidding.objects.all()
+#     serializer_class = BuyerProductBiddingSerializer
+#     # permission_classes = [permissions.AllowAny]
+#     ordering_fields = ['product_bidding_id']
+#     ordering = ['product_bidding_id']
+#
+#     def create(self, request, *args, **kwargs):
+#         created_by = request.data.get('created_by', None)
+#         updated_by = request.data.get('updated_by', None)
+#         product_rfq_type = request.data.get('product_rfq_type', None)
+#         product_publish_date = request.data.get('product_publish_date', None)
+#         product_deadline_date = request.data.get('product_deadline_date', None)
+#         product_delivery_date = request.data.get('product_delivery_date', None)
+#         product_department = request.data.get('product_department', None)
+#         product_rfq_currency = request.data.get('product_rfq_currency', None)
+#         product_rfq_category = request.data.get('product_rfq_category', None)
+#         product_bill_address = request.data.get('product_bill_address', None)
+#         product_ship_address = request.data.get('product_ship_address', None)
+#         product_rfq_title = request.data.get('product_rfq_title', None)
+#         rfqcodesettingsobj = RfqCodeSettings.objects.filter(updated_by=updated_by).order_by('-id').values()
+#         print(rfqcodesettingsobj)
+#         print(len(rfqcodesettingsobj))
+#
+#         if len(rfqcodesettingsobj) > 0:
+#
+#             buyerbid = BuyerProductBidding.objects.filter(updated_by=updated_by).values()
+#             if len(buyerbid) == 0:
+#                 request.data['user_prefix'] = rfqcodesettingsobj[0].get('prefix')
+#                 request.data['user_rfq_number'] = rfqcodesettingsobj[0].get('prefix') + str(
+#                     int(rfqcodesettingsobj[0].get('numeric')))
+#                 request.data['user_bidding_numeric'] = int(rfqcodesettingsobj[0].get('numeric')) + 1
+#             else:
+#                 buyerbid = BuyerProductBidding.objects.filter(updated_by=updated_by).order_by(
+#                     '-product_bidding_id').values()
+#                 print(buyerbid)
+#                 request.data['user_prefix'] = buyerbid[0].get('user_prefix')
+#                 bidding_numeric = int(buyerbid[0].get('user_bidding_numeric')) + 1
+#                 user_rfq_number = buyerbid[0].get('user_prefix') + str(int(buyerbid[0].get('user_bidding_numeric')))
+#                 request.data['user_rfq_number'] = user_rfq_number
+#                 request.data['user_bidding_numeric'] = bidding_numeric
+#
+#             return super().create(request, *args, **kwargs)
+#         else:
+#             return Response({'status': 204, 'message': 'Rfq Code Settings Not Present,Please Create Rfq in Settings'},
+#                             status=204)
+#
+#     def get_queryset(self):
+#         buyerproductbiddingobj = BuyerProductBidding.objects.filter(updated_by=self.request.GET.get('updated_by'))
+#         if buyerproductbiddingobj:
+#             return buyerproductbiddingobj
+#         raise ValidationError(
+#             {'message': 'Buyer Product Bidding details of particular user id is not exist', 'status': 204})
+
+
 class BuyerProductBiddingView(viewsets.ModelViewSet):
     queryset = BuyerProductBidding.objects.all()
     serializer_class = BuyerProductBiddingSerializer
     # permission_classes = [permissions.AllowAny]
-    ordering_fields = ['product_bidding_id']
-    ordering = ['product_bidding_id']
 
     def create(self, request, *args, **kwargs):
         created_by = request.data.get('created_by', None)
@@ -37,6 +90,7 @@ class BuyerProductBiddingView(viewsets.ModelViewSet):
         product_bill_address = request.data.get('product_bill_address', None)
         product_ship_address = request.data.get('product_ship_address', None)
         product_rfq_title = request.data.get('product_rfq_title', None)
+        from_registration=request.data.get('from_registration',None)
         rfqcodesettingsobj = RfqCodeSettings.objects.filter(updated_by=updated_by).order_by('-id').values()
         print(rfqcodesettingsobj)
         print(len(rfqcodesettingsobj))
@@ -70,7 +124,6 @@ class BuyerProductBiddingView(viewsets.ModelViewSet):
             return buyerproductbiddingobj
         raise ValidationError(
             {'message': 'Buyer Product Bidding details of particular user id is not exist', 'status': 204})
-
 
 class BiddingBuyerProductDetailsView(viewsets.ModelViewSet):
     queryset = BiddingBuyerProductDetails.objects.all()
@@ -1911,45 +1964,45 @@ def award_get_list_of_vendor(request):
         return Response({'status': 500, 'error': str(e)}, status=500)
 
 
-class BiddingBuyerServiceDetailsView(viewsets.ModelViewSet):
-    queryset = BiddingBuyerServiceDetails.objects.all()
-    serializer_class = BiddingBuyerServiceDetailsSerializer
-    # permission_classes = [permissions.AllowAny]
-
-    def create(self, request, *args, **kwargs):
-        servicedetails = request.data['servicedetails']
-        service_buyer_rfq_number = request.data.get('service_buyer_rfq_number', None)
-        userid = request.data.get('userid', None)
-        try:
-            for i in range(0, len(servicedetails)):
-                BiddingBuyerServiceDetails.objects.create(service_buyer_rfq_number=service_buyer_rfq_number,
-                                                          service_buyer_item_code=servicedetails[i].get(
-                                                              'buyer_service_item_code'),
-                                                          service_buyer_item_name=servicedetails[i].get(
-                                                              'buyer_service_item_name'),
-                                                          service_buyer_item_description=servicedetails[i].get(
-                                                              'buyer_service_item_description'),
-                                                          service_buyer_uom=servicedetails[i].get('buyer_service_uom'),
-                                                          service_buyer_category=servicedetails[i].get(
-                                                              'buyer_service_category'),
-                                                          service_buyer_quantity=servicedetails[i].get(
-                                                              'service_quantity'),
-                                                          service_buyer_document=servicedetails[i].get(
-                                                              'buyer_service_document'),
-                                                          updated_by=SelfRegistration.objects.get(id=userid),
-                                                          created_by=userid)
-
-            return Response({'status': 201, 'message': 'Service Details Are Created'}, status=201)
-        except Exception as e:
-            return Response({'status': 500, 'error': str(e)}, status=500)
-
-    def get_queryset(self):
-        buyerservicedetailsobj = BiddingBuyerServiceDetails.objects.filter(
-            updated_by=self.request.GET.get('updated_by')).order_by('id')
-        if buyerservicedetailsobj:
-            return buyerservicedetailsobj
-        raise ValidationError(
-            {'message': 'Buyer Bidding Service details of particular user id is not exist', 'status': 204})
+# class BiddingBuyerServiceDetailsView(viewsets.ModelViewSet):
+#     queryset = BiddingBuyerServiceDetails.objects.all()
+#     serializer_class = BiddingBuyerServiceDetailsSerializer
+#     # permission_classes = [permissions.AllowAny]
+#
+#     def create(self, request, *args, **kwargs):
+#         servicedetails = request.data['servicedetails']
+#         service_buyer_rfq_number = request.data.get('service_buyer_rfq_number', None)
+#         userid = request.data.get('userid', None)
+#         try:
+#             for i in range(0, len(servicedetails)):
+#                 BiddingBuyerServiceDetails.objects.create(service_buyer_rfq_number=service_buyer_rfq_number,
+#                                                           service_buyer_item_code=servicedetails[i].get(
+#                                                               'buyer_service_item_code'),
+#                                                           service_buyer_item_name=servicedetails[i].get(
+#                                                               'buyer_service_item_name'),
+#                                                           service_buyer_item_description=servicedetails[i].get(
+#                                                               'buyer_service_item_description'),
+#                                                           service_buyer_uom=servicedetails[i].get('buyer_service_uom'),
+#                                                           service_buyer_category=servicedetails[i].get(
+#                                                               'buyer_service_category'),
+#                                                           service_buyer_quantity=servicedetails[i].get(
+#                                                               'service_quantity'),
+#                                                           service_buyer_document=servicedetails[i].get(
+#                                                               'buyer_service_document'),
+#                                                           updated_by=SelfRegistration.objects.get(id=userid),
+#                                                           created_by=userid)
+#
+#             return Response({'status': 201, 'message': 'Service Details Are Created'}, status=201)
+#         except Exception as e:
+#             return Response({'status': 500, 'error': str(e)}, status=500)
+#
+#     def get_queryset(self):
+#         buyerservicedetailsobj = BiddingBuyerServiceDetails.objects.filter(
+#             updated_by=self.request.GET.get('updated_by')).order_by('id')
+#         if buyerservicedetailsobj:
+#             return buyerservicedetailsobj
+#         raise ValidationError(
+#             {'message': 'Buyer Bidding Service details of particular user id is not exist', 'status': 204})
 
 
 
@@ -1988,6 +2041,50 @@ class BiddingBuyerMachinaryDetailsView(viewsets.ModelViewSet):
         raise ValidationError(
             {'message': 'Buyer Bidding Machinary details of particular user id is not exist', 'status': 204})
 
+class BiddingBuyerServiceDetailsView(viewsets.ModelViewSet):
+    queryset = BiddingBuyerServiceDetails.objects.all()
+    serializer_class = BiddingBuyerServiceDetailsSerializer
+    # permission_classes = [permissions.AllowAny]
+
+    def create(self, request, *args, **kwargs):
+        servicedetails = request.data['servicedetails']
+        service_buyer_rfq_number = request.data.get('service_buyer_rfq_number', None)
+        userid = request.data.get('userid', None)
+        from_registration = request.data.get('from_registration', None)
+        try:
+            bidobj=BuyerProductBidding.objects.get(user_rfq_number=service_buyer_rfq_number)
+            for i in range(0, len(servicedetails)):
+                BiddingBuyerServiceDetails.objects.create(service_buyer_rfq_number=service_buyer_rfq_number,
+                                                          service_buyer_item_code=servicedetails[i].get(
+                                                              'buyer_service_item_code'),
+                                                          service_buyer_item_name=servicedetails[i].get(
+                                                              'buyer_service_item_name'),
+                                                          service_buyer_item_description=servicedetails[i].get(
+                                                              'buyer_service_item_description'),
+                                                          service_buyer_uom=servicedetails[i].get('buyer_service_uom'),
+                                                          service_buyer_category=servicedetails[i].get(
+                                                              'buyer_service_category'),
+                                                          service_buyer_quantity=servicedetails[i].get(
+                                                              'service_quantity'),
+                                                          service_buyer_document=servicedetails[i].get(
+                                                              'buyer_service_document'),
+                                                          service_item_type=servicedetails[i].get('buyer_service_item_type'),
+                                                          updated_by=SelfRegistration.objects.get(id=userid),
+                                                          auto_rfq_number=bidobj.product_rfq_number,
+                                                          from_registration=from_registration,
+                                                          created_by=userid)
+
+            return Response({'status': 201, 'message': 'Service Details Are Created'}, status=201)
+        except Exception as e:
+            return Response({'status': 500, 'error': str(e)}, status=500)
+
+    def get_queryset(self):
+        buyerservicedetailsobj = BiddingBuyerServiceDetails.objects.filter(
+            updated_by=self.request.GET.get('updated_by')).order_by('id')
+        if buyerservicedetailsobj:
+            return buyerservicedetailsobj
+        raise ValidationError(
+            {'message': 'Buyer Bidding Service details of particular user id is not exist', 'status': 204})
 
 @api_view(['post'])
 def fetch_buyer_service_details_by_userid_rfq(request):
@@ -2070,3 +2167,5 @@ def get_previous_value_of_rfq_details(request):
 
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)
+
+

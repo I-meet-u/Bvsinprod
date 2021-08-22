@@ -3386,3 +3386,154 @@ def po_status_update_machinary(request):
             return Response({'status': 204, 'message': 'No data found'}, status=204)
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)
+
+
+
+@api_view(['post'])
+def purchase_order_vendors_list(request):
+    data = request.data
+    userid = data['userid']
+    purchaseorderarray = []
+    try:
+        basicobj=BasicCompanyDetails.objects.get(updated_by_id=userid)
+        print(basicobj.company_code)
+        poobj = PurchaseOrder.objects.filter(vendorcode=basicobj.company_code).values()
+        if len(poobj) > 0:
+            for i in range(0, len(poobj)):
+                selectsobj = SelectVendorsForBiddingProduct.objects.filter(rfq_number=poobj[i].get('rfq_number')).values()
+                if len(selectsobj)>0:
+                    selecteduserid = selectsobj[i].get('updated_by_id')
+                    basicobj = BasicCompanyDetails.objects.get(updated_by_id=selecteduserid)
+                    purchaseorderarray.append({'rfq_number': poobj[i].get('rfq_number'),
+                                               'rfq_title': poobj[i].get('rfq_title'),
+                                               'PO_date': poobj[i].get('PO_date'),
+                                               'PO_expirydate': poobj[i].get('PO_expirydate'),
+                                               'subject': poobj[i].get('subject'),
+                                               'attachment1': poobj[i].get('attachment1'),
+                                               'attachment2': poobj[i].get('attachment2'),
+                                               'attachment3': poobj[i].get('attachment3'),
+                                               'PO_num': poobj[i].get('PO_num'),
+                                               'delivery_date': poobj[i].get('delivery_date'),
+                                               'remind_date': poobj[i].get('remind_date'),
+                                               'delivery_days': poobj[i].get('delivery_days'),
+                                               'company_code': basicobj.company_code,
+                                               'company_name': basicobj.company_name,
+                                               'rfq_type':poobj[i].get('rfq_type'),
+                                               'userid': poobj[i].get('updated_by_id')
+
+
+                                               })
+                # else:
+                #     return Response({'status': 202, 'message': 'No data'}, status=202)
+
+            return Response({'status': 200, 'message': 'Purchase Order Vendor List', 'data': purchaseorderarray}, status=200)
+        else:
+            return Response({'status': 202, 'message': 'No data'}, status=202)
+
+
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)
+
+
+@api_view(['post'])
+def awards_vendor_list(request):
+    data = request.data
+    userid=data['userid']
+    awardarray = []
+    serviceawardsarray=[]
+    machinaryawardsarray=[]
+    try:
+        basicobj=BasicCompanyDetails.objects.get(updated_by_id=userid)
+        awardobj = Awards.objects.filter(company_code=basicobj.company_code).values()
+        print(len(awardobj),'product')
+        serviceawardobj = ServiceAwards.objects.filter(service_company_code=basicobj.company_code).values()
+        print(len(serviceawardobj),'services')
+        machinaryawardobj = MachinaryAwards.objects.filter(machinary_company_code=basicobj.company_code).values()
+        print(len(machinaryawardobj), 'machinary')
+        # if len(awardobj) > 0 and len(serviceawardobj) > 0:
+        for i in range(0,len(awardobj)):
+            print(awardobj[i].get('company_code'))
+            selectsobj = SelectVendorsForBiddingProduct.objects.filter(vendor_code=awardobj[i].get('company_code')).values()
+            if len(selectsobj)>0:
+                print(len(selectsobj))
+                selecteduserid = selectsobj[i].get('updated_by_id')
+                basicobj = BasicCompanyDetails.objects.get(updated_by_id=selecteduserid)
+                awardarray.append({
+                    'rfq_number':awardobj[i].get('rfq_number'),
+                    'rfq_title': awardobj[i].get('rfq_title'),
+                    'company_code': basicobj.company_code,
+                    'company_name':basicobj.company_name,
+                    'buyer_bid_quantity':awardobj[i].get('buyer_bid_quantity'),
+                    'vendor_bid_quantity':awardobj[i].get('vendor_bid_quantity'),
+                    'totalamount': awardobj[i].get('totalamount'),
+                    'awarded_date': awardobj[i].get('awarded_date'),
+                    'publish_date': awardobj[i].get('publish_date'),
+                    'deadline_date': awardobj[i].get('deadline_date'),
+                    'product_code': awardobj[i].get('product_code'),
+                    'product_name':awardobj[i].get('product_name'),
+                    'product_description': awardobj[i].get('product_description'),
+                    'rfq_type':awardobj[i].get('rfq_type'),
+                    'userid':awardobj[i].get('updated_by_id')
+                })
+        for i in range(0, len(serviceawardobj)):
+            print(serviceawardobj[i].get('service_company_code'))
+            selectsobj = SelectVendorsForBiddingProduct.objects.filter(
+                vendor_code=serviceawardobj[i].get('service_company_code')).values()
+            if len(selectsobj) > 0:
+                print(len(selectsobj),'cvame')
+                selecteduserid = selectsobj[i].get('updated_by_id')
+                print(selecteduserid,'ok')
+                basicobj = BasicCompanyDetails.objects.get(updated_by_id=selecteduserid)
+                print(basicobj)
+                serviceawardsarray.append({
+                    'service_rfq_number': serviceawardobj[i].get('service_rfq_number'),
+                    'service_rfq_title': serviceawardobj[i].get('service_rfq_title'),
+                    'service_company_code': basicobj.company_code,
+                    'service_company_name': basicobj.company_name,
+                    'service_buyer_bid_quantity': serviceawardobj[i].get('service_buyer_bid_quantity'),
+                    'service_vendor_bid_quantity': serviceawardobj[i].get('service_vendor_bid_quantity'),
+                    'service_totalamount': serviceawardobj[i].get('service_totalamount'),
+                    'service_awarded_date': serviceawardobj[i].get('service_awarded_date'),
+                    'service_publish_date': serviceawardobj[i].get('service_publish_date'),
+                    'service_deadline_date': serviceawardobj[i].get('service_deadline_date'),
+                    'service_code': serviceawardobj[i].get('service_code'),
+                    'service_name': serviceawardobj[i].get('service_name'),
+                    'service_description': serviceawardobj[i].get('service_description'),
+                    'service_rfq_type': serviceawardobj[i].get('rfq_type'),
+                    'service_userid': serviceawardobj[i].get('updated_by_id')
+                })
+        for i in range(0, len(machinaryawardobj)):
+            print(machinaryawardobj[i].get('machinary_company_code'))
+            selectsobj = SelectVendorsForBiddingProduct.objects.filter(
+                vendor_code=machinaryawardobj[i].get('machinary_company_code')).values()
+            if len(selectsobj) > 0:
+                print(len(selectsobj), 'cvame')
+                selecteduserid = selectsobj[i].get('updated_by_id')
+                print(selecteduserid, 'ok')
+                basicobj = BasicCompanyDetails.objects.get(updated_by_id=selecteduserid)
+                print(basicobj)
+                machinaryawardsarray.append({
+                    'machinary_rfq_number': machinaryawardobj[i].get('machinary_rfq_number'),
+                    'machinary_rfq_title': machinaryawardobj[i].get('machinary_rfq_title'),
+                    'machinary_company_code': basicobj.company_code,
+                    'machinary_company_name': basicobj.company_name,
+                    'machinary_buyer_bid_quantity': machinaryawardobj[i].get('machinary_buyer_bid_quantity'),
+                    'machinary_vendor_bid_quantity': machinaryawardobj[i].get('machinary_vendor_bid_quantity'),
+                    'machinary_totalamount': machinaryawardobj[i].get('machinary_totalamount'),
+                    'machinary_awarded_date': machinaryawardobj[i].get('machinary_awarded_date'),
+                    'machinary_publish_date': machinaryawardobj[i].get('machinary_publish_date'),
+                    'machinary_deadline_date': machinaryawardobj[i].get('machinary_deadline_date'),
+                    'machinary_code': machinaryawardobj[i].get('machinary_code'),
+                    'machinary_name': machinaryawardobj[i].get('machinary_date_range'),
+                    'machinary_description': machinaryawardobj[i].get('machinary_description'),
+                    'machinary_rfq_type': machinaryawardobj[i].get('rfq_type'),
+                    'machinary_userid': machinaryawardobj[i].get('updated_by_id')
+                })
+        total_all_awards = list(chain(awardarray, serviceawardsarray,machinaryawardsarray))
+        return Response({'status': 200, 'message': 'Awards Vendor List','data': total_all_awards}, status=200)
+
+
+
+
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)

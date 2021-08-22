@@ -92,7 +92,9 @@ urlpatterns = [
     path('get-buyer-bid-list-by-userid/',views.get_buyer_bid_list_by_userid),
     path('get-all-types-of-awards/',views.get_all_types_of_awards),
     path('get-all-awards-based-on-userid-and-rfqtype/',views.get_all_awards_based_on_userid_and_rfqtype),
-    path('add-terms-to-bidding-terms-settings/',views.add_terms_to_bidding_terms_settings)
+    path('add-terms-to-bidding-terms-settings/',views.add_terms_to_bidding_terms_settings),
+    path('purchase-order-vendors-list/', views.purchase_order_vendors_list),
+    path('awards-vendor-list/', views.awards_vendor_list)
 
 
 ]

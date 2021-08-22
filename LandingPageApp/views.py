@@ -404,3 +404,38 @@ def get_all_company_products_services(request):
 
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)
+
+
+
+@api_view(['get'])
+def get_approved_companies_list(request):
+    basicarray=[]
+    try:
+        regobj=SelfRegistration.objects.filter(admin_approve='Approved').values().order_by('id')
+        if len(regobj)>0:
+            for i in range(0,len(regobj)):
+                print(regobj[i].get('id'))
+                basicobj = BasicCompanyDetails.objects.filter(updated_by_id=regobj[i].get('id')).values()
+                if len(basicobj)>0:
+                    billobj = BillingAddress.objects.filter(updated_by_id=basicobj[0].get('updated_by_id')).values().order_by('company_code')
+                    basicarray.append({'company_code':basicobj[0].get('company_code'),
+                                       'gst_number':basicobj[0].get('gst_number'),
+                                       'company_name':basicobj[0].get('company_name'),
+                                       'company_type':basicobj[0].get('company_type'),
+                                       'listing_date':basicobj[0].get('listing_date'),
+                                       'pan_number':basicobj[0].get('pan_number'),
+                                       'tax_payer_type':basicobj[0].get('tax_payer_type'),
+                                       'msme_registered':basicobj[0].get('msme_registered'),
+                                       'company_established':basicobj[0].get('company_established'),
+                                       'registered_iec':basicobj[0].get('registered_iec'),
+                                       'industrial_scale':basicobj[0].get('industrial_scale'),
+                                       'updated_by':basicobj[0].get('updated_by_id'),
+                                       'billing_address':billobj[0].get('bill_address')
+                                       })
+                else:
+                    pass
+            return Response({'status': 200, 'message': 'Approved Companies List', 'data': basicarray}, status=200)
+        else:
+            return Response({'status': 204, 'message': 'Approved Companies Are Not Present'}, status=204)
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)

@@ -25,6 +25,7 @@ urlpatterns = [
     path('get-item-code-details-by-userid-itemtype/',views.get_item_code_details_by_userid_itemtype),
     path('advance-search-buyer-product/',views.advance_search_buyer_product),
     path('get-all-types-of-products-by-user-id/',views.get_all_types_of_products_by_user_id),
+    path('get-all-types-of-products-by-ccode/',views.get_all_types_of_products_by_ccode),
     path('vendor-product-based-on-maincore-name/',views.vendor_product_based_on_maincore_name),
     path('vendor-product-based-on-category-name/',views.vendor_product_based_on_category_name),
     path('update-buyer-products/',views.update_buyer_products),
@@ -38,6 +39,7 @@ urlpatterns = [
     path('fetch-vendor-product-technical-details/', views.fetch_vendor_product_technical_details),
     path('fetch-vendor-product-product_features-details/', views.fetch_vendor_product_productfeatures_details),
     path('fetch-vendor-product-document-details/', views.fetch_vendor_product_document_details),
-    path('get-vendor-details-by-sub-category/', views.get_vendor_details_by_sub_category)
+    path('get-vendor-details-by-sub-category/',views.get_vendor_details_by_sub_category),
+    path('fetch-vendor-product-basic-details-by-subcategory/',views.fetch_vendor_product_basic_details_by_subcategory)
 
 ]

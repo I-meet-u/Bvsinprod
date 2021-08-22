@@ -30,7 +30,7 @@ urlpatterns = [
     path('employee-verified-list/',views.employee_verified_list),
     path('employee-status-update-from-pending-to-approve/', views.employee_status_update_from_pending_to_approved),
     path('employee-status-update-from-pending-to-verify/', views.employee_status_update_from_pending_to_verified),
-    path('employee-status-update-from-approved-to-verified/',views.employee_status_update_from_approved_to_verified),
+    path('employee-status-update-from-verify-to-approve/',views.employee_status_update_from_verify_to_approved),
     path('employee-status-update-from-pending-to-reject/',views.employee_status_update_from_pending_to_reject),
     path('company-registration-list/',views.company_registration_list),
     path('admin-reject-list/',views.admin_rejected_list),

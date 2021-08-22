@@ -1502,3 +1502,115 @@ def delete_communication_details(request):
 
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)
+
+
+@api_view(['post'])
+def delete_addressess(request):
+    data=request.data
+    addresstype=data['addresstype']
+    addressid = data['addressid']
+    try:
+        if addresstype=='Billing':
+            billingobj=BillingAddress.objects.filter(id__in=addressid).values()
+            if len(billingobj)>0:
+                for i in range(0,len(billingobj)):
+                    billingdel=BillingAddress.objects.get(id=billingobj[i].get('id'))
+                    billingdel.delete()
+                return Response({'status':200,'message':'Billing Address Details are deleted'},status=200)
+            else:
+                return Response({'status': 204, 'message': 'Billing Address details are not present or it is already deleted'}, status=204)
+        elif addresstype=='Shipping':
+            shippingobj = ShippingAddress.objects.filter(id__in=addressid).values()
+            if len(shippingobj) > 0:
+                for i in range(0, len(shippingobj)):
+                    shippingdel = ShippingAddress.objects.get(id=shippingobj[i].get('id'))
+                    shippingdel.delete()
+                return Response({'status': 200, 'message': 'Shipping Address Details are deleted'}, status=200)
+            else:
+                return Response(
+                    {'status': 204, 'message': 'Shipping Address details are not present or it is already deleted'},
+                    status=204)
+
+
+
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)
+
+
+@api_view(['post'])
+@permission_classes((AllowAny,))
+def get_userid_by_ccode(request):
+    data=request.data
+    ccode=data['ccode']
+    try:
+        basicobj=BasicCompanyDetails.objects.filter(company_code=ccode).values()
+        if len(basicobj)>0:
+            regobj=SelfRegistration.objects.filter(id=basicobj[0].get('updated_by_id')).values('id')
+            return Response({'status':200,'message':'Userid By Ccode','data':regobj},status=200)
+        else:
+            return Response({'status': 204, 'message': 'Not Present'}, status=204)
+
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)
+
+
+
+
+@api_view(['post'])
+@permission_classes((AllowAny,))
+def get_contact_details(request):
+    data=request.data
+    userid=data['userid']
+    try:
+        contactobj=ContactDetails.objects.filter(updated_by_id=userid).values()
+        if len(contactobj)>0:
+            return Response({'status':200,'message':'Contact Details List','data':contactobj},status=200)
+        else:
+            return Response({'status':204,'message':'Not Present'},status=204)
+
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)
+
+@api_view(['post'])
+@permission_classes((AllowAny,))
+def get_communication_details(request):
+    data=request.data
+    userid=data['userid']
+    try:
+        communicationobj=CommunicationDetails.objects.filter(updated_by_id=userid).values()
+        if len(communicationobj)>0:
+            return Response({'status':200,'message':'Communication Details List','data':communicationobj},status=200)
+        else:
+            return Response({'status':204,'message':'Not Present'},status=204)
+
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)
+
+
+@api_view(['post'])
+@permission_classes((AllowAny,))
+def get_billing_address_by_user_id(request):
+    data=request.data
+    userid=data['userid']
+    try:
+        billingobj=BillingAddress.objects.filter(updated_by_id=userid).values()
+        if len(billingobj)>0:
+            return Response({'status': 200, 'message': 'Billing Address Details List', 'data': billingobj},status=200)
+        else:
+            return Response({'status': 204, 'message': 'Not Present'}, status=204)
+
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)
+
+
+@api_view(['get'])
+def fetch_all_basic_company_details(request):
+    try:
+        basicobj=BasicCompanyDetails.objects.filter().values().order_by('company_code')
+        if len(basicobj)>0:
+            return Response({'status': 200, 'message': 'Company List Success', 'data': basicobj}, status=200)
+        else:
+            return Response({'status': 204, 'message': 'Not Present'}, status=204)
+
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)

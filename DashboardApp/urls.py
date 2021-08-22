@@ -25,5 +25,8 @@ urlpatterns = [
     path('business-request-accept-reject-advance-search/',views.business_request_accept_reject_advance_search),
     path('search-business-request-advance-search/',views.search_business_request_advance_search),
     path('update-business-status/',views.update_business_status),
+    path('get-internal-buyer/',views.get_internal_buyer),
+    path('buyer-list/',views.buyer_list),
+    path('add-users-internal-buyer-and-internal-vendor/',views.add_users_internal_buyer_and_internal_vendor)
 
     ]

@@ -1,17 +1,23 @@
+from __future__ import print_function
 import math
 import urllib
 from itertools import chain
 
+from django_filters import rest_framework as filters
 import requests
 from django.db.models import Q
 from django.shortcuts import render
-
 # Create your views here.
+from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import viewsets, permissions, status
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.exceptions import ValidationError
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
+import sib_api_v3_sdk
+from sib_api_v3_sdk.rest import ApiException
+from pprint import pprint
+
 
 from MastersApp.models import MaincoreMaster
 from RegistrationApp.models import BasicCompanyDetails, IndustrialInfo, IndustrialHierarchy, BillingAddress
@@ -23,8 +29,6 @@ class InviteVendorView(viewsets.ModelViewSet):
     # permission_classes = [permissions.AllowAny]
     queryset = InviteVendor.objects.all()
     serializer_class = InviteVendorSerializer
-    ordering_fields = ['invite_id']
-    ordering = ['invite_id']
 
     def create(self, request, *args, **kwargs):
         company_name = request.data.get('company_name', None)
@@ -42,6 +46,36 @@ class InviteVendorView(viewsets.ModelViewSet):
                 regarray.append(regobj[i].get('username'))
             if email_id in regarray:
                 return Response({'status': 202, 'message': 'Email Id already present in Registration'}, status=202)
+            else:
+                regobj = SelfRegistration.objects.filter(id=user_id).values()
+                basicobj = BasicCompanyDetails.objects.filter(updated_by_id=regobj[0].get('id')).values()
+                company_namesender = basicobj[0].get('company_name')
+                print(company_name, 'register_company')
+
+                # Configure API key authorization: api-key
+                configuration = sib_api_v3_sdk.Configuration()
+                configuration.api_key[
+                    'api-key'] = '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'
+
+                # Uncomment below lines to configure API key authorization using: partner-key
+                # configuration = sib_api_v3_sdk.Configuration()
+                # configuration.api_key['partner-key'] = 'YOUR_API_KEY'
+
+                # create an instance of the API class
+                api_instance = sib_api_v3_sdk.TransactionalEmailsApi(sib_api_v3_sdk.ApiClient(configuration))
+                send_smtp_email = sib_api_v3_sdk.SendSmtpEmail(to=[{"email": email_id, "name": contact_name}],
+                                                               template_id=16, params={"username": contact_name,
+                                                                                       "receiverCompany": company_name,
+                                                                                       "senderCompany": company_namesender},
+                                                               subject='Business Invitation Collaboration'
+                                                               )  # SendSmtpEmail | Values to send a transactional email
+
+                try:
+                    # Send a transactional email
+                    api_response = api_instance.send_transac_email(send_smtp_email)
+                    pprint(api_response)
+                except ApiException as e:
+                    print("Exception when calling SMTPApi->send_transac_email: %s\n" % e)
             return super().create(request, *args, **kwargs)
 
 
@@ -55,21 +89,31 @@ class InviteVendorView(viewsets.ModelViewSet):
             return inviteobj
         raise ValidationError({'message': "Invited list by this user is not present", "status": 204})
 
+class BusinessRequestFilter(filters.FilterSet):
+    industry_to_serve = filters.CharFilter(lookup_expr='icontains')
+    nature_of_business=filters.CharFilter(lookup_expr='icontains')
+    company_name = filters.CharFilter(lookup_expr='icontains')
+    state = filters.CharFilter(lookup_expr='icontains')
+    send_status=filters.CharFilter(lookup_expr='icontains')
+    city=filters.CharFilter(lookup_expr="icontains")
+
+    class Meta:
+        model = BusinessRequest
+        fields = ('company_code', 'company_name','state','industry_to_serve','nature_of_business','send_status','updated_by','city')
 
 class BusinessRequestView(viewsets.ModelViewSet):
     # permission_classes = [permissions.AllowAny]
     queryset = BusinessRequest.objects.all()
     serializer_class = BusinessRequestSerializer
-    ordering_fields = ['id']
-    ordering = ['id']
+    filter_backends = [DjangoFilterBackend]
+    # filterset_fields  = ['industry_to_serve','nature_of_business']
+    filterset_class = BusinessRequestFilter
 
 
 class InternalVendorView(viewsets.ModelViewSet):
     # permission_classes = [permissions.AllowAny]
     queryset = InternalVendor.objects.all()
     serializer_class = InternalVendorSerializer
-    ordering_fields = ['internal_vendor_id']
-    ordering = ['internal_vendor_id']
 
     def create(self, request, *args, **kwargs):
         ccode = request.data.get('ccode', None)
@@ -109,8 +153,11 @@ class InternalVendorView(viewsets.ModelViewSet):
 def getinternalvendor(request):
     data = request.data
     try:
-        intobj = InternalVendor.objects.filter(updated_by=data['updated_by']).values()
-        return Response({'status': 200, 'data': intobj}, status=200)
+        intobj = InternalVendor.objects.filter(updated_by=data['updated_by']).values().order_by('internal_vendor_id')
+        if len(intobj)>0:
+            return Response({'status': 200,'message':'Internal Vendor List','data': intobj}, status=200)
+        else:
+            return Response({'status': 204, 'message': 'Not Present'}, status=204)
 
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)
@@ -120,10 +167,38 @@ class InternalBuyerView(viewsets.ModelViewSet):
     # permission_classes = [permissions.AllowAny]
     queryset = InternalBuyer.objects.all()
     serializer_class = InternalBuyerSerializer
-    ordering_fields = ['internal_buyer_id']
-    ordering = ['internal_buyer_id']
 
+    def create(self, request, *args, **kwargs):
+        ccode = request.data.get('ccode', None)
+        userid = request.data.get('userid', None)
+        try:
+            if len(ccode) > 0:
+                print(ccode)
+                for i in range(0, len(ccode)):
+                    basicobj = BasicCompanyDetails.objects.filter(company_code=ccode[i]).values()
+                    print(len(basicobj), 'length')
+                    print(basicobj[0].get('updated_by_id'),'bascic')
+                    address = BillingAddress.objects.filter(company_code=basicobj[0].get('company_code')).values()
+                    regobj = SelfRegistration.objects.get(id=basicobj[0].get('updated_by_id'))
+                    print(regobj.id)
+                    industryinfo = IndustrialInfo.objects.filter(company_code_id=ccode[i]).values()
+                    InternalBuyer.objects.create(company_code=basicobj[0].get('company_code'),
+                                                  company_name=basicobj[0].get('company_name'),
+                                                  city=address[0].get('bill_city'),
+                                                  state=address[0].get('bill_state'),
+                                                  nature_of_business=regobj.nature_of_business,
+                                                  email_id=regobj.username,
+                                                  phone_number=regobj.phone_number,
+                                                  industry_to_serve=industryinfo[0].get('industry_to_serve'),
+                                                  updated_by=SelfRegistration.objects.get(id=userid),
+                                                  created_by=userid
+                                                  )
+                return Response({'status': 201, 'message': "Internal Buyer Created"}, status=201)
+            else:
+                return Response({'status': 204, 'message': "Company Code Not Present"}, status=204)
 
+        except Exception as e:
+            return Response({'status': 500, 'error': str(e)}, status=500)
 @api_view(['post'])
 # @permission_classes((AllowAny,))
 def get_all_details_for_business_request(request):
@@ -177,7 +252,7 @@ def external_vendor(request):
     externalarray = []
     try:
         regobjdata= SelfRegistration.objects.filter(Q(user_type='Vendor')| Q(user_type='Both'),admin_approve='Approved').values().order_by('id')
-        internalobj = InternalVendor.objects.filter().values()
+        internalobj = InternalVendor.objects.filter(updated_by_id=userid).values()
         for i in range(0, len(internalobj)):
             internalarray.append(internalobj[i].get('company_code'))
         if len(regobjdata)>0:
@@ -195,7 +270,10 @@ def external_vendor(request):
                                           'category': hierarchyobj.category,
                                           'subcategory': hierarchyobj.subcategory,
                                           'bill_city': billingobj[0].get('bill_city'),
-                                          'bill_state': billingobj[0].get('bill_state')
+                                          'bill_state': billingobj[0].get('bill_state'),
+                                          'gst_number':basicobj.gst_number,
+                                          'phone_no':regobjdata[i].get('phone_number'),
+                                          'email_id':regobjdata[i].get('username')
                                           })
 
             return Response({'status': 200, 'message': 'External Vendor List', 'data': externalarray}, status=200)
@@ -273,6 +351,9 @@ def buzrequestcreate(request):
     data = request.data
     compcode = data['compcode']
     userid = data['userid']
+    # email=data['email']
+    # phone=data['phone']
+    # gst=data['gst']
     emptyarra=[]
 
     try:
@@ -295,9 +376,12 @@ def buzrequestcreate(request):
                                                city=billngaddrs[0].get('bill_city'), state=billngaddrs[0].get('bill_state'),
                                                nature_of_business=Regobj.nature_of_business,
                                                industry_to_serve=indobj[0].get('industry_to_serve'), created_by=userid,
-                                               updated_by=SelfRegistration.objects.get(id=userid))
+                                               updated_by=SelfRegistration.objects.get(id=userid),
+                                               gst_number=basicoj[0].get('gst_number'),
+                                               email_id=Regobj.username,
+                                               phone_number=Regobj.phone_number)
 
-            return Response({'status': 200, 'message': 'ok'}, status=200)
+            return Response({'status': 200, 'message': 'Business Request Created'}, status=200)
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)
 
@@ -313,9 +397,11 @@ def sendergetbuzrequestdata(request):
             for i in range(0,len(buzobj)-1):
                 print(i)
                 if buzobj[i].get('company_code')==buzobj[i+1].get('company_code'):
+                    print(buzobj[i].get('company_code'))
                     pass
                 else:
-                    basicobj=BasicCompanyDetails.objects.filter(company_code=buzobj[i].get('company_code')).values()
+                    print(buzobj[i].get('company_code'))
+                    basicobj=BasicCompanyDetails.objects.get(company_code=buzobj[i].get('company_code'))
                     businessrequestarray.append({'company_code':buzobj[i].get('company_code'),
                                                  'company_name':buzobj[i].get('company_name'),
                                                  'city':buzobj[i].get('city'),
@@ -325,11 +411,12 @@ def sendergetbuzrequestdata(request):
                                                  'industry_to_serve':buzobj[i].get('industry_to_serve'),
                                                  'maincore':buzobj[i].get('maincore'),
                                                  'category':buzobj[i].get('category'),
+                                                 'gst_number': buzobj[i].get('gst_number'),
                                                  'sub_category':buzobj[i].get('sub_category'),
                                                  'send_status':buzobj[i].get('send_status'),
                                                  'created_by':buzobj[i].get('created_by'),
-                                                 'updated_by':buzobj[i].get('updated_by'),
-                                                 'gst_number':basicobj[0].get('gst_number')
+                                                 'updated_by':buzobj[i].get('updated_by')
+
 
                                                  })
 
@@ -432,11 +519,12 @@ def search_business_request_advance_search(request):
     industry_to_serve = data['industry_to_serve']
     nature_of_business = data['nature_of_business']
     send_status=data['send_status']
+    userid=data['userid']
     serveappend = []
+    nobappend=[]
     try:
         serveappend.append(industry_to_serve)
-        businessrequestadvancesearch = BusinessRequest.objects.filter(updated_by=data['userid']).filter(
-            company_code__icontains=company_code).filter(company_name__icontains=company_name).filter(state__icontains=state).filter(industry_to_serve__contains=serveappend).filter(nature_of_business__0__icontains=nature_of_business).filter(send_status__icontains=send_status).values()
+        businessrequestadvancesearch=BusinessRequest.objects.filter(updated_by_id=userid).filter(company_code__icontains=company_code).filter(company_name__icontains=company_name).filter(state__icontains=state).filter(industry_to_serve__in=industry_to_serve).filter(nature_of_business__in=nature_of_business).filter(send_status__icontains=send_status).values()
 
         return Response(
             {'status': '200', 'message': 'Business Request Advance Search', 'data': businessrequestadvancesearch},
@@ -511,3 +599,209 @@ def searchinternalvendor(request):
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)
 
+
+
+# @api_view(['post'])
+# # @permission_classes((AllowAny,))
+# def reg_list(request):
+#     data = request.data
+#     userid = data['userid']
+#     internalarray = []
+#     regarray = []
+#     try:
+#         regobjdata= SelfRegistration.objects.filter(Q(user_type='Vendor')| Q(user_type='Both'),admin_approve='Approved').values().order_by('id')
+#         internalobj = InternalVendor.objects.filter().values()
+#         for i in range(0, len(internalobj)):
+#             internalarray.append(internalobj[i].get('company_code'))
+#         if len(regobjdata)>0:
+#             for i in range(0, len(regobjdata)):
+#                 basicobj = BasicCompanyDetails.objects.get(updated_by_id=regobjdata[i].get('id'))
+#                 industryobj = IndustrialInfo.objects.get(updated_by_id=regobjdata[i].get('id'),company_code=basicobj.company_code)
+#                 hierarchyobj = IndustrialHierarchy.objects.get(updated_by_id=regobjdata[i].get('id'))
+#                 billingobj = BillingAddress.objects.filter(updated_by_id=regobjdata[i].get('id')).values()
+#                 if basicobj.company_code not in internalarray:
+#                     regarray.append({'company_code': basicobj.company_code,
+#                                           'company_name': basicobj.company_name,
+#                                           'nature_of_business': industryobj.nature_of_business,
+#                                           'industry_to_serve': industryobj.industry_to_serve,
+#                                           'maincore': hierarchyobj.maincore,
+#                                           'category': hierarchyobj.category,
+#                                           'subcategory': hierarchyobj.subcategory,
+#                                           'bill_city': billingobj[0].get('bill_city'),
+#                                           'bill_state': billingobj[0].get('bill_state')
+#                                           })
+#             regobj = SelfRegistration.objects.filter(admin_approve='Approved', user_type='Buyer').values().order_by(
+#                 'id')
+#             print(len(regobj))
+#             internalobj = InternalVendor.objects.filter().values()
+#             for i in range(0, len(internalobj)):
+#                 internalarray.append(internalobj[i].get('company_code'))
+#
+#             if len(regobj) > 0:
+#                 for i in range(0, len(regobj)):
+#                     basicobj = BasicCompanyDetails.objects.get(updated_by_id=regobj[i].get('id'))
+#                     industryobj = IndustrialInfo.objects.get(updated_by_id=regobj[i].get('id'),
+#                                                              company_code=basicobj.company_code)
+#                     # hierarchyobj = IndustrialHierarchy.objects.get(updated_by_id=regobj[i].get('id'))
+#                     billingobj = BillingAddress.objects.filter(updated_by_id=regobj[i].get('id')).values()
+#                     if basicobj.company_code not in internalarray:
+#                         print('ok')
+#
+#                         regarray.append({'company_code': basicobj.company_code,
+#                                               'company_name': basicobj.company_name,
+#                                               'nature_of_business': industryobj.nature_of_business,
+#                                               'industry_to_serve': industryobj.industry_to_serve,
+#                                               'maincore': "",
+#                                               'category': "",
+#                                               'subcategory': "",
+#                                               'bill_city': billingobj[0].get('bill_city'),
+#                                               'bill_state': billingobj[0].get('bill_state'),
+#                                               # 'user_type':regobj[i].get('user_type')
+#
+#                                               })
+#                     else:
+#                         print('already present')
+#
+#             return Response({'status': 200, 'message': 'External Vendor List', 'data': regarray}, status=200)
+#         else:
+#             return Response({'status': 204, 'message': 'Not Present'}, status=204)
+
+    #
+    # except Exception as e:
+    #     return Response({'status': 500, 'error': str(e)}, status=500)
+
+@api_view(['post'])
+def buyer_list(request):
+    data=request.data
+    userid=data['userid']
+    internalbuyerarray=[]
+    buyerarray=[]
+    try:
+        regobj = SelfRegistration.objects.filter(Q(user_type='Buyer')| Q(user_type='Both'),admin_approve='Approved').values().order_by(
+            'id')
+        print(len(regobj))
+        internalobj = InternalBuyer.objects.filter(updated_by_id=userid).values()
+        for i in range(0, len(internalobj)):
+            internalbuyerarray.append(internalobj[i].get('company_code'))
+
+        if len(regobj) > 0:
+            for i in range(0, len(regobj)):
+                basicobj = BasicCompanyDetails.objects.get(updated_by_id=regobj[i].get('id'))
+                industryobj = IndustrialInfo.objects.get(updated_by_id=regobj[i].get('id'),
+                                                         company_code=basicobj.company_code)
+                # hierarchyobj = IndustrialHierarchy.objects.get(updated_by_id=regobj[i].get('id'))
+                billingobj = BillingAddress.objects.filter(updated_by_id=regobj[i].get('id')).values()
+                if basicobj.company_code not in internalbuyerarray:
+                    print('ok')
+
+                    buyerarray.append({'company_code': basicobj.company_code,
+                                       'company_name': basicobj.company_name,
+                                       'nature_of_business': industryobj.nature_of_business,
+                                       'industry_to_serve': industryobj.industry_to_serve,
+                                       'bill_city': billingobj[0].get('bill_city'),
+                                       'bill_state': billingobj[0].get('bill_state'),
+                                       'phone_no': regobj[i].get('phone_number'),
+                                       'email_id': regobj[i].get('username')
+
+                                          })
+                else:
+                    print('already present')
+
+            return Response({'status': 200, 'message': 'Buyer List', 'data': buyerarray}, status=200)
+        else:
+            return Response({'status': 204, 'message': 'Not Present'}, status=204)
+
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)
+
+
+@api_view(['post'])
+def add_users_internal_buyer_and_internal_vendor(request):
+    data=request.data
+    userid=data['userid']
+    ccode=data['ccode']
+    internalarray=[]
+    internalbuyerarray=[]
+    interalbuyer=[]
+    try:
+
+        interalvendor=InternalVendor.objects.filter(updated_by_id=userid).values()
+        for i in range(0,len(interalvendor)):
+            internalarray.append(interalvendor[i].get('company_code'))
+        interalbuyer = InternalBuyer.objects.filter(updated_by_id=userid).values()
+        for i in range(0, len(interalbuyer)):
+            internalbuyerarray.append(interalbuyer[i].get('company_code'))
+
+        businessobj=BusinessRequest.objects.filter(updated_by_id=userid,company_code__in=ccode).values()
+        if len(businessobj)>0:
+            for i in range(0,len(businessobj)):
+                print('ok ',businessobj[i].get('email_id'))
+                regobjdata=SelfRegistration.objects.get(Q(user_type='Vendor')| Q(user_type='Both'),username=businessobj[i].get('email_id'),admin_approve='Approved')
+                print(regobjdata.user_type,'s')
+                basicobj=BasicCompanyDetails.objects.get(company_code=businessobj[i].get('company_code'))
+                print(basicobj.company_code)
+                if basicobj.company_code not in internalarray and regobjdata.user_type=='Vendor':
+                    print('internal vendor')
+                    industryhierarchy=IndustrialHierarchy.objects.get(company_code_id=basicobj.company_code)
+                    billobj = BillingAddress.objects.filter(company_code_id=basicobj.company_code).values()
+                    internalvendorobj=InternalVendor.objects.create(company_code=basicobj.company_code,
+                                                                    company_name=basicobj.company_name,
+                                                                    city=billobj[0].get('bill_city'),
+                                                                    state=billobj[0].get('bill_state'),
+                                                                    nature_of_business=regobjdata.nature_of_business,
+                                                                    email_id=regobjdata.username,
+                                                                    phone_number=regobjdata.phone_number,
+                                                                    maincore=industryhierarchy.maincore,
+                                                                    category=industryhierarchy.category,
+                                                                    sub_category=industryhierarchy.subcategory,
+                                                                    created_by=userid,
+                                                                    updated_by=SelfRegistration.objects.get(id=userid))
+
+
+                if basicobj.company_code not in internalbuyerarray and regobjdata.user_type=='Buyer':
+                    industryinfo = IndustrialInfo.objects.get(company_code_id=basicobj.company_code)
+                    billobj = BillingAddress.objects.filter(company_code_id=basicobj.company_code).values()
+                    internalbuyerobj = InternalBuyer.objects.create(company_code=basicobj.company_code,
+                                                                      company_name=basicobj.company_name,
+                                                                      city=billobj[0].get('bill_city'),
+                                                                      state=billobj[0].get('bill_state'),
+                                                                      nature_of_business=regobjdata.nature_of_business,
+                                                                      industry_to_serve=industryinfo.industry_to_serve,
+                                                                      email_id=regobjdata.username,
+                                                                      phone_number=regobjdata.phone_number,
+                                                                      created_by=userid,
+                                                                      updated_by=SelfRegistration.objects.get(id=userid))
+
+            return Response({'status': 200, 'message': 'Vendors are added to internal vendor and internal buyer successfully'}, status=200)
+        else:
+            return Response({'status': 204, 'message': 'Not Present'}, status=204)
+
+        # else:
+        #     print('s')
+        #     for i in range(0,len(businessobj)):
+        #         print('coming')
+        #         if businessobj[i].get('email_id') in regarray and businessobj[i].get('send_status')=='Accept':
+        #             print('s correct')
+        #             regvalue=SelfRegistration.objects.get(username=businessobj[i].get('email_id'))
+        #             usertype=regvalue.user_type
+        #             basicobj=BasicCompanyDetails.objects.filter(updated_by_id=regvalue.id)
+        #             for i in range(0,len(basicobj)):
+        #                 print('cname  ', basicobj.company_code)
+
+
+
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)
+
+
+@api_view(['post'])
+def get_internal_buyer(request):
+    data = request.data
+    try:
+        internalbuyer = InternalBuyer.objects.filter(updated_by=data['updated_by']).values().order_by('internal_buyer_id')
+        if len(internalbuyer)>0:
+            return Response({'status': 200,'message':'Internal Buyer List','data': internalbuyer}, status=200)
+        else:
+            return Response({'status': 204, 'message': 'Not Present'}, status=204)
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)

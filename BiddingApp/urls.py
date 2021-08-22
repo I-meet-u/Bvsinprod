@@ -19,6 +19,12 @@ router.register('buyer-bidding-machinary-details',views.BiddingBuyerMachinaryDet
 
 router.register('vendor-bidding-service-details',views.VendorBiddingBuyerServiceDetailsView)
 router.register('vendor-bidding-machinary-details',views.VendorBiddingBuyerMachinaryDetailsView)
+router.register('product-award',views.AwardViewSet)
+router.register('service-award',views.ServiceAwardViewSet)
+router.register('machinary-award',views.MachinaryAwardViewSet)
+router.register('purchase-order',views.PurchaseOrderViewSet)
+router.register('purchase-order-service',views.PurchaseOrderServiceViewSet)
+router.register('purchase-order-machinary',views.PurchaseOrderMachinaryViewSet)
 router.register('source-list-create-items',views.SourceList_CreateItemViewSet)
 router.register('source-publish',views.SourcePublishViewSet)
 
@@ -58,7 +64,7 @@ urlpatterns = [
     path('rejected-response-list/', views.rejected_response_list),
     path('get-ccode_by_userid/',views.get_ccode_by_userid),
     path('price-analysis-product/',views.price_analysis_product),
-    path('price-analysis-vendor-list/',views.price_analysis_vendor_list),
+    # path('price-analysis-vendor-terms-list/',views.price_analysis_vendor_terms_list),
     path('vendor-query-description/',views.vendor_query_description),
     path('company_names_get_by_ccode/',views.company_names_get_by_ccode),
     path('buyer-bidlist-based-on-rfqnumber/',views.buyer_bidlist_based_on_rfqnumber),
@@ -67,8 +73,26 @@ urlpatterns = [
     path('award-get-list-of-vendor/',views.award_get_list_of_vendor),
     path('fetch-buyer-service-details-by-userid-rfq/',views.fetch_buyer_service_details_by_userid_rfq),
     path('fetch-buyer-machinary-details-by-userid-rfq/',views.fetch_buyer_machinary_details_by_userid_rfq),
-    path('add-terms-to-bidding-terms-settings/', views.add_terms_to_bidding_terms_settings),
+    path('award-service-create/',views.award_service_create),
+    path('award-machinary-create/',views.award_machinary_create),
+    # path('get-purchase-code-product/',views.get_purchase_code_product),
+    path('po-status-update-product/',views.po_status_update_product),
+    path('po-status-update-service/',views.po_status_update_service),
+    path('po-status-update-machinary/',views.po_status_update_machinary),
+    path('price-analysis-service/',views.price_analysis_service),
+    path('price-analysis-machinary/', views.price_analysis_machinary),
+    path('fetch-vendor-bid-details/',views.fetch_vendor_bid_details),
+    path('price-analysis-vendor-terms-list/',views.price_analysis_vendor_terms_list),
     path('get-previous-value-of-rfq_details/',views.get_previous_value_of_rfq_details),
+    path('fetch-vendor-bid-details-userid/',views.fetch_vendor_bid_details_userid),
+    path('edit-vendor-bidding-product/',views.edit_vendor_bidding_product),
+    path('edit-vendor-bidding-service/',views.edit_vendor_bidding_service),
+    path('edit-vendor-bidding-machinary/',views.edit_vendor_bidding_machinary),
+    path('buyer-bid-status-changed-to-publish/',views.buyer_bid_status_changed_to_publish),
+    path('get-buyer-bid-list-by-userid/',views.get_buyer_bid_list_by_userid),
+    path('get-all-types-of-awards/',views.get_all_types_of_awards),
+    path('get-all-awards-based-on-userid-and-rfqtype/',views.get_all_awards_based_on_userid_and_rfqtype),
+    path('add-terms-to-bidding-terms-settings/',views.add_terms_to_bidding_terms_settings)
 
 
 ]

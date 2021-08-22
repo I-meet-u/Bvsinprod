@@ -74,8 +74,20 @@ urlpatterns = [
     path('buyer-login/',views.buyer_login),
     path('sendbluemailforgot/',views.sendbluemailforgot),
     path('employeelogin/',views.employeelogin),
-    path('delete-contact-details/', views.delete_contact_details),
-    path('delete-communication-details/', views.delete_communication_details)
+    path('delete-contact-details/',views.delete_contact_details),
+    path('delete-communication-details/',views.delete_communication_details),
+    path('delete-addresses/',views.delete_addressess),
+    path('get-userid-by-ccode/',views.get_userid_by_ccode),
+    path('get-contact-details/',views.get_contact_details),
+    path('get-communication-details/',views.get_communication_details),
+    path('get-billing-address-by-user-id/',views.get_billing_address_by_user_id),
+    path('fetch-all-basic-company-details/',views.fetch_all_basic_company_details),
+    path('delete-addresses/',views.delete_addressess),
+    path('get-userid-by-ccode/',views.get_userid_by_ccode),
+    path('get-contact-details/',views.get_contact_details),
+    path('get-communication-details/',views.get_communication_details),
+    path('get-billing-address-by-user-id/',views.get_billing_address_by_user_id),
+    # path('fetch-all-basic-company-details/',views.fetch_all_basic_company_details)
 
     # path('send_mail_template/',views.send_mail_template)
     # path('subscribe_email/', MailSubscriptionAPIView.as_view(),name='subscribe-email')

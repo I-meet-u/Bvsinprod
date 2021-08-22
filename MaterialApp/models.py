@@ -45,8 +45,8 @@ class VendorProduct_BasicDetails(models.Model):
     created_on = models.DateTimeField(auto_now_add=True)
     updated_on = models.DateTimeField(auto_now=True)
     created_by = models.BigIntegerField()
-    company_code=models.CharField(max_length=100,null=True,blank=True)
     updated_by = models.ForeignKey(SelfRegistration, on_delete=models.CASCADE)
+    company_code=models.CharField(max_length=100,null=True,blank=True)
     history = HistoricalRecords()
 
     class Meta:
@@ -237,7 +237,7 @@ class BuyerMachinaryDetails(models.Model):
 class ItemCodeSettings(models.Model):
     item_type=models.CharField(max_length=200)
     prefix=models.CharField(max_length=70,null=True,blank=True)
-    numeric=models.CharField(max_length=30)
+    numeric=models.CharField(max_length=30,null=True,blank=True)
     suffix=models.CharField(max_length=70,null=True,blank=True)
     code_format=models.CharField(max_length=120,null=True,blank=True)
     created_on = models.DateTimeField(auto_now_add=True)

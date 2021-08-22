@@ -11,7 +11,7 @@ from rest_framework.parsers import MultiPartParser
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 
-from RegistrationApp.models import SelfRegistration
+from RegistrationApp.models import SelfRegistration, IndustrialInfo, BillingAddress
 from .models import *
 
 from .serializers import *
@@ -113,24 +113,29 @@ def get_itemtype_based_on_userid(request):
     userid=data['userid']
     itemtype=data['itemtype']
     try:
-        buyerobj = BuyerProductDetails.objects.filter(updated_by=userid).values().order_by('buyer_product_id')
-        if len(buyerobj)>0:
-            if itemtype=='Product':
-                productobj=BuyerProductDetails.objects.filter(updated_by=userid,buyer_item_type=itemtype).values().order_by('buyer_product_id')
+        if itemtype=='Product':
+            productobj=BuyerProductDetails.objects.filter(updated_by=userid,buyer_item_type=itemtype).values().order_by('buyer_product_id')
+            if len(productobj)>0:
                 return Response({'status': 200, 'message': 'Buyer Product List','data':productobj}, status=200)
+            else:
+                return Response({'status': 202, 'message': 'Not Present'}, status=202)
 
-            elif itemtype == 'Service':
-                productobjservice = BuyerServiceDetails.objects.filter(updated_by=userid,
-                                                                buyer_service_item_type=itemtype).values().order_by('buyer_service_id')
+        elif itemtype == 'Service':
+            productobjservice = BuyerServiceDetails.objects.filter(updated_by=userid,
+                                                            buyer_service_item_type=itemtype).values().order_by('buyer_service_id')
+            if len(productobjservice)>0:
                 return Response({'status': 200, 'message': 'Buyer Service List', 'data': productobjservice}, status=200)
-            elif itemtype == 'Machinary & equipments':
-                productobjmachinary = BuyerMachinaryDetails.objects.filter(updated_by=userid,
-                                                                       buyer_machinary_item_type=itemtype).values().order_by('buyer_machinary_id')
+            else:
+                return Response({'status': 202, 'message': 'Not Present'}, status=202)
+        elif itemtype == 'Machinary & equipments':
+            productobjmachinary = BuyerMachinaryDetails.objects.filter(updated_by=userid,
+                                                                   buyer_machinary_item_type=itemtype).values().order_by('buyer_machinary_id')
+            if len(productobjmachinary)>0:
                 return Response({'status': 200, 'message': 'Buyer Machinary List', 'data': productobjmachinary}, status=200)
             else:
-                return Response({'status': 204, 'error':'Not present or itemtype is wrong','data':[]}, status=204)
+                return Response({'status': 202, 'message': 'Not Present'}, status=202)
         else:
-            return Response({'status': 202, 'error': 'Data Not Present For this user id'}, status=202)
+            return Response({'status': 204, 'error':'Not present or itemtype is wrong','data':[]}, status=204)
 
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)
@@ -503,6 +508,9 @@ def get_item_code_details_by_userid_itemtype(request):
 
 
 
+
+
+
 class BuyerProductDetailsView(viewsets.ModelViewSet):
     # permission_classes = [permissions.AllowAny]
     queryset = BuyerProductDetails.objects.all()
@@ -511,48 +519,34 @@ class BuyerProductDetailsView(viewsets.ModelViewSet):
     ordering_fields = ['buyer_product_id']
     ordering = ['buyer_product_id']
 
+
     def create(self, request, *args, **kwargs):
-        buyer_item_type = request.data.get('buyer_item_type', None)
-        buyer_item_name = request.data.get('buyer_item_name', None)
-        buyer_item_description = request.data.get('buyer_item_description', None)
-        buyer_uom = request.data.get('buyer_uom', None)
-        buyer_hsn_sac = request.data.get('buyer_hsn_sac', None)
-        buyer_unit_price = request.data.get('buyer_unit_price', None)
-        buyer_category = request.data.get('buyer_category', None)
-        buyer_department = request.data.get('buyer_department', None)
-        buyer_item_group = request.data.get('buyer_item_group', None)
-        buyer_annual_consumption = request.data.get('buyer_annual_consumption', None)
-        buyer_safety_stock = request.data.get('buyer_safety_stock', None)
-        buyer_model_no = request.data.get('buyer_model_no', None)
-        buyer_document = request.data.get('buyer_document', None)
-        buyer_additional_specifications = request.data.get('buyer_additional_specifications', None)
-        buyer_add_product_supplies = request.data.get('buyer_add_product_supplies', None)
-        # numeric=request.data.get('numeric',None)
-        userid = request.data.get('userid', None)
+        buyer_item_type=request.data.get('buyer_item_type',None)
+        buyer_item_name=request.data.get('buyer_item_name',None)
+        buyer_item_description=request.data.get('buyer_item_description',None)
+        buyer_uom=request.data.get('buyer_uom',None)
+        buyer_hsn_sac = request.data.get('buyer_hsn_sac',None)
+        buyer_unit_price = request.data.get('buyer_unit_price',None)
+        buyer_category = request.data.get('buyer_category',None)
+        buyer_department = request.data.get('buyer_department',None)
+        buyer_item_group = request.data.get('buyer_item_group',None)
+        buyer_annual_consumption = request.data.get('buyer_annual_consumption',None)
+        buyer_safety_stock = request.data.get('buyer_safety_stock',None)
+        buyer_model_no = request.data.get('buyer_model_no',None)
+        buyer_document = request.data.get('buyer_document',None)
+        buyer_additional_specifications = request.data.get('buyer_additional_specifications',None)
+        buyer_add_product_supplies = request.data.get('buyer_add_product_supplies',None)
+        userid = request.data.get('userid',None)
         try:
-            itemcodesettingsobj = ItemCodeSettings.objects.filter(updated_by=userid, item_type='Product').order_by(
-                '-id').values()
+            itemcodesettingsobj = ItemCodeSettings.objects.filter(updated_by=userid,item_type='Product').order_by('-id').values()
             if len(itemcodesettingsobj) > 0:
-                buyerproductobj = BuyerProductDetails.objects.filter(updated_by=userid).order_by(
-                    '-buyer_numeric').values()
-                if len(buyerproductobj) == 0:
+                buyerproductobj = BuyerProductDetails.objects.filter(updated_by=userid).order_by('-buyer_numeric').values()
+                if len(buyerproductobj)==0:
                     print("data not exist")
-                    lastnumeric = str(itemcodesettingsobj[0].get('numeric'))
-                    count = 0
-                    for i in range(0, len(lastnumeric)):
-                        if lastnumeric[i] == str(0):
-                            count = count + 1
-                        else:
-                            break
-                    numericitemcode = int(itemcodesettingsobj[0].get('numeric')) + 1
-                    print(numericitemcode)
-                    count = count + len(str(numericitemcode))
-                    numericitemcodeupdated = str(numericitemcode).zfill(count)
-                    print("new", numericitemcodeupdated)
                     buyerobj = BuyerProductDetails.objects.create(buyer_item_type=buyer_item_type,
                                                                   buyer_prefix=itemcodesettingsobj[0].get('prefix'),
                                                                   buyer_suffix=itemcodesettingsobj[0].get('suffix'),
-                                                                  buyer_numeric=numericitemcodeupdated,
+                                                                  buyer_numeric=str(int(itemcodesettingsobj[0].get('numeric')) + 1),
                                                                   buyer_item_code=itemcodesettingsobj[0].get(
                                                                       'code_format'),
                                                                   buyer_item_name=buyer_item_name,
@@ -572,25 +566,11 @@ class BuyerProductDetailsView(viewsets.ModelViewSet):
                                                                   updated_by=SelfRegistration.objects.get(id=userid),
                                                                   created_by=userid)
                 else:
-                    lastnumeric = str(buyerproductobj[0].get('buyer_numeric'))
-                    count = 0
-                    for i in range(0, len(lastnumeric)):
-                        if lastnumeric[i] == str(0):
-                            count = count + 1
-                        else:
-                            break
-                    numeric = int(buyerproductobj[0].get('buyer_numeric')) + 1
-                    count = count + len(str(numeric))
-                    numericupdated = str(numeric).zfill(count)
-                    print("new", numericupdated)
                     buyerobj = BuyerProductDetails.objects.create(buyer_item_type=buyer_item_type,
                                                                   buyer_prefix=buyerproductobj[0].get('buyer_prefix'),
                                                                   buyer_suffix=buyerproductobj[0].get('buyer_suffix'),
-                                                                  buyer_numeric=numericupdated,
-                                                                  buyer_item_code=buyerproductobj[0].get(
-                                                                      'buyer_prefix') + buyerproductobj[0].get(
-                                                                      'buyer_suffix') + buyerproductobj[0].get(
-                                                                      'buyer_numeric'),
+                                                                  buyer_numeric=int(buyerproductobj[0].get('buyer_numeric')) + 1,
+                                                                  buyer_item_code=buyerproductobj[0].get('buyer_prefix') + buyerproductobj[0].get('buyer_suffix')+buyerproductobj[0].get('buyer_numeric'),
                                                                   buyer_item_name=buyer_item_name,
                                                                   buyer_item_description=buyer_item_description,
                                                                   buyer_uom=buyer_uom,
@@ -607,7 +587,7 @@ class BuyerProductDetailsView(viewsets.ModelViewSet):
                                                                   buyer_add_product_supplies=buyer_add_product_supplies,
                                                                   updated_by=SelfRegistration.objects.get(id=userid),
                                                                   created_by=userid)
-                return Response({'status': 201, 'message': 'Buyer Product Created'}, status=201)
+                return Response({'status':201,'message':'Buyer Product Created'},status=201)
             else:
                 return Response(
                     {'status': 204, 'message': 'Item Code Settings Not Present,Please Create Item Code in Settings'},
@@ -615,13 +595,12 @@ class BuyerProductDetailsView(viewsets.ModelViewSet):
 
         except Exception as e:
             return Response({'status': 500, 'error': str(e)}, status=500)
+
     def get_queryset(self):
         buyerproductobj=BuyerProductDetails.objects.filter(updated_by=self.request.GET.get('updated_by'))
         if buyerproductobj:
             return buyerproductobj
         raise ValidationError({'message':'Buyer Product Details Not Present','status':204})
-
-
 
 
 class BuyerServiceDetailsView(viewsets.ModelViewSet):
@@ -866,15 +845,35 @@ def get_all_types_of_products_by_user_id(request):
     data=request.data
     userid=data['userid']
     try:
-        buyerproductobj=BuyerProductDetails.objects.filter(updated_by_id=userid).values()
-        buyerserviceobj = BuyerServiceDetails.objects.filter(updated_by_id=userid).values()
-        buyermachinaryobj = BuyerMachinaryDetails.objects.filter(updated_by_id=userid).values()
+        buyerproductobj=BuyerProductDetails.objects.filter(updated_by_id=userid).values().order_by('buyer_product_id')
+        buyerserviceobj = BuyerServiceDetails.objects.filter(updated_by_id=userid).values().order_by('buyer_service_id')
+        buyermachinaryobj = BuyerMachinaryDetails.objects.filter(updated_by_id=userid).values().order_by('buyer_machinary_id')
         totalproducts = list(chain(buyerproductobj, buyerserviceobj, buyermachinaryobj))
         if len(buyerproductobj) or len(buyerserviceobj) or len(buyermachinaryobj)>0:
             return Response({'status':200,'message':'All Products List','data':totalproducts},status=200)
         else:
             return Response({'status':204,'message':'Not Present'},status=204)
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)
 
+@api_view(['post'])
+@permission_classes((AllowAny,))
+def get_all_types_of_products_by_ccode(request):
+    data = request.data
+    ccode = data['ccode']
+    try:
+        basicobj=BasicCompanyDetails.objects.filter(company_code=ccode).values()
+        buyerproductobj = BuyerProductDetails.objects.filter(updated_by_id=basicobj[0].get('updated_by_id')).values().order_by(
+            'buyer_product_id')
+        buyerserviceobj = BuyerServiceDetails.objects.filter(updated_by_id=basicobj[0].get('updated_by_id')).values().order_by(
+            'buyer_service_id')
+        buyermachinaryobj = BuyerMachinaryDetails.objects.filter(updated_by_id=basicobj[0].get('updated_by_id')).values().order_by(
+            'buyer_machinary_id')
+        totalproducts = list(chain(buyerproductobj, buyerserviceobj, buyermachinaryobj))
+        if len(buyerproductobj) or len(buyerserviceobj) or len(buyermachinaryobj) > 0:
+            return Response({'status': 200, 'message': 'All Products List', 'data': totalproducts}, status=200)
+        else:
+            return Response({'status': 204, 'message': 'Not Present'}, status=204)
 
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)
@@ -1308,16 +1307,16 @@ def fetch_vendor_product_basic_details_by_category(request):
 #     itemtype=data['itemtype']
 #     try:
 #         if itemtype=='Product':
-#             buyerproductobj=BuyerProductDetails.objects.filter(buyer_item_type=itemtype,updated_by_id=userid).last()
-#             if buyerproductobj:
+#             buyerproductobj=BuyerProductDetails.objects.filter(buyer_item_type=itemtype,updated_by_id=userid).order_by('-').values()
+#             if len(buyerproductobj)>0:
 #                 buyer_product={
-#                     'item_code':buyerproductobj.buyer_numeric,
-#                     'numeric':buyerproductobj.buyer_numeric,
-#                     'user_id':buyerproductobj.updated_by_id
+#                     'numeric':buyerproductobj[0].get('buyer_numeric'),
+#                     'item_code':buyerproductobj[0].get('buyer_prefix')+buyerproductobj[0].get('buyer_suffix')+buyerproductobj,
+#                     'user_id':buyerproductobj[0].get('updated_by_id')
 #                 }
 #                 return Response({'status': 200, 'message': 'Buyer Product List','data':buyer_product},status=200)
 #             else:
-#                 itemcodesettings = ItemCodeSettings.objects.filter(item_type=itemtype, updated_by_id=userid).values()
+#                 itemcodesettings = ItemCodeSettings.objects.filter(item_type=itemtype,updated_by_id=userid).values()
 #                 if len(itemcodesettings)>0:
 #                     product_item_code={
 #                         'item_code':itemcodesettings[0].get('code_format'),
@@ -1457,7 +1456,6 @@ def get_previous_value_of_buyer_details(request):
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)
 
-
 @api_view(['post'])
 @permission_classes((AllowAny,))
 def fetch_vendor_product_general_details(request):
@@ -1537,15 +1535,35 @@ def get_vendor_details_by_sub_category(request):
     try:
         vendorobj = VendorProduct_BasicDetails.objects.filter(sub_category__icontains=subcategoryname).distinct('sub_category','company_code').values()
         for i in range(0,len(vendorobj)):
-            print()
             basicobj=BasicCompanyDetails.objects.get(company_code=vendorobj[i].get('company_code'))
-            regobj=SelfRegistration.objects.get(id=basicobj.updated_by_id)
+            regobj=SelfRegistration.objects.filter(id=basicobj.updated_by_id).values()
+            industryobj=IndustrialInfo.objects.get(company_code=vendorobj[i].get('company_code'))
+            billobj=BillingAddress.objects.filter(company_code_id=vendorobj[i].get('company_code')).values()
             vendordetails.append({
                 'company_name':basicobj.company_name,
-                'name':regobj.contact_person
+                'name': regobj[0].get('contact_person'),
+                'email':regobj[0].get('username'),
+                'phone_number':regobj[0].get('phone_number'),
+                'profile_photo': regobj[0].get('profile_cover_photo'),
+                'city':billobj[0].get('bill_city')
+                # 'nature_of_business':industryobj.nature_of_business,
+                # 'industry_to_serve':industryobj.industry_to_serve
             })
         return Response({'status': 200, 'message': 'ok','data':vendordetails},status=status.HTTP_200_OK)
 
 
     except Exception as e:
         return Response({'status':500,'error':str(e)},status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+@api_view(['post'])
+def fetch_vendor_product_basic_details_by_subcategory(request):
+    try:
+        vendorobj=VendorProduct_BasicDetails.objects.filter(sub_category=request.data['sub_category']).values().order_by('vendor_product_id')
+        if len(vendorobj)>0:
+            return Response({'status': 200, 'message': 'Vendor Product Basic Details By SubCategory List', 'data': vendorobj}, status=status.HTTP_200_OK)
+        else:
+            return Response({'status': 204, 'message': 'Not Present'}, status=status.HTTP_204_NO_CONTENT)
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+

@@ -87,6 +87,75 @@ class BiddingBuyerMachinaryDetailsSerializer(serializers.ModelSerializer):
         model=BiddingBuyerMachinaryDetails
         fields='__all__'
 
+class AwardsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model=Awards
+        fields='__all__'
+
+class ServiceAwardsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model=ServiceAwards
+        fields='__all__'
+
+class MachinaryAwardsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model=MachinaryAwards
+        fields='__all__'
+
+class PurchaseOrderSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PurchaseOrder
+        fields = "__all__"
+
+    # def create(self, validate_data):
+    #     # to add any extra details into the object before saving
+    #     # print(validate_data)
+    #     poobj = PurchaseOrder.objects.count()
+    #     if poobj == 0:
+    #         po_numeric = '720001'
+    #     else:
+    #         poobj = PurchaseOrder.objects.last()
+    #         print(poobj.po_numeric,'came')
+    #         po_numeric = int(poobj.po_numeric) + 1
+    #     values = PurchaseOrder.objects.create(PO_num="PO_"+str(po_numeric),po_numeric=po_numeric, **validate_data)
+    #     return values
+
+
+class PurchaseOrderServiceSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PurchaseOrderService
+        fields = "__all__"
+
+    # def create(self, validate_data):
+    #     # to add any extra details into the object before saving
+    #     # print(validate_data)
+    #     poobjservice = PurchaseOrderService.objects.count()
+    #     if poobjservice == 0:
+    #         service_po_numeric = '820001'
+    #     else:
+    #         poobjservice = PurchaseOrderService.objects.last()
+    #         print(poobjservice.service_po_numeric,'came')
+    #         service_po_numeric = int(poobjservice.service_po_numeric) + 1
+    #     values = PurchaseOrderService.objects.create(service_PO_num="PO_"+str(service_po_numeric),service_po_numeric=service_po_numeric, **validate_data)
+    #     return values
+
+class PurchaseOrderMachinarySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PurchaseOrderMachinary
+        fields = "__all__"
+
+    # def create(self, validate_data):
+    #     # to add any extra details into the object before saving
+    #     # print(validate_data)
+    #     poobjmachinary = PurchaseOrderMachinary.objects.count()
+    #     if poobjmachinary == 0:
+    #         machinary_po_numeric = '920001'
+    #     else:
+    #         poobjmachinary = PurchaseOrderMachinary.objects.last()
+    #         print(poobjmachinary.machinary_po_numeric,'came')
+    #         machinary_po_numeric = int(poobjmachinary.machinary_po_numeric) + 1
+    #     values = PurchaseOrderMachinary.objects.create(machinary_PO_num="PO_"+str(machinary_po_numeric),machinary_po_numeric=machinary_po_numeric, **validate_data)
+    #     return values
 
 class SourceList_CreateItemsSerializer(serializers.ModelSerializer):
     class Meta:

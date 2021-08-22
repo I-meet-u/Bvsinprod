@@ -16,6 +16,7 @@ class AdminRegister(models.Model):
     email_otp = models.CharField(max_length=6, null=True, blank=True)
     phone_otp = models.CharField(max_length=6, null=True, blank=True)
     password = models.CharField(max_length=200)
+    super_admin_key=models.CharField(max_length=60,unique=True,null=True,blank=True)
 
     class Meta:
         db_table = "AdminRegister"
@@ -79,6 +80,8 @@ class CreateUser(models.Model):
     updated_on = models.DateTimeField(auto_now=True, null=True)
     status = models.CharField(max_length=50, default='Active')
     admins=models.ForeignKey(AdminRegister,on_delete=models.CASCADE)
+    created_by = models.BigIntegerField(null=True,blank=True)
+    updated_by = models.ForeignKey(SelfRegistration, on_delete=models.CASCADE, null=True)
 
     class Meta:
         db_table = "CreateUser"

@@ -407,6 +407,58 @@ def get_all_company_products_services(request):
 
 
 
+
+@api_view(['post'])
+@permission_classes((AllowAny,))
+def get_all_company_products_services(request):
+    search_type=request.data['search_type']
+    getarray=[]
+    try:
+        if search_type=='Companies':
+            basicobj=BasicCompanyDetails.objects.filter().values()
+            if len(basicobj)>0:
+                for i in range(0,len(basicobj)):
+                    getarray.append({'name':basicobj[i].get('company_name'),
+                                     'ccode':basicobj[i].get('company_code')
+                                     })
+
+                return Response({'status':200,'message':'Companies List','data':getarray},status=200)
+            else:
+                return Response({'status': 204, 'message': 'Companies datas are Not Present'}, status=204)
+        elif search_type=='Products':
+            productobj=VendorProduct_BasicDetails.objects.filter(item_type='Product').values()
+            if len(productobj)>0:
+                for i in range(0,len(productobj)):
+                    getarray.append({'name':productobj[i].get('item_name'),
+                                     'product_code': productobj[i].get('item_code')
+                                     })
+                return Response({'status': 200, 'message': 'Vendor Product List', 'data': getarray}, status=200)
+            else:
+                return Response({'status': 204, 'message': 'Vendor Product Lists are Not Present'}, status=204)
+        elif search_type == 'All':
+            alldata = VendorProduct_BasicDetails.objects.filter(item_type='Product').values()
+            if len(alldata) > 0:
+                for i in range(0, len(alldata)):
+                    getarray.append({'name': alldata[i].get('item_name'),
+                                     'product_code':alldata[i].get('item_code')
+                                     })
+            basicobj = BasicCompanyDetails.objects.filter().values()
+            if len(basicobj) > 0:
+                for i in range(0, len(basicobj)):
+                    getarray.append({'name': basicobj[i].get('company_name'),
+                                     'ccode': basicobj[i].get('company_code')
+                                     })
+
+                return Response({'status': 200, 'message': 'Vendor All List', 'data': getarray}, status=200)
+            else:
+                return Response({'status': 204, 'message': 'Vendor All Lists are Not Present'}, status=204)
+        else:
+            return Response({'status': 204, 'message': 'search type value is mis-spelled or not present'}, status=204)
+
+
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)
+
 @api_view(['get'])
 def get_approved_companies_list(request):
     basicarray=[]
@@ -420,7 +472,7 @@ def get_approved_companies_list(request):
                     billobj = BillingAddress.objects.filter(updated_by_id=basicobj[0].get('updated_by_id')).values().order_by('company_code')
                     basicarray.append({'company_code':basicobj[0].get('company_code'),
                                        'gst_number':basicobj[0].get('gst_number'),
-                                       'company_name':basicobj[0].get('company_name'),
+                                       'name':basicobj[0].get('company_name'),
                                        'company_type':basicobj[0].get('company_type'),
                                        'listing_date':basicobj[0].get('listing_date'),
                                        'pan_number':basicobj[0].get('pan_number'),

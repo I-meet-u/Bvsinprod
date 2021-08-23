@@ -52,7 +52,6 @@ def admin_login(request):
             if check_password(password, admin_obj.password) and admin_obj.admin_email == admin_email:
                 admin_user_data = {
                     'adminemail': admin_obj.admin_email,
-                    'OTP':OTP
                 }
                 return Response({'status': 200, 'message': 'Email sent successfully','data': admin_user_data}, status=200)
             else:

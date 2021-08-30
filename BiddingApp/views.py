@@ -242,35 +242,76 @@ class SelectVendorsForBiddingProductView(viewsets.ModelViewSet):
         auto_rfq_number=request.data.get('auto_rfq_number',None)
         vendor_code = request.data.get('vendor_code',None)
         rfq_type=request.data.get('rfq_type',None)
-        from_registration=request.data.get('from_registration',None)
+        # from_registration=request.data.get('from_registration',None)
         vendorcodearray = []
 
         try:
+            print("rfq--",rfq_number)
             selectvendorobj = SelectVendorsForBiddingProduct.objects.filter(rfq_number=rfq_number).values()
-            print('ok')
-            for i in range(0, len(selectvendorobj)):
-                vcode = selectvendorobj[i].get('vendor_code')
-                vendorcodearray.append(vcode)
+            if len(selectvendorobj)==0:
+            # print('ok')
+            # for i in range(0, len(selectvendorobj)):
+            #     vcode = selectvendorobj[i].get('vendor_code')
+            #     vendorcodearray.append(vcode)
+                totalquantity=0
+                bidcreater=BasicCompanyDetails.objects.filter(updated_by=userid).values()
+                baddress = BillingAddress.objects.filter(updated_by=userid).values().order_by('id')
+                saddress = ShippingAddress.objects.filter(updated_by=userid).values().order_by('id')
 
-            for i in range(0, len(vendor_code)):
-                if vendor_code[i] not in vendorcodearray:
-                    print(vendor_code[i])
-                    SelectVendorsForBiddingProduct.objects.create(rfq_number=rfq_number,
-                                                                  created_by=userid,
-                                                                  updated_by=SelfRegistration.objects.get(id=userid),
-                                                                  vendor_code=vendor_code[i],
-                                                                  rfq_type=rfq_type,
-                                                                  auto_rfq_number=auto_rfq_number,
-                                                                  from_registration=from_registration,
-                                                                  )
-            return Response({'status': 201, 'message': 'Select Vendor For Product Bidding is Created'}, status=201)
+                for i in range(0, len(vendor_code)):
+                        print(vendor_code[i])
+                        Basicobj=BasicCompanyDetails.objects.filter(company_code=vendor_code[i]).values()
+                        if Basicobj:
+                            print(Basicobj[0].get('updated_by_id'))
+                            Regobj=SelfRegistration.objects.get(id=Basicobj[0].get('updated_by_id'))
+                            email=Regobj.username
 
-            # else:
-            #     return Response({'status': 204, 'message': 'Vendors already present'}, status=204)
+                            configuration = sib_api_v3_sdk.Configuration()
+                            configuration.api_key[
+                                'api-key'] = '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'
+                            headers = {
+                                'accept': 'application/json',
+                                'content-type': 'application/json',
+                            }
+                            bidproductdetails=BiddingBuyerProductDetails.objects.filter(buyer_rfq_number=rfq_number).values()
+                            print("{{{{{{",len(bidproductdetails))
+                            if len(bidproductdetails)>0:
+                                for j in range(0,len(bidproductdetails)):
+                                    totalquantity=totalquantity + int(bidproductdetails[j].get('buyer_quantity'))
+
+                            print("total count",totalquantity)
+
+                            api_instance = sib_api_v3_sdk.TransactionalEmailsApi(sib_api_v3_sdk.ApiClient(configuration))
+                            send_smtp_email = sib_api_v3_sdk.SendSmtpEmail(to=[{"email": email, "name": "harish"}],
+                                                                           template_id=21, params={"billing": str(baddress[0].get('bill_address')),
+                                                                                                   "shipping": str(saddress[0].get('ship_address')),
+                                                                                                   "rfqno":rfq_number ,
+                                                                                                   "totalqnty":str(totalquantity),
+                                                                                                   "totalproduct":str(len(bidproductdetails)),
+                                                                                                   "cname":bidcreater[0].get('company_name')},
+                                                                           headers=headers,
+                                                                           subject='Bidding Invitation'
+                                                                           )  # SendSmtpEmail | Values to send a transactional email
+                            # Send a transactional email
+                            api_response = api_instance.send_transac_email(send_smtp_email)
+                            print(api_response)
 
 
 
 
+
+                        SelectVendorsForBiddingProduct.objects.create(rfq_number=rfq_number,
+                                                                      created_by=userid,
+                                                                      updated_by=SelfRegistration.objects.get(id=userid),
+                                                                      vendor_code=vendor_code[i],
+                                                                      rfq_type=rfq_type,
+                                                                      # auto_rfq_number=auto_rfq_number,
+                                                                      # from_registration=from_registration,
+                                                                      )
+                return Response({'status': 201, 'message': 'Select Vendor For Product Bidding is Created'}, status=201)
+
+            else:
+                return Response({'status': 204, 'message': 'Vendors already present'}, status=204)
 
         except Exception as e:
             return Response({'status': 500, 'error': str(e)}, status=500)

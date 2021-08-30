@@ -10,7 +10,7 @@ from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 
 from MaterialApp.models import BuyerProductDetails, BuyerServiceDetails, BuyerMachinaryDetails
-from RegistrationApp.models import BasicCompanyDetails, BillingAddress
+from RegistrationApp.models import BasicCompanyDetails, BillingAddress, ShippingAddress
 from .serializers import *
 
 from .models import *

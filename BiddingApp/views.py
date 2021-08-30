@@ -15,6 +15,9 @@ from .serializers import *
 
 from .models import *
 
+import sib_api_v3_sdk
+from sib_api_v3_sdk.rest import ApiException
+
 
 # Create your views here.
 class BuyerProductBiddingView(viewsets.ModelViewSet):

@@ -363,7 +363,7 @@ class FrieghtChargesMaster(models.Model):
 class WarrantyMaster(models.Model):
     # warranty_master models and fields
     warranty_id = models.BigAutoField(primary_key=True)
-    warranty_code = models.CharField(max_length=30,unique=True)
+    warranty_code = models.CharField(max_length=30, unique=True, null=True, blank=True)
     warranty_description = models.CharField(max_length=200,null=True,blank=True)
     is_verified = models.BooleanField(default=False)
     created_on = models.DateTimeField(auto_now_add=True)

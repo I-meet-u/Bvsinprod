@@ -3752,4 +3752,30 @@ def createbuyerbidding(request):
         return Response({'status': 500, 'error': str(e)}, status=500)
 
 
+@api_view(['post'])
+def termsanddescriptionpriceanalysis(request):
+    data=request.data
+    userid=data['userid']
+    rfq=data['rfq']
+    vcode=data['vcode']
+    useridarray=[]
+    try:
+        # vendtermsobj=VendorRfqTermsDescription.objects.filter(vendor_rfq_number=rfq,updated_by=userid).values()
+        BasicCompanyDetailsobj=BasicCompanyDetails.objects.filter(company_code__in=vcode).values()
+        for i in range(len(BasicCompanyDetailsobj)):
+            print(BasicCompanyDetailsobj[i].get('updated_by_id'))
+            useridarray.append(BasicCompanyDetailsobj[i].get('updated_by_id'))
+
+        buyertermsobj=BuyerProductBidding.objects.filter(updated_by=userid).values()
+        if buyertermsobj:
+            BiddingBuyerProductDetailsobj=RfqTermsDescription.objects.filter(rfq_number=rfq,updated_by=userid).values()
+            if BiddingBuyerProductDetailsobj:
+                vendobj=VendorRfqTermsDescription.objects.filter(vendor_rfq_number=rfq,updated_by__in=useridarray).values()
+                return Response({'status': 200, 'message': 'ok','buyer_Terms':BiddingBuyerProductDetailsobj,'vendor_Terms':vendobj}, status=200)
+
+    except Exception as e:
+            return Response({'status': 500, 'error': str(e)}, status=500)
+
+
+
 

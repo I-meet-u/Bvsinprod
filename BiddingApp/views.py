@@ -3752,6 +3752,7 @@ def createbuyerbidding(request):
         return Response({'status': 500, 'error': str(e)}, status=500)
 
 
+
 @api_view(['post'])
 def termsanddescriptionpriceanalysis(request):
     data=request.data
@@ -3759,6 +3760,7 @@ def termsanddescriptionpriceanalysis(request):
     rfq=data['rfq']
     vcode=data['vcode']
     useridarray=[]
+    resarray=[]
     try:
         # vendtermsobj=VendorRfqTermsDescription.objects.filter(vendor_rfq_number=rfq,updated_by=userid).values()
         BasicCompanyDetailsobj=BasicCompanyDetails.objects.filter(company_code__in=vcode).values()
@@ -3771,11 +3773,21 @@ def termsanddescriptionpriceanalysis(request):
             BiddingBuyerProductDetailsobj=RfqTermsDescription.objects.filter(rfq_number=rfq,updated_by=userid).values()
             if BiddingBuyerProductDetailsobj:
                 vendobj=VendorRfqTermsDescription.objects.filter(vendor_rfq_number=rfq,updated_by__in=useridarray).values()
-                return Response({'status': 200, 'message': 'ok','buyer_Terms':BiddingBuyerProductDetailsobj,'vendor_Terms':vendobj}, status=200)
+                print(vendobj)
+                for i in range(len(vendobj)):
+                    print(vendobj[i].get('vendor_response'))
+                    singlecomp = BasicCompanyDetails.objects.filter(
+                        updated_by=vendobj[i].get('updated_by_id')).values()
+                    print("singlecomp", singlecomp[0].get('company_name'))
+                    resarray.append({'compname':singlecomp[0].get('company_name'),
+                                     'Buyer_term':vendobj[i].get('vendor_terms'),
+                                     'Buyer_description':vendobj[i].get('vendor_description'),
+                                     'Vendor_description':vendobj[i].get('vendor_response')})
+
+                return Response({'status': 200, 'message': 'ok','buyer_Terms':BiddingBuyerProductDetailsobj,'res':resarray}, status=200)
 
     except Exception as e:
             return Response({'status': 500, 'error': str(e)}, status=500)
-
 
 
 

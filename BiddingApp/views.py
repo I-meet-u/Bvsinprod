@@ -1,6 +1,6 @@
-from datetime import date
+from datetime import date, datetime
 from itertools import chain, groupby
-
+from django.http import HttpRequest
 from django.shortcuts import render
 from rest_framework import viewsets, permissions, status
 from rest_framework.decorators import api_view, permission_classes
@@ -850,18 +850,57 @@ def update_buyer_bidding_deadline_date(request):
     product_bidding_id = data['product_bidding_id']
     user_rfq_number = data['user_rfq_number']
     product_deadline_date = data['product_deadline_date']
+    qtycount=0
     try:
         buyerbidupdateobj = BuyerProductBidding.objects.filter(product_bidding_id=product_bidding_id,
                                                                user_rfq_number=user_rfq_number).values()
+
         if len(buyerbidupdateobj) > 0:
+            basicobj = BasicCompanyDetails.objects.filter(updated_by=buyerbidupdateobj[0].get('updated_by_id')).values()
             buyerobj = BuyerProductBidding.objects.get(product_bidding_id=product_bidding_id,
                                                        user_rfq_number=user_rfq_number)
+
+            buyerproductobj=BiddingBuyerProductDetails.objects.filter(buyer_rfq_number=user_rfq_number).values()
+            for i in range(len(buyerproductobj)):
+                qtycount=qtycount+int(buyerproductobj[i].get('buyer_quantity'))
             if buyerobj.product_deadline_date != product_deadline_date:
                 buyerobj.product_deadline_date = product_deadline_date
                 buyerobj.save()
+                resarray=["Accept","Pending"]
+                selectedobj=SelectVendorsForBiddingProduct.objects.filter(rfq_number=user_rfq_number,vendor_status__in=resarray).values()
+
+                configuration = sib_api_v3_sdk.Configuration()
+                configuration.api_key[
+                    'api-key'] = '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'
+                headers = {
+                    'accept': 'application/json',
+                    'content-type': 'application/json',
+                }
+                for i in range(0,len(selectedobj)):
+                    basicobj=BasicCompanyDetails.objects.filter(company_code=selectedobj[i].get('vendor_code')).values()
+                    regobj=SelfRegistration.objects.filter(id=basicobj[0].get('updated_by_id')).values()
+
+                    datevalue=datetime.strptime(product_deadline_date, '%Y-%m-%d').strftime('%d/%m/%y')
+                    api_instance = sib_api_v3_sdk.TransactionalEmailsApi(sib_api_v3_sdk.ApiClient(configuration))
+                    send_smtp_email = sib_api_v3_sdk.SendSmtpEmail(to=[{"email": regobj[0].get('username'), "name": "harish"}],
+                                                                   template_id=25, params={
+                            "billing":str(buyerobj.product_bill_address) ,
+                            "shipping":str(buyerobj.product_ship_address) ,
+                            "exdate":datevalue,
+                            "rfqno": user_rfq_number,
+                            "totalqnty": str(qtycount),
+                            "totalproduct": str(len(buyerproductobj)),
+                            "cname": basicobj[0].get('company_name')},
+                                                                   headers=headers,
+                                                                   subject='Bidding Invitation'
+                                                                   )  # SendSmtpEmail | Values to send a transactional email
+                    # Send a transactional email
+                    api_response = api_instance.send_transac_email(send_smtp_email)
+                    print(api_response)
+
+
                 return Response({'status': 200, 'message': 'Deadline Date is updated'}, status=200)
             else:
-                print('f')
                 return Response({'status': 202, 'message': 'Deadline Date is Already Updated'}, status=202)
 
         else:
@@ -3790,6 +3829,8 @@ def termsanddescriptionpriceanalysis(request):
 
     except Exception as e:
             return Response({'status': 500, 'error': str(e)}, status=500)
+
+
 
 
 

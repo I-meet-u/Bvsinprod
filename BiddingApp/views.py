@@ -2345,7 +2345,7 @@ def award_product_create(request):
                     for product in pcode:
                         pass
                         for codes in ccode:
-                            print('ok----')
+
                             bidobj = VendorProductBidding.objects.get(vendor_user_rfq_number=rfq_number,vendor_product_rfq_type='Product',vendor_code=codes)
                             print(bidobj, 'fsds')
                             basicobj = BasicCompanyDetails.objects.get(company_code=codes)
@@ -2409,7 +2409,6 @@ def award_product_create(request):
                     pdescarray = []
                     pcode = productvendordetails[i].get('productcode')
                     print(type(pcode))
-
                     ccode = productvendordetails[i].get('vendorcode')
                     for product in pcode:
                         print(product)
@@ -2434,7 +2433,6 @@ def award_product_create(request):
                                                                                       vendor_code=codes,
                                                                                       vendor_item_code=product)
                         print(productdetails)
-
                         if not productdetails:
                             return Response({'status': 204, 'message': 'No product details of vendor'}, status=204)
 
@@ -2469,7 +2467,6 @@ def award_product_create(request):
                                                           rfq_type='Product',
                                                           updated_by=SelfRegistration.objects.get(id=userid),
                                                           deadline_date=deadlinedate)
-
 
 
         return Response({'status': 200, 'message': 'Award Created'}, status=200)
@@ -3025,27 +3022,32 @@ def price_analysis_vendor_terms_list(request):
 
 @api_view(['post'])
 def get_previous_value_of_rfq_details(request):
-    data=request.data
-    userid=data['userid']
+    data = request.data
+    userid = data['userid']
     try:
-        buyerproductobj=BuyerProductBidding.objects.filter(updated_by_id=userid).last()
-        if buyerproductobj:
-            buyer_product={
-                'rfq_number':buyerproductobj.user_rfq_number,
-                'user_id':buyerproductobj.updated_by_id
-            }
-            return Response({'status': 200, 'message': 'Buyer Bidding Product List','data':buyer_product},status=200)
-        else:
-            rfqcodesettings = RfqCodeSettings.objects.filter(updated_by_id=userid).last()
-            if rfqcodesettings:
-                rfq_number_settings={
-                    'rfq_number':rfqcodesettings.prefix+rfqcodesettings.suffix+rfqcodesettings.numeric,
-                    'user_id':rfqcodesettings.updated_by_id
+        rfqcodesettings = RfqCodeSettings.objects.filter(updated_by_id=userid).last()
+        if rfqcodesettings:
+            buyerproductobj = BuyerProductBidding.objects.filter(updated_by_id=userid).last()
+            if buyerproductobj:
+                buyer_product = {
+                    'rfq_number': str(rfqcodesettings.prefix) + str(
+                        rfqcodesettings.suffix) + buyerproductobj.user_bidding_numeric,
+                    'user_id': buyerproductobj.updated_by_id
                 }
-                return Response({'status': 200, 'message': 'Code Settings','data':rfq_number_settings}, status=200)
+                return Response({'status': 200, 'message': 'Buyer Bidding Product List', 'data': buyer_product},
+                                status=200)
             else:
-                return Response({'status': 204, 'message':'Code Settings for this particular user id is not present,Please set your code in rfq code settings'}, status=204)
-
+                rfq_number_settings = {
+                    'rfq_number': rfqcodesettings.prefix + rfqcodesettings.suffix + rfqcodesettings.numeric,
+                    'user_id': rfqcodesettings.updated_by_id
+                }
+                return Response({'status': 200, 'message': 'Code Settings', 'data': rfq_number_settings}, status=200)
+        else:
+            rfq_number_settings = {
+                'rfq_number': rfqcodesettings.prefix + rfqcodesettings.suffix + rfqcodesettings.numeric,
+                'user_id': rfqcodesettings.updated_by_id
+            }
+            return Response({'status': 200, 'message': 'Code Settings', 'data': rfq_number_settings}, status=200)
 
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)

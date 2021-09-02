@@ -814,7 +814,7 @@ def all_vendors_list(request):
     internalbuyerarray=[]
     externalarray = []
     try:
-        regobjdata = SelfRegistration.objects.filter(Q(user_type='Vendor') | Q(user_type='Both') | Q(user_type='Buyer'),
+        regobjdata = SelfRegistration.objects.filter(Q(user_type='Vendor') | Q(user_type='Both'),
                                                      admin_approve='Approved').values().order_by('id')
         print(len(regobjdata),'okkkkkkkkkkkkkkkkkkkkkkkkks')
         internalobj = InternalVendor.objects.filter(updated_by_id=userid).values()

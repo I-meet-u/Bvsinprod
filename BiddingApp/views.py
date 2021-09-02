@@ -1076,7 +1076,6 @@ class SourceList_CreateItemViewSet(viewsets.ModelViewSet):
             return sourcelistcreateitemsobj
         raise ValidationError({'message': 'Source List Create Items of particular user id is not exist', 'status': 204})
 
-
 @api_view(['post'])
 def source_list_leads(request):
     data = request.data

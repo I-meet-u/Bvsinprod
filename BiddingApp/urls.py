@@ -30,6 +30,7 @@ router.register('source-publish',views.SourcePublishViewSet)
 
 urlpatterns = [
     path('bidding-router-urls/',include(router.urls)),
+    path('getsorcelistresponse/', views.getsorcelistresponse),
     path('get-buyer-product-details/',views.get_buyer_product_based_on_userid_pk),
     path('updated-rfq-code-settings-and-rfq-number/',views.updated_rfq_code_settings_and_rfq_number),
     path('rfq-bid-list-summary-advance-search/',views.rfq_bid_list_summary_advance_search),

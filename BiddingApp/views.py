@@ -3862,6 +3862,30 @@ def getsourcebasedpk(request):
         return Response({'status': 500, 'message': str(e)}, status=500)
 
 
+@api_view(['post'])
+def getsorcelistresponse(request):
+    data=request.data
+    try:
+        userid=data['userid']
+        resarry=[]
+        srcobj=SourceList_CreateItems.objects.filter(updated_by=userid).values()
+        print(srcobj)
+        if srcobj:
+            for i in range(0,len(srcobj)):
+                srcpublishobj=SourcePublish.objects.filter(source=srcobj[i].get('id')).values()
+                # print(srcpublishobj)
+                resarry.append({'type':srcobj[i].get('item_type'),
+                                'item_name':srcobj[i].get('item_name'),
+                                'description':srcobj[i].get('item_description'),
+                                'UOM':srcobj[i].get('uom'),
+                                'qty':srcobj[i].get('quantity'),
+                                'source_code':srcobj[i].get('source_code'),
+                                'publishcount':len(srcpublishobj)})
+
+        return Response({'status': 200,'message':'ok','data':resarry},status=200)
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)
+
 
 
 

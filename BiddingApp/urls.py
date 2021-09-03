@@ -96,7 +96,8 @@ urlpatterns = [
     path('purchase-order-vendors-list/', views.purchase_order_vendors_list),
     path('awards-vendor-list/', views.awards_vendor_list),
     path('createbuyerbidding/', views.createbuyerbidding),
-    path('termsanddescriptionpriceanalysis/',views.termsanddescriptionpriceanalysis)
+    path('termsanddescriptionpriceanalysis/',views.termsanddescriptionpriceanalysis),
+    path('getsourcebasedpk/', views.getsourcebasedpk)
 
 
 ]

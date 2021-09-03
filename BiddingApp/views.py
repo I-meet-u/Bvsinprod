@@ -3842,5 +3842,26 @@ def termsanddescriptionpriceanalysis(request):
 
 
 
+@api_view(['post'])
+def getsourcebasedpk(request):
+    data=request.data
+    pkid=data['pkid']
+    try:
+        sourcelistcreateitemsobj = SourceList_CreateItems.objects.filter(id=pkid).values()
+        if sourcelistcreateitemsobj:
+            Billingaddrsobj=BillingAddress.objects.filter(updated_by=sourcelistcreateitemsobj[0].get('updated_by_id')).values().order_by('id')
+            shippingaddrsobj=ShippingAddress.objects.filter(updated_by=sourcelistcreateitemsobj[0].get('updated_by_id')).values().order_by('id')
+            comp=BasicCompanyDetails.objects.filter(updated_by=sourcelistcreateitemsobj[0].get('updated_by_id')).values()
+            resdict={}
+            resdict.setdefault('cname',str(comp[0].get('company_name')))
+            resdict.setdefault('shippaddress',shippingaddrsobj[0].get('ship_address'))
+            resdict.setdefault('Billingaddress', Billingaddrsobj[0].get('bill_address'))
+            sourcelistcreateitemsobj[0].setdefault('address',resdict)
+            return Response({'status': 200, 'message': 'Source Leads','data':sourcelistcreateitemsobj}, status=200)
+    except Exception as e:
+        return Response({'status': 500, 'message': str(e)}, status=500)
+
+
+
 
 

@@ -1567,3 +1567,28 @@ def fetch_vendor_product_basic_details_by_subcategory(request):
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
+
+
+@api_view(['post'])
+@permission_classes((AllowAny,))
+def fetch_vendor_product_basic_details_by_userid_all(request):
+    try:
+        vendorobj=VendorProduct_BasicDetails.objects.filter(updated_by_id=request.data['userid']).values().order_by('vendor_product_id')
+        if len(vendorobj)>0:
+            return Response({'status': 200, 'message': 'Vendor Product Basic Details By User Id List', 'data': vendorobj}, status=status.HTTP_200_OK)
+        else:
+            return Response({'status': 204, 'message': 'Not Present'}, status=status.HTTP_204_NO_CONTENT)
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+@api_view(['post'])
+@permission_classes((AllowAny,))
+def fetch_vendor_product_basic_details_by_pk(request):
+    try:
+        vendorobjpk=VendorProduct_BasicDetails.objects.filter(vendor_product_id=request.data['vendor_product_id']).values().order_by('vendor_product_id')
+        if len(vendorobjpk)>0:
+            return Response({'status': 200, 'message': 'Vendor Product Basic Details List by id', 'data': vendorobjpk}, status=status.HTTP_200_OK)
+        else:
+            return Response({'status': 204, 'message': 'Not Present'}, status=status.HTTP_204_NO_CONTENT)
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

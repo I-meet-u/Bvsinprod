@@ -40,6 +40,8 @@ urlpatterns = [
     path('fetch-vendor-product-product_features-details/', views.fetch_vendor_product_productfeatures_details),
     path('fetch-vendor-product-document-details/', views.fetch_vendor_product_document_details),
     path('get-vendor-details-by-sub-category/',views.get_vendor_details_by_sub_category),
-    path('fetch-vendor-product-basic-details-by-subcategory/',views.fetch_vendor_product_basic_details_by_subcategory)
+    path('fetch-vendor-product-basic-details-by-subcategory/',views.fetch_vendor_product_basic_details_by_subcategory),
+    path('fetch-vendor-product-basic-details-by-userid-all/', views.fetch_vendor_product_basic_details_by_userid_all),
+    path('fetch-vendor-product-basic-details-by-pk/', views.fetch_vendor_product_basic_details_by_pk)
 
 ]

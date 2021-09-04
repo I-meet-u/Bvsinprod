@@ -915,3 +915,127 @@ def all_vendors_list(request):
 
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)
+
+@api_view(['post'])
+def business_request_accept_list(request):
+    ccode=request.data['ccode']
+    arraycode=[]
+    try:
+        businessacceptobj = BusinessRequest.objects.filter(company_code=ccode,send_status='Accept').values().order_by('id')
+        if len(businessacceptobj)>0:
+            for i in range(0, len(businessacceptobj)):
+                basicobj=BasicCompanyDetails.objects.get(updated_by_id=businessacceptobj[i].get('updated_by_id'))
+                billobj=BillingAddress.objects.filter(updated_by_id=basicobj.updated_by_id).values()
+                inudstryinfoobj=IndustrialInfo.objects.get(updated_by_id=basicobj.updated_by_id)
+                arraycode.append({'company_code':basicobj.company_code,
+                                  'company_name':basicobj.company_name,
+                                  'gst_number':basicobj.gst_number,
+                                  'city':billobj[0].get('bill_city'),
+                                  'state':billobj[0].get('bill_state'),
+                                  'nature_of_business': inudstryinfoobj.nature_of_business,
+                                  'industry_to_serve': inudstryinfoobj.industry_to_serve,
+                                  })
+            return Response({'status': 200, 'message': 'Business Request Accepted List', 'data': arraycode}, status=200)
+        else:
+            return Response({'status': 204, 'message': 'Accepted List Not Present'}, status=204)
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)
+
+
+@api_view(['post'])
+def business_request_reject_list(request):
+    ccode=request.data['ccode']
+    arraycode=[]
+    try:
+        businessacceptobj = BusinessRequest.objects.filter(company_code=ccode, send_status='Reject').values().order_by(
+            'id')
+        if len(businessacceptobj) > 0:
+            for i in range(0, len(businessacceptobj)):
+                basicobj = BasicCompanyDetails.objects.get(updated_by_id=businessacceptobj[i].get('updated_by_id'))
+                billobj = BillingAddress.objects.filter(updated_by_id=basicobj.updated_by_id).values()
+                inudstryinfoobj = IndustrialInfo.objects.get(updated_by_id=basicobj.updated_by_id)
+                arraycode.append({'company_code': basicobj.company_code,
+                                  'company_name': basicobj.company_name,
+                                  'gst_number': basicobj.gst_number,
+                                  'city': billobj[0].get('bill_city'),
+                                  'state': billobj[0].get('bill_state'),
+                                  'nature_of_business': inudstryinfoobj.nature_of_business,
+                                  'industry_to_serve': inudstryinfoobj.industry_to_serve,
+                                  })
+            return Response({'status': 200, 'message': 'Business Request Rejected List', 'data': arraycode}, status=200)
+        else:
+            return Response({'status': 204, 'message': 'Rejected List Not Present'}, status=204)
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)
+
+@api_view(['post'])
+def vendor_dashboard_count(request):
+    data=request.data
+    userid=data['userid']
+    from_registration=data['from_registration']
+    totalvendorarray=[]
+    try:
+        auth_token=request.headers['Authorization']
+        totalopenbidlist = get_open_bid_list(userid, from_registration, auth_token)
+        closedrfqlist = get_deadline_date(userid,auth_token)
+        publishobj = VendorProductBidding.objects.filter(updated_by_id=userid).values()
+        rejectedobj = SelectVendorsForBiddingProduct.objects.filter(updated_by_id=userid,vendor_status='Reject').values()
+        vendorsaward = get_vendor_award_list(userid, auth_token)
+        award_pending = len(publishobj) - (len(vendorsaward['data']))
+        print('\n')
+        print(award_pending,'awardddddddddd')
+        purchaserodervendorslist = get_purchase_order_vendor_list(userid, auth_token)
+        pending_po = len(vendorsaward['data']) - (len(purchaserodervendorslist['data']))
+        print('\n')
+        print(pending_po)
+        inviteobj = InviteVendor.objects.filter(updated_by_invites_id=userid).values()
+        businessconnections=get_business_connections(userid,auth_token)
+        print('\n')
+        print(len(businessconnections['data']))
+        invitesapproved=BusinessRequest.objects.filter(updated_by_id=userid,send_status='Accept').values()
+        sourcecreated=SourceList_CreateItems.objects.filter(updated_by_id=userid).values()
+
+        # businessrequestlistobj = get_business_request_list(userid, auth_token)
+        # print(len(businessrequestlistobj),'\n')
+        if totalopenbidlist['status']==500 or len(closedrfqlist['data'])==[] or vendorsaward['status']==202 or vendorsaward['status']==500 or purchaserodervendorslist['status']==202 or purchaserodervendorslist['status']==500 or award_pending<=0 or pending_po<=0 or businessconnections['status']==204:\
+                # or businessrequestlistobj['status']==204:
+            totalvendorarray.append({'rfq_publish_pending':0,
+                                     'rfq_closed_bid': len(closedrfqlist['data']),
+                                     'published_leads':len(publishobj),
+                                     'reject_leads':len(rejectedobj),
+                                     'awarded': 0,
+                                     'award_pending': 0,
+                                     'confirmed_purchase_order_vendor': 0,
+                                     'pending_po': 0,
+                                     'business_invite_count': len(inviteobj),
+                                     # 'business_request_list': 0
+                                     'business_connections': len(businessconnections['data']),
+                                     'invites_approved': len(invitesapproved),
+                                     'source_posts':len(sourcecreated)
+
+
+                                     })
+        else:
+            totalvendorarray.append({'rfq_publish_pending':len(totalopenbidlist['data']),
+                                     'rfq_closed_bid': len(closedrfqlist['data']),
+                                     'published_leads': len(publishobj),
+                                     'reject_leads': len(rejectedobj),
+                                     'awarded': len(vendorsaward['data']),
+                                     'award_pending': award_pending,
+                                     'confirmed_purchase_order_vendor': len(purchaserodervendorslist['data']),
+                                     'pending_po':pending_po,
+                                     'business_invite_count': len(inviteobj),
+                                     'business_connections': len(businessconnections['data']),
+                                     'invites_approved': len(invitesapproved),
+                                     'source_posts': len(sourcecreated)
+                                     # 'business_request_list': len(businessrequestlistobj['data'])
+
+
+                                     })
+
+        return Response({'status': 200, 'message': 'ok', 'data':totalvendorarray}, status=200)
+
+
+
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)

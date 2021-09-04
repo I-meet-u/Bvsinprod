@@ -28,6 +28,9 @@ urlpatterns = [
     path('get-internal-buyer/',views.get_internal_buyer),
     path('buyer-list/',views.buyer_list),
     path('add-users-internal-buyer-and-internal-vendor/',views.add_users_internal_buyer_and_internal_vendor),
-    path('all-vendors-list/', views.all_vendors_list)
+    path('all-vendors-list/', views.all_vendors_list),
+    path('business-request-accept-list/', views.business_request_accept_list),
+    path('business-request-reject-list/', views.business_request_reject_list),
+    path('vendor-dashboard-count/', views.vendor_dashboard_count)
 
     ]

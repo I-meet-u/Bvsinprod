@@ -431,64 +431,6 @@ class PurchaseOrder(models.Model):
         db_table = "PurchaseOrder"
 
 
-class PurchaseOrderService(models.Model):
-
-    service_rfq_number = models.CharField(max_length=50, null=True, blank=True)
-    service_rfq_title = models.CharField(max_length=100, null=True, blank=True)
-    service_PO_date = models.CharField(max_length=400,null=True,blank=True)
-    service_PO_expirydate = models.CharField(max_length=400,null=True,blank=True)
-    service_subject = models.TextField(null=True,blank=True)
-    service_attachment1 = models.FileField(upload_to='POfile', null=True, blank=True)
-    service_attachment2 = models.FileField(upload_to='POfile', null=True, blank=True)
-    service_attachment3 = models.FileField(upload_to='POfile', null=True, blank=True)
-    service_PO_num = models.CharField(max_length=50, null=True, blank=True)
-    service_delivery_date = models.CharField(max_length=400,null=True,blank=True)
-    service_remind_date = models.CharField(max_length=400,null=True,blank=True)
-    service_delivery_days = models.CharField(max_length=100,null=True,blank=True)
-    service_vendorcode = models.CharField(max_length=30)
-    service_company_name = models.CharField(max_length=100, null=True, blank=True)
-    createdon = models.DateTimeField(null=True, auto_now_add=True, blank=True)
-    updatedon = models.DateTimeField(auto_now=True, null=True, blank=True)
-    created_by=models.BigIntegerField(null=True,blank=True)
-    updated_by = models.ForeignKey(SelfRegistration, on_delete=models.CASCADE, null=True, blank=True)
-    history = HistoricalRecords()
-    service_po_numeric=models.CharField(max_length=100,null=True,blank=True)
-    # from_registration = models.CharField(max_length=100, null=True, blank=True, default='False')
-    # auto_rfq_number = models.CharField(max_length=40, null=True, blank=True)
-
-    class Meta:
-        db_table = "PurchaseOrderService"
-
-
-
-class PurchaseOrderMachinary(models.Model):
-
-    machinary_rfq_number = models.CharField(max_length=50, null=True, blank=True)
-    machinary_rfq_title = models.CharField(max_length=100, null=True, blank=True)
-    machinary_PO_date = models.CharField(max_length=400,null=True,blank=True)
-    machinary_PO_expirydate = models.CharField(max_length=400,null=True,blank=True)
-    machinary_subject = models.TextField(null=True,blank=True)
-    machinary_attachment1 = models.FileField(upload_to='POfile', null=True, blank=True)
-    machinary_attachment2 = models.FileField(upload_to='POfile', null=True, blank=True)
-    machinary_attachment3 = models.FileField(upload_to='POfile', null=True, blank=True)
-    machinary_PO_num = models.CharField(max_length=50, null=True, blank=True)
-    machinary_delivery_date = models.CharField(max_length=400,null=True,blank=True)
-    machinary_remind_date = models.CharField(max_length=400,null=True,blank=True)
-    machinary_delivery_days = models.CharField(max_length=100,null=True,blank=True)
-    machinary_vendorcode = models.CharField(max_length=30)
-    machinary_company_name = models.CharField(max_length=100, null=True, blank=True)
-    createdon = models.DateTimeField(null=True, auto_now_add=True, blank=True)
-    updatedon = models.DateTimeField(auto_now=True, null=True, blank=True)
-    created_by=models.BigIntegerField(null=True,blank=True)
-    updated_by = models.ForeignKey(SelfRegistration, on_delete=models.CASCADE, null=True, blank=True)
-    history = HistoricalRecords()
-    machinary_po_numeric=models.CharField(max_length=100,null=True,blank=True)
-    # from_registration = models.CharField(max_length=100, null=True, blank=True, default='False')
-    # auto_rfq_number = models.CharField(max_length=40, null=True, blank=True)
-
-    class Meta:
-        db_table = "PurchaseOrderMachinary"
-
 #------------------------------------SOURCE-------------------------------------------
 
 

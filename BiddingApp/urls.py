@@ -23,8 +23,6 @@ router.register('product-award',views.AwardViewSet)
 router.register('service-award',views.ServiceAwardViewSet)
 router.register('machinary-award',views.MachinaryAwardViewSet)
 router.register('purchase-order',views.PurchaseOrderViewSet)
-router.register('purchase-order-service',views.PurchaseOrderServiceViewSet)
-router.register('purchase-order-machinary',views.PurchaseOrderMachinaryViewSet)
 router.register('source-list-create-items',views.SourceList_CreateItemViewSet)
 router.register('source-publish',views.SourcePublishViewSet)
 

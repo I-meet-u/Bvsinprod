@@ -2437,35 +2437,6 @@ class PurchaseOrderViewSet(viewsets.ModelViewSet):
             {'message': 'Purchase Order details of particular user id is not exist', 'status': 204})
 
 
-
-
-
-class PurchaseOrderServiceViewSet(viewsets.ModelViewSet):
-    queryset = PurchaseOrderService.objects.all()
-    serializer_class = PurchaseOrderServiceSerializer
-    parser = [MultiPartParser]
-    # permission_classes = [permissions.AllowAny]
-
-    def get_queryset(self):
-        poobjservice = PurchaseOrderService.objects.filter(updated_by=self.request.GET.get('updated_by')).order_by('id')
-        if poobjservice:
-            return poobjservice
-        raise ValidationError(
-            {'message': 'Purchase Order Service details of particular user id is not exist', 'status': 204})
-
-class PurchaseOrderMachinaryViewSet(viewsets.ModelViewSet):
-    queryset = PurchaseOrderMachinary.objects.all()
-    serializer_class = PurchaseOrderMachinarySerializer
-    parser = [MultiPartParser]
-    # permission_classes = [permissions.AllowAny]
-
-    def get_queryset(self):
-        poobjmachinary = PurchaseOrderMachinary.objects.filter(updated_by=self.request.GET.get('updated_by')).order_by('id')
-        if poobjmachinary:
-            return poobjmachinary
-        raise ValidationError(
-            {'message': 'Purchase Order Machinary details of particular user id is not exist', 'status': 204})
-
 @api_view(['post'])
 def award_product_create(request):
     data=request.data

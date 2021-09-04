@@ -85,21 +85,3 @@ class CreateUser(models.Model):
 
     class Meta:
         db_table = "CreateUser"
-
-
-class Permissions(models.Model):
-    modules = models.CharField(max_length=400, unique=True)
-    full_access = models.BooleanField(null=True, blank=True)
-    read = models.BooleanField(null=True, blank=True)
-    create = models.BooleanField(null=True, blank=True)
-    modify = models.BooleanField(null=True, blank=True)
-    delete = models.BooleanField(null=True, blank=True)
-    disable = models.BooleanField(null=True, blank=True)
-    active = models.BooleanField(null=True, blank=True)
-    created_on = models.DateTimeField(auto_now_add=True, null=True)
-    updated_on = models.DateTimeField(auto_now=True, null=True)
-    admins = models.ForeignKey(AdminRegister, on_delete=models.CASCADE, null=True)
-    updated_by = models.ForeignKey(SelfRegistration, on_delete=models.CASCADE, null=True)
-
-    class Meta:
-        db_table = "Permissions"

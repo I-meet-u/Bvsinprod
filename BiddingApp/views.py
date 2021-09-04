@@ -421,22 +421,6 @@ def rfq_type_based_list(request):
 class BiddingTermMasterSettingsView(viewsets.ModelViewSet):
     queryset = BiddingTermMasterSettings.objects.all()
     serializer_class = BiddingTermMasterSettingsSerializer
-    # def create(self, request, *args, **kwargs):
-    #     datavalues = request.data['datavalues']
-    #     updated_by = request.data.get('updated_by', None)
-    #     try:
-    #         for i in range(0, len(datavalues)):
-    #             print(datavalues[i], 'datavalues')
-    #             for keys in datavalues[i]:
-    #                 BiddingTermMasterSettings.objects.create(terms_name=keys,
-    #                                                          terms_description=datavalues[i][keys],
-    #                                                          updated_by=SelfRegistration.objects.get(id=updated_by),
-    #                                                          created_by=updated_by)
-    #
-    #         return Response({'status': 201, 'message': 'Bidding Terms and Descriptions Settings are created'},
-    #                         status=201)
-    #     except Exception as e:
-    #         return Response({'status': 500, 'message': str(e)}, status=500)
 
     def get_queryset(self):
         biddingtermsmastersettings = BiddingTermMasterSettings.objects.filter(
@@ -909,53 +893,53 @@ def update_buyer_bidding_deadline_date(request):
         return Response({'status': 500, 'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
-@api_view(['put'])
-def status_vendor_accept(request):
-    data = request.data
-    rfq_number = data['rfq_number']
-    vendor_code = data['vendor_code']
-    try:
-        vends = SelectVendorsForBiddingProduct.objects.filter(rfq_number=rfq_number,
-                                                              vendor_code=vendor_code).values().order_by('rfq_number')
-
-        for i in range(0, len(vends)):
-            vendobj = SelectVendorsForBiddingProduct.objects.get(id=vends[i].get('id'))
-            print(vendobj)
-            if vendobj.vendor_status == 'Pending':
-                vendobj.vendor_status = 'Accept'
-                vendobj.save()
-                return Response({'status': 200, 'message': 'Status Updated to Accepted', 'data': vendobj.vendor_status},
-                                status=status.HTTP_200_OK)
-            else:
-                return Response({'status': 202, 'error': 'Already Accepted'}, status=status.HTTP_202_ACCEPTED)
-
-    except Exception as e:
-        return Response({'status': 500, 'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-
-
-@api_view(['put'])
-def status_vendor_reject(request):
-    data = request.data
-    rfq_number = data['rfq_number']
-    vendor_code = data['vendor_code']
-    userid = data['userid']
-    try:
-        vends = SelectVendorsForBiddingProduct.objects.filter(rfq_number=rfq_number, vendor_code=vendor_code,
-                                                              updated_by=userid).values().order_by('rfq_number')
-
-        for i in range(0, len(vends)):
-            vendobj = SelectVendorsForBiddingProduct.objects.get(id=vends[i].get('id'))
-            print(vendobj)
-            if vendobj.vendor_status == 'Pending':
-                vendobj.vendor_status = 'Reject'
-                vendobj.save()
-                return Response({'status': 200, 'message': 'Status Updated to Rejected', 'data': vendobj.vendor_status},
-                                status=status.HTTP_200_OK)
-            else:
-                return Response({'status': 202, 'error': 'Already rejected'}, status=status.HTTP_202_ACCEPTED)
-
-    except Exception as e:
-        return Response({'status': 500, 'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+# @api_view(['put'])
+# def status_vendor_accept(request):
+#     data = request.data
+#     rfq_number = data['rfq_number']
+#     vendor_code = data['vendor_code']
+#     try:
+#         vends = SelectVendorsForBiddingProduct.objects.filter(rfq_number=rfq_number,
+#                                                               vendor_code=vendor_code).values().order_by('rfq_number')
+#
+#         for i in range(0, len(vends)):
+#             vendobj = SelectVendorsForBiddingProduct.objects.get(id=vends[i].get('id'))
+#             print(vendobj)
+#             if vendobj.vendor_status == 'Pending':
+#                 vendobj.vendor_status = 'Accept'
+#                 vendobj.save()
+#                 return Response({'status': 200, 'message': 'Status Updated to Accepted', 'data': vendobj.vendor_status},
+#                                 status=status.HTTP_200_OK)
+#             else:
+#                 return Response({'status': 202, 'error': 'Already Accepted'}, status=status.HTTP_202_ACCEPTED)
+#
+#     except Exception as e:
+#         return Response({'status': 500, 'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+#
+#
+# @api_view(['put'])
+# def status_vendor_reject(request):
+#     data = request.data
+#     rfq_number = data['rfq_number']
+#     vendor_code = data['vendor_code']
+#     userid = data['userid']
+#     try:
+#         vends = SelectVendorsForBiddingProduct.objects.filter(rfq_number=rfq_number, vendor_code=vendor_code,
+#                                                               updated_by=userid).values().order_by('rfq_number')
+#
+#         for i in range(0, len(vends)):
+#             vendobj = SelectVendorsForBiddingProduct.objects.get(id=vends[i].get('id'))
+#             print(vendobj)
+#             if vendobj.vendor_status == 'Pending':
+#                 vendobj.vendor_status = 'Reject'
+#                 vendobj.save()
+#                 return Response({'status': 200, 'message': 'Status Updated to Rejected', 'data': vendobj.vendor_status},
+#                                 status=status.HTTP_200_OK)
+#             else:
+#                 return Response({'status': 202, 'error': 'Already rejected'}, status=status.HTTP_202_ACCEPTED)
+#
+#     except Exception as e:
+#         return Response({'status': 500, 'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
 @api_view(['post'])
@@ -1076,6 +1060,26 @@ class SourceList_CreateItemViewSet(viewsets.ModelViewSet):
             return sourcelistcreateitemsobj
         raise ValidationError({'message': 'Source List Create Items of particular user id is not exist', 'status': 204})
 
+
+@api_view(['post'])
+def getsourcebasedpk(request):
+    data=request.data
+    pkid=data['pkid']
+    try:
+        sourcelistcreateitemsobj = SourceList_CreateItems.objects.filter(id=pkid).values()
+        if sourcelistcreateitemsobj:
+            Billingaddrsobj=BillingAddress.objects.filter(updated_by=sourcelistcreateitemsobj[0].get('updated_by_id')).values().order_by('id')
+            shippingaddrsobj=ShippingAddress.objects.filter(updated_by=sourcelistcreateitemsobj[0].get('updated_by_id')).values().order_by('id')
+            comp=BasicCompanyDetails.objects.filter(updated_by=sourcelistcreateitemsobj[0].get('updated_by_id')).values()
+            resdict={}
+            resdict.setdefault('cname',str(comp[0].get('company_name')))
+            resdict.setdefault('shippaddress',shippingaddrsobj[0].get('ship_address'))
+            resdict.setdefault('Billingaddress', Billingaddrsobj[0].get('bill_address'))
+            sourcelistcreateitemsobj[0].setdefault('address',resdict)
+            return Response({'status': 200, 'message': 'Source Leads','data':sourcelistcreateitemsobj}, status=200)
+    except Exception as e:
+        return Response({'status': 500, 'message': str(e)}, status=500)
+
 @api_view(['post'])
 def source_list_leads(request):
     data = request.data
@@ -1190,24 +1194,24 @@ class SourcePublishViewSet(viewsets.ModelViewSet):
     ordering = ['id']
 
 
-@api_view(['put'])
-def source_status_update_to_publish(request):
-    data = request.data
-    source_id = data['source_id']
-    try:
-        sourceitems = SourceList_CreateItems.objects.filter(id=source_id).values()
-        if len(sourceitems) > 0:
-            sourceobj = SourceList_CreateItems.objects.get(id=source_id)
-            if sourceobj.status == 'Pending':
-                sourceobj.status = 'Published'
-                sourceobj.save()
-                return Response({'status': 200, 'message': 'Status Changed to Publish'}, status=status.HTTP_200_OK)
-            else:
-                return Response({'status': 202, 'message': 'Already Published'}, status=status.HTTP_202_ACCEPTED)
-        else:
-            return Response({'status': 204, 'message': 'Not Present'}, status=status.HTTP_204_NO_CONTENT)
-    except Exception as e:
-        return Response({'status': 500, 'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+# @api_view(['put'])
+# def source_status_update_to_publish(request):
+#     data = request.data
+#     source_id = data['source_id']
+#     try:
+#         sourceitems = SourceList_CreateItems.objects.filter(id=source_id).values()
+#         if len(sourceitems) > 0:
+#             sourceobj = SourceList_CreateItems.objects.get(id=source_id)
+#             if sourceobj.status == 'Pending':
+#                 sourceobj.status = 'Published'
+#                 sourceobj.save()
+#                 return Response({'status': 200, 'message': 'Status Changed to Publish'}, status=status.HTTP_200_OK)
+#             else:
+#                 return Response({'status': 202, 'message': 'Already Published'}, status=status.HTTP_202_ACCEPTED)
+#         else:
+#             return Response({'status': 204, 'message': 'Not Present'}, status=status.HTTP_204_NO_CONTENT)
+#     except Exception as e:
+#         return Response({'status': 500, 'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
 @api_view(['put'])
@@ -3361,17 +3365,6 @@ def get_previous_value_of_rfq_details(request):
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)
 
-
-# @api_view(['put'])
-# def updated_vendor_publish_data_based_on_rfqtype(request):
-#     data=request.data
-#     try:
-#         pass
-#     except Exception as e:
-#         return Response({'status':500,'error':str(e)},status=500)
-
-
-
 @api_view(['post'])
 def fetch_vendor_bid_details_userid(request):
     data=request.data
@@ -3690,59 +3683,6 @@ def get_all_awards_based_on_userid_and_rfqtype(request):
 
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)
-
-
-@api_view(['put'])
-def po_status_update_service(request):
-    data = request.data
-    awardpk = data['awardpk']
-    rfq_number = data['rfq_number']
-    try:
-        serviceawardobj = ServiceAwards.objects.filter(id=awardpk, service_rfq_number=rfq_number).values()
-        if len(serviceawardobj) > 0:
-            sawards = ServiceAwards.objects.get(id=awardpk)
-            if sawards.service_po_status == 'Pending':
-                sawards.service_po_status = 'PO_Sent'
-                sawards.save()
-                return Response({'status': 200, 'message': 'Service PO sent successfully', 'data': sawards.service_po_status}, status=200)
-            else:
-                if sawards.service_po_status=='PO_Sent':
-                    return Response({'status': 202, 'message': 'PO Already Sent'}, status=202)
-                else:
-                    return Response({'status': 202, 'message': 'PO sent failed or po not sent'}, status=202)
-
-        else:
-            return Response({'status': 204, 'message': 'No data found'}, status=204)
-    except Exception as e:
-        return Response({'status': 500, 'error': str(e)}, status=500)
-
-
-
-@api_view(['put'])
-def po_status_update_machinary(request):
-    data = request.data
-    awardpk = data['awardpk']
-    rfq_number = data['rfq_number']
-    try:
-        machinaryawardobj = MachinaryAwards.objects.filter(id=awardpk, machinary_rfq_number=rfq_number).values()
-        if len(machinaryawardobj) > 0:
-            mawards = MachinaryAwards.objects.get(id=awardpk)
-            if mawards.machinary_po_status == 'Pending':
-                mawards.machinary_po_status = 'PO_Sent'
-                mawards.save()
-                return Response({'status': 200, 'message': 'Machinary PO sent successfully', 'data': mawards.machinary_po_status}, status=200)
-            else:
-                if mawards.machinary_po_status=='PO_Sent':
-                    return Response({'status': 202, 'message': 'PO Already Sent'}, status=202)
-                else:
-                    return Response({'status': 202, 'message': 'PO sent failed or po not sent'}, status=202)
-
-        else:
-            return Response({'status': 204, 'message': 'No data found'}, status=204)
-    except Exception as e:
-        return Response({'status': 500, 'error': str(e)}, status=500)
-
-
 
 @api_view(['post'])
 def purchase_order_vendors_list(request):

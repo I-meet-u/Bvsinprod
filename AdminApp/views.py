@@ -16,8 +16,7 @@ from django.db.models import Q
 from RegistrationApp.models import SelfRegistration, BasicCompanyDetails, IndustrialInfo, IndustrialHierarchy, \
     BankDetails, LegalDocuments, Employee_CompanyDetails, Employee_IndustryInfo
 from .models import *
-from AdminApp.serializers import AdminInviteSerializer, CreateUserSerializer, AdminRegisterSerializer, \
-    PermissionsSerializer
+from AdminApp.serializers import AdminInviteSerializer, CreateUserSerializer, AdminRegisterSerializer
 
 
 class AdminRegisterView(viewsets.ModelViewSet):
@@ -117,13 +116,6 @@ class CreateUserView(viewsets.ModelViewSet):
         if not createuserobj:
             raise ValidationError({'message': 'Create User Details are not found', 'status': 204})
         return  createuserobj
-
-
-
-class PermissionsView(viewsets.ModelViewSet):
-    queryset = Permissions.objects.all()
-    serializer_class=PermissionsSerializer
-
 
 @api_view(['put'])
 def create_user_status_update(request):

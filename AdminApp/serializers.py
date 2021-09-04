@@ -40,9 +40,3 @@ class CreateUserSerializer(serializers.ModelSerializer):
             print(numeric)
         values = CreateUser.objects.create(numeric=numeric,user_code="USR"+str(numeric), **validate_data)
         return values
-
-
-class PermissionsSerializer(serializers.ModelSerializer):
-    class Meta:
-        model=Permissions
-        fields='__all__'

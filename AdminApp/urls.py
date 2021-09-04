@@ -7,7 +7,6 @@ router=routers.DefaultRouter()
 router.register('admin-invite', views.AdminInviteView)
 router.register('create-user', views.CreateUserView)
 router.register('admin-register',views.AdminRegisterView)
-router.register('permissions',views.PermissionsView)
 
 
 urlpatterns = [

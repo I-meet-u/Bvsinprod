@@ -247,3 +247,27 @@ class ItemCodeSettings(models.Model):
 
     class Meta:
         db_table = "ItemCodeSettings"
+
+
+
+class LandingPageBidding(models.Model):
+    publish_date=models.CharField(max_length=200)
+    deadline_date=models.CharField(max_length=200)
+    delivery_terms=models.CharField(max_length=800)
+    packaging_forwarding=models.CharField(max_length=800)
+    priority=models.CharField(max_length=800)
+    payment_terms=models.CharField(max_length=800)
+    quantity=models.BigIntegerField()
+    vendor_product_pk=models.BigIntegerField()
+    # vendor_product_subcategory=models.CharField(max_length=800)
+    vendors_code=ArrayField(models.CharField(max_length=200),null=True,blank=True)
+    created_on = models.DateTimeField(auto_now_add=True)
+    updated_on = models.DateTimeField(auto_now=True)
+    created_by = models.BigIntegerField(null=True,blank=True)
+    updated_by = models.ForeignKey(SelfRegistration, on_delete=models.CASCADE,null=True,blank=True)
+    company_name=ArrayField(models.CharField(max_length=500),null=True,blank=True)
+    product_name=models.CharField(max_length=400)
+
+    class Meta:
+        db_table="LandingPageBidding"
+

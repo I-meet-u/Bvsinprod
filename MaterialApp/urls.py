@@ -42,6 +42,9 @@ urlpatterns = [
     path('get-vendor-details-by-sub-category/',views.get_vendor_details_by_sub_category),
     path('fetch-vendor-product-basic-details-by-subcategory/',views.fetch_vendor_product_basic_details_by_subcategory),
     path('fetch-vendor-product-basic-details-by-userid-all/', views.fetch_vendor_product_basic_details_by_userid_all),
+    path('landing-page-bidding-create/', views.landing_page_bidding_create),
+    path('get-landing-page-bidding-by-userid-buyer-list/', views.get_landing_page_bidding_by_userid_buyer_list),
+    path('get-landing-page-bidding-by-userid-vendors-list/', views.get_landing_page_bidding_by_userid_vendors_list),
     path('fetch-vendor-product-basic-details-by-pk/', views.fetch_vendor_product_basic_details_by_pk)
 
 ]

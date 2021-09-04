@@ -2335,12 +2335,110 @@ class PurchaseOrderViewSet(viewsets.ModelViewSet):
     parser = [MultiPartParser]
     # sssfpermission_classes = [permissions.AllowAny]
 
+    def create(self, request, *args, **kwargs):
+        rfq_number=request.data.get('rfq_number',None)
+        vendorcode=request.data.get('vendorcode',None)
+        configuration = sib_api_v3_sdk.Configuration()
+        configuration.api_key[
+            'api-key'] = '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'
+        headers = {
+            'accept': 'application/json',
+            'content-type': 'application/json',
+        }
+        if request.data['rfq_type']=='Product':
+            awardobj=Awards.objects.filter(rfq_number=rfq_number,company_code=vendorcode).values()
+            ccode=awardobj[0].get('company_code')
+            quantity=awardobj[0].get('buyer_bid_quantity')
+            itemstotal=awardobj[0].get('product_code')
+            print(len(itemstotal),'length')
+            basicobj=BasicCompanyDetails.objects.get(company_code=ccode)
+            regobj = SelfRegistration.objects.get(id=basicobj.updated_by_id)
+            print(regobj.username, 'ok')
+            api_instance = sib_api_v3_sdk.TransactionalEmailsApi(sib_api_v3_sdk.ApiClient(configuration))
+            send_smtp_email = sib_api_v3_sdk.SendSmtpEmail(
+                to=[{"email": regobj.username, "name": regobj.contact_person}],
+                template_id=23, params={
+                    "rfqnumber":rfq_number,
+                    "podate": request.data['PO_date'],
+                    "ponumber": request.data['PO_num'],
+                    "poexpiry": request.data['PO_expirydate'],
+                    "quantity": str(quantity),
+                    'items':str(len(itemstotal)),
+                    "companyname": basicobj.company_name
+                },
+                headers=headers,
+                subject='PO Confirm'
+            )  # SendSmtpEmail | Values to send a transactional email
+            # Send a transactional email
+            api_response = api_instance.send_transac_email(send_smtp_email)
+            print(api_response)
+
+        elif request.data['rfq_type']=='Service':
+            awardobjservice= ServiceAwards.objects.filter(service_rfq_number=rfq_number, service_company_code=vendorcode).values()
+            serviceccode = awardobjservice[0].get('service_company_code')
+            servicequantity = awardobjservice[0].get('service_buyer_bid_quantity')
+            serivcetotal = awardobjservice[0].get('service_code')
+            basicobjservice = BasicCompanyDetails.objects.get(company_code=serviceccode)
+            regobjservice = SelfRegistration.objects.get(id=basicobjservice.updated_by_id)
+            print(regobjservice.username, 'ok')
+            api_instance = sib_api_v3_sdk.TransactionalEmailsApi(sib_api_v3_sdk.ApiClient(configuration))
+            send_smtp_email = sib_api_v3_sdk.SendSmtpEmail(
+                to=[{"email": regobjservice.username, "name": regobjservice.contact_person}],
+                template_id=23, params={
+                    "rfqnumber": rfq_number,
+                    "podate": request.data['PO_date'],
+                    "ponumber": request.data['PO_num'],
+                    "poexpiry": request.data['PO_expirydate'],
+                    "quantity": str(servicequantity),
+                    'items': str(len(serivcetotal)),
+                    "companyname": basicobjservice.company_name
+                },
+                headers=headers,
+                subject='PO Confirm'
+            )  # SendSmtpEmail | Values to send a transactional email
+            # Send a transactional email
+            api_response = api_instance.send_transac_email(send_smtp_email)
+            print(api_response)
+        elif request.data['rfq_type'] == 'Machinary & equipments':
+            awardobjmachinary = MachinaryAwards.objects.filter(machinary_rfq_number=rfq_number,
+                                                           machinary_company_code=vendorcode).values()
+            machinarycode = awardobjmachinary[0].get('machinary_company_code')
+            machinaryquantity = awardobjmachinary[0].get('machinary_buyer_bid_quantity')
+            machinarytotal = awardobjmachinary[0].get('machinary_code')
+            basicobjmachinary = BasicCompanyDetails.objects.get(company_code=machinarycode)
+            regobjservice = SelfRegistration.objects.get(id=basicobjmachinary.updated_by_id)
+            print(regobjservice.username, 'ok')
+            api_instance = sib_api_v3_sdk.TransactionalEmailsApi(sib_api_v3_sdk.ApiClient(configuration))
+            send_smtp_email = sib_api_v3_sdk.SendSmtpEmail(
+                to=[{"email": regobjservice.username, "name": regobjservice.contact_person}],
+                template_id=23, params={
+                    "rfqnumber": rfq_number,
+                    "podate": request.data['PO_date'],
+                    "ponumber": request.data['PO_num'],
+                    "poexpiry": request.data['PO_expirydate'],
+                    "quantity": str(machinaryquantity),
+                    'items': str(len(machinarytotal)),
+                    "companyname": basicobjmachinary.company_name
+                },
+                headers=headers,
+                subject='PO Confirm'
+            )  # SendSmtpEmail | Values to send a transactional email
+            # Send a transactional email
+            api_response = api_instance.send_transac_email(send_smtp_email)
+            print(api_response)
+        return super().create(request, *args, **kwargs)
+
+
     def get_queryset(self):
         poobj = PurchaseOrder.objects.filter(updated_by=self.request.GET.get('updated_by')).order_by('id')
         if poobj:
             return poobj
         raise ValidationError(
-            {'message': 'Purchase Order Product details of particular user id is not exist', 'status': 204})
+            {'message': 'Purchase Order details of particular user id is not exist', 'status': 204})
+
+
+
+
 
 class PurchaseOrderServiceViewSet(viewsets.ModelViewSet):
     queryset = PurchaseOrderService.objects.all()
@@ -2394,11 +2492,12 @@ def award_product_create(request):
                     for product in pcode:
                         pass
                         for codes in ccode:
-
+                            print('ok----')
                             bidobj = VendorProductBidding.objects.get(vendor_user_rfq_number=rfq_number,vendor_product_rfq_type='Product',vendor_code=codes)
                             print(bidobj, 'fsds')
                             basicobj = BasicCompanyDetails.objects.get(company_code=codes)
                             cname = basicobj.company_name
+                            updatedby=basicobj.updated_by_id
                             rfq_number = bidobj.vendor_user_rfq_number
                             publishdate = bidobj.vendor_product_publish_date
                             deadlinedate = bidobj.vendor_product_deadline_date
@@ -2430,17 +2529,46 @@ def award_product_create(request):
                                                         company_name=cname,
                                                         buyer_bid_quantity=orderqtsum,
                                                         vendor_bid_quantity=vendorbidquantitysum,
-                                                      totalamount=totalamountsum,
-                                                      rfq_title=rfqtitle,
-                                                      rfq_status=rfqstatus,
-                                                      product_code=pcode,
-                                                      product_name=parrray,
-                                                      product_description=pdescarray,
-                                                      publish_date=publishdate,
-                                                      updated_by=SelfRegistration.objects.get(id=userid),
-                                                      rfq_type='Product',
+                                                       totalamount=totalamountsum,
+                                                       rfq_title=rfqtitle,
+                                                       rfq_status=rfqstatus,
+                                                       product_code=pcode,
+                                                       product_name=parrray,
+                                                       product_description=pdescarray,
+                                                       publish_date=publishdate,
+                                                       updated_by=SelfRegistration.objects.get(id=userid),
+                                                       rfq_type='Product',
+                                                       deadline_date=deadlinedate)
+                        configuration = sib_api_v3_sdk.Configuration()
+                        configuration.api_key[
+                            'api-key'] = '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'
+                        headers = {
+                            'accept': 'application/json',
+                            'content-type': 'application/json',
+                        }
+                        regobj=SelfRegistration.objects.get(id=updatedby)
+                        print(regobj.username ,'ok')
 
-                                                      deadline_date=deadlinedate)
+                        print("{{{{{{",vendorbidquantitysum)
+
+                        api_instance = sib_api_v3_sdk.TransactionalEmailsApi(sib_api_v3_sdk.ApiClient(configuration))
+                        send_smtp_email = sib_api_v3_sdk.SendSmtpEmail(to=[{"email": regobj.username, "name":regobj.contact_person}],
+                                                                       template_id=22, params={
+                                "rfqnumber": rfq_number,
+                                "awardeddate": awardobj1.awarded_date,
+                                "rfqtitle": rfqtitle,
+                                "quantity": str(vendorbidquantitysum),
+                                "items":len(parrray),
+                                "CompanyName": cname
+                            },
+                                # "cname": bidcreater[0].get('company_name')},
+                                                                       headers=headers,
+                                                                       subject='Bidding Invitation'
+                                                                       )  # SendSmtpEmail | Values to send a transactional email
+                        # Send a transactional email
+                        api_response = api_instance.send_transac_email(send_smtp_email)
+                        print(api_response)
+
         elif len(award_obj)!=0:
             print("already present")
             for i in range(0,len(award_obj)):
@@ -2458,6 +2586,7 @@ def award_product_create(request):
                     pdescarray = []
                     pcode = productvendordetails[i].get('productcode')
                     print(type(pcode))
+
                     ccode = productvendordetails[i].get('vendorcode')
                     for product in pcode:
                         print(product)
@@ -2470,6 +2599,7 @@ def award_product_create(request):
                             print(bidobj, 'fsds')
                             basicobj = BasicCompanyDetails.objects.get(company_code=codes)
                             cname = basicobj.company_name
+                            updatedby = basicobj.updated_by_id
                             rfq_number = bidobj.vendor_user_rfq_number
                             # frieght = bidobj.freight_transportation
                             # pandf = bidobj.packaging_forwarding
@@ -2482,6 +2612,7 @@ def award_product_create(request):
                                                                                       vendor_code=codes,
                                                                                       vendor_item_code=product)
                         print(productdetails)
+
                         if not productdetails:
                             return Response({'status': 204, 'message': 'No product details of vendor'}, status=204)
 
@@ -2497,10 +2628,12 @@ def award_product_create(request):
                     print('-----------ok---------------')
                     awardobj = Awards.objects.filter(rfq_number=rfq_number, company_code__in=codes,
                                                      product_code=pcode).values()
+
                     if len(awardobj) > 0 and awardobj:
                         print(len(awardobj))
                         return Response({'status': 204, 'message': 'already present'}, status=204)
                     else:
+
                         awardobj1 = Awards.objects.create(rfq_number=rfq_number,
                                                           company_code=codes,
                                                           company_name=cname,
@@ -2516,10 +2649,42 @@ def award_product_create(request):
                                                           rfq_type='Product',
                                                           updated_by=SelfRegistration.objects.get(id=userid),
                                                           deadline_date=deadlinedate)
+                        configuration = sib_api_v3_sdk.Configuration()
+                        configuration.api_key[
+                            'api-key'] = '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'
+                        headers = {
+                            'accept': 'application/json',
+                            'content-type': 'application/json',
+                        }
+                        regobj = SelfRegistration.objects.get(id=updatedby)
+                        print(regobj.username, 'ok')
+
+                        print("{{{{{{", vendorbidquantitysum)
+
+                        api_instance = sib_api_v3_sdk.TransactionalEmailsApi(sib_api_v3_sdk.ApiClient(configuration))
+                        send_smtp_email = sib_api_v3_sdk.SendSmtpEmail(
+                            to=[{"email": regobj.username, "name": "harish"}],
+                            template_id=22, params={
+                                 "rfqnumber": rfq_number,
+                                "awardeddate": awardobj1.awarded_date,
+                                "rfqtitle": rfqtitle,
+                                "quantity": str(vendorbidquantitysum),
+                                "items":len(parrray),
+                                "CompanyName": cname
+                            },
+                            # "cname": bidcreater[0].get('company_name')},
+                            headers=headers,
+                            subject='RFQ Award'
+                            )  # SendSmtpEmail | Values to send a transactional email
+                        # Send a transactional email
+                        api_response = api_instance.send_transac_email(send_smtp_email)
+                        print(api_response)
+
+
+
 
 
         return Response({'status': 200, 'message': 'Award Created'}, status=200)
-            # return Response({'status': 200, 'message': 'Already Awarderd'}, status=200)
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)
 
@@ -2558,6 +2723,7 @@ def award_service_create(request):
                             print(bidobj, 'fsds')
                             basicobj = BasicCompanyDetails.objects.get(company_code=codes)
                             cname = basicobj.company_name
+                            updatedby=basicobj.updated_by_id
                             rfq_number = bidobj.vendor_user_rfq_number
                             publishdate = bidobj.vendor_product_publish_date
                             deadlinedate = bidobj.vendor_product_deadline_date
@@ -2602,6 +2768,36 @@ def award_service_create(request):
 
                                                                       updated_by=SelfRegistration.objects.get(id=userid),
                                                                       service_deadline_date=deadlinedate)
+                        configuration = sib_api_v3_sdk.Configuration()
+                        configuration.api_key[
+                            'api-key'] = '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'
+                        headers = {
+                            'accept': 'application/json',
+                            'content-type': 'application/json',
+                        }
+                        regobj = SelfRegistration.objects.get(id=updatedby)
+                        print(regobj.username, 'ok')
+
+                        print("{{{{{{", orderqtsum)
+
+                        api_instance = sib_api_v3_sdk.TransactionalEmailsApi(sib_api_v3_sdk.ApiClient(configuration))
+                        send_smtp_email = sib_api_v3_sdk.SendSmtpEmail(
+                            to=[{"email": regobj.username, "name": "harish"}],
+                            template_id=22, params={
+                                "rfqnumber": rfq_number,
+                                "awardeddate": serviceawardobj.service_awarded_date,
+                                "rfqtitle": rfqtitle,
+                                "quantity": str(orderqtsum),
+                                "items": len(snamearray),
+                                "CompanyName": cname
+                            },
+                            # "cname": bidcreater[0].get('company_name')},
+                            headers=headers,
+                            subject='RFQ Award'
+                        )  # SendSmtpEmail | Values to send a transactional email
+                        # Send a transactional email
+                        api_response = api_instance.send_transac_email(send_smtp_email)
+                        print(api_response)
         elif len(award_obj)!=0:
             print("already present")
             for i in range(0,len(award_obj)):
@@ -2632,6 +2828,7 @@ def award_service_create(request):
                             print(bidobj, 'fsds')
                             basicobj = BasicCompanyDetails.objects.get(company_code=codes)
                             cname = basicobj.company_name
+                            updatedby=basicobj.updated_by_id
                             rfq_number = bidobj.vendor_user_rfq_number
                             publishdate = bidobj.vendor_product_publish_date
                             deadlinedate = bidobj.vendor_product_deadline_date
@@ -2678,6 +2875,36 @@ def award_service_create(request):
                                                                            id=userid),
                                                                        rfq_type='Service',
                                                                        service_deadline_date=deadlinedate)
+                        configuration = sib_api_v3_sdk.Configuration()
+                        configuration.api_key[
+                            'api-key'] = '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'
+                        headers = {
+                            'accept': 'application/json',
+                            'content-type': 'application/json',
+                        }
+                        regobj = SelfRegistration.objects.get(id=updatedby)
+                        print(regobj.username, 'ok')
+
+                        print("{{{{{{", orderqtsum)
+
+                        api_instance = sib_api_v3_sdk.TransactionalEmailsApi(sib_api_v3_sdk.ApiClient(configuration))
+                        send_smtp_email = sib_api_v3_sdk.SendSmtpEmail(
+                            to=[{"email": regobj.username, "name": "harish"}],
+                            template_id=22, params={
+                                "rfqnumber": rfq_number,
+                                "awardeddate": serviceawardobj.service_awarded_date,
+                                "rfqtitle": rfqtitle,
+                                "quantity": str(orderqtsum),
+                                "items": len(snamearray),
+                                "CompanyName": cname
+                            },
+                            # "cname": bidcreater[0].get('company_name')},
+                            headers=headers,
+                            subject='RFQ Award'
+                        )  # SendSmtpEmail | Values to send a transactional email
+                        # Send a transactional email
+                        api_response = api_instance.send_transac_email(send_smtp_email)
+                        print(api_response)
         return Response({'status': 200, 'message': 'Award Service Created'}, status=200)
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)
@@ -2715,6 +2942,7 @@ def award_machinary_create(request):
                             print(bidobj, 'fsds')
                             basicobj = BasicCompanyDetails.objects.get(company_code=codes)
                             cname = basicobj.company_name
+                            updatedby=basicobj.updated_by_id
                             rfq_number = bidobj.vendor_user_rfq_number
                             publishdate = bidobj.vendor_product_publish_date
                             deadlinedate = bidobj.vendor_product_deadline_date
@@ -2758,6 +2986,36 @@ def award_machinary_create(request):
                                                                          rfq_type='Machinary & equipments',
                                                                       updated_by=SelfRegistration.objects.get(id=userid),
                                                                       machinary_deadline_date=deadlinedate)
+                        configuration = sib_api_v3_sdk.Configuration()
+                        configuration.api_key[
+                            'api-key'] = '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'
+                        headers = {
+                            'accept': 'application/json',
+                            'content-type': 'application/json',
+                        }
+                        regobj = SelfRegistration.objects.get(id=updatedby)
+                        print(regobj.username, 'ok')
+
+                        print("{{{{{{", orderqtsum)
+
+                        api_instance = sib_api_v3_sdk.TransactionalEmailsApi(sib_api_v3_sdk.ApiClient(configuration))
+                        send_smtp_email = sib_api_v3_sdk.SendSmtpEmail(
+                            to=[{"email": regobj.username, "name": "harish"}],
+                            template_id=22, params={
+                                "rfqnumber": rfq_number,
+                                "awardeddate": machinaryawardobj.machinary_awarded_date,
+                                "rfqtitle": rfqtitle,
+                                "quantity": str(orderqtsum),
+                                "items": len(mnamearray),
+                                "CompanyName": cname
+                            },
+                            # "cname": bidcreater[0].get('company_name')},
+                            headers=headers,
+                            subject='RFQ Award'
+                        )  # SendSmtpEmail | Values to send a transactional email
+                        # Send a transactional email
+                        api_response = api_instance.send_transac_email(send_smtp_email)
+                        print(api_response)
         elif len(award_obj)!=0:
             print("already present")
             for i in range(0,len(award_obj)):
@@ -2788,6 +3046,7 @@ def award_machinary_create(request):
                             print(bidobj, 'fsds')
                             basicobj = BasicCompanyDetails.objects.get(company_code=codes)
                             cname = basicobj.company_name
+                            updatedby=basicobj.updated_by_id
                             rfq_number = bidobj.vendor_user_rfq_number
                             publishdate = bidobj.vendor_product_publish_date
                             deadlinedate = bidobj.vendor_product_deadline_date
@@ -2835,6 +3094,36 @@ def award_machinary_create(request):
                                                                                id=userid),
                                                                            rfq_type='Machinary & equipments',
                                                                            machinary_deadline_date=deadlinedate)
+                        configuration = sib_api_v3_sdk.Configuration()
+                        configuration.api_key[
+                            'api-key'] = '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'
+                        headers = {
+                            'accept': 'application/json',
+                            'content-type': 'application/json',
+                        }
+                        regobj = SelfRegistration.objects.get(id=updatedby)
+                        print(regobj.username, 'ok')
+
+                        print("{{{{{{", vendorbidquantitysum)
+
+                        api_instance = sib_api_v3_sdk.TransactionalEmailsApi(sib_api_v3_sdk.ApiClient(configuration))
+                        send_smtp_email = sib_api_v3_sdk.SendSmtpEmail(
+                            to=[{"email": regobj.username, "name": "harish"}],
+                            template_id=22, params={
+                                 "rfqnumber": rfq_number,
+                                "awardeddate": machinaryawardobj.machinary_awarded_date,
+                                "rfqtitle": rfqtitle,
+                                "quantity": str(orderqtsum),
+                                "items": len(mnamearray),
+                                "CompanyName": cname
+                            },
+                            # "cname": bidcreater[0].get('company_name')},
+                            headers=headers,
+                            subject='RFQ Award'
+                        )  # SendSmtpEmail | Values to send a transactional email
+                        # Send a transactional email
+                        api_response = api_instance.send_transac_email(send_smtp_email)
+                        print(api_response)
         return Response({'status': 200, 'message': 'Award Machinary Created'}, status=200)
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)

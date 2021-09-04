@@ -717,6 +717,8 @@ def add_users_internal_buyer_and_internal_vendor(request):
     internalarray=[]
     internalbuyerarray=[]
     interalbuyer=[]
+    usertype=data['usertype']
+    vendorboth=data['vendorboth']
     try:
 
         interalvendor=InternalVendor.objects.filter(updated_by_id=userid).values()
@@ -725,63 +727,127 @@ def add_users_internal_buyer_and_internal_vendor(request):
         interalbuyer = InternalBuyer.objects.filter(updated_by_id=userid).values()
         for i in range(0, len(interalbuyer)):
             internalbuyerarray.append(interalbuyer[i].get('company_code'))
+        basicobj = BasicCompanyDetails.objects.filter(company_code__in=ccode).values()
+        if len(basicobj)>0:
+            if usertype=='Vendor' and vendorboth=="False":
+                for i in range(0,len(basicobj)):
+                    regobjdata=SelfRegistration.objects.get(user_type='Vendor',admin_approve='Approved',id=basicobj[i].get('updated_by_id'))
+                    if basicobj[i].get('company_code') not in internalarray and regobjdata.user_type=='Vendor':
+                        print('internal vendor')
+                        industryhierarchy=IndustrialHierarchy.objects.get(company_code_id=basicobj[i].get('company_code'))
+                        billobj = BillingAddress.objects.filter(company_code_id=basicobj[i].get('company_code')).values()
+                        internalvendorobj=InternalVendor.objects.create(company_code=basicobj[i].get('company_code'),
+                                                                        company_name=basicobj[i].get('company_name'),
+                                                                        city=billobj[0].get('bill_city'),
+                                                                        state=billobj[0].get('bill_state'),
+                                                                        nature_of_business=regobjdata.nature_of_business,
+                                                                        email_id=regobjdata.username,
+                                                                        phone_number=regobjdata.phone_number,
+                                                                        maincore=industryhierarchy.maincore,
+                                                                        category=industryhierarchy.category,
+                                                                        sub_category=industryhierarchy.subcategory,
+                                                                        created_by=userid,
+                                                                        updated_by=SelfRegistration.objects.get(id=userid))
+                return Response(
+                    {'status': 200, 'message': 'Vendors are added to internal vendor successfully'},
+                    status=200)
+            elif usertype=='Buyer' and vendorboth=="False":
+                for i in range(0,len(basicobj)):
+                    regobjdata=SelfRegistration.objects.get(user_type='Buyer',admin_approve='Approved',id=basicobj[i].get('updated_by_id'))
+                    if basicobj[i].get('company_code')  not in internalbuyerarray and regobjdata.user_type=='Buyer':
+                        print('internal buyer')
+                        industryinfo = IndustrialInfo.objects.get(company_code_id=basicobj[i].get('company_code'))
+                        billobj = BillingAddress.objects.filter(company_code_id=basicobj[i].get('company_code')).values()
+                        internalbuyerobj = InternalBuyer.objects.create(company_code=basicobj[i].get('company_code'),
+                                                                        company_name=basicobj[i].get('company_name'),
+                                                                        city=billobj[0].get('bill_city'),
+                                                                        state=billobj[0].get('bill_state'),
+                                                                        nature_of_business=regobjdata.nature_of_business,
+                                                                        industry_to_serve=industryinfo.industry_to_serve,
+                                                                        email_id=regobjdata.username,
+                                                                        phone_number=regobjdata.phone_number,
+                                                                        created_by=userid,
+                                                                        updated_by=SelfRegistration.objects.get(
+                                                                            id=userid))
+                return Response(
+                    {'status': 200, 'message': 'Buyers are added to internal buyer successfully'},
+                    status=200)
+            elif usertype=='Both'and vendorboth=="False":
+                for i in range(0, len(basicobj)):
+                    regobjdata=SelfRegistration.objects.get(user_type='Both',admin_approve='Approved',id=basicobj[i].get('updated_by_id'))
+                    if basicobj[i].get('company_code') not in internalarray and basicobj[i].get('company_code') not in internalbuyerarray  and regobjdata.user_type == 'Both':
+                        print('internal vendor')
+                        industryhierarchy = IndustrialHierarchy.objects.get(company_code_id=basicobj[i].get('company_code'))
+                        billobj = BillingAddress.objects.filter(company_code_id=basicobj[i].get('company_code')).values()
+                        industryinfo = IndustrialInfo.objects.get(company_code_id=basicobj[i].get('company_code'))
+                        internalvendorobj = InternalVendor.objects.create(company_code=basicobj[i].get('company_code'),
+                                                                          company_name=basicobj[i].get('company_name'),
+                                                                          city=billobj[0].get('bill_city'),
+                                                                          state=billobj[0].get('bill_state'),
+                                                                          nature_of_business=regobjdata.nature_of_business,
+                                                                          email_id=regobjdata.username,
+                                                                          phone_number=regobjdata.phone_number,
+                                                                          maincore=industryhierarchy.maincore,
+                                                                          category=industryhierarchy.category,
+                                                                          sub_category=industryhierarchy.subcategory,
+                                                                          created_by=userid,
+                                                                          updated_by=SelfRegistration.objects.get(
+                                                                              id=userid))
+                        internalbuyerobj = InternalBuyer.objects.create(company_code=basicobj[i].get('company_code'),
+                                                                        company_name=basicobj[i].get('company_name'),
+                                                                        city=billobj[0].get('bill_city'),
+                                                                        state=billobj[0].get('bill_state'),
+                                                                        nature_of_business=regobjdata.nature_of_business,
+                                                                        industry_to_serve=industryinfo.industry_to_serve,
+                                                                        email_id=regobjdata.username,
+                                                                        phone_number=regobjdata.phone_number,
+                                                                        created_by=userid,
+                                                                        updated_by=SelfRegistration.objects.get(
+                                                                            id=userid))
 
-        businessobj=BusinessRequest.objects.filter(updated_by_id=userid,company_code__in=ccode).values()
-        if len(businessobj)>0:
-            for i in range(0,len(businessobj)):
-                print('ok ',businessobj[i].get('email_id'))
-                regobjdata=SelfRegistration.objects.get(Q(user_type='Vendor')| Q(user_type='Both'),username=businessobj[i].get('email_id'),admin_approve='Approved')
-                print(regobjdata.user_type,'s')
-                basicobj=BasicCompanyDetails.objects.get(company_code=businessobj[i].get('company_code'))
-                print(basicobj.company_code)
-                if basicobj.company_code not in internalarray and regobjdata.user_type=='Vendor':
-                    print('internal vendor')
-                    industryhierarchy=IndustrialHierarchy.objects.get(company_code_id=basicobj.company_code)
-                    billobj = BillingAddress.objects.filter(company_code_id=basicobj.company_code).values()
-                    internalvendorobj=InternalVendor.objects.create(company_code=basicobj.company_code,
-                                                                    company_name=basicobj.company_name,
-                                                                    city=billobj[0].get('bill_city'),
-                                                                    state=billobj[0].get('bill_state'),
-                                                                    nature_of_business=regobjdata.nature_of_business,
-                                                                    email_id=regobjdata.username,
-                                                                    phone_number=regobjdata.phone_number,
-                                                                    maincore=industryhierarchy.maincore,
-                                                                    category=industryhierarchy.category,
-                                                                    sub_category=industryhierarchy.subcategory,
-                                                                    created_by=userid,
-                                                                    updated_by=SelfRegistration.objects.get(id=userid))
+                return Response({'status': 200, 'message': 'Both are added to internal vendor and internal buyer successfully'},status=200)
+            elif usertype == 'Vendor' and vendorboth == "True":
+                for i in range(0, len(basicobj)):
+                    regobjdata = SelfRegistration.objects.get(user_type='Vendor', admin_approve='Approved',
+                                                              id=basicobj[i].get('updated_by_id'))
+                    if basicobj[i].get('company_code') not in internalarray and basicobj[i].get(
+                            'company_code') not in internalbuyerarray and regobjdata.user_type == 'Vendor':
+                        print('internal vendor')
+                        industryhierarchy = IndustrialHierarchy.objects.get(company_code_id=basicobj[i].get('company_code'))
+                        billobj = BillingAddress.objects.filter(company_code_id=basicobj[i].get('company_code')).values()
+                        industryinfo = IndustrialInfo.objects.get(company_code_id=basicobj[i].get('company_code'))
+                        internalvendorobj = InternalVendor.objects.create(company_code=basicobj[i].get('company_code'),
+                                                                          company_name=basicobj[i].get('company_name'),
+                                                                          city=billobj[0].get('bill_city'),
+                                                                          state=billobj[0].get('bill_state'),
+                                                                          nature_of_business=regobjdata.nature_of_business,
+                                                                          email_id=regobjdata.username,
+                                                                          phone_number=regobjdata.phone_number,
+                                                                          maincore=industryhierarchy.maincore,
+                                                                          category=industryhierarchy.category,
+                                                                          sub_category=industryhierarchy.subcategory,
+                                                                          created_by=userid,
+                                                                          updated_by=SelfRegistration.objects.get(
+                                                                              id=userid))
+                        internalbuyerobj = InternalBuyer.objects.create(company_code=basicobj[i].get('company_code'),
+                                                                        company_name=basicobj[i].get('company_name'),
+                                                                        city=billobj[0].get('bill_city'),
+                                                                        state=billobj[0].get('bill_state'),
+                                                                        nature_of_business=regobjdata.nature_of_business,
+                                                                        industry_to_serve=industryinfo.industry_to_serve,
+                                                                        email_id=regobjdata.username,
+                                                                        phone_number=regobjdata.phone_number,
+                                                                        created_by=userid,
+                                                                        updated_by=SelfRegistration.objects.get(
+                                                                            id=userid))
 
-
-                if basicobj.company_code not in internalbuyerarray and regobjdata.user_type=='Buyer':
-                    industryinfo = IndustrialInfo.objects.get(company_code_id=basicobj.company_code)
-                    billobj = BillingAddress.objects.filter(company_code_id=basicobj.company_code).values()
-                    internalbuyerobj = InternalBuyer.objects.create(company_code=basicobj.company_code,
-                                                                      company_name=basicobj.company_name,
-                                                                      city=billobj[0].get('bill_city'),
-                                                                      state=billobj[0].get('bill_state'),
-                                                                      nature_of_business=regobjdata.nature_of_business,
-                                                                      industry_to_serve=industryinfo.industry_to_serve,
-                                                                      email_id=regobjdata.username,
-                                                                      phone_number=regobjdata.phone_number,
-                                                                      created_by=userid,
-                                                                      updated_by=SelfRegistration.objects.get(id=userid))
-
-            return Response({'status': 200, 'message': 'Vendors are added to internal vendor and internal buyer successfully'}, status=200)
+                return Response(
+                    {'status': 200, 'message': 'Vendors are added to internal vendor and internal buyer successfully'},
+                    status=200)
+            else:
+                return Response({'status':204,'message':"user_type or vendor_both is not correct or mis-spelled"},status=204)
         else:
-            return Response({'status': 204, 'message': 'Not Present'}, status=204)
-
-        # else:
-        #     print('s')
-        #     for i in range(0,len(businessobj)):
-        #         print('coming')
-        #         if businessobj[i].get('email_id') in regarray and businessobj[i].get('send_status')=='Accept':
-        #             print('s correct')
-        #             regvalue=SelfRegistration.objects.get(username=businessobj[i].get('email_id'))
-        #             usertype=regvalue.user_type
-        #             basicobj=BasicCompanyDetails.objects.filter(updated_by_id=regvalue.id)
-        #             for i in range(0,len(basicobj)):
-        #                 print('cname  ', basicobj.company_code)
-
+            return Response({'status': 202, 'message': "Details are not present for specified data or ccode is not present"},status=202)
 
 
     except Exception as e:

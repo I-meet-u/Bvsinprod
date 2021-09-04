@@ -491,3 +491,18 @@ def get_approved_companies_list(request):
             return Response({'status': 204, 'message': 'Approved Companies Are Not Present'}, status=204)
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)
+
+
+
+@api_view(['get'])
+@permission_classes((AllowAny,))
+def get_all_vendor_product_details(request):
+    try:
+        vendorobj=VendorProduct_BasicDetails.objects.filter().values().order_by('vendor_product_id')
+        if len(vendorobj)>0:
+            return Response({'status':200,'message':'Vendor Product List','data':vendorobj},status=200)
+        else:
+            return Response({'status':204,'message':'Not Present'},status=204)
+
+    except Exception as e:
+        return Response({'status':500,'error':str(e)},status=500)

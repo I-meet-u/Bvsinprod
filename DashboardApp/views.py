@@ -246,6 +246,47 @@ def get_all_details_for_business_request(request):
         return Response({'status': 500, 'error': str(e)}, status=500)
 
 
+# @api_view(['post'])
+# # @permission_classes((AllowAny,))
+# def external_vendor(request):
+#     data = request.data
+#     userid = data['userid']
+#     internalarray = []
+#     externalarray = []
+#     try:
+#         regobjdata= SelfRegistration.objects.filter(Q(user_type='Vendor')| Q(user_type='Both'),admin_approve='Approved').values().order_by('id')
+#         internalobj = InternalVendor.objects.filter(updated_by_id=userid).values()
+#         for i in range(0, len(internalobj)):
+#             internalarray.append(internalobj[i].get('company_code'))
+#         if len(regobjdata)>0:
+#             for i in range(0, len(regobjdata)):
+#                 basicobj = BasicCompanyDetails.objects.get(updated_by_id=regobjdata[i].get('id'))
+#                 industryobj = IndustrialInfo.objects.get(updated_by_id=regobjdata[i].get('id'),company_code=basicobj.company_code)
+#                 hierarchyobj = IndustrialHierarchy.objects.get(updated_by_id=regobjdata[i].get('id'))
+#                 billingobj = BillingAddress.objects.filter(updated_by_id=regobjdata[i].get('id')).values()
+#                 if basicobj.company_code not in internalarray:
+#                     externalarray.append({'company_code': basicobj.company_code,
+#                                           'company_name': basicobj.company_name,
+#                                           'nature_of_business': industryobj.nature_of_business,
+#                                           'industry_to_serve': industryobj.industry_to_serve,
+#                                           'maincore': hierarchyobj.maincore,
+#                                           'category': hierarchyobj.category,
+#                                           'subcategory': hierarchyobj.subcategory,
+#                                           'bill_city': billingobj[0].get('bill_city'),
+#                                           'bill_state': billingobj[0].get('bill_state'),
+#                                           'gst_number':basicobj.gst_number,
+#                                           'phone_no':regobjdata[i].get('phone_number'),
+#                                           'email_id':regobjdata[i].get('username')
+#                                           })
+#
+#             return Response({'status': 200, 'message': 'External Vendor List', 'data': externalarray}, status=200)
+#         else:
+#             return Response({'status': 204, 'message': 'Not Present'}, status=204)
+#
+#
+#     except Exception as e:
+#         return Response({'status': 500, 'error': str(e)}, status=500)
+
 @api_view(['post'])
 # @permission_classes((AllowAny,))
 def external_vendor(request):
@@ -254,7 +295,7 @@ def external_vendor(request):
     internalarray = []
     externalarray = []
     try:
-        regobjdata= SelfRegistration.objects.filter(Q(user_type='Vendor')| Q(user_type='Both'),admin_approve='Approved').values().order_by('id')
+        regobjdata= SelfRegistration.objects.filter(Q(user_type='Vendor')| Q(user_type='Both'), ~Q(id=userid),admin_approve='Approved').values().order_by('id')
         internalobj = InternalVendor.objects.filter(updated_by_id=userid).values()
         for i in range(0, len(internalobj)):
             internalarray.append(internalobj[i].get('company_code'))
@@ -286,7 +327,6 @@ def external_vendor(request):
 
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)
-
 
 
 

@@ -687,11 +687,13 @@ def all_masters(request):
         performanceguaranteemasterobj=PerformanceGuaranteesMaster.objects.filter().values()
         if performanceguaranteemasterobj:
             masterslist.append({'performance_guarantee_master':performanceguaranteemasterobj})
+        paymentmasterobj = PaymentMaster.objects.filter().values()
+        if paymentmasterobj:
+            masterslist.append({'payment_master': paymentmasterobj})
         return Response({'status': 200, 'message': 'Masters List','data':masterslist}, status=200)
 
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)
-
 
 @api_view(['put'])
 @permission_classes([AllowAny,])

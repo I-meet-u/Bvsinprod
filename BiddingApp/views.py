@@ -3613,7 +3613,7 @@ def get_buyer_bid_list_by_userid(request):
     from_registration=data['from_registration']
     try:
         if from_registration=='True':
-            bidobj=BuyerProductBidding.objects.filter(updated_by_id=userid,from_registration=from_registration).values()
+            bidobj=BuyerProductBidding.objects.filter(updated_by_id=userid,from_registration=from_registration).values().order_by('product_bidding_id')
             if len(bidobj)>0:
                 return Response(
                     {'status': 200, 'message': 'Buyer Bid List from Registration', 'data':bidobj},status=200)
@@ -3622,7 +3622,7 @@ def get_buyer_bid_list_by_userid(request):
         else:
             if from_registration=='False':
                 bidobjvalues = BuyerProductBidding.objects.filter(updated_by_id=userid,
-                                                            from_registration=from_registration).values()
+                                                            from_registration=from_registration).values().order_by('product_bidding_id')
                 if len(bidobjvalues) > 0:
                     return Response({'status': 200, 'message': 'Buyer Bid List', 'data': bidobjvalues}, status=200)
                 else:
@@ -3630,6 +3630,7 @@ def get_buyer_bid_list_by_userid(request):
 
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)
+
 
 @api_view(['post'])
 def get_all_types_of_awards(request):

@@ -890,7 +890,7 @@ def all_vendors_list(request):
                                                          company_code=basicobj.company_code)
                 # hierarchyobj = IndustrialHierarchy.objects.get(updated_by_id=regobjdata[i].get('id'))
                 billingobj = BillingAddress.objects.filter(updated_by_id=regobjdata[i].get('id')).values()
-                if basicobj.company_code not in internalarray and basicobj.company_code not in internalbuyerarray:
+                if basicobj.company_code not in internalarray or basicobj.company_code not in internalbuyerarray:
                     print('oooooooooooooooooooooo')
                     externalarray.append({'company_code': basicobj.company_code,
                                           'company_name': basicobj.company_name,

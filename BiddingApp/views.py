@@ -1877,6 +1877,52 @@ def get_ccode_by_userid(request):
 #         return Response({'status': 500, 'error': str(e)}, status=500)
 
 
+# @api_view(['post'])
+# def price_analysis_product(request):
+#     data = request.data
+#     resarray = []
+#     rfq_number = data['rfq_number']
+#     vendor_code = data['vendor_code']
+#     rfq_type=data['rfq_type']
+#
+#     try:
+#         if rfq_type=='Product':
+#             biddingbuyerproductdetailsobj = BiddingBuyerProductDetails.objects.filter(buyer_rfq_number=rfq_number,buyer_item_type='Product').values()
+#             if len(biddingbuyerproductdetailsobj)>0:
+#                 # print(biddingbuyerproductdetailsobj)
+#                 for i in range(0, len(biddingbuyerproductdetailsobj)):
+#                     resarray.append({'product_code': biddingbuyerproductdetailsobj[i].get('buyer_item_code'),
+#                                      'product_name': biddingbuyerproductdetailsobj[i].get('buyer_item_name'),
+#                                      'Material_Description': biddingbuyerproductdetailsobj[i].get('buyer_item_description'),
+#                                      'UOM': biddingbuyerproductdetailsobj[i].get('buyer_uom'),
+#                                      'Quantity': biddingbuyerproductdetailsobj[i].get('buyer_quantity')})
+#
+#                     vpdetails = VendorBiddingBuyerProductDetails.objects.filter(vendor_rfq_number=rfq_number, vendor_code__in=vendor_code,
+#                                                                                 vendor_item_code=biddingbuyerproductdetailsobj[
+#                                                                                     i].get('buyer_item_code'),vendor_item_type='Product').values().order_by('vendor_code')
+#
+#                     for j in range(0, len(vpdetails)):
+#
+#                         resarray[i].setdefault('ccode' + str(j), vpdetails[j].get('vendor_code'))
+#                         resarray[i].setdefault('rate' + str(j), vpdetails[j].get('vendor_rate'))
+#                         resarray[i].setdefault('tax' + str(j), vpdetails[j].get('vendor_tax'))
+#                         resarray[i].setdefault('discount' + str(j), vpdetails[j].get('vendor_discount'))
+#                         resarray[i].setdefault('totalcost' + str(j), vpdetails[j].get('vendor_final_amount'))
+#                         resarray[i].setdefault('total_all_cost' + str(j), vpdetails[j].get('vendor_total_amount'))
+#                     print("---------------------------------")
+#                     # for j in range(0,len())
+#
+#                 return Response({'status': 200, 'message': 'Product Price Analysis', 'data': resarray}, status=200)
+#             else:
+#                 return Response({'status': 204, 'message': 'Buyer Product Details Not Present'}, status=204)
+#         else:
+#             return Response({'status': 202, 'message': 'product rfq_type is mis-spelled or not present'}, status=202)
+#
+#
+#     except Exception as e:
+#         return Response({'status': 500, 'error': str(e)}, status=500)
+
+
 @api_view(['post'])
 def price_analysis_product(request):
     data = request.data
@@ -1921,8 +1967,6 @@ def price_analysis_product(request):
 
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)
-
-
 #----------------------------------------------------------PRICE ANALYSIS SERVICE---------------------------------------------------------------------------------------------
 @api_view(['post'])
 def price_analysis_service(request):

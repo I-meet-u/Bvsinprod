@@ -411,7 +411,7 @@ class PurchaseOrder(models.Model):
     attachment1 = models.FileField(upload_to='POfile', null=True, blank=True)
     attachment2 = models.FileField(upload_to='POfile', null=True, blank=True)
     attachment3 = models.FileField(upload_to='POfile', null=True, blank=True)
-    PO_num = models.CharField(max_length=50, null=True, blank=True)
+    PO_num = models.CharField(max_length=80,unique=True)
     delivery_date = models.CharField(max_length=400,null=True,blank=True)
     remind_date = models.CharField(max_length=400,null=True,blank=True)
     delivery_days = models.CharField(max_length=100,null=True,blank=True)

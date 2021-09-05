@@ -505,3 +505,25 @@ class SourcePublish(models.Model):
 
     class Meta:
         db_table="SourcePublish"
+
+
+
+class ExtendedDateListBuyer(models.Model):
+    user_rfq_number=models.CharField(max_length=100,null=True,blank=True)
+    vendor_code=models.CharField(max_length=100,null=True,blank=True)
+    product_bidding_id=models.CharField(max_length=100,null=True,blank=True)
+    product_rfq_status=models.CharField(max_length=100,null=True,blank=True)
+    rfq_type=models.CharField(max_length=100,null=True,blank=True)
+    product_publish_date=models.CharField(null=True,blank=True,max_length=200)
+    product_department=models.CharField(max_length=100,null=True,blank=True)
+    product_deadline_date=models.DateField(null=True,blank=True)
+    product_rfq_title=models.CharField(max_length=100,null=True,blank=True)
+    company_name=models.CharField(max_length=100,null=True,blank=True)
+    created_on = models.DateTimeField(null=True, auto_now_add=True, blank=True)
+    updated_on = models.DateTimeField(auto_now=True, null=True, blank=True)
+    created_by = models.BigIntegerField()
+    userid=models.BigIntegerField(null=True,blank=True)
+    updated_by = models.ForeignKey(SelfRegistration, on_delete=models.CASCADE, null=True, blank=True)
+
+    class Meta:
+        db_table="ExtendedDateListBuyer"

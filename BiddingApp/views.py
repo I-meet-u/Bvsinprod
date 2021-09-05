@@ -4089,3 +4089,125 @@ def getsorcelistresponse(request):
 
 
 
+
+@api_view(['post'])
+def deadline_expired_list(request):
+    data = request.data
+    userid = data['userid']
+    selectsarray=[]
+    expiredlistarray=[]
+    try:
+        basicobj = BasicCompanyDetails.objects.get(updated_by_id=userid)
+        selectobj = SelectVendorsForBiddingProduct.objects.filter(vendor_code=basicobj.company_code).values().order_by('id')
+        if len(selectobj)>0:
+            for i in range(0,len(selectobj)):
+                selectsarray.append(selectobj[i].get('rfq_number'))
+            bidobj=BuyerProductBidding.objects.filter(user_rfq_number__in=selectsarray).values().order_by('product_bidding_id')
+            if len(bidobj)>0:
+                for i in range(0,len(bidobj)):
+                    deadline = bidobj[i].get('product_deadline_date')
+                    print(deadline,type(deadline))
+                    publish = bidobj[i].get('product_publish_date')
+                    publistdateobj = datetime.strptime(publish,'%d-%m-%Y')
+                    convertedpublisdate=datetime.date(publistdateobj)
+                    print(convertedpublisdate, type(convertedpublisdate))
+                    todaydate = date.today()
+                    if convertedpublisdate < todaydate > deadline:
+                        bids = BuyerProductBidding.objects.get(user_rfq_number=bidobj[i].get('user_rfq_number'))
+                        bids.product_rfq_status = 'Expired'
+                        bids.save()
+                        basicobjval = BasicCompanyDetails.objects.get(updated_by_id=bidobj[i].get('updated_by_id'))
+                        bidobjdata = BuyerProductBidding.objects.get(user_rfq_number=bids.user_rfq_number, product_rfq_status='Expired')
+                        expiredlistarray.append({'rfq_number': bidobjdata.user_rfq_number,
+                                                'vendorcode': basicobjval.company_code,
+                                                'company_name': basicobjval.company_name,
+                                                'rfq_title': bidobjdata.product_rfq_title,
+                                                'updatedby_id': bidobjdata.updated_by_id,
+                                                'publishdate': bidobjdata.product_publish_date,
+                                                'deadlinedate': bidobjdata.product_deadline_date,
+                                                'bidding_id': bidobjdata.product_bidding_id,
+                                                'rfq_status': bidobjdata.product_rfq_status,
+                                                'rfq_type': bidobjdata.product_rfq_type,
+                                                'department_master': bidobjdata.product_department
+                                                })
+                return Response({'status': 200, 'message': 'Success', 'data': expiredlistarray}, status=200)
+            else:
+                return Response({'status': 202,'message': 'Bidding Details Not Present'}, status=202)
+
+
+        else:
+            return Response({'status':204,'message':'Vendors are not present'},status=204)
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)
+
+
+@api_view(['post'])
+def extended_deadline_date_list_create(request):
+    data = request.data
+    userid = data['userid']
+    rfqnumber = data['rfqnumber']
+    deadline_date = data['deadline_date']
+    try:
+        bidobj = BuyerProductBidding.objects.get(user_rfq_number=rfqnumber)
+        bidrfq = bidobj.user_rfq_number
+        selectobj = SelectVendorsForBiddingProduct.objects.filter(rfq_number=bidrfq,vendor_status='Accept').values()
+        if len(selectobj)>0:
+            for i in range(0, len(selectobj)):
+                print(selectobj[i].get('vendor_code'))
+                vendorcode = selectobj[i].get('vendor_code')
+                basicobj = BasicCompanyDetails.objects.get(company_code=vendorcode)
+                print(basicobj.updated_by_id)
+                extended = ExtendedDateListBuyer.objects.create(user_rfq_number=bidrfq,
+                                                              vendor_code=selectobj[i].get('vendor_code'),
+                                                              product_bidding_id=bidobj.product_bidding_id,
+                                                              product_rfq_status=bidobj.product_rfq_status,
+                                                              rfq_type=bidobj.product_rfq_type,
+                                                              product_publish_date=bidobj.product_publish_date,
+                                                              product_department=bidobj.product_department,
+                                                              product_deadline_date=deadline_date,
+                                                              product_rfq_title=bidobj.product_rfq_title,
+                                                              updated_by=SelfRegistration.objects.get(
+                                                                  id=selectobj[i].get('updated_by_id')),
+                                                              created_by=selectobj[i].get('updated_by_id'),
+                                                              userid=userid,
+                                                              company_name=basicobj.company_name)
+            return Response({'status': 201, 'message': 'Extended DeadLine Data Created Successfully'}, status=201)
+        else:
+            return Response({'status': 204, 'message': 'Vendors Not Present'}, status=204)
+
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)
+
+@api_view(['post'])
+def extended_deadline_list_show(request):
+    data = request.data
+    # userid=data['userid']
+    vendorcode = data['vendorcode']
+    newarray = []
+    try:
+        extendedobj = ExtendedDateListBuyer.objects.filter(vendor_code=vendorcode).values()
+        print(len(extendedobj))
+        if len(extendedobj)>0:
+            for i in range(0, len(extendedobj)):
+                print('yes',extendedobj[i].get('user_rfq_number'))
+                selectsobj = SelectVendorsForBiddingProduct.objects.filter(rfq_number=extendedobj[i].get('user_rfq_number')).values()
+                print(len(selectsobj),'select')
+                if len(selectsobj)>0:
+                    userids = selectsobj[i].get('updated_by_id')
+                    basicobj = BasicCompanyDetails.objects.get(updated_by_id=userids)
+                    newarray.append({'ccode': basicobj.company_code,
+                                     'cname': basicobj.company_name,
+                                     'rfq_number': extendedobj[i].get('user_rfq_number'),
+                                     'rfq_title': extendedobj[i].get('product_rfq_title'),
+                                     'rfq_type': extendedobj[i].get('rfq_type'),
+                                     'status': extendedobj[i].get('product_rfq_status'),
+                                     'published_date': extendedobj[i].get('product_publish_date'),
+                                     'deadline_date': extendedobj[i].get('product_deadline_date'),
+                                     'department': extendedobj[i].get('product_department')
+                                     })
+            return Response({'status': 200, 'message': 'ok', 'data': newarray}, status=200)
+        else:
+            return Response({'status': 204, 'message': 'Not found'}, status=204)
+
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)

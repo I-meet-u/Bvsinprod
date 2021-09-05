@@ -116,7 +116,7 @@ def get_itemtype_based_on_userid(request):
     itemtype=data['itemtype']
     try:
         if itemtype=='Product':
-            productobj=BuyerProductDetails.objects.filter(updated_by=userid,buyer_item_type=itemtype).values().order_by('buyer_product_id')
+            productobj=BuyerProductDetails.objects.filter(updated_by=userid,buyer_item_type=itemtype,buyer_product_status="Active").values().order_by('buyer_product_id')
             if len(productobj)>0:
                 return Response({'status': 200, 'message': 'Buyer Product List','data':productobj}, status=200)
             else:
@@ -124,14 +124,14 @@ def get_itemtype_based_on_userid(request):
 
         elif itemtype == 'Service':
             productobjservice = BuyerServiceDetails.objects.filter(updated_by=userid,
-                                                            buyer_service_item_type=itemtype).values().order_by('buyer_service_id')
+                                                            buyer_service_item_type=itemtype,buyer_service_status='Active').values().order_by('buyer_service_id')
             if len(productobjservice)>0:
                 return Response({'status': 200, 'message': 'Buyer Service List', 'data': productobjservice}, status=200)
             else:
                 return Response({'status': 202, 'message': 'Not Present'}, status=202)
         elif itemtype == 'Machinary & equipments':
             productobjmachinary = BuyerMachinaryDetails.objects.filter(updated_by=userid,
-                                                                   buyer_machinary_item_type=itemtype).values().order_by('buyer_machinary_id')
+                                                                   buyer_machinary_item_type=itemtype,buyer_machinary_product_status='Active').values().order_by('buyer_machinary_id')
             if len(productobjmachinary)>0:
                 return Response({'status': 200, 'message': 'Buyer Machinary List', 'data': productobjmachinary}, status=200)
             else:

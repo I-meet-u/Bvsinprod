@@ -3259,8 +3259,8 @@ def fetch_vendor_bid_details(request):
                                                                            updated_by_id=basicobj.updated_by_id).values().order_by('id')
                     for k in range(0, len(vendorserviceterms)):
                         print('correct')
-                    vendorserviceobj[i].__setitem__('service', vendorservicedetailsobj)
-                    vendorserviceobj[i].__setitem__('vendor_service_rfq_terms', vendorserviceterms)
+                    vendorserviceobj[i].__setitem__('product', vendorservicedetailsobj)
+                    vendorserviceobj[i].__setitem__('vendor_rfq_terms', vendorserviceterms)
 
                 return Response({'status': 200, 'message': 'Vendor Service Bidding List', 'data': vendorserviceobj},
                                 status=200)

@@ -259,7 +259,7 @@ class LandingPageBidding(models.Model):
     payment_terms=models.CharField(max_length=800)
     quantity=models.BigIntegerField()
     vendor_product_pk=models.BigIntegerField()
-    # vendor_product_subcategory=models.CharField(max_length=800)
+    item_type=models.CharField(max_length=300,null=True,blank=True)
     vendors_code=ArrayField(models.CharField(max_length=200),null=True,blank=True)
     created_on = models.DateTimeField(auto_now_add=True)
     updated_on = models.DateTimeField(auto_now=True)

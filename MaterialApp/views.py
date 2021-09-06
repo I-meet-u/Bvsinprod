@@ -1584,6 +1584,7 @@ def fetch_vendor_product_basic_details_by_userid_all(request):
         return Response({'status': 500, 'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
+
 @api_view(['post'])
 def landing_page_bidding_create(request):
     data = request.data
@@ -1596,6 +1597,7 @@ def landing_page_bidding_create(request):
     quantity = data['quantity']
     vendor_product_pk = data['vendor_product_pk']
     product_name=data['product_name']
+    item_type=data['item_type']
     # vendor_product_subcategory = data['vendor_product_subcategory']
     # vendors_code = data['vendors_code']
     userid=data['userid']
@@ -1646,7 +1648,9 @@ def landing_page_bidding_create(request):
                                                                       created_by=userid,
                                                                       vendors_code=vendorcodearray,
                                                                       company_name=company_namearray,
-                                                                      product_name=product_name
+                                                                      product_name=product_name,
+                                                                      item_type=item_type
+
 
                                                                       )
 
@@ -1696,7 +1700,8 @@ def get_landing_page_bidding_by_userid_vendors_list(request):
                                                   'priority':landingobj[i].get('priority'),
                                                   'payment_terms':landingobj[i].get('payment_terms'),
                                                   'quantity':landingobj[i].get('quantity'),
-                                                  'item_code':vendorproductobj.item_code
+                                                  'item_code':vendorproductobj.item_code,
+                                                  'item_type':landingobj[i].get('item_type')
 
 
                                                   })
@@ -1709,6 +1714,7 @@ def get_landing_page_bidding_by_userid_vendors_list(request):
 
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)
+
 
 
 

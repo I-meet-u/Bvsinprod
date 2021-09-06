@@ -3249,9 +3249,9 @@ def fetch_vendor_bid_details(request):
                                                             vendor_product_rfq_type='Service',vendor_code=vendorcode).values().order_by('vendor_product_bidding_id')
             if len(vendorserviceobj) > 0:
                 for i in range(0, len(vendorserviceobj)):
-                    vendorservicedetailsobj = VendorBiddingBuyerServiceDetails.objects.filter(vendor_service_rfq_number=rfqnumber,
-                                                                                       vendor_service_item_type='Service',
-                                                                                       vendor_code=vendorcode).values().order_by('id')
+                    vendorservicedetailsobj = VendorProductBidding.objects.filter(vendor_product_rfq_number=rfqnumber,
+                                                                                       vendor_product_rfq_type='Service',
+                                                                                       vendor_code=vendorcode).values().order_by('vendor_product_bidding_id')
                     for j in range(0, len(vendorserviceobj)):
                         print('s print')
                     vendorserviceterms = VendorRfqTermsDescription.objects.filter(vendor_rfq_number=rfqnumber,

@@ -1643,22 +1643,22 @@ def accepted_response_list(request):
                     ccode = vendobj[i].get('vendor_code')
                     basicobj = BasicCompanyDetails.objects.get(company_code=ccode)
                     cname = basicobj.company_name
-                    servicedetailsvalue = VendorBiddingBuyerServiceDetails.objects.filter(vendor_service_rfq_number=rfq_number,
+                    productdetailsvalue = VendorBiddingBuyerProductDetails.objects.filter(vendor_rfq_number=rfq_number,
                                                                                           vendor_code=ccode).values()
-                    if len(servicedetailsvalue) == 0:
-                        raise ValueError({'message': 'vendor not present in vendor service details', 'status': 204})
+                    if len(productdetailsvalue) == 0:
+                        raise ValueError({'message': 'vendor not present in vendor product details', 'status': 204})
                     else:
 
-                        for i in range(0, len(servicedetailsvalue)):
-                            orderqtsum = orderqtsum + int(servicedetailsvalue[i].get('buyer_service_quantity'))
-                            ratesum = ratesum + int(servicedetailsvalue[i].get('vendor_service_rate'))
-                            discountsum = discountsum + int(servicedetailsvalue[i].get('vendor_service_discount'))
+                        for i in range(0, len(productdetailsvalue)):
+                            orderqtsum = orderqtsum + int(productdetailsvalue[i].get('buyer_quantity'))
+                            ratesum = ratesum + int(productdetailsvalue[i].get('vendor_rate'))
+                            discountsum = discountsum + int(productdetailsvalue[i].get('vendor_discount'))
                         responselistarray.append({'rfq_number': rfq_number,
                                                   'order_quantity': orderqtsum,
                                                   'total_discount': discountsum,
                                                   'total_rate': ratesum,
-                                                  'final_amount': servicedetailsvalue[i].get('vendor_service_final_amount'),
-                                                  'total_amount': servicedetailsvalue[i].get('vendor_service_total_amount'),
+                                                  'final_amount': productdetailsvalue[i].get('vendor_final_amount'),
+                                                  'total_amount': productdetailsvalue[i].get('vendor_total_amount'),
                                                   'company_code': ccode,
                                                   'company_name': cname
                                                   })
@@ -1679,24 +1679,22 @@ def accepted_response_list(request):
                     ccode = vendobj[i].get('vendor_code')
                     basicobj = BasicCompanyDetails.objects.get(company_code=ccode)
                     cname = basicobj.company_name
-                    machinarydetailsvalue = VendorBiddingBuyerMachinaryDetails.objects.filter(vendor_machinary_rfq_number=rfq_number,
+                    productdetailsvalue = VendorBiddingBuyerProductDetails.objects.filter(vendor_rfq_number=rfq_number,
                                                                                           vendor_code=ccode).values()
-                    if len(machinarydetailsvalue) == 0:
-                        raise ValueError({'message': 'vendor not present in vendor machinary details', 'status': 204})
+                    if len(productdetailsvalue) == 0:
+                        raise ValueError({'message': 'vendor not present in vendor product details', 'status': 204})
                     else:
 
-                        for i in range(0, len(machinarydetailsvalue)):
-                            orderqtsum = orderqtsum + int(machinarydetailsvalue[i].get('buyer_machinary_quantity'))
-                            ratesum = ratesum + int(machinarydetailsvalue[i].get('vendor_machinary_rate'))
-                            discountsum = discountsum + int(machinarydetailsvalue[i].get('vendor_machinary_discount'))
+                        for i in range(0, len(productdetailsvalue)):
+                            orderqtsum = orderqtsum + int(productdetailsvalue[i].get('buyer_quantity'))
+                            ratesum = ratesum + int(productdetailsvalue[i].get('vendor_rate'))
+                            discountsum = discountsum + int(productdetailsvalue[i].get('vendor_discount'))
                         responselistarray.append({'rfq_number': rfq_number,
                                                   'order_quantity': orderqtsum,
                                                   'total_discount': discountsum,
                                                   'total_rate': ratesum,
-                                                  'final_amount': machinarydetailsvalue[i].get(
-                                                      'vendor_machinary_final_amount'),
-                                                  'total_amount': machinarydetailsvalue[i].get(
-                                                      'vendor_machinary_total_amount'),
+                                                  'final_amount': productdetailsvalue[i].get('vendor_final_amount'),
+                                                  'total_amount': productdetailsvalue[i].get('vendor_total_amount'),
                                                   'company_code': ccode,
                                                   'company_name': cname
                                                   })
@@ -4263,3 +4261,129 @@ def extended_deadline_list_show(request):
 
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)
+
+
+# @api_view(['post'])
+# def accepted_response_list_new(request):
+#     data = request.data
+#     rfq_number = data['rfq_number']
+#     updated_by = data['updated_by']
+#     responses = data['responses']
+#     rfqtype=data['rfqtype']
+#     responselistarray = []
+#
+#     try:
+#         if responses == 'Accept' and rfqtype=='Product':
+#             vendobj = SelectVendorsForBiddingProduct.objects.filter(rfq_number=rfq_number, updated_by_id=updated_by,
+#                                                                vendor_status=responses,rfq_type=rfqtype).values()
+#             if len(vendobj) > 0:
+#                 for i in range(0, len(vendobj)):
+#                     ratesum = 0
+#                     orderqtsum = 0
+#                     discountsum = 0
+#                     ccode = vendobj[i].get('vendor_code')
+#                     basicobj = BasicCompanyDetails.objects.get(company_code=ccode)
+#                     cname = basicobj.company_name
+#                     productdetailsvalue = VendorBiddingBuyerProductDetails.objects.filter(vendor_rfq_number=rfq_number,
+#                                                                                       vendor_code=ccode).values()
+#                     if len(productdetailsvalue) == 0:
+#                         raise ValueError({'message': 'vendor not present in vendor product details', 'status': 204})
+#                     else:
+#
+#                         for i in range(0, len(productdetailsvalue)):
+#                             orderqtsum = orderqtsum + int(productdetailsvalue[i].get('buyer_quantity'))
+#                             ratesum = ratesum + int(productdetailsvalue[i].get('vendor_rate'))
+#                             discountsum = discountsum + int(productdetailsvalue[i].get('vendor_discount'))
+#                         responselistarray.append({'rfq_number': rfq_number,
+#                                                   'order_quantity': orderqtsum,
+#                                                   'total_discount': discountsum,
+#                                                   'total_rate': ratesum,
+#                                                   'final_amount': productdetailsvalue[i].get('vendor_final_amount'),
+#                                                   'total_amount': productdetailsvalue[i].get('vendor_total_amount'),
+#                                                   'company_code': ccode,
+#                                                   'company_name': cname
+#                                                   })
+#                 return Response({'status': 200, 'message': 'Response List Product', 'data': responselistarray},
+#                                 status=200)
+#             else:
+#                 return Response({'status': 204, 'message': 'No Product  details found'}, status=204)
+#
+#         elif responses=='Accept' and rfqtype=='Service':
+#             vendobj = SelectVendorsForBiddingProduct.objects.filter(rfq_number=rfq_number, updated_by_id=updated_by,
+#                                                                     vendor_status=responses, rfq_type=rfqtype).values()
+#             if len(vendobj) > 0:
+#                 for i in range(0, len(vendobj)):
+#                     ratesum = 0
+#                     orderqtsum = 0
+#                     discountsum = 0
+#                     ccode = vendobj[i].get('vendor_code')
+#                     basicobj = BasicCompanyDetails.objects.get(company_code=ccode)
+#                     cname = basicobj.company_name
+#                     servicedetailsvalue = VendorBiddingBuyerProductDetails.objects.filter(vendor_rfq_number=rfq_number,
+#                                                                                           vendor_code=ccode).values()
+#                     if len(servicedetailsvalue) == 0:
+#                         raise ValueError({'message': 'vendor not present in vendor service details', 'status': 204})
+#                     else:
+#
+#                         for i in range(0, len(servicedetailsvalue)):
+#                             orderqtsum = orderqtsum + int(servicedetailsvalue[i].get('buyer_quantity'))
+#                             ratesum = ratesum + int(servicedetailsvalue[i].get('vendor_tax'))
+#                             discountsum = discountsum + int(servicedetailsvalue[i].get('vendor_discount'))
+#                         responselistarray.append({'rfq_number': rfq_number,
+#                                                   'order_quantity': orderqtsum,
+#                                                   'total_discount': discountsum,
+#                                                   'total_rate': ratesum,
+#                                                   'final_amount': servicedetailsvalue[i].get('vendor_final_amount'),
+#                                                   'total_amount': servicedetailsvalue[i].get('vendor_total_amount'),
+#                                                   'company_code': ccode,
+#                                                   'company_name': cname
+#                                                   })
+#                 return Response({'status': 200, 'message': 'Response List Service', 'data': responselistarray},
+#                                 status=200)
+#             else:
+#                 return Response({'status': 204, 'message': 'No Service details found'}, status=204)
+#
+#
+#         elif responses == 'Accept' and rfqtype == 'Machinary & equipments':
+#             vendobj = SelectVendorsForBiddingProduct.objects.filter(rfq_number=rfq_number, updated_by_id=updated_by,
+#                                                                     vendor_status=responses, rfq_type=rfqtype).values()
+#             if len(vendobj) > 0:
+#                 for i in range(0, len(vendobj)):
+#                     ratesum = 0
+#                     orderqtsum = 0
+#                     discountsum = 0
+#                     ccode = vendobj[i].get('vendor_code')
+#                     basicobj = BasicCompanyDetails.objects.get(company_code=ccode)
+#                     cname = basicobj.company_name
+#                     machinarydetailsvalue = VendorBiddingBuyerProductDetails.objects.filter(vendor_rfq_number=rfq_number,
+#                                                                                           vendor_code=ccode).values()
+#                     if len(machinarydetailsvalue) == 0:
+#                         raise ValueError({'message': 'vendor not present in vendor machinary details', 'status': 204})
+#                     else:
+#
+#                         for i in range(0, len(machinarydetailsvalue)):
+#                             orderqtsum = orderqtsum + int(machinarydetailsvalue[i].get('buyer_quantity'))
+#                             ratesum = ratesum + int(machinarydetailsvalue[i].get('vendor_tax'))
+#                             discountsum = discountsum + int(machinarydetailsvalue[i].get('vendor_discount'))
+#                         responselistarray.append({'rfq_number': rfq_number,
+#                                                   'order_quantity': orderqtsum,
+#                                                   'total_discount': discountsum,
+#                                                   'total_rate': ratesum,
+#                                                   'final_amount': machinarydetailsvalue[i].get(
+#                                                       'vendor_final_amount'),
+#                                                   'total_amount': machinarydetailsvalue[i].get(
+#                                                       'vendor_total_amount'),
+#                                                   'company_code': ccode,
+#                                                   'company_name': cname
+#                                                   })
+#                 return Response({'status': 200, 'message': 'Response List Service', 'data': responselistarray},
+#                                 status=200)
+#             else:
+#                 return Response({'status': 204, 'message': 'No Machinary details found'}, status=204)
+#
+#
+#         else:
+#             return Response({'status': 202, 'message': 'No data present for this response or mis-spelled'}, status=202)
+#
+#     except Exception as e:
+#         return Response({'status': 500, 'error': str(e)}, status=500)

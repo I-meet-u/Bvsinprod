@@ -100,7 +100,8 @@ urlpatterns = [
     path('getsourcebasedpk/', views.getsourcebasedpk),
     path('deadline-expired-list/', views.deadline_expired_list),
     path('extended-deadline-date-list-create/', views.extended_deadline_date_list_create),
-    path('extended-deadline-list-show/', views.extended_deadline_list_show)
+    path('extended-deadline-list-show/', views.extended_deadline_list_show),
+    # path('accepted-response-list-new/', views.accepted_response_list_new),
 
 
 ]

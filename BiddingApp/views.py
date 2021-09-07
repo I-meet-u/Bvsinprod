@@ -1934,132 +1934,40 @@ def price_analysis_product(request):
     resarray = []
     rfq_number = data['rfq_number']
     vendor_code = data['vendor_code']
-    rfq_type=data['rfq_type']
 
     try:
-        if rfq_type=='Product':
-            biddingbuyerproductdetailsobj = BiddingBuyerProductDetails.objects.filter(buyer_rfq_number=rfq_number,buyer_item_type='Product').values()
-            if len(biddingbuyerproductdetailsobj)>0:
-                # print(biddingbuyerproductdetailsobj)
-                for i in range(0, len(biddingbuyerproductdetailsobj)):
-                    resarray.append({'product_code': biddingbuyerproductdetailsobj[i].get('buyer_item_code'),
-                                     'product_name': biddingbuyerproductdetailsobj[i].get('buyer_item_name'),
-                                     'Material_Description': biddingbuyerproductdetailsobj[i].get('buyer_item_description'),
-                                     'UOM': biddingbuyerproductdetailsobj[i].get('buyer_uom'),
-                                     'Quantity': biddingbuyerproductdetailsobj[i].get('buyer_quantity')})
+        biddingbuyerproductdetailsobj = BiddingBuyerProductDetails.objects.filter(buyer_rfq_number=rfq_number).values()
+        if len(biddingbuyerproductdetailsobj)>0:
+            for i in range(0, len(biddingbuyerproductdetailsobj)):
+                resarray.append({'product_code': biddingbuyerproductdetailsobj[i].get('buyer_item_code'),
+                                 'product_name': biddingbuyerproductdetailsobj[i].get('buyer_item_name'),
+                                 'Material_Description': biddingbuyerproductdetailsobj[i].get('buyer_item_description'),
+                                 'UOM': biddingbuyerproductdetailsobj[i].get('buyer_uom'),
+                                 'Quantity': biddingbuyerproductdetailsobj[i].get('buyer_quantity'),
+                                 'item_type':biddingbuyerproductdetailsobj[i].get('item_type')
+                                 })
 
-                    vpdetails = VendorBiddingBuyerProductDetails.objects.filter(vendor_rfq_number=rfq_number, vendor_code__in=vendor_code,
-                                                                                vendor_item_code=biddingbuyerproductdetailsobj[
-                                                                                    i].get('buyer_item_code'),vendor_item_type='Product').values().order_by('vendor_code')
+                vpdetails = VendorBiddingBuyerProductDetails.objects.filter(vendor_rfq_number=rfq_number, vendor_code__in=vendor_code,
+                                                                            vendor_item_code=biddingbuyerproductdetailsobj[
+                                                                                i].get('buyer_item_code')).values().order_by('vendor_code')
 
-                    for j in range(0, len(vpdetails)):
+                for j in range(0, len(vpdetails)):
 
-                        resarray[i].setdefault('ccode' + str(j), vpdetails[j].get('vendor_code'))
-                        resarray[i].setdefault('rate' + str(j), vpdetails[j].get('vendor_rate'))
-                        resarray[i].setdefault('tax' + str(j), vpdetails[j].get('vendor_tax'))
-                        resarray[i].setdefault('discount' + str(j), vpdetails[j].get('vendor_discount'))
-                        resarray[i].setdefault('totalcost' + str(j), vpdetails[j].get('vendor_final_amount'))
-                        resarray[i].setdefault('total_all_cost' + str(j), vpdetails[j].get('vendor_total_amount'))
-                    print("---------------------------------")
-                    # for j in range(0,len())
+                    resarray[i].setdefault('ccode' + str(j), vpdetails[j].get('vendor_code'))
+                    resarray[i].setdefault('rate' + str(j), vpdetails[j].get('vendor_rate'))
+                    resarray[i].setdefault('tax' + str(j), vpdetails[j].get('vendor_tax'))
+                    resarray[i].setdefault('discount' + str(j), vpdetails[j].get('vendor_discount'))
+                    resarray[i].setdefault('totalcost' + str(j), vpdetails[j].get('vendor_final_amount'))
+                    resarray[i].setdefault('total_all_cost' + str(j), vpdetails[j].get('vendor_total_amount'))
+                print("---------------------------------")
+                # for j in range(0,len())
 
-                return Response({'status': 200, 'message': 'Product Price Analysis', 'data': resarray}, status=200)
-            else:
-                return Response({'status': 204, 'message': 'Buyer Product Details Not Present'}, status=204)
+            return Response({'status': 200, 'message': 'Product Price Analysis', 'data': resarray}, status=200)
         else:
-            return Response({'status': 202, 'message': 'product rfq_type is mis-spelled or not present'}, status=202)
-
-
+            return Response({'status': 204, 'message': 'Buyer Product Details Not Present'}, status=204)
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)
-# #----------------------------------------------------------PRICE ANALYSIS SERVICE---------------------------------------------------------------------------------------------
-# @api_view(['post'])
-# def price_analysis_service(request):
-#     data = request.data
-#     resarray = []
-#     rfq_number = data['rfq_number']
-#     vendor_code = data['vendor_code']
-#     rfq_type = data['rfq_type']
-#
-#     try:
-#         if rfq_type == 'Service':
-#             biddingbuyerservicedetailsobj = BiddingBuyerServiceDetails.objects.filter(service_buyer_rfq_number=rfq_number,service_item_type='Service').values()
-#             if len(biddingbuyerservicedetailsobj)>0:
-#                 # print(biddingbuyerproductdetailsobj)
-#                 for i in range(0, len(biddingbuyerservicedetailsobj)):
-#                     resarray.append({'service_code': biddingbuyerservicedetailsobj[i].get('service_buyer_item_code'),
-#                                      'service_name': biddingbuyerservicedetailsobj[i].get('service_buyer_item_name'),
-#                                      'service_description': biddingbuyerservicedetailsobj[i].get('service_buyer_item_description'),
-#                                      'service_UOM': biddingbuyerservicedetailsobj[i].get('service_buyer_uom'),
-#                                      'service_Quantity': biddingbuyerservicedetailsobj[i].get('service_buyer_quantity')})
-#
-#                     vservicedetails = VendorBiddingBuyerServiceDetails.objects.filter(vendor_service_rfq_number=rfq_number, vendor_code__in=vendor_code,vendor_service_item_type='Service',
-#                                                                                 vendor_service_item_code=biddingbuyerservicedetailsobj[
-#                                                                                     i].get('service_buyer_item_code')).values().order_by('vendor_code')
-#
-#                     for j in range(0, len(vservicedetails)):
-#
-#                         resarray[i].setdefault('ccode' + str(j), vservicedetails[j].get('vendor_code'))
-#                         resarray[i].setdefault('rate' + str(j), vservicedetails[j].get('vendor_service_rate'))
-#                         resarray[i].setdefault('tax' + str(j), vservicedetails[j].get('vendor_service_tax'))
-#                         resarray[i].setdefault('discount' + str(j), vservicedetails[j].get('vendor_service_discount'))
-#                         resarray[i].setdefault('totalcost' + str(j), vservicedetails[j].get('vendor_service_final_amount'))
-#                         resarray[i].setdefault('total_all_cost' + str(j), vservicedetails[j].get('vendor_service_total_amount'))
-#                     print("---------------------------------")
-#                     # for j in range(0,len())
-#
-#                 return Response({'status': 200, 'message': 'Service Price Analysis Success', 'data': resarray}, status=200)
-#             else:
-#                 return Response({'status': 204, 'message': 'Buyer Service Details Not Present'}, status=204)
-#         else:
-#             return Response({'status': 202, 'message': 'service rfq_type is mis-spelled or not present'}, status=202)
-#     except Exception as e:
-#         return Response({'status': 500, 'error': str(e)}, status=500)
-#
-# #----------------------------------------------------------PRICE ANALYSIS MACHINARY---------------------------------------------------------------------------------------------
-# @api_view(['post'])
-# def price_analysis_machinary(request):
-#     data = request.data
-#     resarray = []
-#     rfq_number = data['rfq_number']
-#     vendor_code = data['vendor_code']
-#     rfq_type = data['rfq_type']
-#
-#     try:
-#         if rfq_type=='Machinary & equipments':
-#             biddingbuyermachinarydetailsobj = BiddingBuyerMachinaryDetails.objects.filter(machinary_buyer_rfq_number=rfq_number,machinary_item_type='Machinary & equipments').values()
-#             if len(biddingbuyermachinarydetailsobj)>0:
-#                 for i in range(0, len(biddingbuyermachinarydetailsobj)):
-#                     resarray.append({'machinary_code': biddingbuyermachinarydetailsobj[i].get('machinary_buyer_item_code'),
-#                                      'machinary_name': biddingbuyermachinarydetailsobj[i].get('machinary_buyer_item_name'),
-#                                      'machinary_description': biddingbuyermachinarydetailsobj[i].get('machinary_buyer_item_description'),
-#                                      'machinary_UOM': biddingbuyermachinarydetailsobj[i].get('machinary_buyer_uom'),
-#                                      'machinary_Quantity': biddingbuyermachinarydetailsobj[i].get('machinary_buyer_quantity')})
-#
-#                     vservicedetails = VendorBiddingBuyerMachinaryDetails.objects.filter(vendor_machinary_rfq_number=rfq_number, vendor_code__in=vendor_code,vendor_machinary_item_type='Machinary & equipments',
-#                                                                                 vendor_machinary_item_code=biddingbuyermachinarydetailsobj[
-#                                                                                     i].get('machinary_buyer_item_code')).values().order_by('vendor_code')
-#
-#                     for j in range(0, len(vservicedetails)):
-#
-#                         resarray[i].setdefault('ccode' + str(j), vservicedetails[j].get('vendor_code'))
-#                         resarray[i].setdefault('rate' + str(j), vservicedetails[j].get('vendor_machinary_rate'))
-#                         resarray[i].setdefault('tax' + str(j), vservicedetails[j].get('vendor_machinary_tax'))
-#                         resarray[i].setdefault('discount' + str(j), vservicedetails[j].get('vendor_machinary_discount'))
-#                         resarray[i].setdefault('totalcost' + str(j), vservicedetails[j].get('vendor_machinary_final_amount'))
-#                         resarray[i].setdefault('total_all_cost' + str(j),vservicedetails[j].get('vendor_machinary_total_amount'))
-#                     print("---------------------------------")
-#
-#                 return Response({'status': 200, 'message': 'Machinary Price Analysis Success', 'data': resarray}, status=200)
-#             else:
-#                 return Response({'status': 204, 'message': 'Buyer Product Details Not Present'}, status=204)
-#         else:
-#             return Response({'status': 202, 'message': 'service rfq_type is mis-spelled or not present'}, status=202)
-#     except Exception as e:
-#         return Response({'status': 500, 'error': str(e)}, status=500)
 
-
-#-----------------------------------PRICE ANALYSIS SERVICE-----------------------------------------------
 @api_view(['post'])
 def price_analysis_service(request):
     data = request.data

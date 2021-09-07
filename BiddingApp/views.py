@@ -3326,49 +3326,54 @@ def fetch_vendor_bid_details(request):
             else:
                 return Response({'status': 204, 'message': 'Not Present'}, status=204)
         elif rfqtype=='Service':
-            vendorserviceobj = VendorProductBidding.objects.filter(vendor_user_rfq_number=rfqnumber,
-                                                            vendor_product_rfq_type='Service',vendor_code=vendorcode).values().order_by('vendor_product_bidding_id')
-            if len(vendorserviceobj) > 0:
-                for i in range(0, len(vendorserviceobj)):
-                    vendorservicedetailsobj = VendorBiddingBuyerServiceDetails.objects.filter(vendor_service_rfq_number=rfqnumber,
-                                                                                       vendor_service_item_type='Service',
-                                                                                       vendor_code=vendorcode).values().order_by('id')
-                    for j in range(0, len(vendorserviceobj)):
+            vendorobj = VendorProductBidding.objects.filter(vendor_user_rfq_number=rfqnumber,
+                                                            vendor_product_rfq_type='Service',
+                                                            vendor_code=vendorcode).values().order_by(
+                'vendor_product_bidding_id')
+            if len(vendorobj) > 0:
+                for i in range(0, len(vendorobj)):
+                    vendorproductobj = VendorBiddingBuyerProductDetails.objects.filter(vendor_rfq_number=rfqnumber,
+                                                                                       vendor_item_type='Service',
+                                                                                       vendor_code=vendorcode).values().order_by(
+                        'id')
+                    for j in range(0, len(vendorproductobj)):
                         print('s print')
-                    vendorserviceterms = VendorRfqTermsDescription.objects.filter(vendor_rfq_number=rfqnumber,
+                    vendorterms = VendorRfqTermsDescription.objects.filter(vendor_rfq_number=rfqnumber,
                                                                            rfq_type='Service',
-                                                                           updated_by_id=basicobj.updated_by_id).values().order_by('id')
-                    for k in range(0, len(vendorserviceterms)):
+                                                                           updated_by_id=basicobj.updated_by_id).values().order_by(
+                        'id')
+                    for k in range(0, len(vendorterms)):
                         print('correct')
-                    vendorserviceobj[i].__setitem__('service', vendorservicedetailsobj)
-                    vendorserviceobj[i].__setitem__('vendor_service_rfq_terms', vendorserviceterms)
+                    vendorobj[i].__setitem__('product', vendorproductobj)
+                    vendorobj[i].__setitem__('vendor_rfq_terms', vendorterms)
 
-                return Response({'status': 200, 'message': 'Vendor Service Bidding List', 'data': vendorserviceobj},
+                return Response({'status': 200, 'message': 'Vendor Product Bidding List', 'data': vendorobj},
                                 status=200)
             else:
                 return Response({'status': 204, 'message': 'Not Present'}, status=204)
         elif rfqtype=='Machinary & equipments':
-            vendormachinaryobj = VendorProductBidding.objects.filter(vendor_user_rfq_number=rfqnumber,
+            vendorobj = VendorProductBidding.objects.filter(vendor_user_rfq_number=rfqnumber,
                                                             vendor_product_rfq_type='Machinary & equipments',
-                                                            vendor_code=vendorcode).values().order_by('vendor_product_bidding_id')
-            if len(vendormachinaryobj) > 0:
-                for i in range(0, len(vendormachinaryobj)):
-                    vendormachinarydetailsobj = VendorBiddingBuyerMachinaryDetails.objects.filter(
-                        vendor_machinary_rfq_number=rfqnumber,
-                        vendor_machinary_item_type='Machinary & equipments',
-                        vendor_code=vendorcode).values().order_by('id')
-                    for j in range(0, len(vendormachinarydetailsobj)):
-                        print('s print')
-                    vendormachinaryterms = VendorRfqTermsDescription.objects.filter(vendor_rfq_number=rfqnumber,
-                                                                                  rfq_type='Machinary & equipments',
-                                                                                  updated_by_id=basicobj.updated_by_id).values().order_by(
+                                                            vendor_code=vendorcode).values().order_by(
+                'vendor_product_bidding_id')
+            if len(vendorobj) > 0:
+                for i in range(0, len(vendorobj)):
+                    vendorproductobj = VendorBiddingBuyerProductDetails.objects.filter(vendor_rfq_number=rfqnumber,
+                                                                                       vendor_item_type='Machinary & equipments',
+                                                                                       vendor_code=vendorcode).values().order_by(
                         'id')
-                    for k in range(0, len(vendormachinaryterms)):
+                    for j in range(0, len(vendorproductobj)):
+                        print('s print')
+                    vendorterms = VendorRfqTermsDescription.objects.filter(vendor_rfq_number=rfqnumber,
+                                                                           rfq_type='Machinary & equipments',
+                                                                           updated_by_id=basicobj.updated_by_id).values().order_by(
+                        'id')
+                    for k in range(0, len(vendorterms)):
                         print('correct')
-                    vendormachinaryobj[i].__setitem__('machinary', vendormachinarydetailsobj)
-                    vendormachinaryobj[i].__setitem__('vendor_machinary_rfq_terms', vendormachinaryterms)
+                    vendorobj[i].__setitem__('product', vendorproductobj)
+                    vendorobj[i].__setitem__('vendor_rfq_terms', vendorterms)
 
-                return Response({'status': 200, 'message': 'Vendor Machinary Bidding List', 'data': vendormachinaryobj},
+                return Response({'status': 200, 'message': 'Vendor Product Bidding List', 'data': vendorobj},
                                 status=200)
             else:
                 return Response({'status': 204, 'message': 'Not Present'}, status=204)

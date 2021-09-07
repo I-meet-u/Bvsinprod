@@ -504,6 +504,78 @@ def get_buyer_bid_terms_by_user_rfq(request):
         return Response({'status': 500, 'error': str(e)}, status=500)
 
 
+# @api_view(['post'])
+# # @permission_classes((AllowAny,))
+# def open_bid_list_buyer_publish_list(request):
+#     data = request.data
+#     userid = data['userid']
+#     from_registration=data['from_registration']
+#     openbidarray = []
+#     try:
+#         if from_registration=='False':
+#             basicobj = BasicCompanyDetails.objects.get(updated_by=userid)
+#             # print(basicobj)
+#             selectvendorsobj = SelectVendorsForBiddingProduct.objects.filter(vendor_code=basicobj.company_code,
+#                                                                              vendor_status='Pending',from_registration='False').values()
+#             # print(len(selectvendorsobj),'length')
+#             if len(selectvendorsobj) > 0:
+#                 for i in range(0, len(selectvendorsobj)):
+#                     # print(selectvendorsobj[i].get('rfq_number'),'selected vendors rfq')
+#                     biddingval = BuyerProductBidding.objects.get(user_rfq_number=selectvendorsobj[i].get('rfq_number'),from_registration=from_registration)
+#                     if biddingval.product_rfq_status=='Pending':
+#                         basicobjval = BasicCompanyDetails.objects.get(updated_by_id=biddingval.updated_by_id)
+#                         openbidarray.append({'vendor_code': basicobjval.company_code,
+#                                              'user_rfq_number': biddingval.user_rfq_number,
+#                                              'company_name': basicobjval.company_name,
+#                                              'product_rfq_type': biddingval.product_rfq_type,
+#                                              'product_rfq_title': biddingval.product_rfq_title,
+#                                              'product_rfq_status': biddingval.product_rfq_status,
+#                                              'product_publish_date': biddingval.product_publish_date,
+#                                              'product_deadline_date': biddingval.product_deadline_date,
+#                                              'product_delivery_date': biddingval.product_delivery_date,
+#                                              'product_rfq_currency': biddingval.product_rfq_currency,
+#                                              'product_rfq_category': biddingval.product_rfq_category,
+#                                              'product_department': biddingval.product_department,
+#                                                  })
+#                     else:
+#                         pass
+#
+#                 return Response({'status': 200, 'message': "Open Leads", 'data': openbidarray}, status=200)
+#             else:
+#                 return Response({'status': 202, 'message': 'Vendors are not selected for any bidding','data':openbidarray}, status=202)
+#         elif from_registration=='True':
+#                 basicobj = BasicCompanyDetails.objects.get(updated_by=userid)
+#                 print(basicobj)
+#                 selectvendorsobj = SelectVendorsForBiddingProduct.objects.filter(vendor_code=basicobj.company_code,
+#                                                                                  vendor_status='Pending',from_registration=from_registration).values()
+#
+#                 print(len(selectvendorsobj),'length')
+#                 if len(selectvendorsobj) > 0:
+#                     for i in range(0, len(selectvendorsobj)):
+#                         print(selectvendorsobj[i].get('auto_rfq_number'))
+#                         biddingval = BuyerProductBidding.objects.get(product_rfq_number=selectvendorsobj[i].get('auto_rfq_number'),from_registration='True')
+#                         basicobjval = BasicCompanyDetails.objects.get(updated_by_id=biddingval.updated_by_id)
+#                         print(basicobjval)
+#                         openbidarray.append({'vendor_code': basicobjval.company_code,
+#                                              'auto_rfq_number': biddingval.product_rfq_number,
+#                                              'user_rfq_number':"",
+#                                              'company_name': basicobjval.company_name,
+#                                              'product_rfq_type': biddingval.product_rfq_type,
+#                                              'product_rfq_title': biddingval.product_rfq_title,
+#                                              'product_rfq_status': biddingval.product_rfq_status,
+#                                              'product_publish_date': biddingval.product_publish_date,
+#                                              'product_deadline_date': biddingval.product_deadline_date,
+#                                              'product_delivery_date': biddingval.product_delivery_date,
+#                                              'product_rfq_currency': biddingval.product_rfq_currency,
+#                                              'product_rfq_category': biddingval.product_rfq_category,
+#                                              'product_department': biddingval.product_department,
+#                                                  })
+#
+#                     return Response({'status': 200, 'message': "Open Leads Values", 'data': openbidarray}, status=200)
+#                 else:
+#                     return Response({'status': 202, 'message': 'Vendors are not selected for any bidding','data':openbidarray}, status=202)
+#     except Exception as e:
+#         return Response({'status': 500, 'error': str(e)}, status=500)
 @api_view(['post'])
 # @permission_classes((AllowAny,))
 def open_bid_list_buyer_publish_list(request):
@@ -514,31 +586,28 @@ def open_bid_list_buyer_publish_list(request):
     try:
         if from_registration=='False':
             basicobj = BasicCompanyDetails.objects.get(updated_by=userid)
-            # print(basicobj)
+            print(basicobj)
             selectvendorsobj = SelectVendorsForBiddingProduct.objects.filter(vendor_code=basicobj.company_code,
                                                                              vendor_status='Pending',from_registration='False').values()
-            # print(len(selectvendorsobj),'length')
+            print(len(selectvendorsobj),'length')
             if len(selectvendorsobj) > 0:
                 for i in range(0, len(selectvendorsobj)):
-                    # print(selectvendorsobj[i].get('rfq_number'),'selected vendors rfq')
+                    print(selectvendorsobj[i].get('rfq_number'),'selected vendors rfq')
                     biddingval = BuyerProductBidding.objects.get(user_rfq_number=selectvendorsobj[i].get('rfq_number'),from_registration=from_registration)
-                    if biddingval.product_rfq_status=='Pending':
-                        basicobjval = BasicCompanyDetails.objects.get(updated_by_id=biddingval.updated_by_id)
-                        openbidarray.append({'vendor_code': basicobjval.company_code,
-                                             'user_rfq_number': biddingval.user_rfq_number,
-                                             'company_name': basicobjval.company_name,
-                                             'product_rfq_type': biddingval.product_rfq_type,
-                                             'product_rfq_title': biddingval.product_rfq_title,
-                                             'product_rfq_status': biddingval.product_rfq_status,
-                                             'product_publish_date': biddingval.product_publish_date,
-                                             'product_deadline_date': biddingval.product_deadline_date,
-                                             'product_delivery_date': biddingval.product_delivery_date,
-                                             'product_rfq_currency': biddingval.product_rfq_currency,
-                                             'product_rfq_category': biddingval.product_rfq_category,
-                                             'product_department': biddingval.product_department,
-                                                 })
-                    else:
-                        pass
+                    basicobjval = BasicCompanyDetails.objects.get(updated_by_id=biddingval.updated_by_id)
+                    openbidarray.append({'vendor_code': basicobjval.company_code,
+                                         'user_rfq_number': biddingval.user_rfq_number,
+                                         'company_name': basicobjval.company_name,
+                                         'product_rfq_type': biddingval.product_rfq_type,
+                                         'product_rfq_title': biddingval.product_rfq_title,
+                                         'product_rfq_status': biddingval.product_rfq_status,
+                                         'product_publish_date': biddingval.product_publish_date,
+                                         'product_deadline_date': biddingval.product_deadline_date,
+                                         'product_delivery_date': biddingval.product_delivery_date,
+                                         'product_rfq_currency': biddingval.product_rfq_currency,
+                                         'product_rfq_category': biddingval.product_rfq_category,
+                                         'product_department': biddingval.product_department,
+                                             })
 
                 return Response({'status': 200, 'message': "Open Leads", 'data': openbidarray}, status=200)
             else:

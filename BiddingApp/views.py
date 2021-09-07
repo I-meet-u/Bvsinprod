@@ -3833,9 +3833,11 @@ def purchase_order_vendors_list(request):
         poobj = PurchaseOrder.objects.filter(vendorcode=basicobj.company_code).values()
         if len(poobj) > 0:
             for i in range(0, len(poobj)):
+                print(poobj[i].get('rfq_number'))
                 selectsobj = SelectVendorsForBiddingProduct.objects.filter(rfq_number=poobj[i].get('rfq_number')).values()
+                print(len(selectsobj),'asfdfsdf')
                 if len(selectsobj)>0:
-                    selecteduserid = selectsobj[i].get('updated_by_id')
+                    selecteduserid = selectsobj[0].get('updated_by_id')
                     basicobj = BasicCompanyDetails.objects.get(updated_by_id=selecteduserid)
                     purchaseorderarray.append({'rfq_number': poobj[i].get('rfq_number'),
                                                'rfq_title': poobj[i].get('rfq_title'),

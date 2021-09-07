@@ -2500,24 +2500,25 @@ class PurchaseOrderViewSet(viewsets.ModelViewSet):
             print(api_response)
 
         elif request.data['rfq_type']=='Service':
-            awardobjservice= ServiceAwards.objects.filter(service_rfq_number=rfq_number, service_company_code=vendorcode).values()
-            serviceccode = awardobjservice[0].get('service_company_code')
-            servicequantity = awardobjservice[0].get('service_buyer_bid_quantity')
-            serivcetotal = awardobjservice[0].get('service_code')
-            basicobjservice = BasicCompanyDetails.objects.get(company_code=serviceccode)
-            regobjservice = SelfRegistration.objects.get(id=basicobjservice.updated_by_id)
-            print(regobjservice.username, 'ok')
+            awardobj = Awards.objects.filter(rfq_number=rfq_number, company_code=vendorcode).values()
+            ccode = awardobj[0].get('company_code')
+            quantity = awardobj[0].get('buyer_bid_quantity')
+            itemstotal = awardobj[0].get('product_code')
+            print(len(itemstotal), 'length')
+            basicobj = BasicCompanyDetails.objects.get(company_code=ccode)
+            regobj = SelfRegistration.objects.get(id=basicobj.updated_by_id)
+            print(regobj.username, 'ok')
             api_instance = sib_api_v3_sdk.TransactionalEmailsApi(sib_api_v3_sdk.ApiClient(configuration))
             send_smtp_email = sib_api_v3_sdk.SendSmtpEmail(
-                to=[{"email": regobjservice.username, "name": regobjservice.contact_person}],
+                to=[{"email": regobj.username, "name": regobj.contact_person}],
                 template_id=23, params={
                     "rfqnumber": rfq_number,
                     "podate": request.data['PO_date'],
                     "ponumber": request.data['PO_num'],
                     "poexpiry": request.data['PO_expirydate'],
-                    "quantity": str(servicequantity),
-                    'items': str(len(serivcetotal)),
-                    "companyname": basicobjservice.company_name
+                    "quantity": str(quantity),
+                    'items': str(len(itemstotal)),
+                    "companyname": basicobj.company_name
                 },
                 headers=headers,
                 subject='PO Confirm'
@@ -2526,25 +2527,25 @@ class PurchaseOrderViewSet(viewsets.ModelViewSet):
             api_response = api_instance.send_transac_email(send_smtp_email)
             print(api_response)
         elif request.data['rfq_type'] == 'Machinary & equipments':
-            awardobjmachinary = MachinaryAwards.objects.filter(machinary_rfq_number=rfq_number,
-                                                           machinary_company_code=vendorcode).values()
-            machinarycode = awardobjmachinary[0].get('machinary_company_code')
-            machinaryquantity = awardobjmachinary[0].get('machinary_buyer_bid_quantity')
-            machinarytotal = awardobjmachinary[0].get('machinary_code')
-            basicobjmachinary = BasicCompanyDetails.objects.get(company_code=machinarycode)
-            regobjservice = SelfRegistration.objects.get(id=basicobjmachinary.updated_by_id)
-            print(regobjservice.username, 'ok')
+            awardobj = Awards.objects.filter(rfq_number=rfq_number, company_code=vendorcode).values()
+            ccode = awardobj[0].get('company_code')
+            quantity = awardobj[0].get('buyer_bid_quantity')
+            itemstotal = awardobj[0].get('product_code')
+            print(len(itemstotal), 'length')
+            basicobj = BasicCompanyDetails.objects.get(company_code=ccode)
+            regobj = SelfRegistration.objects.get(id=basicobj.updated_by_id)
+            print(regobj.username, 'ok')
             api_instance = sib_api_v3_sdk.TransactionalEmailsApi(sib_api_v3_sdk.ApiClient(configuration))
             send_smtp_email = sib_api_v3_sdk.SendSmtpEmail(
-                to=[{"email": regobjservice.username, "name": regobjservice.contact_person}],
+                to=[{"email": regobj.username, "name": regobj.contact_person}],
                 template_id=23, params={
                     "rfqnumber": rfq_number,
                     "podate": request.data['PO_date'],
                     "ponumber": request.data['PO_num'],
                     "poexpiry": request.data['PO_expirydate'],
-                    "quantity": str(machinaryquantity),
-                    'items': str(len(machinarytotal)),
-                    "companyname": basicobjmachinary.company_name
+                    "quantity": str(quantity),
+                    'items': str(len(itemstotal)),
+                    "companyname": basicobj.company_name
                 },
                 headers=headers,
                 subject='PO Confirm'

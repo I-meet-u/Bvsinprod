@@ -2570,6 +2570,7 @@ def award_product_create(request):
     productvendordetails = data['productvendordetails']
     totalproductarray = []
     userid = data['userid']
+    ccodeval=0
     try:
         award_obj=Awards.objects.filter(rfq_number=rfq_number).values()
         if len(award_obj)==0:
@@ -2590,20 +2591,22 @@ def award_product_create(request):
                         pass
                         for codes in ccode:
                             print('ok----')
+                            ccodeval=codes
                             bidobj = VendorProductBidding.objects.get(vendor_user_rfq_number=rfq_number,vendor_code=codes)
                             print(bidobj, 'fsds')
                             basicobj = BasicCompanyDetails.objects.get(company_code=codes)
                             cname = basicobj.company_name
                             updatedby=basicobj.updated_by_id
                             rfq_number = bidobj.vendor_user_rfq_number
+                            print(rfq_number,'rfqqqqqqqq')
                             publishdate = bidobj.vendor_product_publish_date
                             deadlinedate = bidobj.vendor_product_deadline_date
                             rfqtitle = bidobj.vendor_product_rfq_title
                             rfqstatus = bidobj.vendor_product_rfq_status
-                        print(codes,'d')
-                        productdetails = VendorBiddingBuyerProductDetails.objects.get(vendor_rfq_number=rfq_number,
-                                                                                      vendor_code=codes,
-                                                                                      vendor_item_code=product)
+                        print(ccodeval,'d')
+                        productdetails=VendorBiddingBuyerProductDetails.objects.get(vendor_rfq_number=rfq_number,vendor_item_code=product,vendor_code=codes)
+                        print(productdetails,'----------')
+                        
                         if not productdetails:
                             return Response({'status': 204, 'message': 'No product details of vendor'}, status=204)
 
@@ -2691,7 +2694,6 @@ def award_product_create(request):
                             print(codes)
                             print('ok----')
                             bidobj = VendorProductBidding.objects.get(vendor_user_rfq_number=rfq_number,
-                                                                      vendor_product_rfq_type='Product',
                                                                       vendor_code=codes)
                             print(bidobj, 'fsds')
                             basicobj = BasicCompanyDetails.objects.get(company_code=codes)

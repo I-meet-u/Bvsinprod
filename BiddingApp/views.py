@@ -576,6 +576,7 @@ def get_buyer_bid_terms_by_user_rfq(request):
 #                     return Response({'status': 202, 'message': 'Vendors are not selected for any bidding','data':openbidarray}, status=202)
 #     except Exception as e:
 #         return Response({'status': 500, 'error': str(e)}, status=500)
+
 @api_view(['post'])
 # @permission_classes((AllowAny,))
 def open_bid_list_buyer_publish_list(request):

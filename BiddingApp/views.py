@@ -3616,7 +3616,7 @@ def fetch_vendor_bid_details_userid(request):
                         'id')
                     for k in range(0, len(vendorterms)):
                         print('correct')
-                    vendorobj[i].__setitem__('service', vendorproductobj)
+                    vendorobj[i].__setitem__('product', vendorproductobj)
                     vendorobj[i].__setitem__('vendor_rfq_terms', vendorterms)
 
                 return Response({'status': 200, 'message': 'Vendor Product Bidding List', 'data': vendorobj},
@@ -3642,7 +3642,7 @@ def fetch_vendor_bid_details_userid(request):
                         'id')
                     for k in range(0, len(vendorterms)):
                         print('correct')
-                    vendorobj[i].__setitem__('machinary', vendorproductobj)
+                    vendorobj[i].__setitem__('product', vendorproductobj)
                     vendorobj[i].__setitem__('vendor_rfq_terms', vendorterms)
 
                 return Response({'status': 200, 'message': 'Vendor Product Bidding List', 'data': vendorobj},

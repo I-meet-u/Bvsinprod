@@ -2570,6 +2570,7 @@ def award_product_create(request):
     productvendordetails = data['productvendordetails']
     totalproductarray = []
     userid = data['userid']
+    rfq_type=data['rfq_type']
     ccodeval=0
     try:
         award_obj=Awards.objects.filter(rfq_number=rfq_number).values()
@@ -2637,7 +2638,7 @@ def award_product_create(request):
                                                        product_description=pdescarray,
                                                        publish_date=publishdate,
                                                        updated_by=SelfRegistration.objects.get(id=userid),
-                                                       rfq_type='Product',
+                                                        rfq_type=rfq_type,
                                                        deadline_date=deadlinedate)
                         configuration = sib_api_v3_sdk.Configuration()
                         configuration.api_key[
@@ -2745,7 +2746,7 @@ def award_product_create(request):
                                                           product_name=parrray,
                                                           product_description=pdescarray,
                                                           publish_date=publishdate,
-                                                          rfq_type='Product',
+                                                          rfq_type=rfq_type,
                                                           updated_by=SelfRegistration.objects.get(id=userid),
                                                           deadline_date=deadlinedate)
                         configuration = sib_api_v3_sdk.Configuration()

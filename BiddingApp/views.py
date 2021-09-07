@@ -517,16 +517,13 @@ def open_bid_list_buyer_publish_list(request):
             # print(basicobj)
             selectvendorsobj = SelectVendorsForBiddingProduct.objects.filter(vendor_code=basicobj.company_code,
                                                                              vendor_status='Pending',from_registration='False').values()
-            # print(len(selectvendorsobj))
+            # print(len(selectvendorsobj),'length')
             if len(selectvendorsobj) > 0:
                 for i in range(0, len(selectvendorsobj)):
-                    print(selectvendorsobj[i].get('rfq_number'))
+                    # print(selectvendorsobj[i].get('rfq_number'),'selected vendors rfq')
                     biddingval = BuyerProductBidding.objects.get(user_rfq_number=selectvendorsobj[i].get('rfq_number'),from_registration=from_registration)
-                    basicobjval = BasicCompanyDetails.objects.get(updated_by_id=biddingval.updated_by_id)
-                    # print(basicobjval)
-                    if biddingval.product_deadline_date < date.today():
-                        pass
-                    else:
+                    if biddingval.product_rfq_status=='Pending':
+                        basicobjval = BasicCompanyDetails.objects.get(updated_by_id=biddingval.updated_by_id)
                         openbidarray.append({'vendor_code': basicobjval.company_code,
                                              'user_rfq_number': biddingval.user_rfq_number,
                                              'company_name': basicobjval.company_name,
@@ -539,11 +536,13 @@ def open_bid_list_buyer_publish_list(request):
                                              'product_rfq_currency': biddingval.product_rfq_currency,
                                              'product_rfq_category': biddingval.product_rfq_category,
                                              'product_department': biddingval.product_department,
-                                             })
+                                                 })
+                    else:
+                        pass
 
                 return Response({'status': 200, 'message': "Open Leads", 'data': openbidarray}, status=200)
             else:
-                return Response({'status': 202, 'message': 'Vendors are not selected for any bidding'}, status=202)
+                return Response({'status': 202, 'message': 'Vendors are not selected for any bidding','data':openbidarray}, status=202)
         elif from_registration=='True':
                 basicobj = BasicCompanyDetails.objects.get(updated_by=userid)
                 print(basicobj)
@@ -557,27 +556,24 @@ def open_bid_list_buyer_publish_list(request):
                         biddingval = BuyerProductBidding.objects.get(product_rfq_number=selectvendorsobj[i].get('auto_rfq_number'),from_registration='True')
                         basicobjval = BasicCompanyDetails.objects.get(updated_by_id=biddingval.updated_by_id)
                         print(basicobjval)
-                        if biddingval.product_deadline_date < date.today():
-                            pass
-                        else:
-                            openbidarray.append({'vendor_code': basicobjval.company_code,
-                                                 'auto_rfq_number': biddingval.product_rfq_number,
-                                                 'user_rfq_number':"",
-                                                 'company_name': basicobjval.company_name,
-                                                 'product_rfq_type': biddingval.product_rfq_type,
-                                                 'product_rfq_title': biddingval.product_rfq_title,
-                                                 'product_rfq_status': biddingval.product_rfq_status,
-                                                 'product_publish_date': biddingval.product_publish_date,
-                                                 'product_deadline_date': biddingval.product_deadline_date,
-                                                 'product_delivery_date': biddingval.product_delivery_date,
-                                                 'product_rfq_currency': biddingval.product_rfq_currency,
-                                                 'product_rfq_category': biddingval.product_rfq_category,
-                                                 'product_department': biddingval.product_department,
+                        openbidarray.append({'vendor_code': basicobjval.company_code,
+                                             'auto_rfq_number': biddingval.product_rfq_number,
+                                             'user_rfq_number':"",
+                                             'company_name': basicobjval.company_name,
+                                             'product_rfq_type': biddingval.product_rfq_type,
+                                             'product_rfq_title': biddingval.product_rfq_title,
+                                             'product_rfq_status': biddingval.product_rfq_status,
+                                             'product_publish_date': biddingval.product_publish_date,
+                                             'product_deadline_date': biddingval.product_deadline_date,
+                                             'product_delivery_date': biddingval.product_delivery_date,
+                                             'product_rfq_currency': biddingval.product_rfq_currency,
+                                             'product_rfq_category': biddingval.product_rfq_category,
+                                             'product_department': biddingval.product_department,
                                                  })
 
                     return Response({'status': 200, 'message': "Open Leads Values", 'data': openbidarray}, status=200)
                 else:
-                    return Response({'status': 202, 'message': 'Vendors are not selected for any bidding'}, status=202)
+                    return Response({'status': 202, 'message': 'Vendors are not selected for any bidding','data':openbidarray}, status=202)
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)
 

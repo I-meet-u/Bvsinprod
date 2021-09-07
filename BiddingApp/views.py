@@ -2524,7 +2524,7 @@ def award_product_create(request):
                         pass
                         for codes in ccode:
                             print('ok----')
-                            bidobj = VendorProductBidding.objects.get(vendor_user_rfq_number=rfq_number,vendor_product_rfq_type='Product',vendor_code=codes)
+                            bidobj = VendorProductBidding.objects.get(vendor_user_rfq_number=rfq_number,vendor_code=codes)
                             print(bidobj, 'fsds')
                             basicobj = BasicCompanyDetails.objects.get(company_code=codes)
                             cname = basicobj.company_name

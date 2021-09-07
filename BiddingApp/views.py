@@ -4552,6 +4552,7 @@ def extended_deadline_list_show(request):
 #         return Response({'status': 500, 'error': str(e)}, status=500)
 
 
+
 @api_view(['post'])
 # @permission_classes([AllowAny, ])
 def advance_search_bidding_list(request):
@@ -4629,14 +4630,14 @@ def advance_search_published_leads_list(request):
     # external vendor advance search
     data = request.data
     company_name = data['company_name']
-    product_bill_address = data['product_bill_address']
+    # product_bill_address = data['product_bill_address']
     product_deadline_date = data['product_deadline_date']
     product_department = data['product_department']
     product_publish_date = data['product_publish_date']
     # product_rfq_status = data['product_rfq_status']
     product_rfq_title = data['product_rfq_title']
     # product_rfq_type = data['product_rfq_type']
-    product_ship_address=data['product_ship_address']
+    # product_ship_address=data['product_ship_address']
     user_rfq_number=data['user_rfq_number']
     vendor_code=data['vendor_code']
     vendor_status=data['vendor_status']
@@ -4645,12 +4646,10 @@ def advance_search_published_leads_list(request):
     try:
         for i in range(0, len(valuearray)):
             if company_name.lower() in valuearray[i].get('company_name').lower() and \
-                    product_bill_address.lower() in valuearray[i].get('product_bill_address').lower() and \
                     product_deadline_date.lower() in valuearray[i].get('product_deadline_date').lower() and \
                     product_department.lower() in valuearray[i].get('product_department').lower() and \
                     product_publish_date.lower() in valuearray[i].get('product_publish_date').lower() and \
                     product_rfq_title.lower() in valuearray[i].get('product_rfq_title').lower() and \
-                    product_ship_address.lower() in valuearray[i].get('product_ship_address').lower() and \
                     user_rfq_number.lower() in valuearray[i].get('user_rfq_number').lower() and \
                     vendor_status.lower() in valuearray[i].get('vendor_status').lower() and \
                     product_department.lower() in valuearray[i].get('product_department').lower():

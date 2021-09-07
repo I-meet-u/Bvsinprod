@@ -1307,11 +1307,19 @@ def get_source_items_list_by_source_user_id(request):
     sourceuserid = data['sourceuserid']
     try:
         sourceobj = SourcePublish.objects.filter(source_user_id=sourceuserid).values()
+        for i in range(0,len(sourceobj)):
+            compobj=BasicCompanyDetails.objects.filter(updated_by=sourceobj[i].get('updated_by_id')).values()
+            sourceobj[i].setdefault('compname',compobj[0].get('company_name'))
         if len(sourceobj) > 0:
             return Response({'status': 200, 'message': 'Source Create Items List', 'data': sourceobj},
                             status=status.HTTP_200_OK)
+
         else:
             return Response({'status': 204, 'message': 'Not Found'}, status=status.HTTP_204_NO_CONTENT)
+
+
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
     except Exception as e:

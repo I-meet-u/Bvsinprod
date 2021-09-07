@@ -34,5 +34,6 @@ urlpatterns = [
     # path('vendor-dashboard-count/', views.vendor_dashboard_count)
     path('buyer-dashboard-charts-counts/', views.buyer_dashboard_charts_counts),
     path('vendor-dashboard-count/', views.vendor_dashboard_count),
+    path('advance-search-item-list/', views.advance_search_item_list)
 
     ]

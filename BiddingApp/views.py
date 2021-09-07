@@ -4479,3 +4479,144 @@ def extended_deadline_list_show(request):
 #
 #     except Exception as e:
 #         return Response({'status': 500, 'error': str(e)}, status=500)
+
+
+@api_view(['post'])
+# @permission_classes([AllowAny, ])
+def advance_search_bidding_list(request):
+    # external vendor advance search
+    data = request.data
+    user_rfq_number = data['user_rfq_number']
+    product_rfq_title = data['product_rfq_title']
+    product_publish_date = data['product_publish_date']
+    product_department = data['product_department']
+    product_rfq_currency = data['product_rfq_currency']
+    product_rfq_category = data['product_rfq_category']
+    product_deadline_date = data['product_deadline_date']
+    product_delivery_date = data['product_delivery_date']
+    valuearray = data['valuearray']
+    bidlistarray = []
+    try:
+        for i in range(0, len(valuearray)):
+            if user_rfq_number.lower() in valuearray[i].get('user_rfq_number').lower() and product_rfq_title.lower() in valuearray[i].get(
+                    'product_rfq_title').lower() and product_rfq_title.lower() in valuearray[i].get('product_rfq_title').lower() and product_department.lower() in valuearray[i].get('product_department').lower() and \
+                    product_rfq_currency.lower() in valuearray[i].get(
+                'product_rfq_currency').lower() and product_rfq_category.lower() in valuearray[i].get('product_rfq_category').lower() and \
+                    product_deadline_date.lower() in valuearray[i].get(
+                'product_deadline_date').lower() and product_delivery_date.lower() in valuearray[i].get(
+                'product_delivery_date').lower():
+                bidlistarray.append(valuearray[i])
+            else:
+                print('Not Present')
+        return Response({'status': 200, 'message': 'ok', 'data': bidlistarray}, status=200)
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)
+
+
+@api_view(['post'])
+# @permission_classes([AllowAny, ])
+def advance_search_open_leads_list(request):
+    # external vendor advance search
+    data = request.data
+    vendor_code = data['vendor_code']
+    user_rfq_number = data['user_rfq_number']
+    company_name = data['company_name']
+    product_rfq_title = data['product_rfq_title']
+    product_publish_date = data['product_publish_date']
+    product_deadline_date = data['product_deadline_date']
+    product_delivery_date=data['product_delivery_date']
+    product_rfq_currency=data['product_rfq_currency']
+    product_rfq_category=data['product_rfq_category']
+    product_department=data['product_department']
+    valuearray = data['valuearray']
+    openleadsarray = []
+    try:
+        for i in range(0, len(valuearray)):
+            if vendor_code.lower() in valuearray[i].get('vendor_code').lower() and \
+                    user_rfq_number.lower() in valuearray[i].get('user_rfq_number').lower() and \
+                    company_name.lower() in valuearray[i].get('company_name').lower() and \
+                    product_rfq_title.lower() in valuearray[i].get('product_rfq_title').lower() and \
+                    product_publish_date.lower() in valuearray[i].get('product_publish_date').lower() and \
+                    product_deadline_date.lower() in valuearray[i].get('product_deadline_date').lower() and \
+                    product_delivery_date.lower() in valuearray[i].get('product_delivery_date').lower() and \
+                    product_rfq_currency.lower() in valuearray[i].get('product_rfq_currency').lower() and \
+                    product_rfq_category.lower() in valuearray[i].get('product_rfq_category').lower() and \
+                    product_department.lower() in valuearray[i].get('product_department').lower():
+                openleadsarray.append(valuearray[i])
+            else:
+                print('Not Present')
+        return Response({'status': 200, 'message': 'ok', 'data': openleadsarray}, status=200)
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)
+
+
+
+
+@api_view(['post'])
+# @permission_classes([AllowAny, ])
+def advance_search_published_leads_list(request):
+    # external vendor advance search
+    data = request.data
+    company_name = data['company_name']
+    product_bill_address = data['product_bill_address']
+    product_deadline_date = data['product_deadline_date']
+    product_department = data['product_department']
+    product_publish_date = data['product_publish_date']
+    # product_rfq_status = data['product_rfq_status']
+    product_rfq_title = data['product_rfq_title']
+    # product_rfq_type = data['product_rfq_type']
+    product_ship_address=data['product_ship_address']
+    user_rfq_number=data['user_rfq_number']
+    vendor_code=data['vendor_code']
+    vendor_status=data['vendor_status']
+    valuearray = data['valuearray']
+    openleadsarray = []
+    try:
+        for i in range(0, len(valuearray)):
+            if company_name.lower() in valuearray[i].get('company_name').lower() and \
+                    product_bill_address.lower() in valuearray[i].get('product_bill_address').lower() and \
+                    product_deadline_date.lower() in valuearray[i].get('product_deadline_date').lower() and \
+                    product_department.lower() in valuearray[i].get('product_department').lower() and \
+                    product_publish_date.lower() in valuearray[i].get('product_publish_date').lower() and \
+                    product_rfq_title.lower() in valuearray[i].get('product_rfq_title').lower() and \
+                    product_ship_address.lower() in valuearray[i].get('product_ship_address').lower() and \
+                    user_rfq_number.lower() in valuearray[i].get('user_rfq_number').lower() and \
+                    vendor_status.lower() in valuearray[i].get('vendor_status').lower() and \
+                    product_department.lower() in valuearray[i].get('product_department').lower():
+                openleadsarray.append(valuearray[i])
+            else:
+                print('Not Present')
+        return Response({'status': 200, 'message': 'ok', 'data': openleadsarray}, status=200)
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)
+
+
+@api_view(['post'])
+# @permission_classes([AllowAny, ])
+def advance_search_expired_list(request):
+    # external vendor advance search
+    data = request.data
+    company_name = data['company_name']
+    deadlinedate = data['deadlinedate']
+    department_master = data['department_master']
+    publishdate = data['publishdate']
+    rfq_number = data['rfq_number']
+    # rfq_status = data['rfq_status']
+    rfq_title = data['rfq_title']
+    # rfq_type = data['rfq_type']
+    valuearray = data['valuearray']
+    openleadsarray = []
+    try:
+        for i in range(0, len(valuearray)):
+            if company_name.lower() in valuearray[i].get('company_name').lower() and \
+                    deadlinedate.lower() in valuearray[i].get('deadlinedate').lower() and \
+                    department_master.lower() in valuearray[i].get('department_master').lower() and \
+                    publishdate.lower() in valuearray[i].get('publishdate').lower() and \
+                    rfq_number.lower() in valuearray[i].get('rfq_number').lower() and \
+                    rfq_title.lower() in valuearray[i].get('rfq_title').lower():
+                openleadsarray.append(valuearray[i])
+            else:
+                print('Not Present')
+        return Response({'status': 200, 'message': 'ok', 'data': openleadsarray}, status=200)
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)

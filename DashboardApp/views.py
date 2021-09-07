@@ -1188,3 +1188,38 @@ def buyer_dashboard_charts_counts(request):
 
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)
+
+@api_view(['post'])
+# @permission_classes([AllowAny, ])
+def advance_search_item_list(request):
+    # external vendor advance search
+    data = request.data
+    item_code = data['item_code']
+    item_name = data['item_name']
+    item_type = data['item_type']
+    department = data['department']
+    category = data['category']
+    item_group = data['item_group']
+    UOM = data['UOM']
+    hsn_sac = data['hsn_sac']
+    unit_price = data['unit_price']
+    description = data['description']
+    model_no = data['model_no']
+    valuearray = data['valuearray']
+    itemlistarray = []
+    try:
+        for i in range(0, len(valuearray)):
+            if item_code.lower() in valuearray[i].get('item_code').lower() and item_name.lower() in valuearray[i].get(
+                    'item_name').lower() and item_type.lower() in valuearray[i].get('item_type').lower() and department.lower() in valuearray[i].get('department').lower() and category.lower() in valuearray[i].get(
+                'category').lower() and item_group.lower() in valuearray[i].get('item_group').lower() and \
+                    UOM.lower() in valuearray[i].get(
+                'UOM').lower() and hsn_sac.lower() in valuearray[i].get(
+                'hsn_sac').lower() and unit_price.lower() in valuearray[i].get('unit_price').lower() and \
+                    description.lower() in valuearray[i].get('description').lower() and \
+                    model_no.lower() in valuearray[i].get('model_no').lower():
+                itemlistarray.append(valuearray[i])
+            else:
+                print('Not Present')
+        return Response({'status': 200, 'message': 'ok', 'data': itemlistarray}, status=200)
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)

@@ -101,6 +101,10 @@ urlpatterns = [
     path('deadline-expired-list/', views.deadline_expired_list),
     path('extended-deadline-date-list-create/', views.extended_deadline_date_list_create),
     path('extended-deadline-list-show/', views.extended_deadline_list_show),
+    path('advance-search-bidding-list/', views.advance_search_bidding_list),
+    path('advance-search-open-leads-list/', views.advance_search_open_leads_list),
+    path('advance-search-published-leads-list/', views.advance_search_published_leads_list),
+    path('advance-search-expired-list/', views.advance_search_expired_list)
     # path('accepted-response-list-new/', views.accepted_response_list_new),
 
 

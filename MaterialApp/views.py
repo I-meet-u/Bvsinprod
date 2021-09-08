@@ -1597,7 +1597,6 @@ def landing_page_bidding_create(request):
     quantity = data['quantity']
     vendor_product_pk = data['vendor_product_pk']
     product_name=data['product_name']
-    item_type=data['item_type']
     # vendor_product_subcategory = data['vendor_product_subcategory']
     # vendors_code = data['vendors_code']
     userid=data['userid']
@@ -1648,9 +1647,7 @@ def landing_page_bidding_create(request):
                                                                       created_by=userid,
                                                                       vendors_code=vendorcodearray,
                                                                       company_name=company_namearray,
-                                                                      product_name=product_name,
-                                                                      item_type=item_type
-
+                                                                      product_name=product_name
 
                                                                       )
 

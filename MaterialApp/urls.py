@@ -47,6 +47,7 @@ urlpatterns = [
     path('get-landing-page-bidding-by-userid-vendors-list/', views.get_landing_page_bidding_by_userid_vendors_list),
     path('fetch-vendor-product-basic-details-by-pk/', views.fetch_vendor_product_basic_details_by_pk),
     path('edit-technical-specifications/', views.edit_technical_specifications),
-    path('landing-page-listing-leads-pending-list/', views.landing_page_listing_leads_pending_list)
+    path('landing-page-listing-leads-pending-list/', views.landing_page_listing_leads_pending_list),
+    path('update-landing-page-status-to-decline/', views.update_landing_page_status_to_decline)
 
 ]

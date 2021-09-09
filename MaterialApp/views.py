@@ -1842,3 +1842,8 @@ def get_landing_page_bidding_by_pk(request):
             return Response({'status':204,'message':'Not Present','data':landingobj},status=200)
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)
+
+
+class LandingPageBidding_PublishViewSet(viewsets.ModelViewSet):
+    queryset = LandingPageBidding_Publish.objects.all()
+    serializer_class = LandingPageBidding_PublishSerializer

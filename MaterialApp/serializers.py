@@ -82,3 +82,8 @@ class ItemCodeSettingsSerializer(serializers.ModelSerializer):
     class Meta:
         model=ItemCodeSettings
         fields='__all__'
+
+class LandingPageBidding_PublishSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = LandingPageBidding_Publish
+        fields = '__all__'

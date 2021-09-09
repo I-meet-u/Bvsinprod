@@ -275,3 +275,33 @@ class LandingPageBidding(models.Model):
         db_table="LandingPageBidding"
 
 
+class LandingPageBidding_Publish(models.Model):
+    item_type=models.CharField(max_length=100,null=True,blank=True)
+    company_name = models.CharField(max_length=500, null=True, blank=True)
+    company_code = models.CharField(max_length=100, null=True, blank=True)
+    priority=models.CharField(max_length=150,null=True,blank=True)
+    deadline_date = models.CharField(max_length=120, null=True, blank=True)
+    item_name = models.CharField(max_length=150, null=True, blank=True)
+    item_description=models.TextField(null=True,blank=True)
+    uom=models.CharField(max_length=70,null=True,blank=True)
+    quantity = models.CharField(max_length=200, null=True, blank=True)
+    hsn_sac = models.CharField(max_length=50, null=True, blank=True)
+    category=models.CharField(max_length=300,null=True,blank=True)
+    document= models.FileField(upload_to='LandingPageBiddingFiles',null=True, blank=True)
+    unit_rate = models.CharField(max_length=50, null=True, blank=True)
+    tax = models.CharField(max_length=50, null=True, blank=True)
+    discount = models.CharField(max_length=50, null=True, blank=True)
+    total_amount=models.CharField(max_length=50,null=True,blank=True)
+    pf_charges = models.CharField(max_length=400, null=True, blank=True)
+    frieght_charges = models.CharField(max_length=400, null=True, blank=True)
+    delivery_charges = models.CharField(max_length=400, null=True, blank=True)
+    listing_leads=models.ForeignKey(LandingPageBidding,models.CASCADE, null=True,blank=True)
+    listing_user_id = models.CharField(max_length=40)
+    created_on = models.DateTimeField(auto_now_add=True)
+    updated_on = models.DateTimeField(auto_now=True)
+    created_by = models.BigIntegerField()
+    publish_status=models.CharField(max_length=150,default='Published')
+    updated_by = models.ForeignKey(SelfRegistration, on_delete=models.CASCADE)
+
+    class Meta:
+        db_table="LandingPageBidding_Publish"

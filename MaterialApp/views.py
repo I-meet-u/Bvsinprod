@@ -1808,14 +1808,15 @@ def landing_page_listing_leads_pending_list(request):
 def update_landing_page_status_to_decline(request):
     data=request.data
     landingbidpk=data['landingbidpk']
+    userid=data['userid']
     try:
-        landingobj=LandingPageBidding.objects.filter(id=landingbidpk).values()
+        landingobj=LandingPageBidding.objects.filter(id=landingbidpk,vendor_user_id=userid).values()
         if len(landingobj)>0:
             landingget=LandingPageBidding.objects.get(id=landingobj[0].get('id'))
             if landingget.status=='Pending':
                 landingget.status='Reject'
                 landingget.save()
-                landingobjtotal = LandingPageBidding.objects.filter(id=landingbidpk).values()
+                landingobjtotal = LandingPageBidding.objects.filter(vendor_user_id=userid).values().order_by('id')
                 return Response({'status': 200, 'message': 'Rejected','data':landingobjtotal},status=200)
             elif landingget.status=='Reject':
                 return Response({'status': 202, 'message': 'status already rejected'}, status=202)

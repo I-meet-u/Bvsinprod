@@ -1833,10 +1833,15 @@ def update_landing_page_status_to_decline(request):
 def get_landing_page_bidding_by_pk(request):
     data=request.data
     landingpk=data['landingpk']
+    basicarray={}
     try:
         landingobj=LandingPageBidding.objects.filter(id=landingpk).values()
         if len(landingobj)>0:
+            basicobj = BasicCompanyDetails.objects.get(updated_by_id=landingobj[0].get('updated_by_id'))
             vendorproductobj=VendorProduct_BasicDetails.objects.filter(vendor_product_id=landingobj[0].get('vendor_product_pk')).values()
+            basicarray.setdefault('company_code',str(basicobj.company_code))
+            basicarray.setdefault('company_name',basicobj.company_name)
+            landingobj[0].setdefault('basic_details',basicarray)
             return Response({'status':200,'message':'Landing Page Bidding List','landingpagedata':landingobj,'vendorproductdata':vendorproductobj},status=200)
         else:
             return Response({'status':204,'message':'Not Present','data':landingobj},status=200)

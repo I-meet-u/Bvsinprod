@@ -1816,7 +1816,7 @@ def update_landing_page_status_to_decline(request):
                 landingget.status='Reject'
                 landingget.save()
                 landingobjtotal = LandingPageBidding.objects.filter(id=landingbidpk).values()
-                return Response({'status': 202, 'message': 'Rejected','data':landingobjtotal},status=202)
+                return Response({'status': 200, 'message': 'Rejected','data':landingobjtotal},status=200)
             elif landingget.status=='Reject':
                 return Response({'status': 202, 'message': 'status already rejected'}, status=202)
             else:

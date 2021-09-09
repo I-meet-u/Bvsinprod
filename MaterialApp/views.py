@@ -1817,6 +1817,7 @@ def update_landing_page_status_to_decline(request):
                 landingget.status='Reject'
                 landingget.save()
                 landingobjtotal = LandingPageBidding.objects.filter(vendor_user_id=userid).values().order_by('id')
+
                 return Response({'status': 200, 'message': 'Rejected','data':landingobjtotal},status=200)
             elif landingget.status=='Reject':
                 return Response({'status': 202, 'message': 'status already rejected'}, status=202)
@@ -1825,5 +1826,19 @@ def update_landing_page_status_to_decline(request):
         else:
             return Response({'status': 204, 'message': 'Data Not Present for this id'}, status=204)
 
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)
+
+@api_view(['post'])
+def get_landing_page_bidding_by_pk(request):
+    data=request.data
+    landingpk=data['landingpk']
+    try:
+        landingobj=LandingPageBidding.objects.filter(id=landingpk).values()
+        if len(landingobj)>0:
+            vendorproductobj=VendorProduct_BasicDetails.objects.filter(vendor_product_id=landingobj[0].get('vendor_product_pk')).values()
+            return Response({'status':200,'message':'Landing Page Bidding List','landingpagedata':landingobj,'vendorproductdata':vendorproductobj},status=200)
+        else:
+            return Response({'status':204,'message':'Not Present','data':landingobj},status=200)
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)

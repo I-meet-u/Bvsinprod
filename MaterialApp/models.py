@@ -259,15 +259,19 @@ class LandingPageBidding(models.Model):
     payment_terms=models.CharField(max_length=800)
     quantity=models.BigIntegerField()
     vendor_product_pk=models.BigIntegerField()
-    item_type=models.CharField(max_length=300,null=True,blank=True)
+    item_type = models.CharField(max_length=300, null=True, blank=True)
+    # vendor_product_subcategory=models.CharField(max_length=800)
     vendors_code=ArrayField(models.CharField(max_length=200),null=True,blank=True)
     created_on = models.DateTimeField(auto_now_add=True)
     updated_on = models.DateTimeField(auto_now=True)
     created_by = models.BigIntegerField(null=True,blank=True)
     updated_by = models.ForeignKey(SelfRegistration, on_delete=models.CASCADE,null=True,blank=True)
     company_name=ArrayField(models.CharField(max_length=500),null=True,blank=True)
+    status=models.CharField(max_length=100,default='Pending')
     product_name=models.CharField(max_length=400)
+    vendor_user_id=models.CharField(max_length=100,null=True,blank=True)
 
     class Meta:
         db_table="LandingPageBidding"
+
 

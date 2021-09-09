@@ -1,3 +1,4 @@
+from datetime import datetime, date
 from itertools import chain
 
 from django.shortcuts import render
@@ -1600,6 +1601,7 @@ def landing_page_bidding_create(request):
     # vendor_product_subcategory = data['vendor_product_subcategory']
     # vendors_code = data['vendors_code']
     userid=data['userid']
+    vendor_user_id = data['vendor_user_id']
     vendorcodearray=[]
     company_namearray=[]
     try:
@@ -1647,7 +1649,8 @@ def landing_page_bidding_create(request):
                                                                       created_by=userid,
                                                                       vendors_code=vendorcodearray,
                                                                       company_name=company_namearray,
-                                                                      product_name=product_name
+                                                                      product_name=product_name,
+                                                                      vendor_user_id=vendor_user_id
 
                                                                       )
 
@@ -1726,3 +1729,76 @@ def fetch_vendor_product_basic_details_by_pk(request):
             return Response({'status': 204, 'message': 'Not Present'}, status=status.HTTP_204_NO_CONTENT)
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+
+@api_view(['put'])
+def edit_technical_specifications(request):
+    data = request.data
+    technicaldetailslist = request.data['technicaldetails']
+    updated_by = request.data.get('updated_by', None)
+    vendor_products = request.data.get('vendor_products', None)
+    try:
+        if updated_by is None:
+            return Response({'status': 204, 'message': 'Enter user id or user id not exist'}, status=204)
+        for i in range(0, len(technicaldetailslist)):
+            vendors=VendorProduct_TechnicalSpecifications.objects.filter(vendor_products_id=vendor_products).values()
+            for i in range(0,len(vendors)):
+                if len(vendors)>0:
+                    vendorproduct=VendorProduct_TechnicalSpecifications.objects.filter(id=vendors[i].get('id')).update(item_specification=technicaldetailslist[i].get('item_specification'),
+                                                                                                                    item_description=technicaldetailslist[i].get('item_description'),
+                                                                                                                    vendor_products=VendorProduct_BasicDetails.objects.get(
+                                                                                                                        vendor_product_id=vendor_products),
+                                                                                                                    updated_by=SelfRegistration.objects.get(
+                                                                                                                        id=updated_by),
+                                                                                                                    created_by=updated_by)
+
+            vendorsvals = VendorProduct_TechnicalSpecifications.objects.filter(vendor_products_id=vendor_products).values()
+
+            return Response({'status': 202, 'message': 'Vendor Product Technical Specifications Are Updated','data':vendorsvals}, status=202)
+
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)
+
+
+@api_view(['post'])
+def landing_page_listing_leads_pending_list(request):
+    data=request.data
+    userid=data['userid']
+    vendorproductarray=[]
+    try:
+        openleadslistobj=LandingPageBidding.objects.filter(vendor_user_id=userid,status='Pending').values().order_by('id')
+        if len(openleadslistobj)>0:
+            for i in range(0,len(openleadslistobj)):
+                deadlinedateval = datetime.strptime(openleadslistobj[i].get('deadline_date'), '%Y-%m-%d')
+                deadlinedateconvertion = datetime.date(deadlinedateval)
+                todaydate = date.today()
+                if deadlinedateconvertion > todaydate:
+                    vendorproductarray.append({'id':openleadslistobj[i].get('id'),
+                                               'publish_date':openleadslistobj[i].get('publish_date'),
+                                               'deadline_date': openleadslistobj[i].get('deadline_date'),
+                                               'delivery_terms': openleadslistobj[i].get('delivery_terms'),
+                                               'packaging_forwarding': openleadslistobj[i].get('packaging_forwarding'),
+                                               'priority': openleadslistobj[i].get('priority'),
+                                               'payment_terms': openleadslistobj[i].get('payment_terms'),
+                                               'quantity': openleadslistobj[i].get('quantity'),
+                                               'vendor_product_pk': openleadslistobj[i].get('vendor_product_pk'),
+                                               'item_type': openleadslistobj[i].get('item_type'),
+                                               'vendors_code': openleadslistobj[i].get('vendors_code'),
+                                               'created_by': openleadslistobj[i].get('created_by'),
+                                               'updated_by': openleadslistobj[i].get('updated_by'),
+                                               'company_name': openleadslistobj[i].get('company_name'),
+                                               'status': openleadslistobj[i].get('status'),
+                                               'product_name': openleadslistobj[i].get('product_name'),
+                                               'vendor_user_id': openleadslistobj[i].get('vendor_user_id')
+                                               })
+                else:
+                    print('deadline is expired')
+
+            return Response({'status': 200, 'message': 'Open Leads List of Listing Leads','data':vendorproductarray}, status=200)
+        else:
+            return Response({'status':204,'message':'Data Not Present','data':vendorproductarray},status=204)
+
+
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)

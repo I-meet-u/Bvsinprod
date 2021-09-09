@@ -292,7 +292,7 @@ class LandingPageBidding_Publish(models.Model):
     discount = models.CharField(max_length=50, null=True, blank=True)
     total_amount=models.CharField(max_length=50,null=True,blank=True)
     pf_charges = models.CharField(max_length=400, null=True, blank=True)
-    frieght_charges = models.CharField(max_length=400, null=True, blank=True)
+    payment_charges = models.CharField(max_length=400, null=True, blank=True)
     delivery_charges = models.CharField(max_length=400, null=True, blank=True)
     listing_leads=models.ForeignKey(LandingPageBidding,models.CASCADE, null=True,blank=True)
     created_on = models.DateTimeField(auto_now_add=True)

@@ -1852,3 +1852,10 @@ def get_landing_page_bidding_by_pk(request):
 class LandingPageBidding_PublishViewSet(viewsets.ModelViewSet):
     queryset = LandingPageBidding_Publish.objects.all()
     serializer_class = LandingPageBidding_PublishSerializer
+
+
+    def get_queryset(self):
+        landingpageobj=LandingPageBidding_Publish.objects.filter(updated_by=self.request.GET.get('updated_by'))
+        if landingpageobj:
+            return landingpageobj
+        raise ValidationError({'message':'landing Page details of particular user id is not exist','status':204})

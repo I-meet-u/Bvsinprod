@@ -1654,6 +1654,7 @@ def landing_page_bidding_create(request):
 
                                                                       )
 
+
             return Response({'status': 201, 'message': 'Post RFQ'},status=status.HTTP_201_CREATED)
         else:
             return Response({'status': 204, 'message': 'Product Name is not present'}, status=status.HTTP_204_NO_CONTENT)
@@ -1854,8 +1855,49 @@ class LandingPageBidding_PublishViewSet(viewsets.ModelViewSet):
     serializer_class = LandingPageBidding_PublishSerializer
 
 
+    def create(self, request, *args, **kwargs):
+        # listing_leads=request.data.get('listing_leads',None)
+        # print(listing_leads)
+        listobj=LandingPageBidding.objects.filter(id=request.data['listing_leads']).values()
+        print(listobj[0].get('id'))
+        if len(listobj)>0:
+            listval=LandingPageBidding.objects.get(id=listobj[0].get('id'))
+            if listval.status=='Pending':
+                listval.status='Published'
+                listval.save()
+            # else:
+            #     if listval.status=='Published':
+            #         return Response({'status': 204, 'message': 'Already Published'}, status=204)
+            #     elif listval.status=='Reject':
+            #         return Response({'status': 204, 'message': 'Rejected'}, status=204)
+            basic = BasicCompanyDetails.objects.get(company_code=request.data['company_code'])
+            print(basic.company_code,'fdfdf')
+            regobj = SelfRegistration.objects.get(id=basic.updated_by_id)
+            print(regobj.username)
+            configuration = sib_api_v3_sdk.Configuration()
+            configuration.api_key[
+                'api-key'] = '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'
+
+            api_instance = sib_api_v3_sdk.TransactionalEmailsApi(sib_api_v3_sdk.ApiClient(configuration))
+            subject = "Published  RFQ"
+            text_content = "Dear " + regobj.contact_person + "\n\n" + "Your  " + basic.company_name + " company is published."+"\n\n"+ "NOTE: Please Don't Share this to anyone"
+            sender = {"name": "VENDORSIN COMMERCE PRIVATE LIMITED", "email": "admin@vendorsin.com"}
+            # text_content = 'Hello '+regobj.contact_person+',''\n You are selected for bidding'
+            to = [{"email": regobj.username, "name": regobj.contact_person}]
+            reply_to = {"email": "admin@vendorsin.com", "name": "Admin"}
+            send_smtp_email = sib_api_v3_sdk.SendSmtpEmail(to=to, reply_to=reply_to, text_content=text_content,
+                                                           sender=sender, subject=subject)
+            print(send_smtp_email)
+            api_response = api_instance.send_transac_email(send_smtp_email)
+            pprint(api_response)
+            return super().create(request, *args, **kwargs)
+        else:
+            return Response({'status':204,'message':'Not Present'},status=204)
     def get_queryset(self):
         landingpageobj=LandingPageBidding_Publish.objects.filter(updated_by=self.request.GET.get('updated_by')).order_by('id')
         if landingpageobj:
             return landingpageobj
         raise ValidationError({'message':'landing Page details of particular user id is not exist','status':204})
+
+# @api_view(['put'])
+# def update_status_tp_published(request)

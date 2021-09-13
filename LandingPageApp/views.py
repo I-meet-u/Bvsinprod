@@ -482,7 +482,8 @@ def get_approved_companies_list(request):
                                        'registered_iec':basicobj[0].get('registered_iec'),
                                        'industrial_scale':basicobj[0].get('industrial_scale'),
                                        'updated_by':basicobj[0].get('updated_by_id'),
-                                       'billing_address':billobj[0].get('bill_address')
+                                       'billing_address':billobj[0].get('bill_address'),
+                                       'profile_photo':regobj[i].get('profile_cover_photo')
                                        })
                 else:
                     pass

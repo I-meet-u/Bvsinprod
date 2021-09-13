@@ -483,6 +483,8 @@ def get_approved_companies_list(request):
                                        'industrial_scale':basicobj[0].get('industrial_scale'),
                                        'updated_by':basicobj[0].get('updated_by_id'),
                                        'billing_address':billobj[0].get('bill_address'),
+                                       'email':regobj[i].get('username'),
+                                       'phone_number':regobj[i].get('phone_number'),
                                        'profile_photo':regobj[i].get('profile_cover_photo')
                                        })
                 else:

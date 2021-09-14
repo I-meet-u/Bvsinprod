@@ -4698,3 +4698,147 @@ def advance_search_expired_list(request):
         return Response({'status': 200, 'message': 'ok', 'data': openleadsarray}, status=200)
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)
+
+
+@api_view(['post'])
+def source_awards(request):
+    data=request.data
+    source_code=data['source_code']
+    source_type=data['source_type']
+    source_item_type=data['source_item_type']
+    source_item_name=data['source_item_name']
+    source_item_description=data['source_item_description']
+    source_uom=data['source_uom']
+    source_delivery_charges=data['source_delivery_charges']
+    source_frieght_charges=data['source_frieght_charges']
+    source_pf_charges=data['source_pf_charges']
+    source_product_category=data['source_product_category']
+    source_priority=data['source_priority']
+    source_department=data['source_department']
+    userid = data['userid']
+    sourcepk = data['sourcepk']
+    item_details=data['item_details']
+
+    try:
+        print(len(item_details),'fsdfsdf')
+        for i in range(0,len(item_details)):
+            print(len(item_details), ' if length')
+            sourceobj = SourceAwards.objects.filter(source_code=source_code,company_name=item_details[i].get('company_name'),source_publish_pk=item_details[i].get('source_publish_pk')).values()
+            if len(sourceobj) == 0:
+                basicobj=BasicCompanyDetails.objects.filter(company_name=item_details[i].get('company_name')).values()
+                SourceAwards.objects.create(source_code=source_code,
+                                      source_type=source_type,
+                                      source_item_type=source_item_type,
+                                      source_item_name=source_item_name,
+                                      source_item_description=source_item_description,
+                                      source_uom=source_uom,
+                                      source_delivery_charges=source_delivery_charges,
+                                      source_frieght_charges=source_frieght_charges,
+                                      source_pf_charges=source_pf_charges,
+                                      source_product_category=source_product_category,
+                                      source_priority=source_priority,
+                                      source_department=source_department,
+                                      source_quantity=item_details[i].get('source_quantity'),
+                                      source_unit_rate=item_details[i].get('source_unit_rate'),
+                                      source_tax=item_details[i].get('source_tax'),
+                                      source_discount=item_details[i].get('source_discount'),
+                                      source_total_amount=item_details[i].get('source_total_amount'),
+                                      company_name=item_details[i].get('company_name'),
+                                      source_publish_pk=SourcePublish.objects.get(id=item_details[i].get('source_publish_pk')),
+                                      company_code=basicobj[0].get('company_code'),
+                                      created_by=userid,
+                                      updated_by=SelfRegistration.objects.get(id=userid),
+                                      source_create_pk=SourceList_CreateItems.objects.get(id=sourcepk))
+
+            else:
+                print('already_present')
+                sourceobj = SourceAwards.objects.filter(source_code=source_code,company_name=item_details[i].get('company_name'),
+                                                        source_publish_pk=item_details[i].get(
+                                                            'source_publish_pk')).values()
+                sourcedelete = SourceAwards.objects.get(id=sourceobj[0].get('id'))
+                sourcedelete.delete()
+
+                basicobj = BasicCompanyDetails.objects.filter(company_name=item_details[i].get('company_name')).values()
+                SourceAwards.objects.create(source_code=source_code,
+                                            source_type=source_type,
+                                            source_item_type=source_item_type,
+                                            source_item_name=source_item_name,
+                                            source_item_description=source_item_description,
+                                            source_uom=source_uom,
+                                            source_delivery_charges=source_delivery_charges,
+                                            source_frieght_charges=source_frieght_charges,
+                                            source_pf_charges=source_pf_charges,
+                                            source_product_category=source_product_category,
+                                            source_priority=source_priority,
+                                            source_department=source_department,
+                                            source_quantity=item_details[i].get('source_quantity'),
+                                            source_unit_rate=item_details[i].get('source_unit_rate'),
+                                            source_tax=item_details[i].get('source_tax'),
+                                            source_discount=item_details[i].get('source_discount'),
+                                            source_total_amount=item_details[i].get('source_total_amount'),
+                                            company_name=item_details[i].get('company_name'),
+                                            source_publish_pk=SourcePublish.objects.get(
+                                                id=item_details[i].get('source_publish_pk')),
+                                            company_code=basicobj[0].get('company_code'),
+                                            created_by=userid,
+                                            updated_by=SelfRegistration.objects.get(id=userid),
+                                            source_create_pk=SourceList_CreateItems.objects.get(id=sourcepk))
+                # return Response({'status': 201, 'message': 'Source Award Created'}, status=201)
+        return Response({'status': 201, 'message': 'Source Award Created'}, status=201)
+
+
+
+
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)
+
+
+class SourceAwardsViewSet(viewsets.ModelViewSet):
+    queryset = SourceAwards.objects.all()
+    serializer_class = SourceAwardsSerializer
+
+
+    def get_queryset(self):
+        sourceawardsobj = SourceAwards.objects.filter(updated_by=self.request.GET.get('updated_by'))
+        if sourceawardsobj:
+            return sourceawardsobj
+        raise ValidationError(
+            {'message': 'Source Award of particular user id is not exist', 'status': 204})
+
+
+@api_view(['put'])
+def update_status_to_po_sent(request):
+    data=request.data
+    sourceaward=data['sourceaward']
+    try:
+        poobj=SourceAwards.objects.filter(id=sourceaward).values()
+        if len(poobj)>0:
+            poobjget=SourceAwards.objects.get(id=poobj[0].get('id'))
+            if poobjget.source_po_status=='Pending':
+                poobjget.source_po_status='PO_Sent'
+                poobjget.save()
+                return Response({'status': 200, 'message': 'Status Updated to PO_Sent'}, status=200)
+            else:
+                return Response({'status': 202, 'message': 'Already Updated'}, status=202)
+        else:
+            return Response({'status': 204, 'message': 'Not Present'}, status=204)
+
+
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)
+
+
+@api_view(['post'])
+def source_po_list_based_on_userid(request):
+    data=request.data
+    userid=data['userid']
+    try:
+        sourcepoobj=SourceAwards.objects.filter(updated_by_id=userid,source_po_status='PO_Sent').values()
+        print(len(sourcepoobj))
+        if len(sourcepoobj)>0:
+            return Response({'status': 200, 'message': 'PO List','data':sourcepoobj}, status=200)
+        else:
+            return Response({'status': 204, 'message': 'Not Present'}, status=202)
+
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)

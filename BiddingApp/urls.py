@@ -25,6 +25,7 @@ router.register('machinary-award',views.MachinaryAwardViewSet)
 router.register('purchase-order',views.PurchaseOrderViewSet)
 router.register('source-list-create-items',views.SourceList_CreateItemViewSet)
 router.register('source-publish',views.SourcePublishViewSet)
+router.register('source-awards',views.SourceAwardsViewSet)
 
 urlpatterns = [
     path('bidding-router-urls/',include(router.urls)),
@@ -104,7 +105,10 @@ urlpatterns = [
     path('advance-search-bidding-list/', views.advance_search_bidding_list),
     path('advance-search-open-leads-list/', views.advance_search_open_leads_list),
     path('advance-search-published-leads-list/', views.advance_search_published_leads_list),
-    path('advance-search-expired-list/', views.advance_search_expired_list)
+    path('advance-search-expired-list/', views.advance_search_expired_list),
+    path('source-awards/', views.source_awards),
+    path('update-status-to-po-sent/', views.update_status_to_po_sent),
+    path('source-po-list-based-on-userid/', views.source_po_list_based_on_userid),
     # path('accepted-response-list-new/', views.accepted_response_list_new),
 
 

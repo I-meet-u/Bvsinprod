@@ -527,3 +527,36 @@ class ExtendedDateListBuyer(models.Model):
 
     class Meta:
         db_table="ExtendedDateListBuyer"
+
+
+
+class SourceAwards(models.Model):
+    source_code = models.CharField(max_length=200, null=True, blank=True)
+    source_type = models.CharField(max_length=200, null=True, blank=True)
+    source_item_type = models.CharField(max_length=200, null=True, blank=True)
+    source_item_name = models.CharField(max_length=100, null=True, blank=True)
+    source_item_description=models.TextField(null=True,blank=True)
+    source_uom=models.CharField(max_length=70,null=True,blank=True)
+    source_delivery_charges = models.CharField(max_length=200, null=True, blank=True)
+    source_frieght_charges = models.CharField(max_length=200, null=True, blank=True)
+    source_pf_charges = models.CharField(max_length=200, null=True, blank=True)
+    source_product_category = models.CharField(max_length=500, null=True, blank=True)
+    source_priority = models.CharField(max_length=50, null=True, blank=True)
+    source_department = models.CharField(max_length=150, null=True, blank=True)
+    source_quantity=models.CharField(max_length=50,null=True,blank=True)
+    source_unit_rate = models.CharField(max_length=50, null=True, blank=True)
+    source_tax = models.CharField(max_length=50, null=True, blank=True)
+    source_discount = models.CharField(max_length=50, null=True, blank=True)
+    source_total_amount=models.CharField(max_length=50,null=True,blank=True)
+    source_create_pk=models.ForeignKey(SourceList_CreateItems,models.CASCADE, null=True,blank=True)
+    source_publish_pk = models.ForeignKey(SourcePublish, models.CASCADE, null=True, blank=True)
+    created_on = models.DateTimeField(auto_now_add=True)
+    updated_on = models.DateTimeField(auto_now=True)
+    created_by = models.BigIntegerField()
+    company_name=models.CharField(max_length=300,null=True,blank=True)
+    company_code=models.CharField(max_length=100,null=True,blank=True)
+    updated_by = models.ForeignKey(SelfRegistration, on_delete=models.CASCADE)
+    source_po_status=models.CharField(max_length=200,default='Pending')
+
+    class Meta:
+        db_table="SourceAwards"

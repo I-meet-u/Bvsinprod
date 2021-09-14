@@ -127,3 +127,9 @@ class SourcePublishSerializer(serializers.ModelSerializer):
     class Meta:
         model=SourcePublish
         fields='__all__'
+
+
+class SourceAwardsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model=SourceAwards
+        fields='__all__'

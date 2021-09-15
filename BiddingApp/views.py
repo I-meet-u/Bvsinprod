@@ -4842,3 +4842,29 @@ def source_po_list_based_on_userid(request):
 
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)
+
+@api_view(['post'])
+def priceanalysistermslist(request):
+    data = request.data
+    rfqno=data['rfqno']
+    userid=data['userid']
+    res=[]
+    try:
+        bidmaintable = BuyerProductBidding.objects.filter(product_rfq_number=rfqno).values()
+        if bidmaintable:
+            RfqTermsDescriptionobj=RfqTermsDescription.objects.filter(updated_by=userid,rfq_number=rfqno).values()
+            selectedvendorobj=VendorRfqTermsDescription.objects.filter(vendor_rfq_number=rfqno).values()
+            print(len(selectedvendorobj))
+            for i in range(len(RfqTermsDescriptionobj)):
+                res.append({'BuyerTerm':RfqTermsDescriptionobj[i].get('terms'),
+                            'BuyerDesc':RfqTermsDescriptionobj[i].get('description')})
+                for j in range(0,len(selectedvendorobj)):
+                    if RfqTermsDescriptionobj[i].get('terms')==selectedvendorobj[j].get('vendor_terms'):
+                        print(RfqTermsDescriptionobj[i].get('terms'))
+                        res[i].setdefault('compres'+str(j),selectedvendorobj[j].get('vendor_response'))
+
+            return Response({'status': 200, 'message': 'Term List', 'data': res}, status=200)
+        else:
+            return Response({'status': 204, 'message': 'Not Present'}, status=202)
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)

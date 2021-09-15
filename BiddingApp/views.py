@@ -4237,24 +4237,21 @@ def termsanddescriptionpriceanalysis(request):
         # vendtermsobj=VendorRfqTermsDescription.objects.filter(vendor_rfq_number=rfq,updated_by=userid).values()
         BasicCompanyDetailsobj=BasicCompanyDetails.objects.filter(company_code__in=vcode).values()
         for i in range(len(BasicCompanyDetailsobj)):
-            print(BasicCompanyDetailsobj[i].get('updated_by_id'))
             useridarray.append(BasicCompanyDetailsobj[i].get('updated_by_id'))
-
         buyertermsobj=BuyerProductBidding.objects.filter(updated_by=userid).values()
         if buyertermsobj:
             BiddingBuyerProductDetailsobj=RfqTermsDescription.objects.filter(rfq_number=rfq,updated_by=userid).values()
             if BiddingBuyerProductDetailsobj:
                 vendobj=VendorRfqTermsDescription.objects.filter(vendor_rfq_number=rfq,updated_by__in=useridarray).values()
-                print(vendobj)
                 for i in range(len(vendobj)):
-                    print(vendobj[i].get('vendor_response'))
                     singlecomp = BasicCompanyDetails.objects.filter(
                         updated_by=vendobj[i].get('updated_by_id')).values()
-                    print("singlecomp", singlecomp[0].get('company_name'))
                     resarray.append({'compname':singlecomp[0].get('company_name'),
                                      'Buyer_term':vendobj[i].get('vendor_terms'),
                                      'Buyer_description':vendobj[i].get('vendor_description'),
                                      'Vendor_description':vendobj[i].get('vendor_response')})
+
+                print(resarray)
 
                 return Response({'status': 200, 'message': 'ok','buyer_Terms':BiddingBuyerProductDetailsobj,'res':resarray}, status=200)
 
@@ -4849,11 +4846,20 @@ def priceanalysistermslist(request):
     rfqno=data['rfqno']
     userid=data['userid']
     res=[]
+    iter=0
+    vcode=data['vcode']
+    idaarray=[]
     try:
+
+        basicobj=BasicCompanyDetails.objects.filter(company_code__in=vcode).values().order_by('company_name')
+        print(basicobj)
+        for i in range(0,len(basicobj)):
+            idaarray.append(basicobj[i].get('updated_by_id'))
+        print(idaarray)
         bidmaintable = BuyerProductBidding.objects.filter(product_rfq_number=rfqno).values()
         if bidmaintable:
             RfqTermsDescriptionobj=RfqTermsDescription.objects.filter(updated_by=userid,rfq_number=rfqno).values()
-            selectedvendorobj=VendorRfqTermsDescription.objects.filter(vendor_rfq_number=rfqno).values()
+            selectedvendorobj=VendorRfqTermsDescription.objects.filter(vendor_rfq_number=rfqno,updated_by__in=idaarray).values().order_by('updated_by_id')
             print(len(selectedvendorobj))
             for i in range(len(RfqTermsDescriptionobj)):
                 res.append({'BuyerTerm':RfqTermsDescriptionobj[i].get('terms'),
@@ -4861,10 +4867,13 @@ def priceanalysistermslist(request):
                 for j in range(0,len(selectedvendorobj)):
                     if RfqTermsDescriptionobj[i].get('terms')==selectedvendorobj[j].get('vendor_terms'):
                         print(RfqTermsDescriptionobj[i].get('terms'))
-                        res[i].setdefault('compres'+str(j),selectedvendorobj[j].get('vendor_response'))
+                        res[i].setdefault('compres'+str(iter),selectedvendorobj[j].get('vendor_response'))
+                        iter=iter+1
+                iter=0
 
             return Response({'status': 200, 'message': 'Term List', 'data': res}, status=200)
         else:
             return Response({'status': 204, 'message': 'Not Present'}, status=202)
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)
+

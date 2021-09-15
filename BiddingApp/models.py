@@ -296,6 +296,8 @@ class MachinaryAwards(models.Model):
         db_table = "MachinaryAwards"
 # ------------------------------------------------------------SERVICE BIDDING--------------------------------------------------------------------------------------------
 
+
+
 class BiddingBuyerServiceDetails(models.Model):
     service_item_type = models.CharField(max_length=100, null=True,blank=True)
     service_buyer_item_code= models.CharField(max_length=100,null=True,blank=True)

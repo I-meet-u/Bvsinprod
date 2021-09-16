@@ -4877,3 +4877,48 @@ def priceanalysistermslist(request):
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)
 
+@api_view(['post'])
+def deadline_date_list(request):
+    userid=request.data['userid']
+    from_registration=request.data['from_registration']
+    regarray=[]
+    expiredarray=[]
+    try:
+        if from_registration == 'False':
+            basicobj = BasicCompanyDetails.objects.get(updated_by=userid)
+            # print(basicobj)
+            selectvendorsobj = SelectVendorsForBiddingProduct.objects.filter(vendor_code=basicobj.company_code,
+                                                                             vendor_status='Pending',
+                                                                             from_registration='False').values()
+            # print(len(selectvendorsobj),'length')
+            if len(selectvendorsobj) > 0:
+                for i in range(0, len(selectvendorsobj)):
+
+                    # print(selectvendorsobj[i].get('rfq_number'),'selected vendors rfq')
+                    biddingval = BuyerProductBidding.objects.get(user_rfq_number=selectvendorsobj[i].get('rfq_number'),
+                                                                 from_registration=from_registration)
+                    print(biddingval.product_deadline_date, '--------')
+                    basicobjval = BasicCompanyDetails.objects.get(updated_by_id=biddingval.updated_by_id)
+                    todaydate = date.today()
+                    if biddingval.product_deadline_date > todaydate:
+                        pass
+                    else:
+
+                        expiredarray.append({'vendor_code': basicobjval.company_code,
+                                             'user_rfq_number': biddingval.user_rfq_number,
+                                             'company_name': basicobjval.company_name,
+                                             'product_rfq_type': biddingval.product_rfq_type,
+                                             'product_rfq_title': biddingval.product_rfq_title,
+                                             'product_rfq_status': biddingval.product_rfq_status,
+                                             'product_publish_date': biddingval.product_publish_date,
+                                             'product_deadline_date': biddingval.product_deadline_date,
+                                             'product_delivery_date': biddingval.product_delivery_date,
+                                             'product_rfq_currency': biddingval.product_rfq_currency,
+                                             'product_rfq_category': biddingval.product_rfq_category,
+                                             'product_department': biddingval.product_department,
+                                             })
+                return Response({'status':200,'message':'ok','data':expiredarray},status=200)
+            else:
+                return Response({'status': 200, 'message': 'Data Not Present', 'data':expiredarray}, status=200)
+    except Exception as e:
+        return Response({'status':500,'error':str(e)},status=500)

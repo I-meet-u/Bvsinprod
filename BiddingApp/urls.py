@@ -109,7 +109,8 @@ urlpatterns = [
     path('source-awards/', views.source_awards),
     path('update-status-to-po-sent/', views.update_status_to_po_sent),
     path('source-po-list-based-on-userid/', views.source_po_list_based_on_userid),
-    path('priceanalysistermsnew/',views.priceanalysistermslist)
+    path('priceanalysistermsnew/',views.priceanalysistermslist),
+    path('deadline-date-list/',views.deadline_date_list),
     # path('accepted-response-list-new/', views.accepted_response_list_new),
 
 

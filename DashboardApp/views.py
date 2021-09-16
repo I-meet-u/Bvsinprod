@@ -1,6 +1,7 @@
 from __future__ import print_function
 import math
 import urllib
+from datetime import datetime, date
 from itertools import chain
 
 from django_filters import rest_framework as filters
@@ -19,8 +20,9 @@ from sib_api_v3_sdk.rest import ApiException
 from pprint import pprint
 
 from BiddingApp.models import VendorProductBidding, SourceList_CreateItems, SelectVendorsForBiddingProduct, \
-    BuyerProductBidding, PurchaseOrder, SourcePublish
+    BuyerProductBidding, PurchaseOrder, SourcePublish, SourceAwards
 from MastersApp.models import MaincoreMaster
+from MaterialApp.models import LandingPageBidding, LandingPageBidding_Publish
 from RegistrationApp.models import BasicCompanyDetails, IndustrialInfo, IndustrialHierarchy, BillingAddress
 from .models import *
 from .serializers import *
@@ -1091,103 +1093,103 @@ def vendor_dashboard_count(request):
         return Response({'status': 500, 'error': str(e)}, status=500)
 
 
-@api_view(['post'])
-def buyer_dashboard_charts_counts(request):
-    data=request.data
-    userid=data['userid']
-    from_registration=data['from_registration']
-    totalsentcount = 0
-    totalacceptcount = 0
-    totalrejectcount = 0
-    totalpendingcount = 0
-    totalfullresponse = 0
-    buyercharts=[]
-    try:
-        auth_token = request.headers['Authorization']
-        print(auth_token)
-        closedrfqlist = get_deadline_date(userid, auth_token)
-        buyerbidobjpublished = BuyerProductBidding.objects.filter(updated_by_id=userid,
-                                                                  product_rfq_status='Published').values()
-        responsecount=total_all_responses_buyer(userid,from_registration,auth_token)
-        values_list=responsecount['data']
-        for i in range(0,len(values_list)):
-            sent=values_list[i].get('total_sent')
-            totalsentcount = totalsentcount + sent
-            accept = values_list[i].get('total_accepted')
-            totalacceptcount=totalacceptcount+accept
-            reject = values_list[i].get('total_rejected')
-            totalrejectcount = totalrejectcount + reject
-            pending = values_list[i].get('pending')
-            totalpendingcount = totalpendingcount + pending
-            totalfullresponse = totalacceptcount + totalrejectcount
-            print('--------------------------done--------------------------------')
-        confirmed_po = PurchaseOrder.objects.filter(updated_by_id=userid).values()
-        invitevendorobj=InviteVendor.objects.filter(updated_by_invites_id=userid).values()
-        invites_approved=BusinessRequest.objects.filter(send_status='Accept',updated_by_id=userid).values()
-        internalvendor=InternalVendor.objects.filter(updated_by_id=userid).values()
-        trailvendors=TrailVendors.objects.filter(updated_by_id=userid).values()
-        source_published=SourcePublish.objects.filter(updated_by_id=userid).values()
-        sourcelistcreateitesmsobj=SourceList_CreateItems.objects.filter(updated_by_id=userid).values()
-        sourceresponse = get_source_created_items(userid, auth_token)
-        pendingsourcevalues=len(sourcelistcreateitesmsobj)-len(sourceresponse['data'])
-        print('\n',pendingsourcevalues)
-        if closedrfqlist['status']==500 or len(closedrfqlist['data'])==[] or len(buyerbidobjpublished)<=0 or len(responsecount['data'])==[] or responsecount['status']==500 or len(invites_approved)<=0 or len(internalvendor)<=0 or len(trailvendors)<=0 or len(source_published)<=0 or pendingsourcevalues<=0 or len(sourcelistcreateitesmsobj)<=0 or len(sourceresponse[data])==[] or sourceresponse['status']==500:
-            # or buyerawarded['status']==204 or buyerawarded['status']==500 or len(confirmed_po)<=0 or pending_po<=0 or len(invitevendorobj)<=0 or business_requested['status']==204 or business_requested['status']==500:
-            buyercharts.append({'closed_rfq':len(closedrfqlist['data']),
-                                'published_leads':len(buyerbidobjpublished),
-                                'response_totalsentcount': totalsentcount,
-                                'response_acceptedcount': totalacceptcount,
-                                'response_rejected': totalrejectcount,
-                                'response_pendingcount': totalpendingcount,
-                                'response_totalfullresponse': totalfullresponse,
-                                # 'buyer_awarded':buyerawardcount,
-                                'confirmed_po':len(confirmed_po),
-                                'total_business_invites':len(invitevendorobj),
-                                'invites_approved':len(invites_approved),
-                                'internal_vendor':len(internalvendor),
-                                'trail_vendors':len(trailvendors),
-                                'source_published': len(source_published),
-                                'source_response':len(sourceresponse['data']),
-                                'source_pending':pendingsourcevalues
-                                })
-        else:
-            buyercharts.append({'closed_rfq': len(closedrfqlist['data']),
-                                'published_leads': len(buyerbidobjpublished),
-                                'response_totalsentcount': totalsentcount,
-                                'response_acceptedcount': totalacceptcount,
-                                'response_rejected': totalrejectcount,
-                                'response_pendingcount': totalpendingcount,
-                                'response_totalfullresponse': totalfullresponse,
-                                # 'buyer_awarded': buyerawardcount,
-                                'confirmed_po': len(confirmed_po),
-                                'total_business_invites': len(invitevendorobj),
-                                'invites_approved': len(invites_approved),
-                                'internal_vendor': len(internalvendor),
-                                'trail_vendors': len(trailvendors),
-                                'source_published':len(source_published),
-                                'source_response': len(sourceresponse['data']),
-                                'source_pending': pendingsourcevalues
-
-                                })
-    # # else:
-    # #     print('came')
-    # #     buyercharts.append({'closed_rfq': len(closedrfqlist),
-    # #                         'published_leads': len(buyerbidobjpublished),
-    # #                         'response_totalsentcount': totalsentcount,
-    # #                         'response_acceptedcount': totalacceptcount,
-    # #                         'response_rejected': totalrejectcount,
-    # #                         'response_pendingcount': totalpendingcount,
-    # #                         'response_totalfullresponse': totalfullresponse,
-    # #                         'buyer_awarded': buyerawardcount,
-    # #                         'confirmed_po':len(confirmed_po),
-    # #                         'pending_po': 0,
-    # #                         'total_business_invites': len(invitevendorobj),
-    # #                         'business_requested':business_requestedcount
-    # #                         })
-        return Response({'status': 200, 'message': 'Buyer Charts Count List','data':buyercharts}, status=200)
-
-    except Exception as e:
-        return Response({'status': 500, 'error': str(e)}, status=500)
+# @api_view(['post'])
+# def buyer_dashboard_charts_counts(request):
+#     data=request.data
+#     userid=data['userid']
+#     from_registration=data['from_registration']
+#     totalsentcount = 0
+#     totalacceptcount = 0
+#     totalrejectcount = 0
+#     totalpendingcount = 0
+#     totalfullresponse = 0
+#     buyercharts=[]
+#     try:
+#         auth_token = request.headers['Authorization']
+#         print(auth_token)
+#         closedrfqlist = get_deadline_date(userid, auth_token)
+#         buyerbidobjpublished = BuyerProductBidding.objects.filter(updated_by_id=userid,
+#                                                                   product_rfq_status='Published').values()
+#         responsecount=total_all_responses_buyer(userid,from_registration,auth_token)
+#         values_list=responsecount['data']
+#         for i in range(0,len(values_list)):
+#             sent=values_list[i].get('total_sent')
+#             totalsentcount = totalsentcount + sent
+#             accept = values_list[i].get('total_accepted')
+#             totalacceptcount=totalacceptcount+accept
+#             reject = values_list[i].get('total_rejected')
+#             totalrejectcount = totalrejectcount + reject
+#             pending = values_list[i].get('pending')
+#             totalpendingcount = totalpendingcount + pending
+#             totalfullresponse = totalacceptcount + totalrejectcount
+#             print('--------------------------done--------------------------------')
+#         confirmed_po = PurchaseOrder.objects.filter(updated_by_id=userid).values()
+#         invitevendorobj=InviteVendor.objects.filter(updated_by_invites_id=userid).values()
+#         invites_approved=BusinessRequest.objects.filter(send_status='Accept',updated_by_id=userid).values()
+#         internalvendor=InternalVendor.objects.filter(updated_by_id=userid).values()
+#         trailvendors=TrailVendors.objects.filter(updated_by_id=userid).values()
+#         source_published=SourcePublish.objects.filter(updated_by_id=userid).values()
+#         sourcelistcreateitesmsobj=SourceList_CreateItems.objects.filter(updated_by_id=userid).values()
+#         sourceresponse = get_source_created_items(userid, auth_token)
+#         pendingsourcevalues=len(sourcelistcreateitesmsobj)-len(sourceresponse['data'])
+#         print('\n',pendingsourcevalues)
+#         if closedrfqlist['status']==500 or len(closedrfqlist['data'])==[] or len(buyerbidobjpublished)<=0 or len(responsecount['data'])==[] or responsecount['status']==500 or len(invites_approved)<=0 or len(internalvendor)<=0 or len(trailvendors)<=0 or len(source_published)<=0 or pendingsourcevalues<=0 or len(sourcelistcreateitesmsobj)<=0 or len(sourceresponse[data])==[] or sourceresponse['status']==500:
+#             # or buyerawarded['status']==204 or buyerawarded['status']==500 or len(confirmed_po)<=0 or pending_po<=0 or len(invitevendorobj)<=0 or business_requested['status']==204 or business_requested['status']==500:
+#             buyercharts.append({'closed_rfq':len(closedrfqlist['data']),
+#                                 'published_leads':len(buyerbidobjpublished),
+#                                 'response_totalsentcount': totalsentcount,
+#                                 'response_acceptedcount': totalacceptcount,
+#                                 'response_rejected': totalrejectcount,
+#                                 'response_pendingcount': totalpendingcount,
+#                                 'response_totalfullresponse': totalfullresponse,
+#                                 # 'buyer_awarded':buyerawardcount,
+#                                 'confirmed_po':len(confirmed_po),
+#                                 'total_business_invites':len(invitevendorobj),
+#                                 'invites_approved':len(invites_approved),
+#                                 'internal_vendor':len(internalvendor),
+#                                 'trail_vendors':len(trailvendors),
+#                                 'source_published': len(source_published),
+#                                 'source_response':len(sourceresponse['data']),
+#                                 'source_pending':pendingsourcevalues
+#                                 })
+#         else:
+#             buyercharts.append({'closed_rfq': len(closedrfqlist['data']),
+#                                 'published_leads': len(buyerbidobjpublished),
+#                                 'response_totalsentcount': totalsentcount,
+#                                 'response_acceptedcount': totalacceptcount,
+#                                 'response_rejected': totalrejectcount,
+#                                 'response_pendingcount': totalpendingcount,
+#                                 'response_totalfullresponse': totalfullresponse,
+#                                 # 'buyer_awarded': buyerawardcount,
+#                                 'confirmed_po': len(confirmed_po),
+#                                 'total_business_invites': len(invitevendorobj),
+#                                 'invites_approved': len(invites_approved),
+#                                 'internal_vendor': len(internalvendor),
+#                                 'trail_vendors': len(trailvendors),
+#                                 'source_published':len(source_published),
+#                                 'source_response': len(sourceresponse['data']),
+#                                 'source_pending': pendingsourcevalues
+#
+#                                 })
+#     # # else:
+#     # #     print('came')
+#     # #     buyercharts.append({'closed_rfq': len(closedrfqlist),
+#     # #                         'published_leads': len(buyerbidobjpublished),
+#     # #                         'response_totalsentcount': totalsentcount,
+#     # #                         'response_acceptedcount': totalacceptcount,
+#     # #                         'response_rejected': totalrejectcount,
+#     # #                         'response_pendingcount': totalpendingcount,
+#     # #                         'response_totalfullresponse': totalfullresponse,
+#     # #                         'buyer_awarded': buyerawardcount,
+#     # #                         'confirmed_po':len(confirmed_po),
+#     # #                         'pending_po': 0,
+#     # #                         'total_business_invites': len(invitevendorobj),
+#     # #                         'business_requested':business_requestedcount
+#     # #                         })
+#         return Response({'status': 200, 'message': 'Buyer Charts Count List','data':buyercharts}, status=200)
+#
+#     except Exception as e:
+#         return Response({'status': 500, 'error': str(e)}, status=500)
 
 @api_view(['post'])
 # @permission_classes([AllowAny, ])
@@ -1221,5 +1223,95 @@ def advance_search_item_list(request):
             else:
                 print('Not Present')
         return Response({'status': 200, 'message': 'ok', 'data': itemlistarray}, status=200)
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)
+
+
+@api_view(['post'])
+def buyer_dashboard_charts_counts(request):
+    data=request.data
+    userid=data['userid']
+    from_registration=data['from_registration']
+    totalsentcount = 0
+    totalacceptcount = 0
+    totalrejectcount = 0
+    totalpendingcount = 0
+    totalfullresponse = 0
+    buyercharts=[]
+    closedarray=[]
+    listingleadsclosedarray=[]
+    try:
+        auth_token = request.headers['Authorization']
+        print(auth_token)
+        bidobj=BuyerProductBidding.objects.filter(updated_by_id=userid).values()
+        print(len(bidobj),'ok')
+        for i in range(0,len(bidobj)):
+            print('ok')
+            if bidobj[i].get('product_deadline_date') < date.today():
+                print(bidobj[i].get('product_deadline_date'),'product_deadline')
+                closedarray.append({'product_deadline_date':bidobj[i].get('product_deadline_date')})
+
+        buyerbidobjpublished = BuyerProductBidding.objects.filter(updated_by_id=userid,
+                                                                  product_rfq_status='Published').values()
+        responsecount = total_all_responses_buyer(userid, from_registration, auth_token)
+        values_list = responsecount['data']
+        print(values_list, 'fdsfsdfsfffffffff')
+        for i in range(0, len(values_list)):
+            sent = values_list[i].get('total_sent')
+            totalsentcount = totalsentcount + sent
+            accept = values_list[i].get('total_accepted')
+            totalacceptcount = totalacceptcount + accept
+            reject = values_list[i].get('total_rejected')
+            totalrejectcount = totalrejectcount + reject
+            pending = values_list[i].get('pending')
+            totalpendingcount = totalpendingcount + pending
+            totalfullresponse = totalacceptcount + totalrejectcount
+            print('--------------------------done--------------------------------')
+        confirmed_po = PurchaseOrder.objects.filter(updated_by_id=userid).values()
+        invitevendorobj = InviteVendor.objects.filter(updated_by_invites_id=userid).values()
+        invites_approved = BusinessRequest.objects.filter(send_status='Accept', updated_by_id=userid).values()
+        internalvendor = InternalVendor.objects.filter(updated_by_id=userid).values()
+        # trailvendors = TrailVendors.objects.filter(updated_by_id=userid).values()
+        source_published = SourcePublish.objects.filter(updated_by_id=userid).values()
+        sourcelistcreateitesmsobj = SourceList_CreateItems.objects.filter(updated_by_id=userid).values()
+        sourceresponse = get_source_created_items(userid, auth_token)
+        pendingsourcevalues=len(sourcelistcreateitesmsobj)-len(sourceresponse['data'])
+        sourceaward=SourceAwards.objects.filter(updated_by_id=userid).values()
+        landingpageobj=LandingPageBidding.objects.filter(updated_by_id=userid).values()
+        landingpagepending = LandingPageBidding.objects.filter(updated_by_id=userid,status='Pending').values()
+        landingpagepublish= LandingPageBidding_Publish.objects.filter(updated_by_id=userid).values()
+        landingpageclosedobj = LandingPageBidding.objects.filter(updated_by_id=userid, status='Pending').values().order_by(
+            'id')
+        for i in range(0, len(landingpageclosedobj)):
+            deadlinedateval = datetime.strptime(landingpageclosedobj[i].get('deadline_date'), '%Y-%m-%d')
+            deadlinedateconvertion = datetime.date(deadlinedateval)
+            todaydate = date.today()
+            if deadlinedateconvertion < todaydate:
+                print('s',landingpageclosedobj[i].get('deadline_date'))
+                listingleadsclosedarray.append({'deadline_date':landingpageclosedobj[i].get('deadline_date')})
+
+        buyercharts.append({'closed_rfq':len(closedarray),
+                            'published_leads': len(buyerbidobjpublished),
+                            'response_totalsentcount': totalsentcount,
+                            'response_acceptedcount': totalacceptcount,
+                            'response_rejected': totalrejectcount,
+                            'response_pendingcount': totalpendingcount,
+                            'response_totalfullresponse': totalfullresponse,
+                            'confirmed_po': len(confirmed_po),
+                            'total_business_invites': len(invitevendorobj),
+                            'invites_approved': len(invites_approved),
+                            'internal_vendor': len(internalvendor),
+                            # 'trail_vendors': len(trailvendors),
+                            'source_published': len(source_published),
+                            'source_response': len(sourceresponse['data']),
+                            'source_pending': pendingsourcevalues,
+                            'source_awards':len(sourceaward),
+                            'total_listing_leads_post':len(landingpageobj),
+                            'listing_leads_pending':len(landingpagepending),
+                            'listing_leads_publish':len(landingpagepublish),
+                            'listing_leads_closed':len(listingleadsclosedarray)
+                            })
+        return Response({'status': 200, 'message': 'Buyer Charts Count List','data':buyercharts}, status=200)
+
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)

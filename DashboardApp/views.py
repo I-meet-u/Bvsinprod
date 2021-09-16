@@ -20,7 +20,7 @@ from sib_api_v3_sdk.rest import ApiException
 from pprint import pprint
 
 from BiddingApp.models import VendorProductBidding, SourceList_CreateItems, SelectVendorsForBiddingProduct, \
-    BuyerProductBidding, PurchaseOrder, SourcePublish, SourceAwards
+    BuyerProductBidding, PurchaseOrder, SourcePublish, SourceAwards, Awards
 from MastersApp.models import MaincoreMaster
 from MaterialApp.models import LandingPageBidding, LandingPageBidding_Publish
 from RegistrationApp.models import BasicCompanyDetails, IndustrialInfo, IndustrialHierarchy, BillingAddress
@@ -1282,6 +1282,7 @@ def buyer_dashboard_charts_counts(request):
         landingpagepublish= LandingPageBidding_Publish.objects.filter(updated_by_id=userid).values()
         landingpageclosedobj = LandingPageBidding.objects.filter(updated_by_id=userid, status='Pending').values().order_by(
             'id')
+        awardobj=Awards.objects.filter(updated_by_id=userid).values()
         for i in range(0, len(landingpageclosedobj)):
             deadlinedateval = datetime.strptime(landingpageclosedobj[i].get('deadline_date'), '%Y-%m-%d')
             deadlinedateconvertion = datetime.date(deadlinedateval)
@@ -1309,7 +1310,8 @@ def buyer_dashboard_charts_counts(request):
                             'total_listing_leads_post':len(landingpageobj),
                             'listing_leads_pending':len(landingpagepending),
                             'listing_leads_publish':len(landingpagepublish),
-                            'listing_leads_closed':len(listingleadsclosedarray)
+                            'listing_leads_closed':len(listingleadsclosedarray),
+                            'buyer_awards':len(awardobj)
                             })
         return Response({'status': 200, 'message': 'Buyer Charts Count List','data':buyercharts}, status=200)
 

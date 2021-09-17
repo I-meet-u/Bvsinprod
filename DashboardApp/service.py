@@ -75,7 +75,7 @@ def get_open_bid_list(userid,from_registration,auth_token):
 def get_deadline_date(userid,from_registration,auth_token):
     auth={'Authorization':auth_token}
     # url = "http://127.0.0.1:8000/bidding/deadline-date-list/"
-    url="http://127.0.0.1:8000/bidding/deadline-date-list/"
+    url="https://v2apis.vendorsin.com/bidding/deadline-date-list/"
     dataobj={'userid':userid,'from_registration':from_registration}
     r = requests.post(url, data=dataobj, headers=auth)
     print('-----------------------------',r)

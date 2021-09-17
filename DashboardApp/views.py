@@ -22,7 +22,7 @@ from pprint import pprint
 from BiddingApp.models import VendorProductBidding, SourceList_CreateItems, SelectVendorsForBiddingProduct, \
     BuyerProductBidding, PurchaseOrder, SourcePublish, SourceAwards, Awards
 from MastersApp.models import MaincoreMaster
-from MaterialApp.models import LandingPageBidding, LandingPageBidding_Publish
+from MaterialApp.models import LandingPageBidding, LandingPageBidding_Publish, VendorProduct_BasicDetails
 from RegistrationApp.models import BasicCompanyDetails, IndustrialInfo, IndustrialHierarchy, BillingAddress
 from .models import *
 from .serializers import *
@@ -462,7 +462,7 @@ def sendergetbuzrequestdata(request):
                                              })
             return Response({'status': 200, 'message': 'ok', 'data': businessrequestarray}, status=200)
         else:
-            return Response({'status': 204, 'message': 'No data present in business request'}, status=204)
+            return Response({'status': 204, 'message': 'No data present in business request','data':[]}, status=204)
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)
 
@@ -980,9 +980,10 @@ def business_request_accept_list(request):
                                   })
             return Response({'status': 200, 'message': 'Business Request Accepted List', 'data': arraycode}, status=200)
         else:
-            return Response({'status': 204, 'message': 'Accepted List Not Present'}, status=204)
+            return Response({'status': 204, 'message': 'Accepted List Not Present','data':arraycode}, status=204)
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)
+
 
 
 @api_view(['post'])
@@ -1008,87 +1009,6 @@ def business_request_reject_list(request):
             return Response({'status': 200, 'message': 'Business Request Rejected List', 'data': arraycode}, status=200)
         else:
             return Response({'status': 204, 'message': 'Rejected List Not Present'}, status=204)
-    except Exception as e:
-        return Response({'status': 500, 'error': str(e)}, status=500)
-
-
-@api_view(['post'])
-def vendor_dashboard_count(request):
-    data=request.data
-    userid=data['userid']
-    from_registration=data['from_registration']
-    totalvendorarray=[]
-    try:
-        auth_token=request.headers['Authorization']
-        totalopenbidlist = get_open_bid_list(userid, from_registration, auth_token)
-        closedrfqlist = get_deadline_date(userid, auth_token)
-        publishobj = VendorProductBidding.objects.filter(updated_by_id=userid).values()
-        print(len(publishobj), ' publish')
-        rejectedobj = SelectVendorsForBiddingProduct.objects.filter(updated_by_id=userid,vendor_status='Reject').values()
-        print(len(rejectedobj), ' rejected')
-        vendorsaward = get_vendor_award_list(userid, auth_token)
-        print('\n','ok')
-        print(len(vendorsaward['data']))
-        award_pending = len(publishobj) - (len(vendorsaward['data']))
-        print('\n',award_pending,'award_pen')
-        print(award_pending)
-        purchaserodervendorslist = get_purchase_order_vendor_list(userid, auth_token)
-        print('\n','pk')
-        print(len(purchaserodervendorslist['data']))
-        pending_po = len(vendorsaward['data']) - (len(purchaserodervendorslist['data']))
-        print('\n')
-        print(pending_po)
-        inviteobj = InviteVendor.objects.filter(updated_by_invites_id=userid).values()
-        print(len(inviteobj),'\n','inviteeeee')
-        invitesapproved = BusinessRequest.objects.filter(updated_by_id=userid, send_status='Accept').values()
-        print('\n')
-        print(len(invitesapproved),' sffsd')
-        sourcecreated = SourceList_CreateItems.objects.filter(updated_by_id=userid).values()
-        print('\n')
-        print(len(sourcecreated))
-        sourceresponse=get_source_created_items(userid,auth_token)
-        print('\n','caaaaaaaaaaaaa')
-        print(len(sourceresponse['data']))
-        pendingsource=len(sourcecreated)-len(sourceresponse['data'])
-        print('\n','pendinfaaa')
-        print(pendingsource)
-        if totalopenbidlist['status']==500 or totalopenbidlist['status']==204 or len(closedrfqlist['data'])==[] or len(publishobj)<=0 or len(rejectedobj)<=0 or vendorsaward['status']==500 or len(vendorsaward['data'])==[] or purchaserodervendorslist['status']==500 or len(purchaserodervendorslist['data'])==[] or award_pending<=0 or pending_po<=0 or len(inviteobj)<=0 or len(invitesapproved)<=0 or len(sourcecreated)<=0 or len(sourceresponse['data'])==[] or sourceresponse['status']==500:
-            totalvendorarray.append({'rfq_publish_pending':len(totalopenbidlist['data']),
-                                     'rfq_closed_bid': len(closedrfqlist['data']),
-                                     'published_leads':len(publishobj),
-                                     'reject_leads': len(rejectedobj),
-                                     'awarded': len(vendorsaward['data']),
-                                     'confirmed_purchase_order_vendor': len(purchaserodervendorslist['data']),
-                                     'award_pending': award_pending,
-                                     'pending_po':pending_po,
-                                     'business_invite_count': len(inviteobj),
-                                     'invites_approved': len(invitesapproved),
-                                     'source_posts': len(sourcecreated),
-                                     'source_responses':len(sourceresponse['data']),
-                                     'source_pending':pendingsource,
-
-                                     })
-        else:
-            print('not none')
-            totalvendorarray.append({'rfq_publish_pending':len(totalopenbidlist['data']),
-                                         'rfq_closed_bid': len(closedrfqlist['data']),
-                                         'published_leads': len(publishobj),
-                                         'reject_leads': len(rejectedobj),
-                                         'awarded': len(vendorsaward['data']),
-                                         'confirmed_purchase_order_vendor': len(purchaserodervendorslist['data']),
-                                         'award_pending': award_pending,
-                                         'pending_po': pending_po,
-                                         'business_invite_count': len(inviteobj),
-                                         'invites_approved': len(invitesapproved),
-                                         'source_posts': len(sourcecreated),
-                                         'source_responses': len(sourceresponse['data']),
-                                         'source_pending': pendingsource
-
-                                     })
-        return Response({'status': 200, 'message': 'ok', 'data':totalvendorarray}, status=200)
-
-
-
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)
 
@@ -1314,6 +1234,31 @@ def buyer_dashboard_charts_counts(request):
                             'buyer_awards':len(awardobj)
                             })
         return Response({'status': 200, 'message': 'Buyer Charts Count List','data':buyercharts}, status=200)
+
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)
+
+
+@api_view(['post'])
+def vendor_dashboard_count(request):
+    data=request.data
+    userid=data['userid']
+    from_registration=data['from_registration']
+    totalvendorarray=[]
+    vendorproductarray=[]
+    try:
+        auth_token=request.headers['Authorization']
+        vendorobj=VendorProduct_BasicDetails.objects.filter(updated_by_id=userid).values()
+        for i in range(0,len(vendorobj)):
+            vendorproductarray.append(vendorobj[i].get('vendor_product_id'))
+        print(vendorproductarray,' --vendor')
+        landingpageobj=LandingPageBidding.objects.filter(vendor_product_pk__in=vendorproductarray).values()
+        if len(landingpageobj)>0:
+            print(len(landingpageobj),'dddddddddddddddddd')
+
+        return Response({'status': 200, 'message': 'ok', 'data':totalvendorarray}, status=200)
+
+
 
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)

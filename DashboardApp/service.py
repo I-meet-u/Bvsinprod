@@ -72,14 +72,15 @@ def get_open_bid_list(userid,from_registration,auth_token):
     return openleadsvalue
 
 
-def get_deadline_date(userid,auth_token):
+def get_deadline_date(userid,from_registration,auth_token):
     auth={'Authorization':auth_token}
     # url = "http://127.0.0.1:8000/bidding/deadline-date-list/"
-    url="https://v2apis.vendorsin.com/bidding/deadline-date-list/"
-    dataobj={'userid':userid}
-    r=requests.post(url,data=dataobj,headers=auth)
-    deadline_date=r.json()
-    return deadline_date
+    url="http://127.0.0.1:8000/bidding/deadline-date-list/"
+    dataobj={'userid':userid,'from_registration':from_registration}
+    r = requests.post(url, data=dataobj, headers=auth)
+    print('-----------------------------',r)
+    return r.json()
+    # return deadline_date
 
 
 def get_vendor_award_list(userid,auth_token):
@@ -100,18 +101,6 @@ def get_purchase_order_vendor_list(userid,auth_token):
     purchaseorder = r.json()
     return purchaseorder
 
-# def get_business_connections(userid,auth_token):
-#     try:
-#         auth = {'Authorization': auth_token,
-#                 "Content-Type": "application/json"
-#         }
-#         url="http://20.193.226.5/dashboard-page/buzrequest/"
-#         data = {'userid': userid}
-#         r = requests.post(url,data=json.dumps(data), headers=auth).json()
-#         return  r
-#     except Exception as e:
-#         print('error',e)
-
 def get_source_created_items(userid,auth_token):
     auth = {'Authorization': auth_token}
     # url="http://127.0.0.1:8000/bidding/getsorcelistresponse/"
@@ -121,28 +110,30 @@ def get_source_created_items(userid,auth_token):
     businesslist = r.json()
     return businesslist
 
-# def get_business_request_list(userid,auth_token):
-#     try:
-#         auth = {'Authorization': auth_token,
-#                 }
-#         url="http://20.193.226.5/dashboard-page/sendergetbuzrequestdata/"
-#         data = {'userid': userid}
-#         r = requests.post(url, data=data, headers=auth)
-#         return r.json()
-#     except Exception as e:
-#         print('error got',e)
 def get_business_request_list(userid,auth_token):
     try:
-        # url = "http://127.0.0.1:8000/dashboard-page/sendergetbuzrequestdata/"
         auth = {'Authorization': auth_token,
-                "Content-Type": "application/json"
                 }
-        url="https://v2apis.vendorsin.com/dashboard-page/sendergetbuzrequestdata/"
+        url=" http://127.0.0.1:8000/dashboard-page/sendergetbuzrequestdata/"
         data = {'userid': userid}
-        r = requests.post(url,headers=auth,data=json.dumps(data)).json()
-        return  r
+        r = requests.post(url, data=data, headers=auth)
+        print('-------------------------------------------------------',r)
+        return r.json()
     except Exception as e:
         print('error got',e)
+
+# def get_business_connections(userid,auth_token):
+#     try:
+#         # url = "http://127.0.0.1:8000/dashboard-page/sendergetbuzrequestdata/"
+#         auth = {'Authorization': auth_token,
+#                 "Content-Type": "application/json"
+#                 }
+#         url="http://127.0.0.1:8000/dashboard-page/business-request-accept-list-userid/"
+#         data = {'userid': userid}
+#         r = requests.post(url,headers=auth,data=json.dumps(data)).json()
+#         return  r
+#     except Exception as e:
+#         print('error got',e)
 
 
 def total_all_responses_buyer(userid,from_registration,auth_token):

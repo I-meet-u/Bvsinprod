@@ -2438,29 +2438,29 @@ class AwardViewSet(viewsets.ModelViewSet):
         raise ValidationError(
             {'message': 'Award Product  details of particular user id is not exist', 'status': 204})
 
-# class ServiceAwardViewSet(viewsets.ModelViewSet):
-#     queryset = ServiceAwards.objects.all()
-#     serializer_class = ServiceAwardsSerializer
-#     # permission_classes = [permissions.AllowAny]
-#
-#     def get_queryset(self):
-#         awardobj = ServiceAwards.objects.filter(updated_by=self.request.GET.get('updated_by')).order_by('id')
-#         if awardobj:
-#             return awardobj
-#         raise ValidationError(
-#             {'message': 'Award Service  details of particular user id is not exist', 'status': 204})
-#
-# class MachinaryAwardViewSet(viewsets.ModelViewSet):
-#     queryset = Awards.objects.all()
-#     serializer_class = MachinaryAwardsSerializer
-#     # permission_classes = [permissions.AllowAny]
-#
-#     def get_queryset(self):
-#         awardobj = MachinaryAwards.objects.filter(updated_by=self.request.GET.get('updated_by')).order_by('id')
-#         if awardobj:
-#             return awardobj
-#         raise ValidationError(
-#             {'message': 'Award Machinary  details of particular user id is not exist', 'status': 204})
+class ServiceAwardViewSet(viewsets.ModelViewSet):
+    queryset = ServiceAwards.objects.all()
+    serializer_class = ServiceAwardsSerializer
+    # permission_classes = [permissions.AllowAny]
+
+    def get_queryset(self):
+        awardobj = ServiceAwards.objects.filter(updated_by=self.request.GET.get('updated_by')).order_by('id')
+        if awardobj:
+            return awardobj
+        raise ValidationError(
+            {'message': 'Award Service  details of particular user id is not exist', 'status': 204})
+
+class MachinaryAwardViewSet(viewsets.ModelViewSet):
+    queryset = Awards.objects.all()
+    serializer_class = MachinaryAwardsSerializer
+    # permission_classes = [permissions.AllowAny]
+
+    def get_queryset(self):
+        awardobj = MachinaryAwards.objects.filter(updated_by=self.request.GET.get('updated_by')).order_by('id')
+        if awardobj:
+            return awardobj
+        raise ValidationError(
+            {'message': 'Award Machinary  details of particular user id is not exist', 'status': 204})
 
 class PurchaseOrderViewSet(viewsets.ModelViewSet):
     queryset = PurchaseOrder.objects.all()

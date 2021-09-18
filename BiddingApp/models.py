@@ -228,72 +228,72 @@ class Awards(models.Model):
     class Meta:
         db_table = "Awards"
 
-# class ServiceAwards(models.Model):
-#     service_rfq_number = models.CharField(max_length=50)
-#     service_company_code =models.CharField(max_length=100,null=True,blank=True)
-#     service_company_name=models.CharField(max_length=200,null=True,blank=True)
-#     # order_quantity=models.CharField(max_length=100,null=True,blank=True)
-#     service_buyer_bid_quantity = models.CharField(max_length=100, null=True, blank=True)
-#     service_vendor_bid_quantity = models.CharField(max_length=100, null=True, blank=True)
-#     # frieght_cost=models.CharField(max_length=500, null=True, blank=True)
-#     # p_f_charge=models.CharField(max_length=500, null=True, blank=True)
-#     service_totalamount=models.CharField(max_length=200, null=True, blank=True)
-#     service_rfq_title = models.CharField(max_length=100, null=True, blank=True)
-#     service_rfq_status = models.CharField(max_length=100, null=True, default="Pending", blank=True)
-#     service_code=ArrayField(models.CharField(max_length=200),null=True,blank=True)
-#     service_name = ArrayField(models.CharField(max_length=200),null=True,blank=True)
-#     service_daterange = models.DateField(null=True,blank=True)
-#     service_description =ArrayField(models.CharField(max_length=200),null=True,blank=True)
-#     service_awarded_date = models.DateField(auto_now=True, null=True, blank=True)
-#     service_publish_date=models.CharField(max_length=100,null=True, blank=True)
-#     service_deadline_date=models.CharField(max_length=100,null=True, blank=True)
-#     service_award_status=models.CharField(max_length=100,null=True,blank=True,default='Pending')
-#     created_on = models.DateTimeField(auto_now_add=True)
-#     updated_on = models.DateTimeField(auto_now=True)
-#     created_by = models.BigIntegerField(null=True,blank=True)
-#     updated_by = models.ForeignKey(SelfRegistration, on_delete=models.CASCADE)
-#     service_po_status=models.CharField(max_length=100,default='Pending',blank=True,null=True)
-#     rfq_type = models.CharField(max_length=100, null=True, blank=True)
-#     # from_registration = models.CharField(max_length=100, null=True, blank=True, default='False')
-#     # auto_rfq_number = models.CharField(max_length=40, null=True, blank=True)
-#     history = HistoricalRecords()
-#
-#     class Meta:
-#         db_table = "ServiceAwards"
-#
-#
-# class MachinaryAwards(models.Model):
-#     machinary_rfq_number = models.CharField(max_length=50)
-#     machinary_company_code =models.CharField(max_length=100,null=True,blank=True)
-#     machinary_company_name=models.CharField(max_length=200,null=True,blank=True)
-#     # order_quantity=models.CharField(max_length=100,null=True,blank=True)
-#     machinary_buyer_bid_quantity = models.CharField(max_length=100, null=True, blank=True)
-#     machinary_vendor_bid_quantity = models.CharField(max_length=100, null=True, blank=True)
-#     # frieght_cost=models.CharField(max_length=500, null=True, blank=True)
-#     # p_f_charge=models.CharField(max_length=500, null=True, blank=True)
-#     machinary_totalamount=models.CharField(max_length=200, null=True, blank=True)
-#     machinary_rfq_title = models.CharField(max_length=100, null=True, blank=True)
-#     machinary_rfq_status = models.CharField(max_length=100, null=True, default="Pending", blank=True)
-#     machinary_code=ArrayField(models.CharField(max_length=200),null=True,blank=True)
-#     machinary_name = ArrayField(models.CharField(max_length=200),null=True,blank=True)
-#     machinary_date_range = models.DateField(null=True,blank=True)
-#     machinary_description = ArrayField(models.CharField(max_length=200),null=True,blank=True)
-#     machinary_awarded_date = models.DateField(auto_now=True, null=True, blank=True)
-#     machinary_publish_date=models.CharField(max_length=100,null=True, blank=True)
-#     machinary_deadline_date=models.CharField(max_length=100,null=True, blank=True)
-#     machinary_award_status=models.CharField(max_length=100,null=True,blank=True,default='Pending')
-#     created_on = models.DateTimeField(auto_now_add=True)
-#     updated_on = models.DateTimeField(auto_now=True)
-#     created_by = models.BigIntegerField(null=True,blank=True)
-#     updated_by = models.ForeignKey(SelfRegistration, on_delete=models.CASCADE)
-#     machinary_po_status=models.CharField(max_length=100,default='Pending',blank=True,null=True)
-#     rfq_type = models.CharField(max_length=100, null=True, blank=True)
-#     # from_registration = models.CharField(max_length=100, null=True, blank=True, default='False')
-#     # auto_rfq_number = models.CharField(max_length=40, null=True, blank=True)
-#     history = HistoricalRecords()
-#
-#     class Meta:
-#         db_table = "MachinaryAwards"
+class ServiceAwards(models.Model):
+    service_rfq_number = models.CharField(max_length=50)
+    service_company_code =models.CharField(max_length=100,null=True,blank=True)
+    service_company_name=models.CharField(max_length=200,null=True,blank=True)
+    # order_quantity=models.CharField(max_length=100,null=True,blank=True)
+    service_buyer_bid_quantity = models.CharField(max_length=100, null=True, blank=True)
+    service_vendor_bid_quantity = models.CharField(max_length=100, null=True, blank=True)
+    # frieght_cost=models.CharField(max_length=500, null=True, blank=True)
+    # p_f_charge=models.CharField(max_length=500, null=True, blank=True)
+    service_totalamount=models.CharField(max_length=200, null=True, blank=True)
+    service_rfq_title = models.CharField(max_length=100, null=True, blank=True)
+    service_rfq_status = models.CharField(max_length=100, null=True, default="Pending", blank=True)
+    service_code=ArrayField(models.CharField(max_length=200),null=True,blank=True)
+    service_name = ArrayField(models.CharField(max_length=200),null=True,blank=True)
+    service_daterange = models.DateField(null=True,blank=True)
+    service_description =ArrayField(models.CharField(max_length=200),null=True,blank=True)
+    service_awarded_date = models.DateField(auto_now=True, null=True, blank=True)
+    service_publish_date=models.CharField(max_length=100,null=True, blank=True)
+    service_deadline_date=models.CharField(max_length=100,null=True, blank=True)
+    service_award_status=models.CharField(max_length=100,null=True,blank=True,default='Pending')
+    created_on = models.DateTimeField(auto_now_add=True)
+    updated_on = models.DateTimeField(auto_now=True)
+    created_by = models.BigIntegerField(null=True,blank=True)
+    updated_by = models.ForeignKey(SelfRegistration, on_delete=models.CASCADE)
+    service_po_status=models.CharField(max_length=100,default='Pending',blank=True,null=True)
+    rfq_type = models.CharField(max_length=100, null=True, blank=True)
+    # from_registration = models.CharField(max_length=100, null=True, blank=True, default='False')
+    # auto_rfq_number = models.CharField(max_length=40, null=True, blank=True)
+    history = HistoricalRecords()
+
+    class Meta:
+        db_table = "ServiceAwards"
+
+
+class MachinaryAwards(models.Model):
+    machinary_rfq_number = models.CharField(max_length=50)
+    machinary_company_code =models.CharField(max_length=100,null=True,blank=True)
+    machinary_company_name=models.CharField(max_length=200,null=True,blank=True)
+    # order_quantity=models.CharField(max_length=100,null=True,blank=True)
+    machinary_buyer_bid_quantity = models.CharField(max_length=100, null=True, blank=True)
+    machinary_vendor_bid_quantity = models.CharField(max_length=100, null=True, blank=True)
+    # frieght_cost=models.CharField(max_length=500, null=True, blank=True)
+    # p_f_charge=models.CharField(max_length=500, null=True, blank=True)
+    machinary_totalamount=models.CharField(max_length=200, null=True, blank=True)
+    machinary_rfq_title = models.CharField(max_length=100, null=True, blank=True)
+    machinary_rfq_status = models.CharField(max_length=100, null=True, default="Pending", blank=True)
+    machinary_code=ArrayField(models.CharField(max_length=200),null=True,blank=True)
+    machinary_name = ArrayField(models.CharField(max_length=200),null=True,blank=True)
+    machinary_date_range = models.DateField(null=True,blank=True)
+    machinary_description = ArrayField(models.CharField(max_length=200),null=True,blank=True)
+    machinary_awarded_date = models.DateField(auto_now=True, null=True, blank=True)
+    machinary_publish_date=models.CharField(max_length=100,null=True, blank=True)
+    machinary_deadline_date=models.CharField(max_length=100,null=True, blank=True)
+    machinary_award_status=models.CharField(max_length=100,null=True,blank=True,default='Pending')
+    created_on = models.DateTimeField(auto_now_add=True)
+    updated_on = models.DateTimeField(auto_now=True)
+    created_by = models.BigIntegerField(null=True,blank=True)
+    updated_by = models.ForeignKey(SelfRegistration, on_delete=models.CASCADE)
+    machinary_po_status=models.CharField(max_length=100,default='Pending',blank=True,null=True)
+    rfq_type = models.CharField(max_length=100, null=True, blank=True)
+    # from_registration = models.CharField(max_length=100, null=True, blank=True, default='False')
+    # auto_rfq_number = models.CharField(max_length=40, null=True, blank=True)
+    history = HistoricalRecords()
+
+    class Meta:
+        db_table = "MachinaryAwards"
 # ------------------------------------------------------------SERVICE BIDDING--------------------------------------------------------------------------------------------
 
 

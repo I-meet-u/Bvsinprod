@@ -92,15 +92,15 @@ class AwardsSerializer(serializers.ModelSerializer):
         model=Awards
         fields='__all__'
 
-class ServiceAwardsSerializer(serializers.ModelSerializer):
-    class Meta:
-        model=ServiceAwards
-        fields='__all__'
-
-class MachinaryAwardsSerializer(serializers.ModelSerializer):
-    class Meta:
-        model=MachinaryAwards
-        fields='__all__'
+# class ServiceAwardsSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model=ServiceAwards
+#         fields='__all__'
+#
+# class MachinaryAwardsSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model=MachinaryAwards
+#         fields='__all__'
 
 class PurchaseOrderSerializer(serializers.ModelSerializer):
     class Meta:

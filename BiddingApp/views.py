@@ -1062,7 +1062,7 @@ def get_vendor_published_leads(request):
 
             return Response({'status': 200, 'message': 'Getting data', 'data': vendorpublishleads}, status=200)
         else:
-            return Response({'status': 202, 'message': 'No Data Found'}, status=202)
+            return Response({'status': 202, 'message': 'No Data Found','data':[]}, status=202)
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)
 
@@ -4224,7 +4224,7 @@ def getsorcelistresponse(request):
         resarry=[]
         srcobj=SourceList_CreateItems.objects.filter(updated_by=userid).values()
         print(srcobj)
-        if srcobj:
+        if len(srcobj)>0:
             for i in range(0,len(srcobj)):
                 srcpublishobj=SourcePublish.objects.filter(source=srcobj[i].get('id')).values()
                 # print(srcpublishobj)
@@ -4236,7 +4236,9 @@ def getsorcelistresponse(request):
                                 'source_code':srcobj[i].get('source_code'),
                                 'publishcount':len(srcpublishobj)})
 
-        return Response({'status': 200,'message':'ok','data':resarry},status=200)
+            return Response({'status': 200,'message':'ok','data':resarry},status=200)
+        else:
+            return Response({'status': 204, 'message': 'Source List Not Present', 'data': []}, status=204)
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)
 

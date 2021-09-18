@@ -27,7 +27,7 @@ from RegistrationApp.models import BasicCompanyDetails, IndustrialInfo, Industri
 from .models import *
 from .serializers import *
 from .service import get_open_bid_list, get_vendor_award_list, get_purchase_order_vendor_list, get_source_created_items, \
-    get_deadline_date, total_all_responses_buyer
+    get_deadline_date, total_all_responses_buyer, get_vendor_published_list, get_source_list_leads,get_business_connections, get_business_requests_list, get_business_accept_list
 
 
 class InviteVendorView(viewsets.ModelViewSet):
@@ -474,49 +474,52 @@ def buzrequest(request):
     userbuzdata = []
 
     try:
-        basiccompoobj = BasicCompanyDetails.objects.get(updated_by_id=data['userid'])
-        print(basiccompoobj.company_code)
-        businessrequest=BusinessRequest.objects.filter(company_code=basiccompoobj.company_code).values().order_by('id')
-        if len(businessrequest)>0:
-            for i in range(0,len(businessrequest)):
-                regobj=SelfRegistration.objects.filter(id=businessrequest[i].get('updated_by_id')).values()
-                basival = BasicCompanyDetails.objects.get(updated_by_id=businessrequest[i].get('updated_by_id'))
-                print(basival.updated_by_id,'ds')
-                industryinfoobj = IndustrialInfo.objects.filter(company_code_id=basival.company_code).values()
-                billsaddrsobj = BillingAddress.objects.filter(company_code_id=basival.company_code,updated_by_id=businessrequest[i].get('updated_by_id')).values()
-                if not billsaddrsobj:
-                    states=""
-                    city=""
-                    userbuzdata.append({'profile_photo': regobj[0].get('profile_cover_photo'),
-                                        'ccode': basival.company_code,
-                                        'cname': basival.company_name,
-                                        'gst_number': basival.gst_number,
-                                        'Industry': industryinfoobj[0].get('industry_to_serve'),
-                                        'natureofbuz': industryinfoobj[0].get('nature_of_business'),
-                                        'business_id': businessrequest[i].get('id'),
-                                        'user_id': basival.updated_by_id,
-                                        'state':states,
-                                        'city':city,
-                                        'status':businessrequest[i].get('send_status')
-                                        })
-                else:
-                    states= billsaddrsobj[0].get('bill_state')
-                    city=billsaddrsobj[0].get('bill_city')
-                    userbuzdata.append({'profile_photo': regobj[0].get('profile_cover_photo'),
-                                        'ccode': basival.company_code,
-                                        'cname': basival.company_name,
-                                        'gst_number': basival.gst_number,
-                                        'Industry': industryinfoobj[0].get('industry_to_serve'),
-                                        'natureofbuz': industryinfoobj[0].get('nature_of_business'),
-                                        'business_id': businessrequest[i].get('id'),
-                                        'user_id': basival.updated_by_id,
-                                        'state': states,
-                                        'city': city,
-                                        'status': businessrequest[i].get('send_status')
-                                        })
-            return Response({'status':200,'message':'ok','data':userbuzdata},status=200)
+        basiccompoobj = BasicCompanyDetails.objects.filter(updated_by_id=data['userid']).values()
+        if len(basiccompoobj)>0:
+            businessrequest=BusinessRequest.objects.filter(company_code=basiccompoobj[0].get('company_code')).values().order_by('id')
+            if len(businessrequest)>0:
+                for i in range(0,len(businessrequest)):
+                    regobj=SelfRegistration.objects.filter(id=businessrequest[i].get('updated_by_id')).values()
+                    basival = BasicCompanyDetails.objects.get(updated_by_id=businessrequest[i].get('updated_by_id'))
+                    print(basival.updated_by_id,'ds')
+                    industryinfoobj = IndustrialInfo.objects.filter(company_code_id=basival.company_code).values()
+                    billsaddrsobj = BillingAddress.objects.filter(company_code_id=basival.company_code,updated_by_id=businessrequest[i].get('updated_by_id')).values()
+                    if not billsaddrsobj:
+                        states=""
+                        city=""
+                        userbuzdata.append({'profile_photo': regobj[0].get('profile_cover_photo'),
+                                            'ccode': basival.company_code,
+                                            'cname': basival.company_name,
+                                            'gst_number': basival.gst_number,
+                                            'Industry': industryinfoobj[0].get('industry_to_serve'),
+                                            'natureofbuz': industryinfoobj[0].get('nature_of_business'),
+                                            'business_id': businessrequest[i].get('id'),
+                                            'user_id': basival.updated_by_id,
+                                            'state':states,
+                                            'city':city,
+                                            'status':businessrequest[i].get('send_status')
+                                            })
+                    else:
+                        states= billsaddrsobj[0].get('bill_state')
+                        city=billsaddrsobj[0].get('bill_city')
+                        userbuzdata.append({'profile_photo': regobj[0].get('profile_cover_photo'),
+                                            'ccode': basival.company_code,
+                                            'cname': basival.company_name,
+                                            'gst_number': basival.gst_number,
+                                            'Industry': industryinfoobj[0].get('industry_to_serve'),
+                                            'natureofbuz': industryinfoobj[0].get('nature_of_business'),
+                                            'business_id': businessrequest[i].get('id'),
+                                            'user_id': basival.updated_by_id,
+                                            'state': states,
+                                            'city': city,
+                                            'status': businessrequest[i].get('send_status')
+                                            })
+                return Response({'status':200,'message':'ok','data':userbuzdata},status=200)
+            else:
+                return Response({'status': 204, 'message': 'Company code not present in busines request','data':[]}, status=204)
         else:
-            return Response({'status': 204, 'message': 'Company code not present in busines request'}, status=204)
+            return Response({'status': 202, 'message': 'not present','data':[]}, status=202)
+
 
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)
@@ -953,7 +956,7 @@ def all_vendors_list(request):
 
             return Response({'status': 200, 'message': 'External Vendor List', 'data': externalarray}, status=200)
         else:
-            return Response({'status': 204, 'message': 'Not Present'}, status=204)
+            return Response({'status': 204, 'message': 'Not Present','data':[]}, status=204)
 
 
     except Exception as e:
@@ -980,10 +983,38 @@ def business_request_accept_list(request):
                                   })
             return Response({'status': 200, 'message': 'Business Request Accepted List', 'data': arraycode}, status=200)
         else:
-            return Response({'status': 204, 'message': 'Accepted List Not Present','data':arraycode}, status=204)
+            return Response({'status': 204, 'message': 'Accepted List Not Present','data':[]}, status=204)
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)
 
+@api_view(['post'])
+def business_request_accept_list_user_id(request):
+    userid=request.data['userid']
+    arraycode=[]
+    try:
+        basicobj=BasicCompanyDetails.objects.filter(updated_by_id=userid).values()
+        if len(basicobj)>0:
+            businessacceptobj = BusinessRequest.objects.filter(company_code=basicobj[0].get('company_code'),send_status='Accept').values().order_by('id')
+            if len(businessacceptobj)>0:
+                for i in range(0, len(businessacceptobj)):
+                    basicobj=BasicCompanyDetails.objects.get(updated_by_id=businessacceptobj[i].get('updated_by_id'))
+                    billobj=BillingAddress.objects.filter(updated_by_id=basicobj.updated_by_id).values()
+                    inudstryinfoobj=IndustrialInfo.objects.get(updated_by_id=basicobj.updated_by_id)
+                    arraycode.append({'company_code':basicobj.company_code,
+                                      'company_name':basicobj.company_name,
+                                      'gst_number':basicobj.gst_number,
+                                      'city':billobj[0].get('bill_city'),
+                                      'state':billobj[0].get('bill_state'),
+                                      'nature_of_business': inudstryinfoobj.nature_of_business,
+                                      'industry_to_serve': inudstryinfoobj.industry_to_serve,
+                                      })
+                return Response({'status': 200, 'message': 'Business Request Accepted List', 'data': arraycode}, status=200)
+            else:
+                return Response({'status': 204, 'message': 'Accepted List Not Present','data':[]}, status=204)
+        else:
+            return Response({'status': 202, 'message': 'Not Present', 'data': []}, status=204)
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)
 
 
 @api_view(['post'])
@@ -1239,6 +1270,117 @@ def buyer_dashboard_charts_counts(request):
         return Response({'status': 500, 'error': str(e)}, status=500)
 
 
+# @api_view(['post'])
+# def vendor_dashboard_count(request):
+#     data=request.data
+#     userid=data['userid']
+#     from_registration=data['from_registration']
+#     totalvendorarray=[]
+#     vendorproductarray=[]
+#     closedarray=[]
+#     deadlinearray=[]
+#     try:
+#         auth_token = request.headers['Authorization']
+#         vendorobj=VendorProduct_BasicDetails.objects.filter(updated_by_id=userid).values()
+#         print(len(vendorobj))
+#         landingpagepublish=LandingPageBidding_Publish.objects.filter(updated_by_id=userid).values()
+#         print(len(landingpagepublish))
+#         landingpageobj = LandingPageBidding.objects.filter(vendor_user_id=userid).values()
+#
+#         for i in range(0,len(landingpageobj)):
+#             deadlinedateval = datetime.strptime(landingpageobj[i].get('deadline_date'), '%Y-%m-%d')
+#             deadlinedateconvertion = datetime.date(deadlinedateval)
+#             todaydate = date.today()
+#             if deadlinedateconvertion > todaydate:
+#                 print('sssss')
+#                 closedarray.append(landingpageobj[i].get('deadline_date'))
+#         source_pending=get_source_list_leads(userid,auth_token)
+#         source_publish=SourcePublish.objects.filter(source_user_id=userid).values()
+#         sourceobj=SourceList_CreateItems.objects.filter(updated_by_id=userid).values()
+#         for i in range(0,len(sourceobj)):
+#             deadlinedateval = datetime.strptime(sourceobj[i].get('deadline_date'), '%Y-%m-%d')
+#             deadlinedateconvertion = datetime.date(deadlinedateval)
+#             print(deadlinedateconvertion)
+#             todaydate = date.today()
+#             print(todaydate,'todats')
+#             if deadlinedateconvertion > todaydate:
+#                 print('kkk')
+#                 deadlinearray.append(sourceobj[i].get('deadline_date'))
+#         sourceaward=SourceAwards.objects.filter(updated_by_id=userid).values()
+#         totalopenbidlist = get_open_bid_list(userid, from_registration, auth_token)
+#         print('\n')
+#         print(totalopenbidlist['data'])
+#         closedrfqlist = get_deadline_date(userid, from_registration, auth_token)
+#         publishedobj = get_vendor_published_list(userid, auth_token)
+#         rejectedobj = SelectVendorsForBiddingProduct.objects.filter(updated_by_id=userid,
+#                                                                     vendor_status='Reject').values()
+#         vendorsaward = get_vendor_award_list(userid, auth_token)
+#         award_pending = len(publishedobj['data']) - (len(vendorsaward['data']))
+#         purchaserodervendorslist = get_purchase_order_vendor_list(userid, auth_token)
+#         pending_po = len(vendorsaward['data']) - (len(purchaserodervendorslist['data']))
+#         inviteobj = InviteVendor.objects.filter(updated_by_invites_id=userid).values()
+#         businessacceptlist=get_business_accept_list(userid,auth_token)
+#         businessrequestlist=get_business_requests_list(userid,auth_token)
+#         businessconnections=get_business_connections(userid,auth_token)
+#         # if totalopenbidlist['data']==202:
+#         #     totalvendorarray.append({'listing_leads_published': len(landingpagepublish),
+#         #                              'listing_leads_pending': len(vendorobj),
+#         #                              'listing_leads_closed': len(closedarray),
+#         #                              'source_pending': len(source_pending['data']),
+#         #                              'source_publish': len(source_publish),
+#         #                              'source_closed': len(deadlinearray),
+#         #                              'source_award': len(sourceaward),
+#         #                              'rfq_publish_pending':0
+#         #                              })
+#         if (award_pending<0 or pending_po<0) or award_pending<0 or pending_po<0:
+#             print('s')
+#             totalvendorarray.append({'listing_leads_published': len(landingpagepublish),
+#                                      'listing_leads_pending': len(vendorobj),
+#                                      'listing_leads_closed': len(closedarray),
+#                                      'source_pending':len(source_pending['data']),
+#                                      'source_publish':len(source_publish),
+#                                      'source_closed':len(deadlinearray),
+#                                      'source_award':len(sourceaward),
+#                                      'rfq_publish_pending': len(totalopenbidlist['data']),
+#                                      'rfq_closed_bid': len(closedrfqlist['data']),
+#                                      'published_leads': len(publishedobj['data']),
+#                                      'reject_leads': len(rejectedobj),
+#                                      'awarded': len(vendorsaward['data']),
+#                                      'award_pending': 0,
+#                                      'confirmed_purchase_order_vendor': len(purchaserodervendorslist['data']),
+#                                      'pending_po': 0,
+#                                      'business_invite_count': len(inviteobj),
+#                                      'businesss_request_list': len(businessrequestlist['data']),
+#                                      'business_connections':len(businessconnections['data']),
+#                                      'invites_approved':len(businessacceptlist['data'])
+#                                      })
+#         else:
+#             totalvendorarray.append({'listing_leads_published': len(landingpagepublish),
+#                                      'listing_leads_pending': len(vendorobj),
+#                                      'listing_leads_closed': len(closedarray),
+#                                      'source_pending': len(source_pending['data']),
+#                                      'source_publish': len(source_publish),
+#                                      'source_closed': len(deadlinearray),
+#                                      'source_award': len(sourceaward),
+#                                      'rfq_publish_pending': len(totalopenbidlist['data']),
+#                                      'rfq_closed_bid': len(closedrfqlist['data']),
+#                                      'published_leads': len(publishedobj['data']),
+#                                      'reject_leads': len(rejectedobj),
+#                                      'awarded': len(vendorsaward['data']),
+#                                      'award_pending': award_pending,
+#                                      'confirmed_purchase_order_vendor': len(purchaserodervendorslist['data']),
+#                                      'pending_po': pending_po,
+#                                      'business_invite_count': len(inviteobj),
+#                                      'businesss_request_list': len(businessrequestlist['data']),
+#                                      'business_connections': len(businessconnections['data']),
+#                                      'invites_approved':len(businessacceptlist['data']),
+#                                      })
+#
+#         return Response({'status': 200, 'message': 'ok', 'data': totalvendorarray}, status=200)
+#
+#     except Exception as e:
+#         return Response({'status': 500, 'error': str(e)}, status=500)
+
 @api_view(['post'])
 def vendor_dashboard_count(request):
     data=request.data
@@ -1246,19 +1388,96 @@ def vendor_dashboard_count(request):
     from_registration=data['from_registration']
     totalvendorarray=[]
     vendorproductarray=[]
+    closedarray=[]
+    deadlinearray=[]
     try:
-        auth_token=request.headers['Authorization']
+        auth_token = request.headers['Authorization']
         vendorobj=VendorProduct_BasicDetails.objects.filter(updated_by_id=userid).values()
-        for i in range(0,len(vendorobj)):
-            vendorproductarray.append(vendorobj[i].get('vendor_product_id'))
-        print(vendorproductarray,' --vendor')
-        landingpageobj=LandingPageBidding.objects.filter(vendor_product_pk__in=vendorproductarray).values()
-        if len(landingpageobj)>0:
-            print(len(landingpageobj),'dddddddddddddddddd')
+        print(len(vendorobj))
+        landingpagepublish=LandingPageBidding_Publish.objects.filter(updated_by_id=userid).values()
+        print(len(landingpagepublish))
+        landingpageobj = LandingPageBidding.objects.filter(vendor_user_id=userid).values()
 
-        return Response({'status': 200, 'message': 'ok', 'data':totalvendorarray}, status=200)
+        for i in range(0,len(landingpageobj)):
+            deadlinedateval = datetime.strptime(landingpageobj[i].get('deadline_date'), '%Y-%m-%d')
+            deadlinedateconvertion = datetime.date(deadlinedateval)
+            todaydate = date.today()
+            if deadlinedateconvertion > todaydate:
+                print('sssss')
+                closedarray.append(landingpageobj[i].get('deadline_date'))
+        source_pending=get_source_list_leads(userid,auth_token)
+        source_publish=SourcePublish.objects.filter(source_user_id=userid).values()
+        sourceobj=SourceList_CreateItems.objects.filter(updated_by_id=userid).values()
+        for i in range(0,len(sourceobj)):
+            deadlinedateval = datetime.strptime(sourceobj[i].get('deadline_date'), '%Y-%m-%d')
+            deadlinedateconvertion = datetime.date(deadlinedateval)
+            print(deadlinedateconvertion)
+            todaydate = date.today()
+            print(todaydate,'todats')
+            if deadlinedateconvertion > todaydate:
+                print('kkk')
+                deadlinearray.append(sourceobj[i].get('deadline_date'))
+        sourceaward=SourceAwards.objects.filter(updated_by_id=userid).values()
+        totalopenbidlist = get_open_bid_list(userid, from_registration, auth_token)
+        print('\n')
+        print(totalopenbidlist['data'])
+        closedrfqlist = get_deadline_date(userid, from_registration, auth_token)
+        publishedobj = get_vendor_published_list(userid, auth_token)
+        rejectedobj = SelectVendorsForBiddingProduct.objects.filter(updated_by_id=userid,
+                                                                    vendor_status='Reject').values()
+        vendorsaward = get_vendor_award_list(userid, auth_token)
+        award_pending = len(publishedobj['data']) - (len(vendorsaward['data']))
+        purchaserodervendorslist = get_purchase_order_vendor_list(userid, auth_token)
+        pending_po = len(vendorsaward['data']) - (len(purchaserodervendorslist['data']))
+        inviteobj = InviteVendor.objects.filter(updated_by_invites_id=userid).values()
+        businessacceptlist=get_business_accept_list(userid,auth_token)
+        businessrequestlist=get_business_requests_list(userid,auth_token)
+        businessconnections=get_business_connections(userid,auth_token)
+        if (award_pending<0 or pending_po<0) or award_pending<0 or pending_po<0:
+            print('s')
+            totalvendorarray.append({'listing_leads_published_vendor': len(landingpagepublish),
+                                     'listing_leads_pending_vendor': len(vendorobj),
+                                     'listing_leads_closed_vendor': len(closedarray),
+                                     'source_pending_vendor':len(source_pending['data']),
+                                     'source_publish_vendor':len(source_publish),
+                                     'source_closed_vendor':len(deadlinearray),
+                                     'source_award_vendor':len(sourceaward),
+                                     'rfq_publish_pending_vendor': len(totalopenbidlist['data']),
+                                     'rfq_closed_bid_vendor': len(closedrfqlist['data']),
+                                     'published_leads_vendor': len(publishedobj['data']),
+                                     'reject_leads_vendor': len(rejectedobj),
+                                     'awarded_vendor': len(vendorsaward['data']),
+                                     'award_pending_vendor': 0,
+                                     'confirmed_purchase_order_vendor': len(purchaserodervendorslist['data']),
+                                     'pending_po_vendor': 0,
+                                     'business_invite_count_vendor': len(inviteobj),
+                                     'businesss_request_list_vendor': len(businessrequestlist['data']),
+                                     'business_connections_vendor':len(businessconnections['data']),
+                                     'invites_approved_vendor':len(businessacceptlist['data'])
+                                     })
+        else:
+            totalvendorarray.append({'listing_leads_published_vendor': len(landingpagepublish),
+                                     'listing_leads_pending_vendor': len(vendorobj),
+                                     'listing_leads_closed_vendor': len(closedarray),
+                                     'source_pending_vendor': len(source_pending['data']),
+                                     'source_publish_vendor': len(source_publish),
+                                     'source_closed_vendor': len(deadlinearray),
+                                     'source_award_vendor': len(sourceaward),
+                                     'rfq_publish_pending_vendor': len(totalopenbidlist['data']),
+                                     'rfq_closed_bid_vendor': len(closedrfqlist['data']),
+                                     'published_leads_vendor': len(publishedobj['data']),
+                                     'reject_leads_vendor': len(rejectedobj),
+                                     'awarded_vendor': len(vendorsaward['data']),
+                                     'award_pending_vendor': award_pending,
+                                     'confirmed_purchase_order_vendor_vendor': len(purchaserodervendorslist['data']),
+                                     'pending_po_vendor': pending_po,
+                                     'business_invite_count_vendor': len(inviteobj),
+                                     'businesss_request_list_vendor': len(businessrequestlist['data']),
+                                     'business_connections_vendor': len(businessconnections['data']),
+                                     'invites_approved_vendor':len(businessacceptlist['data']),
+                                     })
 
-
+        return Response({'status': 200, 'message': 'ok', 'data': totalvendorarray}, status=200)
 
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)

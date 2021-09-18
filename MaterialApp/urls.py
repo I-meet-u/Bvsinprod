@@ -50,6 +50,13 @@ urlpatterns = [
     path('edit-technical-specifications/', views.edit_technical_specifications),
     path('landing-page-listing-leads-pending-list/', views.landing_page_listing_leads_pending_list),
     path('update-landing-page-status-to-decline/', views.update_landing_page_status_to_decline),
-    path('get-landing-page-bidding-by-pk/',views.get_landing_page_bidding_by_pk)
+    path('get-landing-page-bidding-by-pk/',views.get_landing_page_bidding_by_pk),
+    path('fetch-vendor-product-details-by-userid-and-pk/', views.fetch_vendor_product_details_by_userid_and_pk),
+    path('landing-page-listing-leads-closed-list/', views.landing_page_listing_leads_closed_list),
+    path('fetch-general-details-by-foreign-key/', views.fetch_general_details_by_foreign_key),
+    path('fetch-technical-specifications-by-foreign-key/', views.fetch_techincal_specification_by_foreign_key),
+    path('fetch-product-features-by-foreign-key/', views.fetch_product_features_by_foreign_key),
+    path('fetch-product-documents-by-foreign-key/', views.fetch_product_documents_foreign_key),
+    path('get-landing-page-bidding-list-response/', views.get_landing_page_bidding_list_response),
 
 ]

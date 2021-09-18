@@ -1481,3 +1481,32 @@ def vendor_dashboard_count(request):
 
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)
+
+
+@api_view(['post'])
+def update_invite_vendor_registration_status(request):
+    data=request.data
+    emailarray=data['emailarray']
+    regarray=[]
+    try:
+        regobj = SelfRegistration.objects.filter().values()
+        for i in range(0,len(regobj)):
+            regarray.append(regobj[i].get('username'))
+        inviteobj=InviteVendor.objects.filter(email_id__in=emailarray).values()
+        if len(inviteobj)>0:
+            for i in range(0,len(inviteobj)):
+                # if inviteobj[i].get('email_id') in regarray:
+                inviteval=InviteVendor.objects.get(email_id=inviteobj[i].get('email_id'))
+                if inviteval.email_id==regarray:
+                    print('ssssssss')
+                # if inviteval.registration_status=='Not Registered':
+                #     inviteval.registration_status='Registered'
+                #     inviteval.save()
+            return Response({'status': 200, 'message': 'Registration Status Updated'}, status=200)
+        else:
+            return Response({'status': 204, 'message': 'Users are not invited'}, status=204)
+
+
+
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)

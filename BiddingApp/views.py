@@ -4634,6 +4634,79 @@ def advance_search_expired_list(request):
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)
 
+@api_view(['post'])
+# @permission_classes([AllowAny, ])
+def advance_search_po_list(request):
+    # external vendor advance search
+    data = request.data
+    PO_date = data['PO_date']
+    PO_expirydate = data['PO_expirydate']
+    PO_num = data['PO_num']
+    company_name = data['company_name']
+    delivery_date = data['delivery_date']
+    # rfq_status = data['rfq_status']
+    delivery_days = data['delivery_days']
+    remind_date = data['remind_date']
+    rfq_number=data['rfq_number']
+    rfq_title=data['rfq_title']
+    vendorcode=data['vendorcode']
+    valuearray = data['valuearray']
+    poarray = []
+    try:
+        for i in range(0, len(valuearray)):
+            if PO_date.lower() in valuearray[i].get('PO_date').lower() and \
+                    PO_expirydate.lower() in valuearray[i].get('PO_expirydate').lower() and \
+                    PO_num.lower() in valuearray[i].get('PO_num').lower() and \
+                    company_name.lower() in valuearray[i].get('company_name').lower() and \
+                    delivery_date.lower() in valuearray[i].get('delivery_date').lower() and \
+                    delivery_days.lower() in valuearray[i].get('delivery_days').lower() and \
+                    remind_date.lower() in valuearray[i].get('remind_date').lower() and \
+                    rfq_number.lower() in valuearray[i].get('rfq_number').lower() and \
+                    rfq_title.lower() in valuearray[i].get('rfq_title').lower() and \
+                    vendorcode.lower() in valuearray[i].get('vendorcode').lower():
+                poarray.append(valuearray[i])
+            else:
+                print('Not Present')
+        return Response({'status': 200, 'message': 'ok', 'data': poarray}, status=200)
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)
+
+@api_view(['post'])
+# @permission_classes([AllowAny, ])
+def advance_search_award_list(request):
+    # external vendor advance search
+    data = request.data
+    rfq_number = data['rfq_number']
+    company_code = data['company_code']
+    company_name = data['company_name']
+    totalamount = data['totalamount']
+    rfq_title = data['rfq_title']
+    # product_code = data['product_code']
+    # product_name = data['product_name']
+    # product_description=data['product_description']
+    awarded_date=data['awarded_date']
+    publish_date=data['publish_date']
+    deadline_date=data['deadline_date']
+    valuearray = data['valuearray']
+    awardarray = []
+    try:
+        for i in range(0, len(valuearray)):
+            print('yes')
+            if rfq_number.lower() in valuearray[i].get('rfq_number').lower() and \
+                    company_code.lower() in valuearray[i].get('company_code').lower() and \
+                    company_name.lower() in valuearray[i].get('company_name').lower() and \
+                    totalamount.lower() in valuearray[i].get('totalamount').lower() and \
+                    rfq_title.lower() in valuearray[i].get('rfq_title').lower() and \
+                    awarded_date.lower() in valuearray[i].get('awarded_date').lower() and \
+                    publish_date.lower() in valuearray[i].get('publish_date').lower() and \
+                    deadline_date.lower() in valuearray[i].get('deadline_date').lower():
+                awardarray.append(valuearray[i])
+            else:
+                print('Not Present')
+        return Response({'status': 200, 'message': 'ok', 'data': awardarray}, status=200)
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)
+
 
 @api_view(['post'])
 def source_awards(request):
@@ -4860,3 +4933,117 @@ def deadline_date_list(request):
                 return Response({'status': 200, 'message': 'Data Not Present', 'data':expiredarray}, status=200)
     except Exception as e:
         return Response({'status':500,'error':str(e)},status=500)
+
+
+
+@api_view(['post'])
+def vendor_side_award_search(request):
+    data=request.data
+    rfq_number=data['rfq_number']
+    company_name = data['company_name']
+    company_code = data['company_code']
+    rfq_title = data['rfq_title']
+    # product_code = data['product_code']
+    # rfq_status = data['rfq_status']
+    # product_name = data['product_name']
+    # product_description = data['product_description']
+    awarded_date  = data['awarded_date']
+    publish_date = data['publish_date']
+    deadline_date  = data['deadline_date']
+    total_amount=data['total_amount']
+    valuearray = data['valuearray']
+    vendorawardarray = []
+    try:
+        for i in range(0, len(valuearray)):
+            if rfq_number.lower() in valuearray[i].get('rfq_number').lower() and \
+                    company_name.lower() in valuearray[i].get('company_name').lower() and \
+                    company_code.lower() in valuearray[i].get('company_code').lower() and \
+                    rfq_title.lower() in valuearray[i].get('rfq_title').lower() and \
+                    awarded_date.lower() in valuearray[i].get('awarded_date').lower() and \
+                    publish_date.lower() in valuearray[i].get('publish_date').lower() and \
+                    deadline_date.lower() in valuearray[i].get('deadline_date').lower() and \
+                    total_amount.lower() in valuearray[i].get('total_amount').lower():
+                vendorawardarray.append(valuearray[i])
+            else:
+                print('Not Present')
+        return Response({'status': 200, 'message': 'ok', 'data': vendorawardarray}, status=200)
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)
+
+
+
+@api_view(['post'])
+def vendor_side_po_search(request):
+    data=request.data
+    rfq_number = data['rfq_number']
+    company_code = data['company_code']
+    company_name = data['company_name']
+    rfq_title = data['rfq_title']
+    PO_num = data['PO_num']
+    delivery_days = data['delivery_days']
+    PO_date  = data['PO_date']
+    PO_expirydate = data['PO_expirydate']
+    delivery_date= data['delivery_date']
+    remind_date=data['remind_date']
+    valuearray = data['valuearray']
+    poarray = []
+    try:
+        for i in range(0, len(valuearray)):
+            if rfq_number.lower() in valuearray[i].get('rfq_number').lower() and \
+                    company_code.lower() in valuearray[i].get('company_code').lower() and \
+                    company_name.lower() in valuearray[i].get('company_name').lower() and \
+                    rfq_title.lower() in valuearray[i].get('rfq_title').lower() and \
+                    PO_num.lower() in valuearray[i].get('PO_num').lower() and \
+                    delivery_days.lower() in valuearray[i].get('delivery_days').lower() and \
+                    PO_date.lower() in valuearray[i].get('PO_date').lower() and \
+                    PO_expirydate.lower() in valuearray[i].get('PO_expirydate').lower() and \
+                    delivery_date.lower() in valuearray[i].get('delivery_date').lower() and \
+                    remind_date.lower() in valuearray[i].get('remind_date').lower():
+                poarray.append(valuearray[i])
+            else:
+                print('Not Present')
+        return Response({'status': 200, 'message': 'ok', 'data': poarray}, status=200)
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)
+
+
+@api_view(['post'])
+def source_award_search(request):
+    data=request.data
+    company_code = data['company_code']
+    company_name = data['company_name']
+    source_code = data['source_code']
+    source_type=data['source_type']
+    source_item_type = data['source_item_type']
+    source_item_name = data['source_item_name']
+    source_quantity = data['source_quantity']
+    source_delivery_charges = data['source_delivery_charges']
+    source_frieght_charges = data['source_frieght_charges']
+    source_pf_charges = data['source_pf_charges']
+    source_department = data['source_department']
+    source_product_category=data['source_product_category']
+    source_total_amount=data['source_total_amount']
+    valuearray = data['valuearray']
+    sourceawardarray = []
+    try:
+        for i in range(0, len(valuearray)):
+            if company_code.lower() in valuearray[i].get('company_code').lower() and \
+                    company_name.lower() in valuearray[i].get('company_name').lower() and \
+                    source_code.lower() in valuearray[i].get('source_code').lower() and \
+                    source_type.lower() in valuearray[i].get('source_type').lower() and \
+                    source_item_type.lower() in valuearray[i].get('source_item_type').lower() and \
+                    source_item_name.lower() in valuearray[i].get('source_item_name').lower() and \
+                    source_quantity.lower() in valuearray[i].get('source_quantity').lower() and \
+                    source_delivery_charges.lower() in valuearray[i].get('source_delivery_charges').lower() and \
+                    source_frieght_charges.lower() in valuearray[i].get('source_frieght_charges').lower() and \
+                    source_pf_charges.lower() in valuearray[i].get('source_pf_charges').lower() and \
+                    source_department.lower() in valuearray[i].get('source_department').lower() and \
+                    source_product_category.lower() in valuearray[i].get('source_product_category').lower() and \
+                    source_total_amount.lower() in valuearray[i].get('source_total_amount').lower():
+                sourceawardarray.append(valuearray[i])
+            else:
+                print('Not Present')
+
+        return Response({'status': 200, 'message': 'ok', 'data': sourceawardarray}, status=200)
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)

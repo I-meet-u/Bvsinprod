@@ -91,6 +91,16 @@ urlpatterns = [
 
     # path('send_mail_template/',views.send_mail_template)
     # path('subscribe_email/', MailSubscriptionAPIView.as_view(),name='subscribe-email')
+    path('get-all-basic-details-without-token/', views.get_basic_details_without_token),
+    path('get-all-basic-details-without-token-with-userid/', views.get_basic_details_without_token_and_with_userid),
+    path('get-billing-address-without-token/', views.get_billing_address_without_token),
+    path('get-shipping-address-without-token/', views.get_shipping_address_without_token),
+    path('get-bank-details-without-token/', views.get_bank_details_without_token),
+    path('get-industry-hierarchy-without-token/', views.get_industry_hierarchy_without_token),
+    path('get-legal-details-without-token/', views.get_legal_details_without_token),
+    path('get-employee-basic-details-without-token/', views.get_employee_basic_details_without_token),
+    path('get-employee-industry-info-without-token/', views.get_employee_industry_info_without_token),
+    path('get-industry-info-without-token/', views.get_industry_info_without_token),
 
 
 

@@ -1614,3 +1614,156 @@ def fetch_all_basic_company_details(request):
 
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)
+
+
+@api_view(['post'])
+@permission_classes((AllowAny,))
+def get_basic_details_without_token(request):
+    data=request.data
+    ccode=data['ccode']
+    try:
+        basicobj=BasicCompanyDetails.objects.filter(company_code=ccode).values()
+        if len(basicobj)>0:
+            return Response({'status': 200, 'message': 'Basic Company List Success', 'data': basicobj}, status=200)
+        else:
+            return Response({'status': 204, 'message': 'Not Present'}, status=204)
+
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)
+
+@api_view(['post'])
+@permission_classes((AllowAny,))
+def get_basic_details_without_token_and_with_userid(request):
+    data=request.data
+    userid=data['userid']
+    try:
+        basicobj=BasicCompanyDetails.objects.filter(updated_by_id=userid).values()
+        if len(basicobj)>0:
+            return Response({'status': 200, 'message': 'Basic Company List for Parcticular User Id Success', 'data': basicobj}, status=200)
+        else:
+            return Response({'status': 204, 'message': 'Not Present'}, status=204)
+
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)
+
+@api_view(['post'])
+@permission_classes((AllowAny,))
+def get_billing_address_without_token(request):
+    data=request.data
+    userid=data['userid']
+    try:
+        billingobj=BillingAddress.objects.filter(updated_by_id=userid).values()
+        if len(billingobj)>0:
+            return Response({'status': 200, 'message': 'Billing Address List Success', 'data': billingobj}, status=200)
+        else:
+            return Response({'status': 204, 'message': 'Not Present'}, status=204)
+
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)
+
+
+@api_view(['post'])
+@permission_classes((AllowAny,))
+def get_shipping_address_without_token(request):
+    data=request.data
+    userid=data['userid']
+    try:
+        shippingobj=ShippingAddress.objects.filter(updated_by_id=userid).values()
+        if len(shippingobj)>0:
+            return Response({'status': 200, 'message': 'Shipping Address List Success', 'data': shippingobj}, status=200)
+        else:
+            return Response({'status': 204, 'message': 'Not Present'}, status=204)
+
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)
+
+
+@api_view(['post'])
+@permission_classes((AllowAny,))
+def get_industry_info_without_token(request):
+    data=request.data
+    userid=data['userid']
+    try:
+        industryobj=IndustrialInfo.objects.filter(updated_by_id=userid).values()
+        if len(industryobj)>0:
+            return Response({'status': 200, 'message': 'Industry Info List Success', 'data': industryobj}, status=200)
+        else:
+            return Response({'status': 204, 'message': 'Not Present'}, status=204)
+
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)
+
+@api_view(['post'])
+@permission_classes((AllowAny,))
+def get_bank_details_without_token(request):
+    data=request.data
+    userid=data['userid']
+    try:
+        bankobj=BankDetails.objects.filter(updated_by_id=userid).values()
+        if len(bankobj)>0:
+            return Response({'status': 200, 'message': 'Bank Details List Success', 'data': bankobj}, status=200)
+        else:
+            return Response({'status': 204, 'message': 'Not Present'}, status=204)
+
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)
+
+@api_view(['post'])
+@permission_classes((AllowAny,))
+def get_industry_hierarchy_without_token(request):
+    data=request.data
+    userid=data['userid']
+    try:
+        industryhierarchyobj=IndustrialHierarchy.objects.filter(updated_by_id=userid).values()
+        if len(industryhierarchyobj)>0:
+            return Response({'status': 200, 'message': 'Industry Hierarchy List Success', 'data': industryhierarchyobj}, status=200)
+        else:
+            return Response({'status': 204, 'message': 'Not Present'}, status=204)
+
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)
+
+@api_view(['post'])
+@permission_classes((AllowAny,))
+def get_legal_details_without_token(request):
+    data=request.data
+    userid=data['userid']
+    try:
+        legalobj=LegalDocuments.objects.filter(updated_by_id=userid).values().order_by('id')
+        if len(legalobj)>0:
+            return Response({'status': 200, 'message': 'Legal Documents List Success', 'data': legalobj}, status=200)
+        else:
+            return Response({'status': 204, 'message': 'Not Present'}, status=204)
+
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)
+
+@api_view(['post'])
+@permission_classes((AllowAny,))
+def get_employee_basic_details_without_token(request):
+    data=request.data
+    userid=data['userid']
+    try:
+        empbasicobj=Employee_CompanyDetails.objects.filter(emp_updated_by=userid).values()
+        if len(empbasicobj)>0:
+            return Response({'status': 200, 'message': 'Employee Company Details List Success', 'data':empbasicobj}, status=200)
+        else:
+            return Response({'status': 204, 'message': 'Not Present'}, status=204)
+
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)
+
+@api_view(['post'])
+@permission_classes((AllowAny,))
+def get_employee_industry_info_without_token(request):
+    data=request.data
+    userid=data['userid']
+    try:
+        empindustryobj=Employee_IndustryInfo.objects.filter(emp_updated_by=userid).values()
+        if len(empindustryobj)>0:
+            return Response({'status': 200, 'message': 'Employee Industry Info List Success', 'data':empindustryobj}, status=200)
+        else:
+            return Response({'status': 204, 'message': 'Not Present'}, status=204)
+
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)

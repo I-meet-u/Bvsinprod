@@ -1899,5 +1899,158 @@ class LandingPageBidding_PublishViewSet(viewsets.ModelViewSet):
             return landingpageobj
         raise ValidationError({'message':'landing Page details of particular user id is not exist','status':204})
 
-# @api_view(['put'])
-# def update_status_tp_published(request)
+@api_view(['post'])
+def fetch_vendor_product_details_by_userid_and_pk(request):
+    data=request.data
+    userid=data['userid']
+    vendorpk=data['vendorpk']
+    try:
+        vendorobj=VendorProduct_BasicDetails.objects.filter(updated_by_id=userid,vendor_product_id=vendorpk).values()
+        if len(vendorobj)>0:
+            vendorproductobj=VendorProduct_BasicDetails.objects.filter(vendor_product_id=vendorobj[0].get('vendor_product_id')).values().order_by('vendor_product_id')
+            vendorproductgeneraldetailsobj=VendorProduct_GeneralDetails.objects.filter(vendor_products_id=vendorobj[0].get('vendor_product_id')).values().order_by('id')
+            vendortechincalobj = VendorProduct_TechnicalSpecifications.objects.filter(
+                vendor_products_id=vendorobj[0].get('vendor_product_id')).values().order_by('id')
+            vendorproductfeaturesobj = VendorProduct_ProductFeatures.objects.filter(
+                vendor_products_id=vendorobj[0].get('vendor_product_id')).values().order_by('id')
+            vendordocumentsobj = VendorProduct_Documents.objects.filter(
+                vendor_products_id=vendorobj[0].get('vendor_product_id')).values().order_by('id')
+            vendorproductalldata = list(chain(vendorproductobj, vendorproductgeneraldetailsobj,vendortechincalobj,vendorproductfeaturesobj,vendordocumentsobj))
+
+            return Response({'status': 200, 'message': 'Vendor Product List','data':vendorproductalldata}, status=200)
+        else:
+            return Response({'status': 204, 'message': 'Data Not Present'}, status=204)
+
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)
+
+@api_view(['post'])
+def landing_page_listing_leads_closed_list(request):
+    data=request.data
+    userid=data['userid']
+    vendorproductarray=[]
+    try:
+        openleadslistobj=LandingPageBidding.objects.filter(vendor_user_id=userid,status='Pending').values().order_by('id')
+        if len(openleadslistobj)>0:
+            for i in range(0,len(openleadslistobj)):
+                deadlinedateval = datetime.strptime(openleadslistobj[i].get('deadline_date'), '%Y-%m-%d')
+                deadlinedateconvertion = datetime.date(deadlinedateval)
+                todaydate = date.today()
+                if deadlinedateconvertion < todaydate:
+                    print('s')
+                    vendorproductarray.append({'id':openleadslistobj[i].get('id'),
+                                               'publish_date':openleadslistobj[i].get('publish_date'),
+                                               'deadline_date': openleadslistobj[i].get('deadline_date'),
+                                               'delivery_terms': openleadslistobj[i].get('delivery_terms'),
+                                               'packaging_forwarding': openleadslistobj[i].get('packaging_forwarding'),
+                                               'priority': openleadslistobj[i].get('priority'),
+                                               'payment_terms': openleadslistobj[i].get('payment_terms'),
+                                               'quantity': openleadslistobj[i].get('quantity'),
+                                               'vendor_product_pk': openleadslistobj[i].get('vendor_product_pk'),
+                                               'item_type': openleadslistobj[i].get('item_type'),
+                                               'vendors_code': openleadslistobj[i].get('vendors_code'),
+                                               'created_by': openleadslistobj[i].get('created_by'),
+                                               'updated_by': openleadslistobj[i].get('updated_by'),
+                                               'company_name': openleadslistobj[i].get('company_name'),
+                                               'status': openleadslistobj[i].get('status'),
+                                               'product_name': openleadslistobj[i].get('product_name'),
+                                               'vendor_user_id': openleadslistobj[i].get('vendor_user_id')
+                                               })
+                else:
+                    print('deadline is expired')
+
+            return Response({'status': 200, 'message': 'Open Leads List of Listing Leads','data':vendorproductarray}, status=200)
+        else:
+            return Response({'status':204,'message':'Data Not Present','data':vendorproductarray},status=204)
+
+
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)
+
+
+@api_view(['post'])
+def fetch_general_details_by_foreign_key(request):
+
+    data=request.data
+    vendorproductid=data['vendorproductid']
+    try:
+        vendorgeneraldetailsobj=VendorProduct_GeneralDetails.objects.filter(vendor_products=vendorproductid).values().order_by('id')
+        if len(vendorgeneraldetailsobj)>0:
+            return Response({'status': 200, 'message': 'Vendor Product General Details List', 'data': vendorgeneraldetailsobj},
+                            status=status.HTTP_200_OK)
+        else:
+            return Response({'status': 204, 'message': 'Not Present'}, status=status.HTTP_204_NO_CONTENT)
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+
+@api_view(['post'])
+def fetch_techincal_specification_by_foreign_key(request):
+    data=request.data
+    vendorproductid=data['vendorproductid']
+    try:
+        vendortechincalspecifiactionsobj=VendorProduct_TechnicalSpecifications.objects.filter(vendor_products=vendorproductid).values().order_by('id')
+        if len(vendortechincalspecifiactionsobj)>0:
+            return Response({'status': 200, 'message': 'Vendor Product Technical Specification Details List', 'data': vendortechincalspecifiactionsobj},
+                            status=status.HTTP_200_OK)
+        else:
+            return Response({'status': 204, 'message': 'Not Present'}, status=status.HTTP_204_NO_CONTENT)
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+@api_view(['post'])
+def fetch_product_features_by_foreign_key(request):
+    data=request.data
+    vendorproductid=data['vendorproductid']
+    try:
+        vendorproductfeaturesobj=VendorProduct_ProductFeatures.objects.filter(vendor_products_id=vendorproductid).values().order_by('id')
+        if len(vendorproductfeaturesobj)>0:
+            return Response({'status': 200, 'message': 'Vendor Product Features Details List', 'data': vendorproductfeaturesobj},
+                            status=status.HTTP_200_OK)
+        else:
+            return Response({'status': 204, 'message': 'Not Present'}, status=status.HTTP_204_NO_CONTENT)
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+@api_view(['post'])
+def fetch_product_documents_foreign_key(request):
+    data=request.data
+    vendorproductid=data['vendorproductid']
+    try:
+        vendorproductdocumentsobj=VendorProduct_Documents.objects.filter(vendor_products_id=vendorproductid).values().order_by('id')
+        if len(vendorproductdocumentsobj)>0:
+            return Response({'status': 200, 'message': 'Vendor Product Documents Details List', 'data': vendorproductdocumentsobj},
+                            status=status.HTTP_200_OK)
+        else:
+            return Response({'status': 204, 'message': 'Not Present'}, status=status.HTTP_204_NO_CONTENT)
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+@api_view(['post'])
+def get_landing_page_bidding_list_response(request):
+    data=request.data
+    userid = data['userid']
+    resarry = []
+    try:
+        landingpageobj=LandingPageBidding.objects.filter(updated_by_id=userid).values()
+        print(len(landingpageobj))
+        if len(landingpageobj)>0:
+            for i in range(0,len(landingpageobj)):
+                print(landingpageobj[i].get('id'))
+                listpublishobj=LandingPageBidding_Publish.objects.filter(listing_leads=landingpageobj[i].get('id')).values()
+                print('publis----------',len(listpublishobj))
+                if listpublishobj:
+                    resarry.append({'type':listpublishobj[i].get('item_type'),
+                                    'item_name':listpublishobj[i].get('item_name'),
+                                    'description':listpublishobj[i].get('item_description'),
+                                    'UOM':listpublishobj[i].get('uom'),
+                                    'qty':listpublishobj[i].get('quantity'),
+                                    'publishcount':len(listpublishobj)})
+
+            return Response({'status': 200,'message':'ok','data':resarry},status=200)
+        else:
+            return Response({'status': 204, 'message': 'Not Present', 'data': []}, status=200)
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)

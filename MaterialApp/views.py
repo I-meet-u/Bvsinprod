@@ -2079,3 +2079,15 @@ def fetch_vendor_product_details_by_pk(request):
 
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)
+
+@api_view(['post'])
+def get_landing_page_bidding_by_pid(request):
+    try:
+        getlistbyuserid=LandingPageBidding.objects.filter(id=request.data['id']).values()
+        if len(getlistbyuserid)>0:
+            return Response({'status': 200, 'message': 'Buyer Post rfq list by id','data':getlistbyuserid}, status=status.HTTP_200_OK)
+        else:
+            return Response({'status': 204, 'message': 'Buyer Post rfq list is not present'},
+                            status=status.HTTP_204_NO_CONTENT)
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)

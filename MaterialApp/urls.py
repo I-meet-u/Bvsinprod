@@ -59,5 +59,6 @@ urlpatterns = [
     path('fetch-product-documents-by-foreign-key/', views.fetch_product_documents_foreign_key),
     path('get-landing-page-bidding-list-response/', views.get_landing_page_bidding_list_response),
     path('fetch-vendor-product-details-by-pk/', views.fetch_vendor_product_details_by_pk),
+    path('get_landing_page_bidding_by_pid/',views.get_landing_page_bidding_by_pid)
 
 ]

@@ -2054,3 +2054,28 @@ def get_landing_page_bidding_list_response(request):
             return Response({'status': 204, 'message': 'Not Present', 'data': []}, status=200)
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)
+
+
+@api_view(['post'])
+def fetch_vendor_product_details_by_pk(request):
+    data=request.data
+    vendorpk=data['vendorpk']
+    try:
+        vendorobj=VendorProduct_BasicDetails.objects.filter(vendor_product_id=vendorpk).values()
+        if len(vendorobj)>0:
+            vendorproductobj=VendorProduct_BasicDetails.objects.filter(vendor_product_id=vendorobj[0].get('vendor_product_id')).values().order_by('vendor_product_id')
+            vendorproductgeneraldetailsobj=VendorProduct_GeneralDetails.objects.filter(vendor_products_id=vendorobj[0].get('vendor_product_id')).values().order_by('id')
+            vendortechincalobj = VendorProduct_TechnicalSpecifications.objects.filter(
+                vendor_products_id=vendorobj[0].get('vendor_product_id')).values().order_by('id')
+            vendorproductfeaturesobj = VendorProduct_ProductFeatures.objects.filter(
+                vendor_products_id=vendorobj[0].get('vendor_product_id')).values().order_by('id')
+            vendordocumentsobj = VendorProduct_Documents.objects.filter(
+                vendor_products_id=vendorobj[0].get('vendor_product_id')).values().order_by('id')
+            vendorproductalldata = list(chain(vendorproductobj, vendorproductgeneraldetailsobj,vendortechincalobj,vendorproductfeaturesobj,vendordocumentsobj))
+
+            return Response({'status': 200, 'message': 'Vendor Product List','data':vendorproductalldata}, status=200)
+        else:
+            return Response({'status': 204, 'message': 'Data Not Present'}, status=204)
+
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)

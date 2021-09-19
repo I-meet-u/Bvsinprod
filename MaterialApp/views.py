@@ -1900,6 +1900,35 @@ class LandingPageBidding_PublishViewSet(viewsets.ModelViewSet):
         raise ValidationError({'message':'landing Page details of particular user id is not exist','status':204})
 
 @api_view(['post'])
+def getbuyerpostedresponse(request):
+    data=request.data
+    userid=data['userid']
+    res=[]
+    try:
+        landingpagebidd=LandingPageBidding.objects.filter(updated_by=SelfRegistration.objects.get(id=userid)).values()
+        print(landingpagebidd)
+        for i in range(len(landingpagebidd)):
+            # landingpageid.append(landingpagebidd[i].get('id'))
+            landingpagevendorbidpublishobj=LandingPageBidding_Publish.objects.filter(listing_leads=landingpagebidd[i].get('id')).values()
+            res.append({'productname':landingpagebidd[i].get('product_name'),
+                        'Quantity':landingpagebidd[i].get('quantity'),
+                        'Priority':landingpagebidd[i].get('priority'),
+                        'publish_date':landingpagebidd[i].get('publish_date'),
+                        'deadline_date':landingpagebidd[i].get('deadline_date'),
+                        'count_of_res':len(landingpagevendorbidpublishobj)})
+
+            print("i----",i)
+            print("count of response per RFQ ",len(landingpagevendorbidpublishobj))
+
+            # landingpagebidd[i].setdefault({'count',len(landingpagevendorbidpublishobj)})
+
+        return Response({'status': 200, 'message': 'Ok','data':res}, status=204)
+
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)
+
+
+@api_view(['post'])
 def fetch_vendor_product_details_by_userid_and_pk(request):
     data=request.data
     userid=data['userid']

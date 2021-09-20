@@ -1938,7 +1938,7 @@ def get_buyer_posted_response_by_pk(request):
         landingpagebidd=LandingPageBidding.objects.filter(id=landingpk).values()
         if len(landingpagebidd)>0:
             landingpagevendorbidpublishobj=LandingPageBidding_Publish.objects.filter(listing_leads=landingpagebidd[0].get('id')).values()
-            return Response({'status': 200, 'message': 'Listing Leads Publish','data':landingpagevendorbidpublishobj}, status=200)
+            return Response({'status': 200, 'message': 'Listing Leads Publish','data':landingpagevendorbidpublishobj,'buyer_data':landingpagebidd}, status=200)
         else:
             return Response({'status':204,'message':'Listing Leads Not Present'},status=204)
 

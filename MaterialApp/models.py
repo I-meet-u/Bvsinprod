@@ -303,3 +303,27 @@ class LandingPageBidding_Publish(models.Model):
 
     class Meta:
         db_table="LandingPageBidding_Publish"
+
+class awardpostedRFQ(models.Model):
+    ItemType=models.CharField(max_length=100,null=True,blank=True)
+    product=models.CharField(max_length=100,null=True,blank=True)
+    quantity=models.CharField(max_length=100,null=True,blank=True)
+    priority=models.CharField(max_length=100,null=True,blank=True)
+    buyer_publish_date=models.CharField(max_length=100,null=True,blank=True)
+    buyer_deadLine_date=models.CharField(max_length=100,null=True,blank=True)
+    Buyer_delivery_Terms=models.CharField(max_length=100,null=True,blank=True)
+    Buyer_pfcharges_Terms = models.CharField(max_length=100, null=True, blank=True)
+    Buyer_payment_Terms=models.CharField(max_length=100, null=True, blank=True)
+    landingpage_bidding_id=models.ForeignKey(LandingPageBidding, on_delete=models.CASCADE,null=True,blank=True)
+    landing_page_bidding_publish_id=ArrayField(models.CharField(max_length=500))
+    created_on = models.DateTimeField(auto_now_add=True,null=True)
+    updated_on = models.DateTimeField(auto_now=True,null=True)
+    created_by = models.BigIntegerField(null=True)
+    updated_by = models.ForeignKey(SelfRegistration, on_delete=models.CASCADE,null=True)
+
+    class Meta:
+        db_table="AwardpostedRFQBuyer"
+
+
+
+

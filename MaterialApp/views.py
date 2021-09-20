@@ -1899,6 +1899,19 @@ class LandingPageBidding_PublishViewSet(viewsets.ModelViewSet):
             return landingpageobj
         raise ValidationError({'message':'landing Page details of particular user id is not exist','status':204})
 
+
+class LandingPageBiddingRFQAwardsSerializerViewSet(viewsets.ModelViewSet):
+    queryset = awardpostedRFQ.objects.all()
+    serializer_class = LandingPageBiddingRFQAwardsSerializer
+
+    def get_queryset(self):
+        landingpageobj = awardpostedRFQ.objects.filter(
+            updated_by=self.request.GET.get('updated_by')).order_by('id')
+        if landingpageobj:
+            return landingpageobj
+        raise ValidationError({'message': 'Award is not exist', 'status': 204})
+
+
 @api_view(['post'])
 def getbuyerpostedresponse(request):
     data=request.data
@@ -2137,3 +2150,15 @@ def get_landing_page_bidding_by_pid(request):
                             status=status.HTTP_204_NO_CONTENT)
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)
+
+
+#
+# @api_view(['post'])
+# def addtoawardspostedrfq(request):
+#     data=requset.data
+#     try:
+#
+#     except Exception as e:
+#         return Response({'status': 500, 'error': str(e)}, status=500)
+
+

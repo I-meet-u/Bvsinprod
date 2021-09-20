@@ -14,6 +14,7 @@ router.register('buyer-service-details', views.BuyerServiceDetailsView)
 router.register('buyer-machinary-details', views.BuyerMachinaryDetailsView)
 router.register('item-code-settings', views.ItemCodeSettingsView)
 router.register('landing-page-bidding-publish',views.LandingPageBidding_PublishViewSet)
+router.register('LandingPageBiddingRFQAwardsSerializerViewSet',views.LandingPageBiddingRFQAwardsSerializerViewSet)
 urlpatterns = [
     path('vendor-product-router-urls/',include(router.urls)),
     path('get-itemtype-based-on-userid/',views.get_itemtype_based_on_userid),

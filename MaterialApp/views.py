@@ -1910,7 +1910,9 @@ def getbuyerpostedresponse(request):
         for i in range(len(landingpagebidd)):
             # landingpageid.append(landingpagebidd[i].get('id'))
             landingpagevendorbidpublishobj=LandingPageBidding_Publish.objects.filter(listing_leads=landingpagebidd[i].get('id')).values()
-            res.append({'productname':landingpagebidd[i].get('product_name'),
+            res.append({
+                        'landong_page_pk':landingpagebidd[i].get('id'),
+                        'productname':landingpagebidd[i].get('product_name'),
                         'Quantity':landingpagebidd[i].get('quantity'),
                         'Priority':landingpagebidd[i].get('priority'),
                         'publish_date':landingpagebidd[i].get('publish_date'),

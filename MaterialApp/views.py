@@ -1922,7 +1922,7 @@ def getbuyerpostedresponse(request):
 
             # landingpagebidd[i].setdefault({'count',len(landingpagevendorbidpublishobj)})
 
-        return Response({'status': 200, 'message': 'Ok','data':res}, status=204)
+        return Response({'status': 200, 'message': 'Ok','data':res}, status=200)
 
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)

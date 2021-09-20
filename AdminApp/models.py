@@ -85,3 +85,50 @@ class CreateUser(models.Model):
 
     class Meta:
         db_table = "CreateUser"
+
+
+
+class CreateBuyer(models.Model):
+    company_code=models.CharField(max_length=100,null=True,blank=True)
+    company_name=models.CharField(max_length=500)
+    gst_no=models.CharField(max_length=50)
+    company_type=models.CharField(max_length=280)
+    currency=models.CharField(max_length=300)
+    pan_number=models.CharField(max_length=80)
+    tax_payer_type=models.CharField(max_length=150)
+    msme_registered=models.CharField(max_length=50)
+    established_year=models.CharField(max_length=100)
+    website=models.CharField(max_length=200,null=True,blank=True)
+    industrial_scale=models.CharField(max_length=100)
+    email_id=models.CharField(max_length=250,unique=True)
+    phone_no=models.CharField(max_length=30)
+    emergency_no=models.CharField(max_length=50)
+    designation=models.CharField(max_length=150)
+    department=models.CharField(max_length=150)
+    alternate_email=models.CharField(max_length=100)
+    bill_company_name=models.CharField(max_length=300)
+    bill_address=models.TextField()
+    bill_city=models.CharField(max_length=400)
+    bill_state=models.CharField(max_length=400)
+    bill_country=models.CharField(max_length=300)
+    bill_pincode=models.IntegerField()
+    bill_landmark=models.CharField(max_length=600,null=True,blank=True)
+    bill_location = models.CharField(max_length=300, null=True, blank=True)
+    ship_company_name = models.CharField(max_length=300)
+    ship_address = models.TextField()
+    ship_city = models.CharField(max_length=400)
+    ship_state = models.CharField(max_length=400)
+    ship_country = models.CharField(max_length=300)
+    ship_pincode = models.IntegerField()
+    ship_landmark = models.CharField(max_length=600, null=True, blank=True)
+    ship_location = models.CharField(max_length=300, null=True, blank=True)
+    numeric=models.IntegerField(null=True,blank=True)
+    admins=models.ForeignKey(AdminRegister,on_delete=models.CASCADE)
+    created_on = models.DateTimeField(auto_now_add=True, null=True)
+    updated_on = models.DateTimeField(auto_now=True, null=True)
+    created_by = models.BigIntegerField(null=True,blank=True)
+    updated_by = models.CharField(max_length=100,null=True,blank=True)
+    user_image=models.FileField(upload_to="AdminImages",null=True,blank=True)
+
+    class Meta:
+        db_table = "CreateBuyer"

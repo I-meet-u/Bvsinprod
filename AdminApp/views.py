@@ -1039,7 +1039,8 @@ from django.db.models import Q
 from RegistrationApp.models import SelfRegistration, BasicCompanyDetails, IndustrialInfo, IndustrialHierarchy, \
     BankDetails, LegalDocuments, Employee_CompanyDetails, Employee_IndustryInfo
 from .models import *
-from AdminApp.serializers import AdminInviteSerializer, CreateUserSerializer, AdminRegisterSerializer
+from AdminApp.serializers import AdminInviteSerializer, CreateUserSerializer, AdminRegisterSerializer, \
+    CreateBuyerSerializer
 
 
 class AdminRegisterView(viewsets.ModelViewSet):
@@ -2154,3 +2155,16 @@ def add_data_based_on_user_type_to_create_user(request):
 
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)
+
+
+
+class CreateBuyerView(viewsets.ModelViewSet):
+    queryset = CreateBuyer.objects.all()
+    serializer_class = CreateBuyerSerializer
+
+
+    def get_queryset(self):
+        createbuyerobj=CreateBuyer.objects.filter(admins=self.request.GET.get('admins'))
+        if not createbuyerobj:
+            raise ValidationError({'message': 'Create Buyer Details are not found', 'status': 204})
+        return  createbuyerobj

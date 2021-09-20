@@ -40,3 +40,32 @@ class CreateUserSerializer(serializers.ModelSerializer):
             print(numeric)
         values = CreateUser.objects.create(numeric=numeric,user_code="USR"+str(numeric), **validate_data)
         return values
+
+
+class CreateBuyerSerializer(serializers.ModelSerializer):
+    company_code = serializers.SerializerMethodField()
+    numeric = serializers.SerializerMethodField()
+
+    def get_numeric(self, obj):
+        return obj.numeric
+
+    def get_company_code(self, obj):
+        return obj.company_code
+
+    class Meta:
+        model=CreateBuyer
+        fields = '__all__'
+
+    def create(self, validate_data):
+        # to add any extra details into the object before saving
+        print(validate_data)
+        createbuyer = CreateBuyer.objects.count()
+        if createbuyer == 0:
+            numeric = 1011001
+        else:
+            createbuyer = CreateBuyer.objects.values_list('numeric', flat=True).last()
+            print(createbuyer)
+            numeric = int(createbuyer) + 1
+            print(numeric)
+        values = CreateBuyer.objects.create(numeric=numeric,company_code=str(numeric), **validate_data)
+        return values

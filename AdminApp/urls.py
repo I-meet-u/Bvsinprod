@@ -49,7 +49,7 @@ router=routers.DefaultRouter()
 router.register('admin-invite', views.AdminInviteView)
 router.register('create-user', views.CreateUserView)
 router.register('admin-register',views.AdminRegisterView)
-
+router.register('create-buyer', views.CreateBuyerView)
 
 urlpatterns = [
     path('admin-router-urls/',include(router.urls)),
@@ -77,6 +77,7 @@ urlpatterns = [
     path('admin-reject-list/',views.admin_rejected_list),
     path('employee-reject-list/',views.employee_rejected_list),
     path('add-data-based-on-user-type-to-create-user/', views.add_data_based_on_user_type_to_create_user)
+
 
 
 

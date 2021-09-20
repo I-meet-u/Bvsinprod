@@ -132,3 +132,51 @@ class CreateBuyer(models.Model):
 
     class Meta:
         db_table = "CreateBuyer"
+
+
+class OpenLeadsRfq(models.Model):
+    buyer=models.CharField(max_length=200)
+    rfq_number=models.CharField(max_length=50,null=True,blank=True)
+    numeric=models.IntegerField(null=True,blank=True)
+    rfq_status=models.CharField(max_length=80)
+    rfq_type=models.CharField(max_length=80)
+    publish_date=models.CharField(max_length=100)
+    deadline_date=models.CharField(max_length=100)
+    closing_date=models.CharField(max_length=100)
+    department=models.CharField(max_length=280)
+    currency=models.CharField(max_length=250)
+    category=models.CharField(max_length=250)
+    bill_address=models.TextField()
+    ship_address=models.TextField()
+    scope_of_supply=models.TextField()
+    scope_of_work=models.TextField()
+    additional_info=models.TextField()
+    document_1=models.FileField(upload_to='OpenLeadsDocuments')
+    document_name_1=models.CharField(max_length=500)
+    document_2=models.FileField(upload_to='OpenLeadsDocuments')
+    document_name_2 = models.CharField(max_length=500)
+    document_3=models.FileField(upload_to='OpenLeadsDocuments')
+    document_name_3 = models.CharField(max_length=500)
+    created_on = models.DateTimeField(auto_now_add=True, null=True)
+    updated_on = models.DateTimeField(auto_now=True, null=True)
+    created_by = models.BigIntegerField(null=True, blank=True)
+    updated_by = models.CharField(max_length=100, null=True, blank=True)
+    admins = models.ForeignKey(AdminRegister, on_delete=models.CASCADE)
+
+    class Meta:
+        db_table='OpenLeadsRfq'
+
+class OpenLeadsItems(models.Model):
+    item_code=models.CharField(max_length=100)
+    item_name=models.CharField(max_length=300)
+    item_description=models.TextField()
+    uom=models.CharField(max_length=100)
+    quantity=models.CharField(max_length=100)
+    created_on = models.DateTimeField(auto_now_add=True, null=True)
+    updated_on = models.DateTimeField(auto_now=True, null=True)
+    created_by = models.BigIntegerField(null=True, blank=True)
+    updated_by = models.CharField(max_length=100, null=True, blank=True)
+    admins = models.ForeignKey(AdminRegister, on_delete=models.CASCADE)
+
+    class Meta:
+        db_table='OpenLeadsItems'

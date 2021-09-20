@@ -50,6 +50,8 @@ router.register('admin-invite', views.AdminInviteView)
 router.register('create-user', views.CreateUserView)
 router.register('admin-register',views.AdminRegisterView)
 router.register('create-buyer', views.CreateBuyerView)
+router.register('open-leads-rfq', views.OpenLeadsRfqViewSet)
+router.register('open-leads-terms', views.OpenLeadsItemsViewSet)
 
 urlpatterns = [
     path('admin-router-urls/',include(router.urls)),

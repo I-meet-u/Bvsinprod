@@ -1040,7 +1040,7 @@ from RegistrationApp.models import SelfRegistration, BasicCompanyDetails, Indust
     BankDetails, LegalDocuments, Employee_CompanyDetails, Employee_IndustryInfo
 from .models import *
 from AdminApp.serializers import AdminInviteSerializer, CreateUserSerializer, AdminRegisterSerializer, \
-    CreateBuyerSerializer
+    CreateBuyerSerializer, OpenLeadsRfqSerializer, OpenLeadsItemsSerializer
 
 
 class AdminRegisterView(viewsets.ModelViewSet):
@@ -2168,3 +2168,19 @@ class CreateBuyerView(viewsets.ModelViewSet):
         if not createbuyerobj:
             raise ValidationError({'message': 'Create Buyer Details are not found', 'status': 204})
         return  createbuyerobj
+
+
+class OpenLeadsRfqViewSet(viewsets.ModelViewSet):
+    queryset = OpenLeadsRfq.objects.all()
+    serializer_class = OpenLeadsRfqSerializer
+
+
+    # def get_queryset(self):
+    #     openleadsobj=OpenLeadsRfq.objects.filter(admins=self.request.GET.get('admins'))
+    #     if not openleadsobj:
+    #         raise ValidationError({'message': 'Create Open Leads Details are not found', 'status': 204})
+    #     return  openleadsobj
+
+class OpenLeadsItemsViewSet(viewsets.ModelViewSet):
+    queryset = OpenLeadsItems.objects.all()
+    serializer_class = OpenLeadsItemsSerializer

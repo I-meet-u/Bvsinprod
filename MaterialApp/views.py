@@ -1931,6 +1931,21 @@ def getbuyerpostedresponse(request):
 
 
 @api_view(['post'])
+def get_buyer_posted_response_by_pk(request):
+    data=request.data
+    landingpk=data['landingpk']
+    try:
+        landingpagebidd=LandingPageBidding.objects.filter(id=landingpk).values()
+        if len(landingpagebidd)>0:
+            landingpagevendorbidpublishobj=LandingPageBidding_Publish.objects.filter(listing_leads=landingpagebidd[0].get('id')).values()
+            return Response({'status': 200, 'message': 'Listing Leads Publish','data':landingpagevendorbidpublishobj}, status=200)
+        else:
+            return Response({'status':204,'message':'Listing Leads Not Present'},status=204)
+
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)
+
+@api_view(['post'])
 def fetch_vendor_product_details_by_userid_and_pk(request):
     data=request.data
     userid=data['userid']

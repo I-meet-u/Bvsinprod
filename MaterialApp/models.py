@@ -320,7 +320,7 @@ class awardpostedRFQ(models.Model):
     updated_on = models.DateTimeField(auto_now=True,null=True)
     created_by = models.BigIntegerField(null=True)
     updated_by = models.ForeignKey(SelfRegistration, on_delete=models.CASCADE,null=True)
-
+    po_status=models.CharField(max_length=50,default='Pending',null=True,blank=True)
     class Meta:
         db_table="AwardpostedRFQBuyer"
 

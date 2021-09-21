@@ -52,6 +52,7 @@ router.register('admin-register',views.AdminRegisterView)
 router.register('create-buyer', views.CreateBuyerView)
 router.register('open-leads-rfq', views.OpenLeadsRfqViewSet)
 router.register('open-leads-items', views.OpenLeadsItemsViewSet)
+router.register('open-leads-terms',views.OpenLeadsTermsDescriptionViewSet)
 
 urlpatterns = [
     path('admin-router-urls/',include(router.urls)),

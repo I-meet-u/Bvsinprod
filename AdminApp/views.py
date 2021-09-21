@@ -2184,3 +2184,51 @@ class OpenLeadsRfqViewSet(viewsets.ModelViewSet):
 class OpenLeadsItemsViewSet(viewsets.ModelViewSet):
     queryset = OpenLeadsItems.objects.all()
     serializer_class = OpenLeadsItemsSerializer
+
+    def create(self, request, *args, **kwargs):
+        itemsarray=request.data['itemsarray']
+        admins=self.request.data.get('admins',None)
+        open_leads_pk=self.request.data.get('open_leads_pk',None)
+        try:
+            for i in range(0,len(itemsarray)):
+                openleadsitemsobj=OpenLeadsItems.objects.create(item_code=itemsarray[i].get('item_code'),
+                                                                item_name=itemsarray[i].get('item_name'),
+                                                                item_description=itemsarray[i].get('item_description'),
+                                                                item_type=itemsarray[i].get('item_type'),
+                                                                uom=itemsarray[i].get('uom'),
+                                                                quantity=itemsarray[i].get('quantity'),
+                                                                admins=AdminRegister.objects.get(admin_id=admins),
+                                                                open_leads_pk=open_leads_pk
+
+
+                                                                )
+            return Response({'status': 201, 'message': 'Open Leads Items are created'}, status=201)
+        except Exception as e:
+            return Response({'status':500,'error':str(e)},status=500)
+
+
+class OpenLeadsTermsDescriptionViewSet(viewsets.ModelViewSet):
+    queryset = OpenLeadsItems.objects.all()
+    serializer_class = OpenLeadsItemsSerializer
+
+    def create(self, request, *args, **kwargs):
+        rfq_number = request.data['rfq_number']
+        termsqueries = request.data['termsqueries']
+        print(type(termsqueries))
+        open_leads_pk = request.data.get('open_leads_pk', None)
+        rfq_type = request.data.get('rfq_type', None)
+        admins = request.data.get('admins', None)
+        try:
+            for i in range(0, len(termsqueries)):
+                for keys in termsqueries[i]:
+                    OpenLeadsTermsDescription.objects.create(rfq_number=rfq_number,
+                                                             terms=keys,
+                                                             description=termsqueries[i][keys],
+                                                             open_leads_pk=OpenLeadsRfq.objects.get(id=open_leads_pk),
+                                                             admins=AdminRegister.objects.get(admin_id=admins),
+                                                             rfq_type=rfq_type
+                                                             )
+
+            return Response({'status': 201, 'message': 'Open Leads Terms and Descriptions are created'}, status=201)
+        except Exception as e:
+            return Response({'status': 500, 'message': str(e)}, status=500)

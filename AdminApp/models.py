@@ -170,6 +170,7 @@ class OpenLeadsItems(models.Model):
     item_code=models.CharField(max_length=100)
     item_name=models.CharField(max_length=300)
     item_description=models.TextField()
+    item_type = models.CharField(max_length=80, null=True, blank=True)
     uom=models.CharField(max_length=100)
     quantity=models.CharField(max_length=100)
     created_on = models.DateTimeField(auto_now_add=True, null=True)
@@ -177,6 +178,23 @@ class OpenLeadsItems(models.Model):
     created_by = models.BigIntegerField(null=True, blank=True)
     updated_by = models.CharField(max_length=100, null=True, blank=True)
     admins = models.ForeignKey(AdminRegister, on_delete=models.CASCADE)
-
+    open_leads_pk = models.ForeignKey(OpenLeadsRfq, on_delete=models.CASCADE, null=True, blank=True)
     class Meta:
         db_table='OpenLeadsItems'
+
+
+
+class OpenLeadsTermsDescription(models.Model):
+    rfq_number=models.CharField(max_length=200,null=True,blank=True)
+    terms=models.CharField(max_length=500)
+    description=models.TextField()
+    created_on = models.DateTimeField(auto_now_add=True)
+    updated_on = models.DateTimeField(auto_now=True)
+    created_by = models.BigIntegerField(null=True,blank=True)
+    updated_by = models.BigIntegerField(null=True, blank=True)
+    admins = models.ForeignKey(AdminRegister, on_delete=models.CASCADE)
+    open_leads_pk=models.ForeignKey(OpenLeadsRfq, on_delete=models.CASCADE,null=True,blank=True)
+    rfq_type = models.CharField(max_length=150,null=True,blank=True)
+
+    class Meta:
+        db_table = "OpenLeadsTermsDescription"

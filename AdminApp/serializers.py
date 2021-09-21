@@ -104,3 +104,10 @@ class OpenLeadsItemsSerializer(serializers.ModelSerializer):
     class Meta:
         model=OpenLeadsItems
         fields = '__all__'
+
+
+class OpenLeadsTermsDescriptionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model=OpenLeadsItems
+        fields = '__all__'
+

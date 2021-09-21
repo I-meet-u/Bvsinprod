@@ -35,6 +35,7 @@ urlpatterns = [
     path('business-request-reject-list/', views.business_request_reject_list),
     path('buyer-dashboard-charts-counts/', views.buyer_dashboard_charts_counts),
     path('vendor-dashboard-count/', views.vendor_dashboard_count),
-    path('advance-search-item-list/', views.advance_search_item_list)
+    path('advance-search-item-list/', views.advance_search_item_list),
+    path('deleteinternalvendor/',views.deleteinternalvendor),
 
     ]

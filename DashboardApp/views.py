@@ -1510,3 +1510,18 @@ def update_invite_vendor_registration_status(request):
 
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)
+
+@api_view(['post'])
+def deleteinternalvendor(request):
+    data=request.data
+    try:
+        intvendoridarray=data['internalvendorid']
+        for i in range(0,len(intvendoridarray)):
+            print(intvendoridarray[i])
+            intrnavendorobj=InternalVendor.objects.get(internal_vendor_id=intvendoridarray[i])
+            intrnavendorobj.delete()
+
+        return Response({'status': 200, 'message': 'Internal Users are deleted'}, status=204)
+
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)

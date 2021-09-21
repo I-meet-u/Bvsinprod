@@ -1137,7 +1137,6 @@ class AdminInviteView(viewsets.ModelViewSet):
 class CreateUserView(viewsets.ModelViewSet):
     queryset = CreateUser.objects.all()
     serializer_class = CreateUserSerializer
-    # permission_classes = [permissions.AllowAny]
 
 
     def get_queryset(self):

@@ -1162,12 +1162,12 @@ def source_list_leads(request):
             sourcobj = SourceList_CreateItems.objects.filter(source_vendors__contains=[basicobj[0].get('company_code')]).values()
             # print(len(sourcobj),'qwertyuuywqas')
             for i in range(0,len(sourcobj)):
-                print(sourcobj[i].get('company_code'),'ccode')
+                print(sourcobj[i].get('source_vendors'),'ccode')
                 if sourcobj[i].get('id') not in sourceleadsarray:
                     # print('ndgsfvdas cdasjnmd djnnaddadjnkadjnk')
                     basicval = BasicCompanyDetails.objects.filter(updated_by_id=sourcobj[i].get('updated_by_id')).values()
-                    billingobj = BillingAddress.objects.filter(company_code_id=basicval.company_code,
-                                                               updated_by_id=basicval.updated_by_id).values()
+                    billingobj = BillingAddress.objects.filter(company_code_id=basicval[0].get('company_code'),
+                                                               updated_by_id=basicval[0].get('updated_by_id')).values()
                     listarray.append({'id': sourcobj[i].get('id'),
                                       'company_code': basicval[0].get('company_code'),
                                       'company_name': basicval[0].get('company_name'),

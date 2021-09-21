@@ -1069,8 +1069,6 @@ def admin_login(request):
     data = request.data
     password = data['password']
     admin_email = data['admin_email']
-    digits = '0123456789'
-    OTP = ""
     try:
         admin_obj = AdminRegister.objects.get(admin_email=admin_email)
         if admin_obj:
@@ -1079,8 +1077,6 @@ def admin_login(request):
                     'adminemail': admin_obj.admin_email,
                     'super_admin_key':admin_obj.super_admin_key
                 }
-                admin_obj.email_otp=OTP
-                admin_obj.save()
                 return Response({'status': 200, 'message': 'Email sent successfully','data': admin_user_data}, status=200)
             else:
                 return Response({'status': 424, 'message': 'Password entered is not correct,Please Check Once'},

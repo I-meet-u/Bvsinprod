@@ -29,6 +29,9 @@ class BuyerProductBidding(models.Model):
     created_by = models.BigIntegerField()
     updated_by = models.ForeignKey(SelfRegistration, on_delete=models.CASCADE)
     from_registration=models.CharField(max_length=100,null=True,blank=True,default='False')
+    contact_name=models.CharField(max_length=200,null=True,blank=True)
+    phone_number=models.CharField(max_length=100,null=True,blank=True)
+
     history=HistoricalRecords()
 
     class Meta:

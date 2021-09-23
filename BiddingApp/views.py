@@ -4010,6 +4010,8 @@ def createbuyerbidding(request):
     userid=data['userid']
     productdetails=data['pdetails']
     terms=data["terms"]
+    contact_name=data['contact_name']
+    phone_number=data['phone_number']
 
     try:
         rfqobjcode=RfqCodeSettings.objects.filter(updated_by=userid).values()
@@ -4033,7 +4035,9 @@ def createbuyerbidding(request):
                                                                             product_rfq_title=rfqtitle,
                                                                             created_by=userid,
                                                                             updated_by=SelfRegistration.objects.get(
-                                                                                id=userid)
+                                                                                id=userid),
+                                                                            contact_name=contact_name,
+                                                                            phone_number=phone_number
                                                                             )
 
                 for i in range(0, len(productdetails)):
@@ -4065,19 +4069,21 @@ def createbuyerbidding(request):
                 print("-----",rfqobjcode)
 
                 BuyerProductBiddingobj = BuyerProductBidding.objects.create(product_rfq_number=rfq, user_rfq_number=rfq,
-                                                                      user_bidding_numeric=int(rfqobjcode[0].get('numeric'))+1,
-                                                                      product_rfq_type=rfqtype,
-                                                                      product_publish_date=pdate,
-                                                                      product_deadline_date=deadlinedate,
-                                                                      product_delivery_date=delidate,
-                                                                      product_rfq_currency=currency,
-                                                                      product_rfq_category=category,
-                                                                      product_department=dept,
-                                                                      product_bill_address=billto,
-                                                                      product_ship_address=shipto,
-                                                                      product_rfq_title=rfqtitle,
-                                                                      created_by=userid,
-                                                                      updated_by=SelfRegistration.objects.get(id=userid)
+                                                                          user_bidding_numeric=int(rfqobjcode[0].get('numeric'))+1,
+                                                                          product_rfq_type=rfqtype,
+                                                                          product_publish_date=pdate,
+                                                                          product_deadline_date=deadlinedate,
+                                                                          product_delivery_date=delidate,
+                                                                          product_rfq_currency=currency,
+                                                                          product_rfq_category=category,
+                                                                          product_department=dept,
+                                                                          product_bill_address=billto,
+                                                                          product_ship_address=shipto,
+                                                                          product_rfq_title=rfqtitle,
+                                                                          created_by=userid,
+                                                                          updated_by=SelfRegistration.objects.get(id=userid),
+                                                                          contact_name=contact_name,
+                                                                          phone_number=phone_number,
                                                                       )
 
                 for i in range(0, len(productdetails)):

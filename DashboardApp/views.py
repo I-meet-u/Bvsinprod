@@ -377,7 +377,9 @@ def advance_search_external_vendor(request):
     try:
         for i in range(0, len(valuearray)):
             if valuearray[i].get('company_code').count(company_code) > 0 and maincore.lower() in valuearray[i].get(
-                    'maincore').lower() and category.lower() in valuearray[i].get('category').lower() and subcategory.lower() in valuearray[i].get('subcategory').lower() and bill_city.lower() in valuearray[i].get(
+                    'maincore').lower() and category.lower() in valuearray[i].get('category').lower()\
+                    and subcategory.lower() in valuearray[i].get('subcategory').lower()\
+                    and bill_city.lower() in valuearray[i].get(
                 'bill_city').lower() and bill_state.lower() in valuearray[i].get('bill_state').lower() and \
                     nature_of_business.lower() in valuearray[i].get(
                 'nature_of_business').lower() and industry_to_serve.lower() in valuearray[i].get(
@@ -922,7 +924,7 @@ def all_vendors_list(request):
     internalbuyerarray=[]
     externalarray = []
     try:
-        regobjdata = SelfRegistration.objects.filter(Q(user_type='Vendor') | Q(user_type='Both') | Q(user_type='Buyer'),
+        regobjdata = SelfRegistration.objects.filter(Q(user_type='Vendor') | Q(user_type='Both'),
                                                      admin_approve='Approved').values().order_by('id')
         print(len(regobjdata),'okkkkkkkkkkkkkkkkkkkkkkkkks')
         internalobj = InternalVendor.objects.filter(updated_by_id=userid).values()
@@ -937,22 +939,52 @@ def all_vendors_list(request):
                 industryobj = IndustrialInfo.objects.get(updated_by_id=regobjdata[i].get('id'),
                                                          company_code=basicobj.company_code)
                 billingobj = BillingAddress.objects.filter(updated_by_id=regobjdata[i].get('id')).values()
+                hierarchyobj = IndustrialHierarchy.objects.get(updated_by_id=regobjdata[i].get('id'),
+                                                                  company_code=basicobj.company_code)
                 if basicobj.company_code not in internalarray or basicobj.company_code not in internalbuyerarray:
                     externalarray.append({'company_code': basicobj.company_code,
                                           'company_name': basicobj.company_name,
                                           'industry_scale': basicobj.industrial_scale,
                                           'nature_of_business': industryobj.nature_of_business,
                                           'industry_to_serve': industryobj.industry_to_serve,
-                                          # 'maincore': hierarchyobj.maincore,
-                                          # 'category': hierarchyobj.category,
-                                          # 'subcategory': hierarchyobj.subcategory,
+                                           'maincore': hierarchyobj.maincore,
+                                          'category': hierarchyobj.category,
+                                          'subcategory': hierarchyobj.subcategory,
                                           'bill_city': billingobj[0].get('bill_city'),
                                           'bill_state': billingobj[0].get('bill_state'),
                                           'gst_number': basicobj.gst_number,
                                           'phone_no': regobjdata[i].get('phone_number'),
                                           'email_id': regobjdata[i].get('username'),
                                           'usertype':regobjdata[i].get('user_type'),
+                                              })
+        regobjdata1 = SelfRegistration.objects.filter(user_type='Buyer',admin_approve='Approved').values().order_by('id')
+        print(len(regobjdata1), 'aa')
+        if len(regobjdata1) > 0:
+            for i in range(0, len(regobjdata1)):
+                print(regobjdata1[i].get('id'))
+                basicobj = BasicCompanyDetails.objects.get(updated_by_id=regobjdata1[i].get('id'))
+                industryobj = IndustrialInfo.objects.get(updated_by_id=regobjdata1[i].get('id'),
+                                                         company_code=basicobj.company_code)
+                billingobj = BillingAddress.objects.filter(updated_by_id=regobjdata1[i].get('id')).values()
+
+                if basicobj.company_code not in internalarray or basicobj.company_code not in internalbuyerarray:
+                    externalarray.append({'company_code': basicobj.company_code,
+                                          'company_name': basicobj.company_name,
+                                          'industry_scale': basicobj.industrial_scale,
+                                          'nature_of_business': industryobj.nature_of_business,
+                                          'industry_to_serve': industryobj.industry_to_serve,
+                                          'maincore': "",
+                                          'category': "",
+                                          'subcategory': "",
+                                          'bill_city': billingobj[0].get('bill_city'),
+                                          'bill_state': billingobj[0].get('bill_state'),
+                                          'gst_number': basicobj.gst_number,
+                                          'phone_no': regobjdata1[i].get('phone_number'),
+                                          'email_id': regobjdata1[i].get('username'),
+                                          'usertype': regobjdata1[i].get('user_type'),
                                           })
+
+
 
             return Response({'status': 200, 'message': 'External Vendor List', 'data': externalarray}, status=200)
         else:

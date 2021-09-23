@@ -387,19 +387,11 @@ def advance_search_external_vendor(request):
                 'industry_to_serve').lower() and company_name.lower() in valuearray[i].get('company_name').lower() and \
                     maincore.lower() in valuearray[i].get('maincore') or category.lower() in valuearray[i].get('category') \
                     or subcategory.lower() in valuearray[i].get('subcategory'):
-                # or \
-                #     maincore.lower() in valuearray[i].get('maincore') or \
-                #     category.lower() in valuearray[i].get('category') or \
-                #     subcategory.lower() in valuearray[i].get('subcategory')
                 externalarraysearch.append(valuearray[i])
             else:
                 print('dddd')
-                # externalarraysearch.append(valuearray[i])
-            # if maincore[i].get('maincore') in valuearray[i].get('maincore'):
-
-                # externalarraysearch.append(valuearray[i])
-            # else:
-            #     print('Not Present')
+                if maincore not in valuearray[i].get('maincore') and category not in valuearray[i].get('category') and subcategory not in valuearray[i].get('subcategory') and valuearray[i].get('company_code').count(company_code) > 0:
+                    externalarraysearch.append(valuearray[i])
         return Response({'status': 200, 'message': 'ok', 'data': externalarraysearch}, status=200)
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)

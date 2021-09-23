@@ -373,20 +373,33 @@ def advance_search_external_vendor(request):
     company_code = data['company_code']
     company_name = data['company_name']
     valuearray = data['valuearray']
+    # maincorearray=data['maincorearray']
     externalarraysearch = []
     try:
         for i in range(0, len(valuearray)):
-            if valuearray[i].get('company_code').count(company_code) > 0 and maincore.lower() in valuearray[i].get(
-                    'maincore').lower() and category.lower() in valuearray[i].get('category').lower()\
-                    and subcategory.lower() in valuearray[i].get('subcategory').lower()\
-                    and bill_city.lower() in valuearray[i].get(
+            print('dss')
+            print(maincore)
+            print(valuearray[i].get('maincore'),'sssssss')
+            if valuearray[i].get('company_code').count(company_code) > 0 and bill_city.lower() in valuearray[i].get(
                 'bill_city').lower() and bill_state.lower() in valuearray[i].get('bill_state').lower() and \
                     nature_of_business.lower() in valuearray[i].get(
                 'nature_of_business').lower() and industry_to_serve.lower() in valuearray[i].get(
-                'industry_to_serve').lower() and company_name.lower() in valuearray[i].get('company_name').lower():
+                'industry_to_serve').lower() and company_name.lower() in valuearray[i].get('company_name').lower() and \
+                    maincore.lower() in valuearray[i].get('maincore') or category.lower() in valuearray[i].get('category') \
+                    or subcategory.lower() in valuearray[i].get('subcategory'):
+                # or \
+                #     maincore.lower() in valuearray[i].get('maincore') or \
+                #     category.lower() in valuearray[i].get('category') or \
+                #     subcategory.lower() in valuearray[i].get('subcategory')
                 externalarraysearch.append(valuearray[i])
             else:
-                print('Not Present')
+                print('dddd')
+                # externalarraysearch.append(valuearray[i])
+            # if maincore[i].get('maincore') in valuearray[i].get('maincore'):
+
+                # externalarraysearch.append(valuearray[i])
+            # else:
+            #     print('Not Present')
         return Response({'status': 200, 'message': 'ok', 'data': externalarraysearch}, status=200)
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)

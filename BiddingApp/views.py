@@ -291,7 +291,10 @@ class SelectVendorsForBiddingProductView(viewsets.ModelViewSet):
                                                                                                    "rfqno":rfq_number ,
                                                                                                    "totalqnty":str(totalquantity),
                                                                                                    "totalproduct":str(len(bidproductdetails)),
-                                                                                                   "cname":bidcreater[0].get('company_name')},
+                                                                                                   "cname":bidcreater[0].get('company_name'),
+                                                                                                   "mail": Regobj.username,
+                                                                                                   "phone": Regobj.phone_number,
+                                                                                                   },
                                                                            headers=headers,
                                                                            subject='Bidding Invitation'
                                                                            )  # SendSmtpEmail | Values to send a transactional email

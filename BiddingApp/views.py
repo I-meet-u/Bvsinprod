@@ -1,5 +1,8 @@
+import io
 from datetime import date, datetime
 from itertools import chain, groupby
+
+import requests
 from django.http import HttpRequest
 from django.shortcuts import render
 from rest_framework import viewsets, permissions, status
@@ -2469,11 +2472,10 @@ class PurchaseOrderViewSet(viewsets.ModelViewSet):
     queryset = PurchaseOrder.objects.all()
     serializer_class = PurchaseOrderSerializer
     parser = [MultiPartParser]
-    # sssfpermission_classes = [permissions.AllowAny]
 
     def create(self, request, *args, **kwargs):
-        rfq_number=request.data.get('rfq_number',None)
-        vendorcode=request.data.get('vendorcode',None)
+        rfq_number = request.data.get('rfq_number', None)
+        vendorcode = request.data.get('vendorcode', None)
         configuration = sib_api_v3_sdk.Configuration()
         configuration.api_key[
             'api-key'] = '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'
@@ -2481,25 +2483,25 @@ class PurchaseOrderViewSet(viewsets.ModelViewSet):
             'accept': 'application/json',
             'content-type': 'application/json',
         }
-        if request.data['rfq_type']=='Product':
-            awardobj=Awards.objects.filter(rfq_number=rfq_number,company_code=vendorcode).values()
-            ccode=awardobj[0].get('company_code')
-            quantity=awardobj[0].get('buyer_bid_quantity')
-            itemstotal=awardobj[0].get('product_code')
-            print(len(itemstotal),'length')
-            basicobj=BasicCompanyDetails.objects.get(company_code=ccode)
+        if request.data['rfq_type'] == 'Product':
+            awardobj = Awards.objects.filter(rfq_number=rfq_number, company_code=vendorcode).values()
+            ccode = awardobj[0].get('company_code')
+            quantity = awardobj[0].get('buyer_bid_quantity')
+            itemstotal = awardobj[0].get('product_code')
+            print(len(itemstotal), 'length')
+            basicobj = BasicCompanyDetails.objects.get(company_code=ccode)
             regobj = SelfRegistration.objects.get(id=basicobj.updated_by_id)
             print(regobj.username, 'ok')
             api_instance = sib_api_v3_sdk.TransactionalEmailsApi(sib_api_v3_sdk.ApiClient(configuration))
             send_smtp_email = sib_api_v3_sdk.SendSmtpEmail(
                 to=[{"email": regobj.username, "name": regobj.contact_person}],
                 template_id=23, params={
-                    "rfqnumber":rfq_number,
+                    "rfqnumber": rfq_number,
                     "podate": request.data['PO_date'],
                     "ponumber": request.data['PO_num'],
                     "poexpiry": request.data['PO_expirydate'],
                     "quantity": str(quantity),
-                    'items':str(len(itemstotal)),
+                    'items': str(len(itemstotal)),
                     "companyname": basicobj.company_name
                 },
                 headers=headers,
@@ -2509,7 +2511,7 @@ class PurchaseOrderViewSet(viewsets.ModelViewSet):
             api_response = api_instance.send_transac_email(send_smtp_email)
             print(api_response)
 
-        elif request.data['rfq_type']=='Service':
+        elif request.data['rfq_type'] == 'Service':
             awardobj = Awards.objects.filter(rfq_number=rfq_number, company_code=vendorcode).values()
             ccode = awardobj[0].get('company_code')
             quantity = awardobj[0].get('buyer_bid_quantity')
@@ -2564,7 +2566,6 @@ class PurchaseOrderViewSet(viewsets.ModelViewSet):
             api_response = api_instance.send_transac_email(send_smtp_email)
             print(api_response)
         return super().create(request, *args, **kwargs)
-
 
     def get_queryset(self):
         poobj = PurchaseOrder.objects.filter(updated_by=self.request.GET.get('updated_by')).order_by('id')
@@ -4015,6 +4016,7 @@ def createbuyerbidding(request):
     terms=data["terms"]
     contact_name=data['contact_name']
     phone_number=data['phone_number']
+    email_id=data['email_id']
 
     try:
         rfqobjcode=RfqCodeSettings.objects.filter(updated_by=userid).values()
@@ -4040,7 +4042,8 @@ def createbuyerbidding(request):
                                                                             updated_by=SelfRegistration.objects.get(
                                                                                 id=userid),
                                                                             contact_name=contact_name,
-                                                                            phone_number=phone_number
+                                                                            phone_number=phone_number,
+                                                                            email_id=email_id
                                                                             )
 
                 for i in range(0, len(productdetails)):
@@ -4087,6 +4090,7 @@ def createbuyerbidding(request):
                                                                           updated_by=SelfRegistration.objects.get(id=userid),
                                                                           contact_name=contact_name,
                                                                           phone_number=phone_number,
+                                                                          email_id=email_id
                                                                       )
 
                 for i in range(0, len(productdetails)):
@@ -5056,3 +5060,4 @@ def source_award_search(request):
         return Response({'status': 200, 'message': 'ok', 'data': sourceawardarray}, status=200)
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)
+

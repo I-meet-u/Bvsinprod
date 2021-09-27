@@ -5061,3 +5061,103 @@ def source_award_search(request):
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)
 
+
+
+
+@api_view(['post'])
+@permission_classes((AllowAny,))
+def purchase_order_email(request):
+    data=request.data
+    pkid=data['pkid']
+    rfq_type=data['rfq_type']
+    dictval=[]
+    try:
+        poobj=PurchaseOrder.objects.filter(id=pkid).values()
+        if len(poobj)>0:
+            poobjget=PurchaseOrder.objects.get(id=poobj[0].get('id'))
+            awardobj = Awards.objects.filter(rfq_number=poobjget.rfq_number, company_code=poobjget.vendorcode).values()
+            if len(awardobj)>0:
+                if poobjget.attachment1!="" or poobjget.attachment2!="" or poobjget.attachment3!="":
+                    ccode = awardobj[0].get('company_code')
+                    quantity = awardobj[0].get('buyer_bid_quantity')
+                    itemstotal = awardobj[0].get('product_code')
+                    basicobj = BasicCompanyDetails.objects.get(company_code=ccode)
+                    regobj = SelfRegistration.objects.get(id=basicobj.updated_by_id)
+                    if poobjget.attachment1:
+                        urlvalue1 = "https://v2apis.vendorsin.com/" + poobjget.attachment1.url
+                        dictval.append({"url":urlvalue1})
+
+                    if poobjget.attachment2:
+                        urlvalue2 = "https://v2apis.vendorsin.com/" + poobjget.attachment2.url
+                        dictval.append({"url":urlvalue2})
+
+                    if poobjget.attachment3:
+                        urlvalue3 = "https://v2apis.vendorsin.com/" + poobjget.attachment3.url
+                        dictval.append({"url": urlvalue3})
+                    configuration = sib_api_v3_sdk.Configuration()
+                    configuration.api_key[
+                        'api-key'] = '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'
+                    headers = {
+                        'accept': 'application/json',
+                        'content-type': 'application/json',
+                    }
+                    api_instance = sib_api_v3_sdk.TransactionalEmailsApi(sib_api_v3_sdk.ApiClient(configuration))
+                    send_smtp_email = sib_api_v3_sdk.SendSmtpEmail(
+                        to=[{"email": "vyshnavi.ms@vendorsin.com", "name": "vyshnavi"}],
+                        template_id=23, params={
+                            "rfqnumber": poobjget.rfq_number,
+                            "podate": poobjget.PO_date,
+                            "ponumber": poobjget.PO_num,
+                            "poexpiry": poobjget.PO_expirydate,
+                            "quantity": str(quantity),
+                            'items': str(len(itemstotal)),
+                            "companyname": basicobj.company_name
+                        },
+                        headers=headers,
+                        subject='PO Confirm',
+                        attachment=dictval
+                    )
+                    api_response = api_instance.send_transac_email(send_smtp_email)
+                    print(api_response)
+                if poobjget.attachment1=='' and poobjget.attachment2=='' and poobjget.attachment3=='':
+                    print('came')
+                    configuration = sib_api_v3_sdk.Configuration()
+                    configuration.api_key[
+                        'api-key'] = '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'
+                    headers = {
+                        'accept': 'application/json',
+                        'content-type': 'application/json',
+                    }
+                    awardobj = Awards.objects.filter(rfq_number=poobjget.rfq_number, company_code=poobjget.vendorcode).values()
+                    ccode = awardobj[0].get('company_code')
+                    quantity = awardobj[0].get('buyer_bid_quantity')
+                    itemstotal = awardobj[0].get('product_code')
+                    print(len(itemstotal), 'length')
+                    basicobj = BasicCompanyDetails.objects.get(company_code=ccode)
+                    regobj = SelfRegistration.objects.get(id=basicobj.updated_by_id)
+                    print(regobj.username, 'ok')
+                    api_instance = sib_api_v3_sdk.TransactionalEmailsApi(sib_api_v3_sdk.ApiClient(configuration))
+                    send_smtp_email = sib_api_v3_sdk.SendSmtpEmail(
+                        to=[{"email": regobj.username, "name": regobj.contact_person}],
+                        template_id=23, params={
+                            "rfqnumber": poobjget.rfq_number,
+                            "podate": poobjget.PO_date,
+                            "ponumber": poobjget.PO_num,
+                            "poexpiry": poobjget.PO_expirydate,
+                            "quantity": str(quantity),
+                            'items': str(len(itemstotal)),
+                            "companyname": basicobj.company_name
+                        },
+                        headers=headers,
+                        subject='PO Confirm'
+                    )  # SendSmtpEmail | Values to send a transactional email
+                    # Send a transactional email
+                    api_response = api_instance.send_transac_email(send_smtp_email)
+                    print(api_response)
+            return Response({'status': 200, 'message': 'ok', 'data': poobj}, status=200)
+        return Response({'status': 204, 'message': 'Not Yet Awarded or award details are not present'}, status=200)
+
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)
+
+

@@ -101,6 +101,7 @@ urlpatterns = [
     path('get-employee-basic-details-without-token/', views.get_employee_basic_details_without_token),
     path('get-employee-industry-info-without-token/', views.get_employee_industry_info_without_token),
     path('get-industry-info-without-token/', views.get_industry_info_without_token),
+    path('vendor-buyer-list/',views.vendor_buyer_list)
 
 
 

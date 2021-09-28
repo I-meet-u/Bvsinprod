@@ -1798,43 +1798,48 @@ def get_employee_industry_info_without_token(request):
 #         except (KeyError, ValueError) as e:
 #            raise e
 
-@api_view(['get'])
+@api_view(['post'])
 def vendor_buyer_list(request):
+    data=request.data
     detailslist=[]
+    token=data['token']
     try:
-        regobj=SelfRegistration.objects.filter().values().order_by('id')
-        if len(regobj)>0:
-            for i in range(0,len(regobj)):
-                basicobj=BasicCompanyDetails.objects.filter(updated_by_id=regobj[i].get('id')).values()
-                # paginations=CustomPagination()
+        if token=="Atoiuyrtyu1247yutyrc":
+            regobj=SelfRegistration.objects.filter().values().order_by('id')
+            if len(regobj)>0:
+                for i in range(0,len(regobj)):
+                    basicobj=BasicCompanyDetails.objects.filter(updated_by_id=regobj[i].get('id')).values()
+                    # paginations=CustomPagination()
 
-                if len(basicobj)>0:
-                    addressobj = BillingAddress.objects.filter(updated_by_id=regobj[i].get('id')).values()
-                    detailslist.append({"company_code":basicobj[0].get('company_code'),
-                                        "company_name":basicobj[0].get('company_name'),
-                                        "company_type":basicobj[0].get('company_type'),
-                                        "address":addressobj[0].get('bill_address'),
-                                        "profile_image":regobj[i].get('profile_cover_photo')
-                                        })
+                    if len(basicobj)>0:
+                        addressobj = BillingAddress.objects.filter(updated_by_id=regobj[i].get('id')).values()
+                        detailslist.append({"company_code":basicobj[0].get('company_code'),
+                                            "company_name":basicobj[0].get('company_name'),
+                                            "company_type":basicobj[0].get('company_type'),
+                                            "address":addressobj[0].get('bill_address'),
+                                            "profile_image":regobj[i].get('profile_cover_photo')
+                                            })
 
-                else:
-                    pass
-            return Response({'status': 200, 'message': 'List Of Vendors & Buyers','data':detailslist}, status=200)
+                    else:
+                        pass
+                return Response({'status': 200, 'message': 'List Of Vendors & Buyers','data':detailslist}, status=200)
+            else:
+                return Response({'status': 204, 'message': 'Registered Details Are Not Present'}, status=204)
         else:
-            return Response({'status': 204, 'message': 'Registered Details Are Not Present'}, status=204)
+            return Response({'status':401,'message':'UnAuthorized'},status=401)
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)
 
 
-
-def list(self, request, *args, **kwargs):
-    queryset = self.filter_queryset(self.get_queryset())
-    page = self.paginate_queryset(queryset)
-    if page is not None:
-        # get_paginaion_serializer will read your DEFAULT_PAGINATION_SERIALIZER_CLASS
-        # or view.pagination_serializer_class
-        # we will talk the two variable later
-        serializer = self.get_pagination_serializer(page)
-    else:
-        serializer = self.get_serializer(queryset, many=True)
-    return Response(serializer.data)
+#
+# def list(self, request, *args, **kwargs):
+#     queryset = self.filter_queryset(self.get_queryset())
+#     page = self.paginate_queryset(queryset)
+#     if page is not None:
+#         # get_paginaion_serializer will read your DEFAULT_PAGINATION_SERIALIZER_CLASS
+#         # or view.pagination_serializer_class
+#         # we will talk the two variable later
+#         serializer = self.get_pagination_serializer(page)
+#     else:
+#         serializer = self.get_serializer(queryset, many=True)
+#     return Response(serializer.data)

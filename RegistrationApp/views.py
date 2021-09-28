@@ -11,6 +11,7 @@ from django.contrib.auth.hashers import make_password, check_password
 
 import requests
 from django.core.exceptions import ObjectDoesNotExist
+from django.core.paginator import Paginator
 from django.shortcuts import render
 
 # Create your views here.
@@ -1776,6 +1777,8 @@ def vendor_buyer_list(request):
     detailslist=[]
     token=data['token']
     try:
+
+
         if token=="Atoiuyrtyu1247yutyrc":
             regobj=SelfRegistration.objects.filter().values().order_by('id')
             if len(regobj)>0:
@@ -1789,11 +1792,13 @@ def vendor_buyer_list(request):
                                             "company_type":basicobj[0].get('company_type'),
                                             "address":addressobj[0].get('bill_address'),
                                             "gst_number":basicobj[0].get('gst_number'),
-                                            "profile_image":regobj[i].get('profile_cover_photo')
-                                            })
+                                            "profile_image":regobj[i].get('profile_cover_photo'),
+                                            "user_type":regobj[i].get('user_type')
 
-                    else:
-                        pass
+                                         })
+
+
+
                 return Response({'status': 200, 'message': 'List Of Vendors & Buyers','data':detailslist}, status=200)
             else:
                 return Response({'status': 204, 'message': 'Registered Details Are Not Present'}, status=204)
@@ -1801,3 +1806,8 @@ def vendor_buyer_list(request):
             return Response({'status':401,'message':'UnAuthorized'},status=401)
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)
+
+
+ # paginated = Paginator(detailslist, 1)
+ #                profiles = paginated.page(3)
+ #                val=profiles.object_list

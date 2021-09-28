@@ -1804,39 +1804,40 @@ class CustomPagination(pagination.PageNumberPagination):
     max_page_size = 50
     page_query_param = 'p'
 
-# @api_view(['post'])
-# def vendor_buyer_list(request):
-#     data=request.data
-#     detailslist=[]
-#     token=data['token']
-#     try:
-#         if token=="Atoiuyrtyu1247yutyrc":
-#             regobj=SelfRegistration.objects.filter().values().order_by('id')
-#             if len(regobj)>0:
-#                 for i in range(0,len(regobj)):
-#                     basicobj=BasicCompanyDetails.objects.filter(updated_by_id=regobj[i].get('id')).values()
-#                     paginations=CustomPagination()
-#
-#                     if len(basicobj)>0:
-#                         addressobj = BillingAddress.objects.filter(updated_by_id=regobj[i].get('id')).values()
-#                         detailslist.append({"company_code":basicobj[0].get('company_code'),
-#                                             "company_name":basicobj[0].get('company_name'),
-#                                             "company_type":basicobj[0].get('company_type'),
-#                                             "address":addressobj[0].get('bill_address'),
-#                                             "profile_image":regobj[i].get('profile_cover_photo')
-#                                             })
-#
-#                         datas=paginations.get_paginated_response(detailslist)
-#
-#                     else:
-#                         pass
-#                 return Response({'status': 200, 'message': 'List Of Vendors & Buyers','data':detailslist}, status=200)
-#             else:
-#                 return Response({'status': 204, 'message': 'Registered Details Are Not Present'}, status=204)
-#         else:
-#             return Response({'status':401,'message':'UnAuthorized'},status=401)
-#     except Exception as e:
-#         return Response({'status': 500, 'error': str(e)}, status=500)
+@api_view(['post'])
+@permission_classes((AllowAny,))
+def vendor_buyer_list(request):
+    data=request.data
+    detailslist=[]
+    token=data['token']
+    try:
+        if token=="Atoiuyrtyu1247yutyrc":
+            regobj=SelfRegistration.objects.filter().values().order_by('id')
+            if len(regobj)>0:
+                for i in range(0,len(regobj)):
+                    basicobj=BasicCompanyDetails.objects.filter(updated_by_id=regobj[i].get('id')).values()
+                    paginations=CustomPagination()
+
+                    if len(basicobj)>0:
+                        addressobj = BillingAddress.objects.filter(updated_by_id=regobj[i].get('id')).values()
+                        detailslist.append({"company_code":basicobj[0].get('company_code'),
+                                            "company_name":basicobj[0].get('company_name'),
+                                            "company_type":basicobj[0].get('company_type'),
+                                            "address":addressobj[0].get('bill_address'),
+                                            "profile_image":regobj[i].get('profile_cover_photo')
+                                            })
+
+                        datas=paginations.get_paginated_response(detailslist)
+
+                    else:
+                        pass
+                return Response({'status': 200, 'message': 'List Of Vendors & Buyers','data':detailslist}, status=200)
+            else:
+                return Response({'status': 204, 'message': 'Registered Details Are Not Present'}, status=204)
+        else:
+            return Response({'status':401,'message':'UnAuthorized'},status=401)
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)
 
 
 

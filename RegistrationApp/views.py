@@ -1770,6 +1770,7 @@ def get_employee_industry_info_without_token(request):
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)
 
+
 @api_view(['post'])
 @permission_classes((AllowAny,))
 def vendor_buyer_list(request):
@@ -1781,33 +1782,29 @@ def vendor_buyer_list(request):
 
         if token=="Atoiuyrtyu1247yutyrc":
             regobj=SelfRegistration.objects.filter().values().order_by('id')
-            if len(regobj)>0:
-                for i in range(0,len(regobj)):
-                    basicobj=BasicCompanyDetails.objects.filter(updated_by_id=regobj[i].get('id')).values()
+            if len(regobj) > 0:
+                for i in range(0, len(regobj)):
+                    basicobj = BasicCompanyDetails.objects.filter(updated_by_id=regobj[i].get('id')).values()
 
-                    if len(basicobj)>0:
+                    if len(basicobj) > 0:
                         addressobj = BillingAddress.objects.filter(updated_by_id=regobj[i].get('id')).values()
-                        detailslist.append({"company_code":basicobj[0].get('company_code'),
-                                            "company_name":basicobj[0].get('company_name'),
-                                            "company_type":basicobj[0].get('company_type'),
-                                            "address":addressobj[0].get('bill_address'),
-                                            "gst_number":basicobj[0].get('gst_number'),
-                                            "profile_image":regobj[i].get('profile_cover_photo'),
-                                            "user_type":regobj[i].get('user_type')
+                        detailslist.append({"company_code": basicobj[0].get('company_code'),
+                                            "company_name": basicobj[0].get('company_name'),
+                                            "company_type": basicobj[0].get('company_type'),
+                                            "address": addressobj[0].get('bill_address'),
+                                            "gst_number": basicobj[0].get('gst_number'),
+                                            "profile_image": regobj[i].get('profile_cover_photo'),
+                                            "user_type": regobj[i].get('user_type')
 
-                                         })
-
-
-
-                return Response({'status': 200, 'message': 'List Of Vendors & Buyers','data':detailslist}, status=200)
+                                            })
+                paginator=Paginator(detailslist,10)
+                page_number=request.GET.get('page')
+                page_obj=paginator.get_page(page_number)
+                values_data=page_obj.object_list
+                return Response({'status': 200, 'message': 'List Of Vendors & Buyers','data':values_data}, status=200)
             else:
                 return Response({'status': 204, 'message': 'Registered Details Are Not Present'}, status=204)
         else:
             return Response({'status':401,'message':'UnAuthorized'},status=401)
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)
-
-
- # paginated = Paginator(detailslist, 1)
- #                profiles = paginated.page(3)
- #                val=profiles.object_list

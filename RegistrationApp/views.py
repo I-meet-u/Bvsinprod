@@ -1778,8 +1778,6 @@ def vendor_buyer_list(request):
     detailslist=[]
     token=data['token']
     try:
-
-
         if token=="Atoiuyrtyu1247yutyrc":
             regobj=SelfRegistration.objects.filter().values().order_by('id')
             if len(regobj) > 0:

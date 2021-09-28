@@ -1,6 +1,7 @@
 import io
 from datetime import date, datetime
 from itertools import chain, groupby
+from pprint import pprint
 
 import requests
 from django.http import HttpRequest
@@ -5065,7 +5066,6 @@ def source_award_search(request):
 
 
 @api_view(['post'])
-@permission_classes((AllowAny,))
 def purchase_order_email(request):
     data=request.data
     pkid=data['pkid']
@@ -5119,8 +5119,12 @@ def purchase_order_email(request):
                     )
                     api_response = api_instance.send_transac_email(send_smtp_email)
                     print(api_response)
-                if poobjget.attachment1=='' and poobjget.attachment2=='' and poobjget.attachment3=='':
-                    print('came')
+                if poobjget.attachment1=="" and poobjget.attachment2=="" and poobjget.attachment3=="":
+                    ccode = awardobj[0].get('company_code')
+                    quantity = awardobj[0].get('buyer_bid_quantity')
+                    itemstotal = awardobj[0].get('product_code')
+                    basicobj = BasicCompanyDetails.objects.get(company_code=ccode)
+                    regobj = SelfRegistration.objects.get(id=basicobj.updated_by_id)
                     configuration = sib_api_v3_sdk.Configuration()
                     configuration.api_key[
                         'api-key'] = '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'
@@ -5128,17 +5132,9 @@ def purchase_order_email(request):
                         'accept': 'application/json',
                         'content-type': 'application/json',
                     }
-                    awardobj = Awards.objects.filter(rfq_number=poobjget.rfq_number, company_code=poobjget.vendorcode).values()
-                    ccode = awardobj[0].get('company_code')
-                    quantity = awardobj[0].get('buyer_bid_quantity')
-                    itemstotal = awardobj[0].get('product_code')
-                    print(len(itemstotal), 'length')
-                    basicobj = BasicCompanyDetails.objects.get(company_code=ccode)
-                    regobj = SelfRegistration.objects.get(id=basicobj.updated_by_id)
-                    print(regobj.username, 'ok')
                     api_instance = sib_api_v3_sdk.TransactionalEmailsApi(sib_api_v3_sdk.ApiClient(configuration))
                     send_smtp_email = sib_api_v3_sdk.SendSmtpEmail(
-                        to=[{"email": regobj.username, "name": regobj.contact_person}],
+                        to=[{"email": "vyshnavi.ms@vendorsin.com", "name": "vyshnavi"}],
                         template_id=23, params={
                             "rfqnumber": poobjget.rfq_number,
                             "podate": poobjget.PO_date,
@@ -5150,14 +5146,24 @@ def purchase_order_email(request):
                         },
                         headers=headers,
                         subject='PO Confirm'
-                    )  # SendSmtpEmail | Values to send a transactional email
-                    # Send a transactional email
+                    )
                     api_response = api_instance.send_transac_email(send_smtp_email)
                     print(api_response)
-            return Response({'status': 200, 'message': 'ok', 'data': poobj}, status=200)
+                return Response({'status': 200, 'message': 'ok', 'data': poobj}, status=200)
         return Response({'status': 204, 'message': 'Not Yet Awarded or award details are not present'}, status=200)
 
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)
 
 
+# @api_view(['post'])
+# @permission_classes((AllowAny,))
+# def purchase_order_email(request):
+#     data = request.data
+#     pkid = data['pkid']
+#     rfq_type = data['rfq_type']
+#     try:
+#         print("The bold text is", '\033[1m' + 'Python' + '\033[0m')
+#         return Response({'status': 200, 'message': 'ok', 'data': poobj}, status=200)
+#     except Exception as e:
+#         return Response({'status': 500, 'error': str(e)}, status=500)

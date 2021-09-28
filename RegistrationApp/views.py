@@ -1769,41 +1769,6 @@ def get_employee_industry_info_without_token(request):
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)
 
-#
-# class CustomPagination(pagination.LimitOffsetPagination):
-#     default_limit = 15
-#     max_limit = 50
-#     min_limit = 1
-#     min_offset = 1
-#     max_offset = 50
-#
-#     def get_limit(self, request):
-#         if self.limit_query_param:
-#             try:
-#                 return _positive_int(
-#                     request.query_params[self.limit_query_param],
-#                     strict=True,
-#                     cutoff=self.max_limit
-#                 )
-#             except (KeyError, ValueError) as e:
-#                 raise e
-#
-#         return self.default_limit
-#
-#     def get_offset(self, request):
-#         try:
-#             return _positive_int(
-#                 request.query_params[self.offset_query_param],
-#             )
-#         except (KeyError, ValueError) as e:
-#            raise e
-
-class CustomPagination(pagination.PageNumberPagination):
-    page_size = 2
-    page_size_query_param = 'page_size'
-    max_page_size = 50
-    page_query_param = 'p'
-
 @api_view(['post'])
 @permission_classes((AllowAny,))
 def vendor_buyer_list(request):
@@ -1816,7 +1781,6 @@ def vendor_buyer_list(request):
             if len(regobj)>0:
                 for i in range(0,len(regobj)):
                     basicobj=BasicCompanyDetails.objects.filter(updated_by_id=regobj[i].get('id')).values()
-                    paginations=CustomPagination()
 
                     if len(basicobj)>0:
                         addressobj = BillingAddress.objects.filter(updated_by_id=regobj[i].get('id')).values()
@@ -1827,8 +1791,6 @@ def vendor_buyer_list(request):
                                             "profile_image":regobj[i].get('profile_cover_photo')
                                             })
 
-                        datas=paginations.get_paginated_response(detailslist)
-
                     else:
                         pass
                 return Response({'status': 200, 'message': 'List Of Vendors & Buyers','data':detailslist}, status=200)
@@ -1838,17 +1800,3 @@ def vendor_buyer_list(request):
             return Response({'status':401,'message':'UnAuthorized'},status=401)
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)
-
-
-
-def list(self, request, *args, **kwargs):
-    queryset = self.filter_queryset(self.get_queryset())
-    page = self.paginate_queryset(queryset)
-    if page is not None:
-        # get_paginaion_serializer will read your DEFAULT_PAGINATION_SERIALIZER_CLASS
-        # or view.pagination_serializer_class
-        # we will talk the two variable later
-        serializer = self.get_pagination_serializer(page)
-    else:
-        serializer = self.get_serializer(queryset, many=True)
-    return Response(serializer.data)

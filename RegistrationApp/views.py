@@ -1788,15 +1788,34 @@ def vendor_buyer_list(request):
 
                     if len(basicobj) > 0:
                         addressobj = BillingAddress.objects.filter(updated_by_id=regobj[i].get('id')).values()
-                        detailslist.append({"company_code": basicobj[0].get('company_code'),
-                                            "company_name": basicobj[0].get('company_name'),
-                                            "company_type": basicobj[0].get('company_type'),
-                                            "address": addressobj[0].get('bill_address'),
-                                            "gst_number": basicobj[0].get('gst_number'),
-                                            "profile_image": regobj[i].get('profile_cover_photo'),
-                                            "user_type": regobj[i].get('user_type')
+                        maincoreobj=IndustrialHierarchy.objects.filter(updated_by_id=regobj[i].get('id')).values()
+                        if len(maincoreobj)>0:
+                            detailslist.append({"company_code": basicobj[0].get('company_code'),
+                                                "company_name": basicobj[0].get('company_name'),
+                                                "company_type": basicobj[0].get('company_type'),
+                                                "address": addressobj[0].get('bill_address'),
+                                                "gst_number": basicobj[0].get('gst_number'),
+                                                "profile_image": regobj[i].get('profile_cover_photo'),
+                                                "user_type": regobj[i].get('user_type'),
+                                                "nature_of_business":regobj[i].get('nature_of_business'),
+                                                "maincore": maincoreobj[0].get('maincore')
 
-                                            })
+
+                                                })
+
+                        else:
+                            detailslist.append({"company_code": basicobj[0].get('company_code'),
+                                                "company_name": basicobj[0].get('company_name'),
+                                                "company_type": basicobj[0].get('company_type'),
+                                                "address": addressobj[0].get('bill_address'),
+                                                "gst_number": basicobj[0].get('gst_number'),
+                                                "profile_image": regobj[i].get('profile_cover_photo'),
+                                                "user_type": regobj[i].get('user_type'),
+                                                "nature_of_business": regobj[i].get('nature_of_business'),
+                                                "maincore": ""
+
+                                                })
+
                 paginator=Paginator(detailslist,10)
                 page_number=request.GET.get('page')
                 page_obj=paginator.get_page(page_number)

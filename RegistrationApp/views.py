@@ -14,7 +14,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.shortcuts import render
 
 # Create your views here.
-from rest_framework import viewsets, status, permissions, pagination
+from rest_framework import viewsets, status, permissions, pagination, mixins
 from rest_framework.authtoken.models import Token
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.exceptions import ValidationError
@@ -1788,6 +1788,7 @@ def vendor_buyer_list(request):
                                             "company_name":basicobj[0].get('company_name'),
                                             "company_type":basicobj[0].get('company_type'),
                                             "address":addressobj[0].get('bill_address'),
+                                            "gst_number":basicobj[0].get('gst_number'),
                                             "profile_image":regobj[i].get('profile_cover_photo')
                                             })
 

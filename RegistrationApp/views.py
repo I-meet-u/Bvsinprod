@@ -11,7 +11,6 @@ from django.contrib.auth.hashers import make_password, check_password
 
 import requests
 from django.core.exceptions import ObjectDoesNotExist
-from django.core.paginator import Paginator
 from django.shortcuts import render
 
 # Create your views here.
@@ -19,7 +18,6 @@ from rest_framework import viewsets, status, permissions, pagination, mixins
 from rest_framework.authtoken.models import Token
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.exceptions import ValidationError
-from rest_framework.pagination import PageNumberPagination, LimitOffsetPagination, _positive_int
 from rest_framework.parsers import MultiPartParser
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -1813,12 +1811,7 @@ def vendor_buyer_list(request):
                                                 "maincore": ""
 
                                                 })
-
-                paginator=Paginator(detailslist,10)
-                page_number=request.GET.get('page')
-                page_obj=paginator.get_page(page_number)
-                values_data=page_obj.object_list
-                return Response({'status': 200, 'message': 'List Of Vendors & Buyers','data':values_data}, status=200)
+                return Response({'status': 200, 'message': 'List Of Vendors & Buyers','data':detailslist}, status=200)
             else:
                 return Response({'status': 204, 'message': 'Registered Details Are Not Present'}, status=204)
         else:

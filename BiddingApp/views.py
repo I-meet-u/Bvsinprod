@@ -1313,12 +1313,13 @@ def get_source_items_list_by_source_user_id(request):
     sourceuserid = data['sourceuserid']
     try:
         sourceobj = SourcePublish.objects.filter(source_user_id=sourceuserid).values()
-        for i in range(0,len(sourceobj)):
-            compobj=BasicCompanyDetails.objects.filter(updated_by=sourceobj[i].get('updated_by_id')).values()
-            sourceobj[i].setdefault('compname',compobj[0].get('company_name'))
-            sourcecreateobj=SourceList_CreateItems.objects.filter(id=sourceobj[i].get('source_id')).values()
-            sourceobj[i].setdefault('source_required_city',sourcecreateobj[0].get('source_required_city'))
         if len(sourceobj) > 0:
+            for i in range(0,len(sourceobj)):
+                compobj=BasicCompanyDetails.objects.filter(updated_by=sourceobj[i].get('updated_by_id')).values()
+                sourceobj[i].setdefault('compname',compobj[0].get('company_name'))
+                sourcecreateobj=SourceList_CreateItems.objects.filter(id=sourceobj[i].get('source_id')).values()
+                sourceobj[i].setdefault('source_required_city',sourcecreateobj[0].get('source_required_city'))
+
             return Response({'status': 200, 'message': 'Source Create Items List', 'data': sourceobj},
                             status=status.HTTP_200_OK)
 

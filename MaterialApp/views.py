@@ -1593,7 +1593,7 @@ def landing_page_bidding_create(request):
     deadline_date = data['deadline_date']
     delivery_terms = data['delivery_terms']
     packaging_forwarding = data['packaging_forwarding']
-    priority = data['priority']
+    # priority = data['priority']
     payment_terms = data['payment_terms']
     quantity = data['quantity']
     vendor_product_pk = data['vendor_product_pk']
@@ -1640,7 +1640,7 @@ def landing_page_bidding_create(request):
                                                                       deadline_date=deadline_date,
                                                                       delivery_terms=delivery_terms,
                                                                       packaging_forwarding=packaging_forwarding,
-                                                                      priority=priority,
+                                                                      # priority=priority,
                                                                       payment_terms=payment_terms,
                                                                       quantity=quantity,
                                                                       vendor_product_pk=vendor_product_pk,

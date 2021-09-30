@@ -1060,20 +1060,21 @@ def business_request_reject_list(request):
     ccode=request.data['ccode']
     arraycode=[]
     try:
-        businessacceptobj = BusinessRequest.objects.filter(company_code=ccode, send_status='Reject').values().order_by(
+        businessrejectobj = BusinessRequest.objects.filter(company_code=ccode, send_status='Reject').values().order_by(
             'id')
-        if len(businessacceptobj) > 0:
-            for i in range(0, len(businessacceptobj)):
-                basicobj = BasicCompanyDetails.objects.get(updated_by_id=businessacceptobj[i].get('updated_by_id'))
+        if len(businessrejectobj) > 0:
+            for i in range(0, len(businessrejectobj)):
+                basicobj = BasicCompanyDetails.objects.get(updated_by_id=businessrejectobj[i].get('updated_by_id'))
                 billobj = BillingAddress.objects.filter(updated_by_id=basicobj.updated_by_id).values()
-                inudstryinfoobj = IndustrialInfo.objects.get(updated_by_id=basicobj.updated_by_id)
+                industryinfoobj = IndustrialInfo.objects.get(updated_by_id=basicobj.updated_by_id)
                 arraycode.append({'company_code': basicobj.company_code,
                                   'company_name': basicobj.company_name,
                                   'gst_number': basicobj.gst_number,
                                   'city': billobj[0].get('bill_city'),
                                   'state': billobj[0].get('bill_state'),
-                                  'nature_of_business': inudstryinfoobj.nature_of_business,
-                                  'industry_to_serve': inudstryinfoobj.industry_to_serve,
+                                  'nature_of_business': industryinfoobj.nature_of_business,
+                                  'industry_to_serve': industryinfoobj.industry_to_serve,
+                                  'send_status':businessrejectobj[i].get('send_status')
                                   })
             return Response({'status': 200, 'message': 'Business Request Rejected List', 'data': arraycode}, status=200)
         else:

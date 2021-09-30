@@ -1799,10 +1799,12 @@ def landing_page_listing_leads_pending_list(request):
         openleadslistobj=LandingPageBidding.objects.filter(vendor_user_id=userid,status='Pending').values().order_by('id')
         if len(openleadslistobj)>0:
             for i in range(0,len(openleadslistobj)):
+                print(openleadslistobj[i].get('deadline_date'),'pok')
                 deadlinedateval = datetime.strptime(openleadslistobj[i].get('deadline_date'), '%Y-%m-%d')
                 deadlinedateconvertion = datetime.date(deadlinedateval)
                 todaydate = date.today()
                 if deadlinedateconvertion > todaydate:
+                    print('yes')
                     basicobj=BasicCompanyDetails.objects.get(updated_by_id=openleadslistobj[i].get('updated_by_id'))
                     vendorproductarray.append({'id':openleadslistobj[i].get('id'),
                                                'publish_date':openleadslistobj[i].get('publish_date'),

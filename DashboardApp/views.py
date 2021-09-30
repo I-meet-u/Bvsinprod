@@ -1017,6 +1017,7 @@ def business_request_accept_list(request):
                                   'state':billobj[0].get('bill_state'),
                                   'nature_of_business': inudstryinfoobj.nature_of_business,
                                   'industry_to_serve': inudstryinfoobj.industry_to_serve,
+                                  'send_status':businessacceptobj[i].get('send_status')
                                   })
             return Response({'status': 200, 'message': 'Business Request Accepted List', 'data': arraycode}, status=200)
         else:

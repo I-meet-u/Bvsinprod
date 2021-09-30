@@ -1682,36 +1682,64 @@ def get_landing_page_bidding_by_userid_vendors_list(request):
     userid=data['userid']
     vendorlandingpagebidarray=[]
     try:
-        basicobj=BasicCompanyDetails.objects.get(updated_by_id=userid)
-        ccodearray=[basicobj.company_code]
-        print(ccodearray)
-        landingobj=LandingPageBidding.objects.filter(vendors_code__contains=ccodearray).values()
-        print(len(landingobj))
-        if len(landingobj)>0:
-            for i in range(0,len(landingobj)):
-                basicobj=BasicCompanyDetails.objects.get(updated_by_id=landingobj[i].get('updated_by_id'))
-                vendorproductobj=VendorProduct_BasicDetails.objects.get(updated_by_id=userid,item_name=landingobj[i].get('product_name'))
-                vendorlandingpagebidarray.append({'vendor_code':basicobj.company_code,
-                                                  'vendor_company_name':basicobj.company_name,
-                                                  'item_name':landingobj[i].get('product_name'),
-                                                  'publish_date':landingobj[i].get('publish_date'),
-                                                  'deadline_date':landingobj[i].get('deadline_date'),
-                                                  'delivery_terms':landingobj[i].get('delivery_terms'),
-                                                  'packaging_forwarding':landingobj[i].get('packaging_forwarding'),
-                                                  'priority':landingobj[i].get('priority'),
-                                                  'payment_terms':landingobj[i].get('payment_terms'),
-                                                  'quantity':landingobj[i].get('quantity'),
-                                                  'item_code':vendorproductobj.item_code,
-                                                  'item_type':landingobj[i].get('item_type')
+        basicobj=BasicCompanyDetails.objects.filter(updated_by_id=userid).values().order_by('company_code')
+        if len(basicobj)>0:
+            ccodearray=[basicobj[0].get('company_code')]
+            print(ccodearray)
+            landingobj=LandingPageBidding.objects.filter(vendors_code__contains=ccodearray).values().order_by('id')
+            print(len(landingobj))
+            if len(landingobj)>0:
+                for i in range(0,len(landingobj)):
+                    basicobj1=BasicCompanyDetails.objects.get(updated_by_id=landingobj[i].get('updated_by_id'))
+                    vendorproductobj=VendorProduct_BasicDetails.objects.get(updated_by_id=userid,item_name=landingobj[i].get('product_name'))
+                    billobj=BillingAddress.objects.filter(updated_by_id=landingobj[i].get('updated_by_id')).values()
+                    if len(billobj)>0:
+                        vendorlandingpagebidarray.append({'vendor_code':basicobj1.company_code,
+                                                          'vendor_company_name':basicobj1.company_name,
+                                                          'item_name':landingobj[i].get('product_name'),
+                                                          'item_description':vendorproductobj.item_description,
+                                                          'uom':vendorproductobj.uom,
+                                                          'publish_date':landingobj[i].get('publish_date'),
+                                                          'deadline_date':landingobj[i].get('deadline_date'),
+                                                          'delivery_terms':landingobj[i].get('delivery_terms'),
+                                                          'packaging_forwarding':landingobj[i].get('packaging_forwarding'),
+                                                          'priority':landingobj[i].get('priority'),
+                                                          'payment_terms':landingobj[i].get('payment_terms'),
+                                                          'quantity':landingobj[i].get('quantity'),
+                                                          'item_code':vendorproductobj.item_code,
+                                                          'item_type':landingobj[i].get('item_type'),
+                                                          'bill_city':billobj[0].get('bill_city')
 
 
-                                                  })
+                                                          })
+                    else:
+                        vendorlandingpagebidarray.append({'vendor_code': basicobj1.company_code,
+                                                          'vendor_company_name': basicobj1.company_name,
+                                                          'item_name': landingobj[i].get('product_name'),
+                                                          'item_description': vendorproductobj.item_description,
+                                                          'uom': vendorproductobj.uom,
+                                                          'publish_date': landingobj[i].get('publish_date'),
+                                                          'deadline_date': landingobj[i].get('deadline_date'),
+                                                          'delivery_terms': landingobj[i].get('delivery_terms'),
+                                                          'packaging_forwarding': landingobj[i].get(
+                                                              'packaging_forwarding'),
+                                                          'priority': landingobj[i].get('priority'),
+                                                          'payment_terms': landingobj[i].get('payment_terms'),
+                                                          'quantity': landingobj[i].get('quantity'),
+                                                          'item_code': vendorproductobj.item_code,
+                                                          'item_type': landingobj[i].get('item_type'),
+                                                          'bill_city': billobj[0].get('bill_city')
 
-            return Response({'status': 200, 'message': 'Vendor Post rfq list by userid','data':vendorlandingpagebidarray},
-                            status=status.HTTP_200_OK)
+                                                          })
+
+                return Response({'status': 200, 'message': 'Vendor Post rfq list by userid','data':vendorlandingpagebidarray},
+                                status=status.HTTP_200_OK)
+            else:
+                return Response({'status': 204, 'message': 'Vendor Post rfq is not present', 'data': vendorlandingpagebidarray},
+                                status=status.HTTP_204_NO_CONTENT)
         else:
-            return Response({'status': 204, 'message': 'Vendor Post rfq is not present', 'data': vendorlandingpagebidarray},
-                            status=status.HTTP_200_OK)
+
+            return Response({'status': 202, 'message': 'Not Present'},status=200)
 
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)

@@ -1869,10 +1869,12 @@ def get_landing_page_bidding_by_pk(request):
         landingobj=LandingPageBidding.objects.filter(id=landingpk).values()
         if len(landingobj)>0:
             basicobj = BasicCompanyDetails.objects.get(updated_by_id=landingobj[0].get('updated_by_id'))
+            billobj=BillingAddress.objects.filter(updated_by_id=landingobj[0].get('updated_by_id')).values()
             vendorproductobj=VendorProduct_BasicDetails.objects.filter(vendor_product_id=landingobj[0].get('vendor_product_pk')).values()
             basicarray.setdefault('ccode',str(basicobj.company_code))
             basicarray.setdefault('cname',basicobj.company_name)
             landingobj[0].setdefault('basic_details',basicarray)
+            landingobj[0].setdefault('bill_city',billobj[0].get('bill_city'))
             return Response({'status':200,'message':'Landing Page Bidding List','landingpagedata':landingobj,'vendorproductdata':vendorproductobj},status=200)
         else:
             return Response({'status':204,'message':'Not Present','data':landingobj},status=200)

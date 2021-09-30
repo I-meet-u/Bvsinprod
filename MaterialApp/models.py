@@ -255,7 +255,7 @@ class LandingPageBidding(models.Model):
     deadline_date=models.CharField(max_length=200)
     delivery_terms=models.CharField(max_length=800)
     packaging_forwarding=models.CharField(max_length=800)
-    priority=models.CharField(max_length=800)
+    priority=models.CharField(max_length=800,null=True,blank=True)
     payment_terms=models.CharField(max_length=800)
     quantity=models.BigIntegerField()
     vendor_product_pk=models.BigIntegerField()

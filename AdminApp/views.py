@@ -1040,7 +1040,7 @@ from RegistrationApp.models import SelfRegistration, BasicCompanyDetails, Indust
     BankDetails, LegalDocuments, Employee_CompanyDetails, Employee_IndustryInfo
 from .models import *
 from AdminApp.serializers import AdminInviteSerializer, CreateUserSerializer, AdminRegisterSerializer, \
-    CreateBuyerSerializer, OpenLeadsRfqSerializer, OpenLeadsItemsSerializer
+    CreateBuyerSerializer, OpenLeadsRfqSerializer, OpenLeadsItemsSerializer, OpenLeadsPublishSerializer
 
 
 class AdminRegisterView(viewsets.ModelViewSet):
@@ -2227,3 +2227,16 @@ class OpenLeadsTermsDescriptionViewSet(viewsets.ModelViewSet):
             return Response({'status': 201, 'message': 'Open Leads Terms and Descriptions are created'}, status=201)
         except Exception as e:
             return Response({'status': 500, 'message': str(e)}, status=500)
+
+
+class OpenLeadsPublishViewSet(viewsets.ModelViewSet):
+    queryset = OpenLeadsPublish.objects.all()
+    serializer_class = OpenLeadsPublishSerializer
+    permission_classes = ((AllowAny,))
+
+    def create(self, request, *args, **kwargs):
+        token=request.data.get('token',None)
+        if token=="4aoedpde123Vyeyweuo2":
+            return super().create(request, *args, **kwargs)
+        else:
+            return Response({'status':401,'message':'UnAuthorized'},status=401)

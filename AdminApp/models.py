@@ -198,3 +198,22 @@ class OpenLeadsTermsDescription(models.Model):
 
     class Meta:
         db_table = "OpenLeadsTermsDescription"
+
+
+class OpenLeadsPublish(models.Model):
+    company_name=models.CharField(max_length=200)
+    vendor_code=models.CharField(max_length=70)
+    nature_of_busines=models.CharField(max_length=200)
+    supply_capability=models.CharField(max_length=200)
+    vendor_group=models.CharField(max_length=200,null=True,blank=True)
+    maincore=models.CharField(max_length=200)
+    category=models.CharField(max_length=300)
+    sub_category=models.CharField(max_length=300)
+    created_on = models.DateTimeField(auto_now_add=True)
+    updated_on = models.DateTimeField(auto_now=True)
+    created_by = models.BigIntegerField(null=True, blank=True)
+    updated_by = models.BigIntegerField(null=True, blank=True)
+    admins = models.ForeignKey(AdminRegister, on_delete=models.CASCADE)
+
+    class Meta:
+        db_table = "OpenLeadsPublish"

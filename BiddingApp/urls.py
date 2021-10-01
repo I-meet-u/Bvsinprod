@@ -107,7 +107,8 @@ urlpatterns = [
     path('source-award-search/', views.source_award_search),
     path('priceanalysistermsnew/',views.priceanalysistermslist),
     path('deadline-date-list/',views.deadline_date_list),
-    path('purchase_order_email/',views.purchase_order_email)
+    path('purchase_order_email/',views.purchase_order_email),
+    path('source-list-leads-all/', views.source_list_leads_all),
 
 
 ]

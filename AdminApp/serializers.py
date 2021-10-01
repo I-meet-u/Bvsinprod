@@ -111,3 +111,10 @@ class OpenLeadsTermsDescriptionSerializer(serializers.ModelSerializer):
         model=OpenLeadsItems
         fields = '__all__'
 
+
+
+class OpenLeadsPublishSerializer(serializers.ModelSerializer):
+    class Meta:
+        model=OpenLeadsPublish
+        fields = '__all__'
+

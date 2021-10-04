@@ -2308,6 +2308,7 @@ class BuyerProductDetailsAdminViewSet(viewsets.ModelViewSet):
         category = request.data.get('category',None)
         department = request.data.get('department',None)
         item_group = request.data.get('item_group',None)
+        safety_stock=request.data.get('safety_stock',None)
         # annual_consumption = request.data.get('annual_consumption',None)
         # safety_stock = request.data.get('safety_stock',None)
         # model_no = request.data.get('model_no',None)
@@ -2335,6 +2336,7 @@ class BuyerProductDetailsAdminViewSet(viewsets.ModelViewSet):
                                                                   category=category,
                                                                   department=department,
                                                                   item_group=item_group,
+                                                                  safety_stock=safety_stock,
                                                                   document1=document1,
                                                                   document2=document2,
                                                                   document3=document3,

@@ -1040,7 +1040,8 @@ from RegistrationApp.models import SelfRegistration, BasicCompanyDetails, Indust
     BankDetails, LegalDocuments, Employee_CompanyDetails, Employee_IndustryInfo
 from .models import *
 from AdminApp.serializers import AdminInviteSerializer, CreateUserSerializer, AdminRegisterSerializer, \
-    CreateBuyerSerializer, OpenLeadsRfqSerializer, OpenLeadsItemsSerializer, OpenLeadsPublishSerializer
+    CreateBuyerSerializer, OpenLeadsRfqSerializer, OpenLeadsItemsSerializer, OpenLeadsPublishSerializer, \
+    BuyerProductDetailsAdminSerializer
 
 
 class AdminRegisterView(viewsets.ModelViewSet):
@@ -2267,3 +2268,107 @@ def get_all_open_bids_vendors(request):
 
     except Exception as e:
         return Response({'status': 500, 'message': str(e)}, status=500)
+
+
+@api_view(['post'])
+@permission_classes((AllowAny,))
+def get_all_buyers(request):
+    data=request.data
+    token=data['token']
+    try:
+        if token == "4aoedpde123Vyeyweuo2":
+            getbuyerobj=CreateBuyer.objects.filter().values().order_by('id')
+            if len(getbuyerobj)>0:
+                return Response({'status': 200, 'message': 'Buyers List', 'data': getbuyerobj}, status=200)
+            else:
+                return Response({'status': 204, 'message': 'Buyer Lists are not present'}, status=204)
+        else:
+            return Response({'status': 401, 'message': 'UnAuthorized'}, status=401)
+    except Exception as e:
+        return Response({'status': 500, 'message': str(e)}, status=500)
+
+
+class BuyerProductDetailsAdminViewSet(viewsets.ModelViewSet):
+    permission_classes = [permissions.AllowAny]
+    queryset = BuyerProductDetailsAdmin.objects.all()
+    serializer_class = BuyerProductDetailsAdminSerializer
+    # parser_classes = (MultiPartParser,)
+    ordering_fields = ['buyer_product_id']
+    ordering = ['buyer_product_id']
+
+
+    def create(self, request, *args, **kwargs):
+        token=request.data.get('token',None)
+        item_type=request.data.get('item_type',None)
+        item_name=request.data.get('item_name',None)
+        item_description=request.data.get('item_description',None)
+        uom=request.data.get('uom',None)
+        hsn_sac = request.data.get('hsn_sac',None)
+        unit_price = request.data.get('unit_price',None)
+        category = request.data.get('category',None)
+        department = request.data.get('department',None)
+        item_group = request.data.get('item_group',None)
+        # annual_consumption = request.data.get('annual_consumption',None)
+        # safety_stock = request.data.get('safety_stock',None)
+        # model_no = request.data.get('model_no',None)
+        document1 = request.data.get('document1',None)
+        document2 = request.data.get('document2', None)
+        document3 = request.data.get('document3', None)
+        # additional_specifications = request.data.get('additional_specifications',None)
+        # add_product_supplies = request.data.get('buyer_add_product_supplies',None)
+        admins = request.data.get('admins',None)
+        try:
+            if token=="4aoedpde123Vyeyweuo2":
+                buyerproductobj = BuyerProductDetailsAdmin.objects.filter(admins=admins).order_by('-numeric').values()
+                if len(buyerproductobj)==0:
+                    print("data not exist")
+                    buyerobj = BuyerProductDetailsAdmin.objects.create(item_type=item_type,
+                                                                  prefix="MAT",
+                                                                  suffix="",
+                                                                  numeric=5101102,
+                                                                  item_code="MAT"+""+str(5101101),
+                                                                  item_name=item_name,
+                                                                  item_description=item_description,
+                                                                  uom=uom,
+                                                                  hsn_sac=hsn_sac,
+                                                                  unit_price=unit_price,
+                                                                  category=category,
+                                                                  department=department,
+                                                                  item_group=item_group,
+                                                                  document1=document1,
+                                                                  document2=document2,
+                                                                  document3=document3,
+                                                                  admins=AdminRegister.objects.get(admin_id=admins))
+                else:
+                    print('already present')
+                    print(buyerproductobj[0].get('prefix'))
+                    print(int(buyerproductobj[0].get('numeric'))+1,'pl')
+                    print(buyerproductobj[0].get('numeric'))
+                    buyerobj = BuyerProductDetailsAdmin.objects.create(item_type=item_type,
+                                                                       prefix=buyerproductobj[0].get('prefix'),
+                                                                       suffix=buyerproductobj[0].get('suffix'),
+                                                                       numeric=int(buyerproductobj[0].get('numeric'))+1,
+                                                                       item_code=buyerproductobj[0].get('prefix') + buyerproductobj[0].get('suffix')+buyerproductobj[0].get('numeric'),
+                                                                       item_name=item_name,
+                                                                       item_description=item_description,
+                                                                       uom=uom,
+                                                                       hsn_sac=hsn_sac,
+                                                                       unit_price=unit_price,
+                                                                       category=category,
+                                                                       department=department,
+                                                                       item_group=item_group,
+                                                                       document1=document1,
+                                                                       document2=document2,
+                                                                       document3=document3,
+                                                                       admins=AdminRegister.objects.get(admin_id=admins))
+                return Response({'status':201,'message':'Buyer Product Created'},status=201)
+            else:
+                return Response({'status': 401, 'message': 'UnAuthorized'}, status=401)
+        except Exception as e:
+            return Response({'status': 500, 'error': str(e)}, status=500)
+
+    def get_queryset(self):
+        buyerproductobj=BuyerProductDetailsAdmin.objects.filter(admins=self.request.GET.get('admins'))
+        if buyerproductobj:
+            return buyerproductobj
+        raise ValidationError({'message':'Buyer Product Details Admin Not Present','status':204})

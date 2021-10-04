@@ -229,3 +229,37 @@ class OpenLeadsPublish(models.Model):
 
     class Meta:
         db_table = "OpenLeadsPublish"
+
+
+class BuyerProductDetailsAdmin(models.Model):
+    product_id = models.BigAutoField(primary_key=True)
+    item_type = models.CharField(max_length=100, null=True)
+    item_code = models.CharField(max_length=100, null=True, unique=True)
+    item_name = models.CharField(max_length=100, null=True)
+    item_description = models.TextField(null=True,blank=True)
+    numeric = models.CharField(max_length=50,null=True,blank=True)
+    uom = models.CharField(max_length=100, blank=True)
+    hsn_sac = models.CharField(max_length=100, blank=True,null=True)
+    unit_price = models.CharField(max_length=100, blank=True,null=True)
+    prefix = models.CharField(max_length=50,null=True, blank=True)
+    suffix = models.CharField(max_length=50,null=True, blank=True)
+    category=models.CharField(max_length=500,null=True,blank=True)
+    department=models.CharField(max_length=400,null=True,blank=True)
+    item_group = models.CharField(max_length=500, blank=True,null=True)
+    annual_consumption = models.CharField(max_length=500, null=True,blank=True)
+    safety_stock = models.CharField(max_length=100, blank=True,null=True)
+    model_no = models.CharField(max_length=500, blank=True,null=True)
+    document1=models.FileField(upload_to='BuyerProductFilesAdmin',null=True,blank=True)
+    document2 = models.FileField(upload_to='BuyerProductFilesAdmin', null=True, blank=True)
+    document3 = models.FileField(upload_to='BuyerProductFilesAdmin', null=True, blank=True)
+    additional_specifications=models.TextField(null=True,blank=True)
+    add_product_supplies=models.CharField(max_length=200,null=True,blank=True)
+    product_status=models.CharField(max_length=50,default='Active')
+    created_on = models.DateTimeField(auto_now_add=True)
+    updated_on = models.DateTimeField(auto_now=True)
+    created_by = models.BigIntegerField(null=True,blank=True)
+    admins = models.ForeignKey(AdminRegister, on_delete=models.CASCADE)
+    history = HistoricalRecords()
+
+    class Meta:
+        db_table = "BuyerProductDetailsAdmin"

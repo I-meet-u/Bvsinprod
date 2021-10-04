@@ -54,6 +54,7 @@ router.register('open-leads-rfq', views.OpenLeadsRfqViewSet)
 router.register('open-leads-items', views.OpenLeadsItemsViewSet)
 router.register('open-leads-terms',views.OpenLeadsTermsDescriptionViewSet)
 router.register('open-leads-publish',views.OpenLeadsPublishViewSet)
+router.register('buyer-product-details-admin',views.BuyerProductDetailsAdminViewSet)
 
 urlpatterns = [
     path('admin-router-urls/',include(router.urls)),
@@ -81,7 +82,8 @@ urlpatterns = [
     path('admin-reject-list/',views.admin_rejected_list),
     path('employee-reject-list/',views.employee_rejected_list),
     path('add-data-based-on-user-type-to-create-user/', views.add_data_based_on_user_type_to_create_user),
-    path('get-all-open-bids-vendors/',views.get_all_open_bids_vendors)
+    path('get-all-open-bids-vendors/',views.get_all_open_bids_vendors),
+    path('get-all-buyers/',views.get_all_buyers)
 
 
 

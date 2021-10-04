@@ -80,7 +80,8 @@ urlpatterns = [
     path('company-registration-list/',views.company_registration_list),
     path('admin-reject-list/',views.admin_rejected_list),
     path('employee-reject-list/',views.employee_rejected_list),
-    path('add-data-based-on-user-type-to-create-user/', views.add_data_based_on_user_type_to_create_user)
+    path('add-data-based-on-user-type-to-create-user/', views.add_data_based_on_user_type_to_create_user),
+    path('get-all-open-bids-vendors/',views.get_all_open_bids_vendors)
 
 
 

@@ -2182,8 +2182,11 @@ class OpenLeadsItemsViewSet(viewsets.ModelViewSet):
 
     def create(self, request, *args, **kwargs):
         itemsarray=request.data['itemsarray']
-        admins=self.request.data.get('admins',None)
-        open_leads_pk=self.request.data.get('open_leads_pk',None)
+        admins=request.data.get('admins',None)
+        open_leads_pk=request.data.get('open_leads_pk',None)
+        buyer_company_code =request.data.get('buyer_company_code',None)
+        buyer_company_name = request.data.get('buyer_company_name',None)
+        buyer_pk =request.data.get('buyer_pk',None)
         try:
             for i in range(0,len(itemsarray)):
                 openleadsitemsobj=OpenLeadsItems.objects.create(item_code=itemsarray[i].get('item_code'),
@@ -2193,7 +2196,12 @@ class OpenLeadsItemsViewSet(viewsets.ModelViewSet):
                                                                 uom=itemsarray[i].get('uom'),
                                                                 quantity=itemsarray[i].get('quantity'),
                                                                 admins=AdminRegister.objects.get(admin_id=admins),
-                                                                open_leads_pk=open_leads_pk
+                                                                open_leads_pk=open_leads_pk,
+                                                                buyer_company_code=buyer_company_code,
+                                                                buyer_company_name=buyer_company_name,
+                                                                buyer_pk=CreateBuyer.objects.get(id=buyer_pk)
+
+
 
 
                                                                 )
@@ -2213,6 +2221,9 @@ class OpenLeadsTermsDescriptionViewSet(viewsets.ModelViewSet):
         open_leads_pk = request.data.get('open_leads_pk', None)
         rfq_type = request.data.get('rfq_type', None)
         admins = request.data.get('admins', None)
+        buyer_company_code = request.data.get('buyer_company_code', None)
+        buyer_company_name = request.data.get('buyer_company_name', None)
+        buyer_pk = request.data.get('buyer_pk', None)
         try:
             for i in range(0, len(termsqueries)):
                 for keys in termsqueries[i]:
@@ -2221,7 +2232,10 @@ class OpenLeadsTermsDescriptionViewSet(viewsets.ModelViewSet):
                                                              description=termsqueries[i][keys],
                                                              open_leads_pk=OpenLeadsRfq.objects.get(id=open_leads_pk),
                                                              admins=AdminRegister.objects.get(admin_id=admins),
-                                                             rfq_type=rfq_type
+                                                             rfq_type=rfq_type,
+                                                             buyer_company_code=buyer_company_code,
+                                                             buyer_company_name=buyer_company_name,
+                                                             buyer_pk=CreateBuyer.objects.get(id=buyer_pk)
                                                              )
 
             return Response({'status': 201, 'message': 'Open Leads Terms and Descriptions are created'}, status=201)
@@ -2240,3 +2254,16 @@ class OpenLeadsPublishViewSet(viewsets.ModelViewSet):
             return super().create(request, *args, **kwargs)
         else:
             return Response({'status':401,'message':'UnAuthorized'},status=401)
+
+
+@api_view(['get'])
+def get_all_open_bids_vendors(request):
+    try:
+        openobj=OpenLeadsRfq.objects.filter().values()
+        if len(openobj)>0:
+            return Response({'status': 200, 'message': 'ok','data':openobj}, status=200)
+        else:
+            return Response({'status': 204, 'message': 'Not Present'}, status=204)
+
+    except Exception as e:
+        return Response({'status': 500, 'message': str(e)}, status=500)

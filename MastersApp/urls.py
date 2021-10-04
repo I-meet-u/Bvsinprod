@@ -73,6 +73,7 @@ urlpatterns = [
     path('delete-department-master/', views.delete_department_master),
     # path('history-department-master/', views.department_master_history),
     path('department-master-get-by-userid/', views.department_master_user_id),
+    path('getopenbidsmasters/',views.getopenbidsmasters),
 
     #
     # path('industry-to-serve-master-history/', views.industry_to_serve_master_history),

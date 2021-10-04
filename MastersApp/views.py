@@ -2655,3 +2655,18 @@ def updatedesignation(request):
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)
 
+@api_view(['get'])
+@permission_classes([AllowAny,])
+def getopenbidsmasters(request):
+    try:
+        deptobj=DepartmentMaster.objects.filter().values()
+        currencymasters=CurrencyMaster.objects.filter().values()
+        categorymasterobj=CategoryMaster.objects.filter().values()
+        return Response({'status': 200, 'message': 'ok','categorymaster':categorymasterobj,'currencymasters':currencymasters,'deptmasters':deptobj}, status=200)
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)
+
+
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)
+

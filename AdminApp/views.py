@@ -2374,3 +2374,18 @@ class BuyerProductDetailsAdminViewSet(viewsets.ModelViewSet):
         if buyerproductobj:
             return buyerproductobj
         raise ValidationError({'message':'Buyer Product Details Admin Not Present','status':204})
+
+@api_view(['post'])
+@permission_classes([AllowAny,])
+def getbuyeraddedadminbyccode(request):
+    data=request.data
+    key=data['key']
+    try:
+        if key=="vsinadmindb":
+            CreateBuyerobj=CreateBuyer.objects.filter(company_code=data['companycode']).values()
+            return Response({'status': 200, 'message': 'ok','data':CreateBuyerobj}, status=200)
+        else:
+            return Response({'status': 400, 'message': 'bad request'}, status=400)
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)
+

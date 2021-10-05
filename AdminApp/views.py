@@ -2205,7 +2205,6 @@ class OpenLeadsItemsViewSet(viewsets.ModelViewSet):
                                                                     item_type=itemsarray[i].get('item_type'),
                                                                     uom=itemsarray[i].get('uom'),
                                                                     quantity=itemsarray[i].get('quantity'),
-                                                                    documents=itemsarray[i].get('documents'),
                                                                     admins=AdminRegister.objects.get(admin_id=admins),
                                                                     open_leads_pk=open_leads_pk,
                                                                     buyer_company_code=buyer_company_code,

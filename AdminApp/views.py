@@ -2187,6 +2187,7 @@ class OpenLeadsItemsViewSet(viewsets.ModelViewSet):
         open_leads_pk=request.data.get('open_leads_pk',None)
         buyer_company_code =request.data.get('buyer_company_code',None)
         buyer_company_name = request.data.get('buyer_company_name',None)
+        documents=request.data.get('dcouments',None)
         # buyer_pk =request.data.get('buyer_pk',None)
         try:
             for i in range(0,len(itemsarray)):
@@ -2196,10 +2197,12 @@ class OpenLeadsItemsViewSet(viewsets.ModelViewSet):
                                                                 item_type=itemsarray[i].get('item_type'),
                                                                 uom=itemsarray[i].get('uom'),
                                                                 quantity=itemsarray[i].get('quantity'),
+                                                                documents=itemsarray[i].get('documents'),
                                                                 admins=AdminRegister.objects.get(admin_id=admins),
                                                                 open_leads_pk=open_leads_pk,
                                                                 buyer_company_code=buyer_company_code,
                                                                 buyer_company_name=buyer_company_name,
+
                                                                 # buyer_pk=CreateBuyer.objects.get(id=buyer_pk)
 
 

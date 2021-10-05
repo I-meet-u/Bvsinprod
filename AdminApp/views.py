@@ -2227,6 +2227,7 @@ class OpenLeadsItemsViewSet(viewsets.ModelViewSet):
 class OpenLeadsTermsDescriptionViewSet(viewsets.ModelViewSet):
     queryset = OpenLeadsItems.objects.all()
     serializer_class = OpenLeadsItemsSerializer
+    permission_classes = ((AllowAny,))
 
     def create(self, request, *args, **kwargs):
         rfq_number = request.data['rfq_number']

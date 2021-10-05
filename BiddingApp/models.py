@@ -428,6 +428,7 @@ class PurchaseOrder(models.Model):
     history = HistoricalRecords()
     po_numeric=models.CharField(max_length=100,null=True,blank=True)
     rfq_type=models.CharField(max_length=120,null=True,blank=True)
+    city=models.CharField(max_length=200,null=True,blank=True)
     # from_registration = models.CharField(max_length=100, null=True, blank=True, default='False')
     # auto_rfq_number = models.CharField(max_length=40, null=True, blank=True)
 

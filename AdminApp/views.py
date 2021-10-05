@@ -2407,9 +2407,6 @@ def fetch_all_buyer_product_details(request):
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)
 
-
-
-
 @api_view(['post'])
 @permission_classes((AllowAny,))
 def fetch_open_leads_rfq(request):
@@ -2426,8 +2423,6 @@ def fetch_open_leads_rfq(request):
             return Response({'status': 400, 'message': 'bad request'}, status=400)
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)
-
-
 
 
 @api_view(['post'])

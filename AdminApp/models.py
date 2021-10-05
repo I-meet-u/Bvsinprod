@@ -187,6 +187,7 @@ class OpenLeadsItems(models.Model):
     buyer_company_code = models.CharField(max_length=100, null=True, blank=True)
     buyer_company_name = models.CharField(max_length=500,null=True,blank=True)
     buyer_pk = models.ForeignKey(CreateBuyer, on_delete=models.CASCADE, null=True, blank=True)
+    dcouments=models.FileField(default='OpenLeadsItemsFiles',null=True,blank=True)
     class Meta:
         db_table='OpenLeadsItems'
 

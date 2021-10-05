@@ -2389,3 +2389,21 @@ def getbuyeraddedadminbyccode(request):
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)
 
+
+@api_view(['post'])
+@permission_classes((AllowAny,))
+def fetch_all_buyer_product_details(request):
+    key = request.data['key']
+    try:
+        if key == "vsinadmindb":
+            getbuyerproductobj=BuyerProductDetailsAdmin.objects.filter().values().order_by('product_id')
+            if len(getbuyerproductobj)>0:
+                return Response({'status': 200, 'message': 'Buyer Product Details List', 'data': getbuyerproductobj}, status=200)
+            else:
+                return Response({'status': 204, 'message': 'Not Present'}, status=204)
+
+        else:
+            return Response({'status': 400, 'message': 'bad request'}, status=400)
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)
+

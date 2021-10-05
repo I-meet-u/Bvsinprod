@@ -163,7 +163,9 @@ class OpenLeadsRfq(models.Model):
     updated_by = models.CharField(max_length=100, null=True, blank=True)
     admins = models.ForeignKey(AdminRegister, on_delete=models.CASCADE)
     buyer_company_code = models.CharField(max_length=100, null=True, blank=True)
-    buyer_company_name = models.CharField(max_length=500),
+    buyer_company_name = models.CharField(max_length=500,null=True,blank=True)
+    maincore = models.CharField(max_length=300, null=True, blank=True)
+    subcategory = models.CharField(max_length=300, null=True, blank=True)
     buyer_pk=models.ForeignKey(CreateBuyer,on_delete=models.CASCADE,null=True,blank=True)
 
     class Meta:
@@ -183,7 +185,7 @@ class OpenLeadsItems(models.Model):
     admins = models.ForeignKey(AdminRegister, on_delete=models.CASCADE)
     open_leads_pk = models.ForeignKey(OpenLeadsRfq, on_delete=models.CASCADE, null=True, blank=True)
     buyer_company_code = models.CharField(max_length=100, null=True, blank=True)
-    buyer_company_name = models.CharField(max_length=500),
+    buyer_company_name = models.CharField(max_length=500,null=True,blank=True)
     buyer_pk = models.ForeignKey(CreateBuyer, on_delete=models.CASCADE, null=True, blank=True)
     class Meta:
         db_table='OpenLeadsItems'
@@ -202,7 +204,7 @@ class OpenLeadsTermsDescription(models.Model):
     open_leads_pk=models.ForeignKey(OpenLeadsRfq, on_delete=models.CASCADE,null=True,blank=True)
     rfq_type = models.CharField(max_length=150,null=True,blank=True)
     buyer_company_code = models.CharField(max_length=100, null=True, blank=True)
-    buyer_company_name = models.CharField(max_length=500),
+    buyer_company_name = models.CharField(max_length=500,null=True,blank=True)
     buyer_pk = models.ForeignKey(CreateBuyer, on_delete=models.CASCADE, null=True, blank=True)
 
     class Meta:
@@ -224,7 +226,7 @@ class OpenLeadsPublish(models.Model):
     updated_by = models.BigIntegerField(null=True, blank=True)
     admins = models.ForeignKey(AdminRegister, on_delete=models.CASCADE)
     buyer_company_code = models.CharField(max_length=100, null=True, blank=True)
-    buyer_company_name = models.CharField(max_length=500),
+    buyer_company_name = models.CharField(max_length=500,null=True,blank=True)
     buyer_pk = models.ForeignKey(CreateBuyer, on_delete=models.CASCADE, null=True, blank=True)
 
     class Meta:

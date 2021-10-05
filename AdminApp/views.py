@@ -2187,7 +2187,7 @@ class OpenLeadsItemsViewSet(viewsets.ModelViewSet):
         open_leads_pk=request.data.get('open_leads_pk',None)
         buyer_company_code =request.data.get('buyer_company_code',None)
         buyer_company_name = request.data.get('buyer_company_name',None)
-        buyer_pk =request.data.get('buyer_pk',None)
+        # buyer_pk =request.data.get('buyer_pk',None)
         try:
             for i in range(0,len(itemsarray)):
                 openleadsitemsobj=OpenLeadsItems.objects.create(item_code=itemsarray[i].get('item_code'),
@@ -2200,7 +2200,7 @@ class OpenLeadsItemsViewSet(viewsets.ModelViewSet):
                                                                 open_leads_pk=open_leads_pk,
                                                                 buyer_company_code=buyer_company_code,
                                                                 buyer_company_name=buyer_company_name,
-                                                                buyer_pk=CreateBuyer.objects.get(id=buyer_pk)
+                                                                # buyer_pk=CreateBuyer.objects.get(id=buyer_pk)
 
 
 
@@ -2407,3 +2407,44 @@ def fetch_all_buyer_product_details(request):
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)
 
+
+
+
+@api_view(['post'])
+@permission_classes((AllowAny,))
+def fetch_open_leads_rfq(request):
+    key = request.data['key']
+    try:
+        if key == "vsinadmindb":
+            openleadsobj=OpenLeadsRfq.objects.filter().values().order_by('id')
+            if len(openleadsobj)>0:
+                return Response({'status': 200, 'message': 'Buyer Product Details List', 'data': openleadsobj}, status=200)
+            else:
+                return Response({'status': 204, 'message': 'Not Present'}, status=204)
+
+        else:
+            return Response({'status': 400, 'message': 'bad request'}, status=400)
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)
+
+
+
+
+@api_view(['post'])
+@permission_classes((AllowAny,))
+def fetch_all_buyer_product_details_by_pk(request):
+    data=request.data
+    key = data['key']
+    buyerid=data['buyerid']
+    try:
+        if key == "vsinadmindb":
+            getbuyerproductobj=BuyerProductDetailsAdmin.objects.filter(product_id__in=buyerid).values().order_by('product_id')
+            if len(getbuyerproductobj)>0:
+                return Response({'status': 200, 'message': 'Buyer Product Details List', 'data': getbuyerproductobj}, status=200)
+            else:
+                return Response({'status': 204, 'message': 'Not Present'}, status=204)
+
+        else:
+            return Response({'status': 400, 'message': 'bad request'}, status=400)
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)

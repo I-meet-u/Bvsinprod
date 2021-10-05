@@ -2170,7 +2170,12 @@ class OpenLeadsRfqViewSet(viewsets.ModelViewSet):
     queryset = OpenLeadsRfq.objects.all()
     serializer_class = OpenLeadsRfqSerializer
 
-
+    def create(self, request, *args, **kwargs):
+        token = request.data.get('token', None)
+        if token == "4aoedpde123Vyeyweuo2":
+            return super().create(request, *args, **kwargs)
+        else:
+            return Response({'status': 401, 'message': 'UnAuthorized'}, status=401)
     # def get_queryset(self):
     #     openleadsobj=OpenLeadsRfq.objects.filter(admins=self.request.GET.get('admins'))
     #     if not openleadsobj:

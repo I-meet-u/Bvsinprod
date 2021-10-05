@@ -2460,3 +2460,4 @@ def fetch_all_buyer_product_details_by_pk(request):
             return Response({'status': 400, 'message': 'bad request'}, status=400)
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)
+    #hello

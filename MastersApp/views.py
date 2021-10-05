@@ -273,7 +273,7 @@ def get_category_by_maincore(request):
     data=request.data
     maincoreid=data['maincoreid']
     try:
-        catobj=CategoryMaster.objects.filter(maincore_id=maincoreid).values()
+        catobj=CategoryMaster.objects.filter(maincore_id=maincoreid).values().order_by('category_id')
         if catobj:
             return Response({'status':200,'message':'Category List','data':catobj},status=200)
         else:
@@ -289,7 +289,7 @@ def get_subcategory_by_category(request):
     data=request.data
     categoryid=data['categoryid']
     try:
-        subcatobj=SubCategoryMaster.objects.filter(category_id__in=categoryid).values()
+        subcatobj=SubCategoryMaster.objects.filter(category_id__in=categoryid).values().order_by('sub_category_id')
         if subcatobj:
             return Response({'status':200,'message':'SubCategory List','data':subcatobj},status=200)
         else:

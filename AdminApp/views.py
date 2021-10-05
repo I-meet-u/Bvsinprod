@@ -2167,6 +2167,7 @@ class CreateBuyerView(viewsets.ModelViewSet):
 
 
 class OpenLeadsRfqViewSet(viewsets.ModelViewSet):
+    permission_classes = ((AllowAny,))
     queryset = OpenLeadsRfq.objects.all()
     serializer_class = OpenLeadsRfqSerializer
 
@@ -2185,6 +2186,7 @@ class OpenLeadsRfqViewSet(viewsets.ModelViewSet):
 class OpenLeadsItemsViewSet(viewsets.ModelViewSet):
     queryset = OpenLeadsItems.objects.all()
     serializer_class = OpenLeadsItemsSerializer
+    permission_classes = ((AllowAny,))
 
     def create(self, request, *args, **kwargs):
         itemsarray=request.data['itemsarray']
@@ -2192,29 +2194,32 @@ class OpenLeadsItemsViewSet(viewsets.ModelViewSet):
         open_leads_pk=request.data.get('open_leads_pk',None)
         buyer_company_code =request.data.get('buyer_company_code',None)
         buyer_company_name = request.data.get('buyer_company_name',None)
-        documents=request.data.get('dcouments',None)
+        token = request.data.get('token', None)
         # buyer_pk =request.data.get('buyer_pk',None)
         try:
-            for i in range(0,len(itemsarray)):
-                openleadsitemsobj=OpenLeadsItems.objects.create(item_code=itemsarray[i].get('item_code'),
-                                                                item_name=itemsarray[i].get('item_name'),
-                                                                item_description=itemsarray[i].get('item_description'),
-                                                                item_type=itemsarray[i].get('item_type'),
-                                                                uom=itemsarray[i].get('uom'),
-                                                                quantity=itemsarray[i].get('quantity'),
-                                                                documents=itemsarray[i].get('documents'),
-                                                                admins=AdminRegister.objects.get(admin_id=admins),
-                                                                open_leads_pk=open_leads_pk,
-                                                                buyer_company_code=buyer_company_code,
-                                                                buyer_company_name=buyer_company_name,
+            if token == "4aoedpde123Vyeyweuo2":
+                for i in range(0,len(itemsarray)):
+                    openleadsitemsobj=OpenLeadsItems.objects.create(item_code=itemsarray[i].get('item_code'),
+                                                                    item_name=itemsarray[i].get('item_name'),
+                                                                    item_description=itemsarray[i].get('item_description'),
+                                                                    item_type=itemsarray[i].get('item_type'),
+                                                                    uom=itemsarray[i].get('uom'),
+                                                                    quantity=itemsarray[i].get('quantity'),
+                                                                    documents=itemsarray[i].get('documents'),
+                                                                    admins=AdminRegister.objects.get(admin_id=admins),
+                                                                    open_leads_pk=open_leads_pk,
+                                                                    buyer_company_code=buyer_company_code,
+                                                                    buyer_company_name=buyer_company_name,
 
-                                                                # buyer_pk=CreateBuyer.objects.get(id=buyer_pk)
+                                                                    # buyer_pk=CreateBuyer.objects.get(id=buyer_pk)
 
 
 
 
-                                                                )
-            return Response({'status': 201, 'message': 'Open Leads Items are created'}, status=201)
+                                                                    )
+                return Response({'status': 201, 'message': 'Open Leads Items are created'}, status=201)
+            else:
+                return Response({'status': 401, 'message': 'UnAuthorized'}, status=401)
         except Exception as e:
             return Response({'status':500,'error':str(e)},status=500)
 
@@ -2233,21 +2238,25 @@ class OpenLeadsTermsDescriptionViewSet(viewsets.ModelViewSet):
         buyer_company_code = request.data.get('buyer_company_code', None)
         buyer_company_name = request.data.get('buyer_company_name', None)
         buyer_pk = request.data.get('buyer_pk', None)
+        token = request.data.get('token', None)
         try:
-            for i in range(0, len(termsqueries)):
-                for keys in termsqueries[i]:
-                    OpenLeadsTermsDescription.objects.create(rfq_number=rfq_number,
-                                                             terms=keys,
-                                                             description=termsqueries[i][keys],
-                                                             open_leads_pk=OpenLeadsRfq.objects.get(id=open_leads_pk),
-                                                             admins=AdminRegister.objects.get(admin_id=admins),
-                                                             rfq_type=rfq_type,
-                                                             buyer_company_code=buyer_company_code,
-                                                             buyer_company_name=buyer_company_name,
-                                                             buyer_pk=CreateBuyer.objects.get(id=buyer_pk)
-                                                             )
+            if token == "4aoedpde123Vyeyweuo2":
+                for i in range(0, len(termsqueries)):
+                    for keys in termsqueries[i]:
+                        OpenLeadsTermsDescription.objects.create(rfq_number=rfq_number,
+                                                                 terms=keys,
+                                                                 description=termsqueries[i][keys],
+                                                                 open_leads_pk=OpenLeadsRfq.objects.get(id=open_leads_pk),
+                                                                 admins=AdminRegister.objects.get(admin_id=admins),
+                                                                 rfq_type=rfq_type,
+                                                                 buyer_company_code=buyer_company_code,
+                                                                 buyer_company_name=buyer_company_name,
+                                                                 buyer_pk=CreateBuyer.objects.get(id=buyer_pk)
+                                                                 )
 
-            return Response({'status': 201, 'message': 'Open Leads Terms and Descriptions are created'}, status=201)
+                return Response({'status': 201, 'message': 'Open Leads Terms and Descriptions are created'}, status=201)
+            else:
+                return Response({'status': 401, 'message': 'UnAuthorized'}, status=401)
         except Exception as e:
             return Response({'status': 500, 'message': str(e)}, status=500)
 

@@ -2494,33 +2494,36 @@ def get_all_open_leads_by_pk(request):
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)
 
-# @api_view(['post'])
-# @permission_classes((AllowAny,))
-# def fetch_open_leads_rfq(request):
-#     key = request.data['key']
-#     itemlist=[]
-#     newarray=[]
-#     quantityval=0
-#     count = 0
-#     try:
-#         if key == "vsinadmindb":
-#             openleadsobj=OpenLeadsRfq.objects.filter().values().order_by('id')
-#             if len(openleadsobj)>0:
-#                 for i in range(0, len(openleadsobj)):
-#                     openleadsobjdata=OpenLeadsItems.objects.filter(open_leads_pk=openleadsobj[i].get('id')).values().order_by('id')
-#                     newarray.append({'item_code':len(openleadsobjdata)})
-#
-#
-#
-#
-#
-#
-#                 return Response({'status': 200, 'message': 'Buyer Product Details List','data':newarray}, status=200)
-#             else:
-#                 return Response({'status': 204, 'message': 'Not Present'}, status=204)
-#
-#         else:
-#             return Response({'status': 400, 'message': 'bad request'}, status=400)
-#     except Exception as e:
-#         return Response({'status': 500, 'error': str(e)}, status=500)
+@api_view(['post'])
+@permission_classes((AllowAny,))
+def fetch_open_leads_rfq(request):
+    key = request.data['key']
+    itemlist=[]
+    newarray=[]
+    quantityval=0
+    count = 0
+    try:
+        if key == "vsinadmindb":
+            openleadsobj=OpenLeadsRfq.objects.filter().values().order_by('id')
+            if len(openleadsobj)>0:
+                for i in range(0, len(openleadsobj)):
+                    # print(openleadsobj[i].get('id'))
+                    openobj=OpenLeadsItems.objects.filter(open_leads_pk=openleadsobj[i].get('id')).values().order_by('quantity')
+                    openleadsobj[i].__setitem__('noi',len(openobj))
+                    for j in range(len(openobj)):
+                        print((openobj[j].get('quantity')))
+                        if openobj[j].get('quantity')!="":
+                            count=count+int(openobj[j].get('quantity'))
+                    print("====j loop ended")
+                    print(count)
+                    openleadsobj[i].__setitem__('noq', count)
+                    count=0
+                return Response({'status': 200, 'message': 'Buyer Product Details List','data':openleadsobj}, status=200)
+            else:
+                return Response({'status': 204, 'message': 'Not Present'}, status=204)
+
+        else:
+            return Response({'status': 400, 'message': 'bad request'}, status=400)
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)
 

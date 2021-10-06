@@ -537,6 +537,8 @@ class BuyerProductDetailsView(viewsets.ModelViewSet):
         buyer_safety_stock = request.data.get('buyer_safety_stock',None)
         buyer_model_no = request.data.get('buyer_model_no',None)
         buyer_document = request.data.get('buyer_document',None)
+        buyer_document_1 = request.data.get('buyer_document_1', None)
+        buyer_document_2 = request.data.get('buyer_document_2', None)
         buyer_additional_specifications = request.data.get('buyer_additional_specifications',None)
         buyer_add_product_supplies = request.data.get('buyer_add_product_supplies',None)
         userid = request.data.get('userid',None)
@@ -564,6 +566,8 @@ class BuyerProductDetailsView(viewsets.ModelViewSet):
                                                                   buyer_safety_stock=buyer_safety_stock,
                                                                   buyer_model_no=buyer_model_no,
                                                                   buyer_document=buyer_document,
+                                                                  buyer_document_1=buyer_document_1,
+                                                                  buyer_document_2=buyer_document_2,
                                                                   buyer_additional_specifications=buyer_additional_specifications,
                                                                   buyer_add_product_supplies=buyer_add_product_supplies,
                                                                   updated_by=SelfRegistration.objects.get(id=userid),
@@ -586,6 +590,8 @@ class BuyerProductDetailsView(viewsets.ModelViewSet):
                                                                   buyer_safety_stock=buyer_safety_stock,
                                                                   buyer_model_no=buyer_model_no,
                                                                   buyer_document=buyer_document,
+                                                                  buyer_document_1=buyer_document_1,
+                                                                  buyer_document_2=buyer_document_2,
                                                                   buyer_additional_specifications=buyer_additional_specifications,
                                                                   buyer_add_product_supplies=buyer_add_product_supplies,
                                                                   updated_by=SelfRegistration.objects.get(id=userid),
@@ -627,6 +633,8 @@ class BuyerServiceDetailsView(viewsets.ModelViewSet):
         buyer_service_safety_stock = request.data.get('buyer_service_safety_stock',None)
         buyer_service_model_no = request.data.get('buyer_service_model_no',None)
         buyer_service_document = request.data.get('buyer_service_document',None)
+        buyer_service_document_1 = request.data.get('buyer_service_document_1',None)
+        buyer_service_document_2 = request.data.get('buyer_service_document_2',None)
         buyer_service_additional_specifications = request.data.get('buyer_service_additional_specifications',None)
         buyer_service_add_product_supplies = request.data.get('buyer_service_add_product_supplies',None)
         userid = request.data.get('userid',None)
@@ -653,6 +661,8 @@ class BuyerServiceDetailsView(viewsets.ModelViewSet):
                                                                   buyer_service_safety_stock=buyer_service_safety_stock,
                                                                   buyer_service_model_no=buyer_service_model_no,
                                                                   buyer_service_document=buyer_service_document,
+                                                                  buyer_service_document_1=buyer_service_document_1,
+                                                                  buyer_service_document_2=buyer_service_document_2,
                                                                   buyer_service_additional_specifications=buyer_service_additional_specifications,
                                                                   buyer_service_add_product_supplies=buyer_service_add_product_supplies,
                                                                   updated_by=SelfRegistration.objects.get(id=userid),
@@ -675,6 +685,8 @@ class BuyerServiceDetailsView(viewsets.ModelViewSet):
                                                                   buyer_service_safety_stock=buyer_service_safety_stock,
                                                                   buyer_service_model_no=buyer_service_model_no,
                                                                   buyer_service_document=buyer_service_document,
+                                                                  buyer_service_document_1=buyer_service_document_1,
+                                                                  buyer_service_document_2=buyer_service_document_2,
                                                                   buyer_service_additional_specifications=buyer_service_additional_specifications,
                                                                   buyer_service_add_product_supplies=buyer_service_add_product_supplies,
                                                                   updated_by=SelfRegistration.objects.get(id=userid),
@@ -716,6 +728,8 @@ class BuyerMachinaryDetailsView(viewsets.ModelViewSet):
         buyer_machinary_safety_stock = request.data.get('buyer_machinary_safety_stock',None)
         buyer_machinary_model_no = request.data.get('buyer_machinary_model_no',None)
         buyer_machinary_document = request.data.get('buyer_machinary_document',None)
+        buyer_machinary_document_1 = request.data.get('buyer_machinary_document_1', None)
+        buyer_machinary_document_2= request.data.get('buyer_machinary_document_2', None)
         buyer_machinary_additional_specifications = request.data.get('buyer_machinary_additional_specifications',None)
         buyer_machinary_add_product_supplies = request.data.get('buyer_machinary_add_product_supplies',None)
         userid = request.data.get('userid',None)
@@ -742,6 +756,8 @@ class BuyerMachinaryDetailsView(viewsets.ModelViewSet):
                                                                   buyer_machinary_safety_stock=buyer_machinary_safety_stock,
                                                                   buyer_machinary_model_no=buyer_machinary_model_no,
                                                                   buyer_machinary_document=buyer_machinary_document,
+                                                                  buyer_machinary_document_1=buyer_machinary_document_1,
+                                                                  buyer_machinary_document_2=buyer_machinary_document_2,
                                                                   buyer_machinary_additional_specifications=buyer_machinary_additional_specifications,
                                                                   buyer_machinary_add_product_supplies=buyer_machinary_add_product_supplies,
                                                                   updated_by=SelfRegistration.objects.get(id=userid),
@@ -764,6 +780,8 @@ class BuyerMachinaryDetailsView(viewsets.ModelViewSet):
                                                                   buyer_machinary_safety_stock=buyer_machinary_safety_stock,
                                                                   buyer_machinary_model_no=buyer_machinary_model_no,
                                                                   buyer_machinary_document=buyer_machinary_document,
+                                                                  buyer_machinary_document_1=buyer_machinary_document_1,
+                                                                  buyer_machinary_document_2=buyer_machinary_document_2,
                                                                   buyer_machinary_additional_specifications=buyer_machinary_additional_specifications,
                                                                   buyer_machinary_add_product_supplies=buyer_machinary_add_product_supplies,
                                                                   updated_by=SelfRegistration.objects.get(id=userid),

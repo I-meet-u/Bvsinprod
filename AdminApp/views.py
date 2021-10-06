@@ -2332,7 +2332,7 @@ class BuyerProductDetailsAdminViewSet(viewsets.ModelViewSet):
         document1 = request.data.get('document1',None)
         document2 = request.data.get('document2', None)
         document3 = request.data.get('document3', None)
-        # additional_specifications = request.data.get('additional_specifications',None)
+        additional_specifications = request.data.get('additional_specifications',None)
         # add_product_supplies = request.data.get('buyer_add_product_supplies',None)
         admins = request.data.get('admins',None)
         try:
@@ -2357,7 +2357,8 @@ class BuyerProductDetailsAdminViewSet(viewsets.ModelViewSet):
                                                                   document1=document1,
                                                                   document2=document2,
                                                                   document3=document3,
-                                                                  admins=AdminRegister.objects.get(admin_id=admins))
+                                                                  admins=AdminRegister.objects.get(admin_id=admins),
+                                                                  additional_specifications=additional_specifications)
                 else:
                     print('already present')
                     print(buyerproductobj[0].get('prefix'))
@@ -2379,7 +2380,11 @@ class BuyerProductDetailsAdminViewSet(viewsets.ModelViewSet):
                                                                        document1=document1,
                                                                        document2=document2,
                                                                        document3=document3,
-                                                                       admins=AdminRegister.objects.get(admin_id=admins))
+                                                                       admins=AdminRegister.objects.get(admin_id=admins),
+                                                                       safety_stock=safety_stock,
+                                                                       additional_specifications=additional_specifications)
+
+
                 return Response({'status':201,'message':'Buyer Product Created'},status=201)
             else:
                 return Response({'status': 401, 'message': 'UnAuthorized'}, status=401)
@@ -2424,22 +2429,7 @@ def fetch_all_buyer_product_details(request):
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)
 
-@api_view(['post'])
-@permission_classes((AllowAny,))
-def fetch_open_leads_rfq(request):
-    key = request.data['key']
-    try:
-        if key == "vsinadmindb":
-            openleadsobj=OpenLeadsRfq.objects.filter().values().order_by('id')
-            if len(openleadsobj)>0:
-                return Response({'status': 200, 'message': 'Buyer Product Details List', 'data': openleadsobj}, status=200)
-            else:
-                return Response({'status': 204, 'message': 'Not Present'}, status=204)
 
-        else:
-            return Response({'status': 400, 'message': 'bad request'}, status=400)
-    except Exception as e:
-        return Response({'status': 500, 'error': str(e)}, status=500)
 
 
 @api_view(['post'])
@@ -2461,3 +2451,20 @@ def fetch_all_buyer_product_details_by_pk(request):
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)
     #hello
+
+@api_view(['post'])
+@permission_classes((AllowAny,))
+def fetch_open_leads_rfq(request):
+    key = request.data['key']
+    try:
+        if key == "vsinadmindb":
+            openleadsobj=OpenLeadsRfq.objects.filter().values().order_by('id')
+            if len(openleadsobj)>0:
+                return Response({'status': 200, 'message': 'Buyer Product Details List', 'data': openleadsobj}, status=200)
+            else:
+                return Response({'status': 204, 'message': 'Not Present'}, status=204)
+
+        else:
+            return Response({'status': 400, 'message': 'bad request'}, status=400)
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)

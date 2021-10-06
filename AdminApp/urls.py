@@ -87,7 +87,8 @@ urlpatterns = [
     path('get-particular-buyer/',views.getbuyeraddedadminbyccode),
     path('fetch-all-buyer-product-details/',views.fetch_all_buyer_product_details),
     path('fetch-all-buyer-product-details-by-pk/', views.fetch_all_buyer_product_details_by_pk),
-    path('fetch-open-leads-rfq/',views.fetch_open_leads_rfq)
+    path('fetch-open-leads-rfq/',views.fetch_open_leads_rfq),
+    path('get-all-open-leads-by-pk/',views.get_all_open_leads_by_pk)
 
 
 

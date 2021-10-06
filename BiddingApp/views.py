@@ -479,11 +479,38 @@ def get_buyer_product_bid_by_user_rfq(request):
 def get_buyer_product_details_by_user_rfq(request):
     data = request.data
     rfqnumber = data['rfqnumber']
+    docarray=[]
+    dict1={}
     try:
         bidproductdetails = BiddingBuyerProductDetails.objects.filter(buyer_rfq_number=rfqnumber).values().order_by(
             'id')
         if len(bidproductdetails) > 0:
-            return Response({'status': 200, 'message': "Buyer Product Details List Success", 'data': bidproductdetails},
+            for i in range(0,len(bidproductdetails)):
+                buyerproductobj=BuyerProductDetails.objects.filter(buyer_item_code=bidproductdetails[i].get('buyer_item_code')).values()
+                # print(len(buyerproductobj),'okkkkkkkkk')
+                if len(buyerproductobj)>0:
+                    docarray.append({'buyer_document': buyerproductobj[0].get('buyer_document'),
+                                     'buyer_document_1': buyerproductobj[0].get('buyer_document_1'),
+                                     'buyer_document_2': buyerproductobj[0].get('buyer_document_2'),
+                                     'updated_by_id': buyerproductobj[0].get('updated_by_id'),
+                                     'item_code': buyerproductobj[0].get('buyer_item_code')
+                                     })
+                    # dict1.setdefault('buyer_document',buyerproductobj[0].get('buyer_document'))
+                    # dict1.setdefault('buyer_document_1', buyerproductobj[0].get('buyer_document_1'))
+                    # dict1.setdefault('buyer_document_2', buyerproductobj[0].get('buyer_document_2'))
+                    # print(dict1,'okk')
+                    bidproductdetails[i].__setitem__('docs',docarray)
+                    # bidproductdetails[i].setdefault('document', dict1)
+                    # bidproductdetails[i].setdefault('document', dict1)
+                    # bidproductdetails[i].setdefault('document', dict1)
+                    # docarray.append({'buyer_document':buyerproductobj[0].get('buyer_document'),
+                    #                  'buyer_document_1': buyerproductobj[0].get('buyer_document_1'),
+                    #                  'buyer_document_2': buyerproductobj[0].get('buyer_document_2'),
+                    #                  'updated_by_id':buyerproductobj[0].get('updated_by_id'),
+                    #                  'item_code':buyerproductobj[0].get('buyer_item_code')
+                    #                  })
+
+            return Response({'status': 200, 'message': "Buyer Product Details List Success", 'data': bidproductdetails,'data1':docarray},
                             status=200)
         else:
             return Response(
@@ -1523,7 +1550,8 @@ def bidding_data_responses_count(request):
                                       'deadline_date': biddingbasicdatadetails.product_deadline_date,
                                       'department_master': biddingbasicdatadetails.product_department,
                                       'company_code':basicobj[0].get('company_code'),
-                                      'company_name':basicobj[0].get('company_name')
+                                      'company_name':basicobj[0].get('company_name'),
+                                      'rfq_status':biddingbasicdatadetails.product_rfq_status
 
                                       })
                 print(biddingbasicdatadetails.product_rfq_title)

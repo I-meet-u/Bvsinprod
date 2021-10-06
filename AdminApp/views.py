@@ -2483,8 +2483,7 @@ def get_all_open_leads_by_pk(request):
             openleadsitemsobj=OpenLeadsItems.objects.filter(open_leads_pk_id=userpk).values().order_by('id')
             openleadsterms=OpenLeadsTermsDescription.objects.filter(open_leads_pk_id=userpk).values().order_by('id')
             if len(openleadsobj)>0 or len(openleadsitemsobj)>0 or len(openleadsterms)>0:
-                totalalldata = list(chain(openleadsobj, openleadsitemsobj,openleadsterms))
-                return Response({'status': 200, 'message': 'Open Bids Rfq List', 'data': totalalldata}, status=200)
+                return Response({'status': 200, 'message': 'Open Bids Rfq List', 'data':openleadsobj,'data1':openleadsitemsobj,'data3':openleadsterms}, status=200)
 
             else:
                 return Response({'status': 204, 'message': 'Not Present'}, status=204)
@@ -2511,7 +2510,7 @@ def fetch_open_leads_rfq(request):
                     openobj=OpenLeadsItems.objects.filter(open_leads_pk=openleadsobj[i].get('id')).values().order_by('quantity')
                     openleadsobj[i].__setitem__('noi',len(openobj))
                     for j in range(len(openobj)):
-                        print((openobj[j].get('quantity')))
+                        # print((openobj[j].get('quantity')))
                         if openobj[j].get('quantity')!="":
                             count=count+int(openobj[j].get('quantity'))
                     print("====j loop ended")

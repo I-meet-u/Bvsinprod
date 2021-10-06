@@ -489,28 +489,15 @@ def get_buyer_product_details_by_user_rfq(request):
                 buyerproductobj=BuyerProductDetails.objects.filter(buyer_item_code=bidproductdetails[i].get('buyer_item_code')).values()
                 # print(len(buyerproductobj),'okkkkkkkkk')
                 if len(buyerproductobj)>0:
-                    docarray.append({'buyer_document': buyerproductobj[0].get('buyer_document'),
-                                     'buyer_document_1': buyerproductobj[0].get('buyer_document_1'),
-                                     'buyer_document_2': buyerproductobj[0].get('buyer_document_2'),
-                                     'updated_by_id': buyerproductobj[0].get('updated_by_id'),
-                                     'item_code': buyerproductobj[0].get('buyer_item_code')
-                                     })
-                    # dict1.setdefault('buyer_document',buyerproductobj[0].get('buyer_document'))
-                    # dict1.setdefault('buyer_document_1', buyerproductobj[0].get('buyer_document_1'))
-                    # dict1.setdefault('buyer_document_2', buyerproductobj[0].get('buyer_document_2'))
-                    # print(dict1,'okk')
-                    bidproductdetails[i].__setitem__('docs',docarray)
-                    # bidproductdetails[i].setdefault('document', dict1)
-                    # bidproductdetails[i].setdefault('document', dict1)
-                    # bidproductdetails[i].setdefault('document', dict1)
-                    # docarray.append({'buyer_document':buyerproductobj[0].get('buyer_document'),
-                    #                  'buyer_document_1': buyerproductobj[0].get('buyer_document_1'),
-                    #                  'buyer_document_2': buyerproductobj[0].get('buyer_document_2'),
-                    #                  'updated_by_id':buyerproductobj[0].get('updated_by_id'),
-                    #                  'item_code':buyerproductobj[0].get('buyer_item_code')
-                    #                  })
+                    bidproductdetails[i].__setitem__('document',"https://v2apis.vendorsin.com/media/"+buyerproductobj[0].get('buyer_document'))
+                    # bidproductdetails[i].__setitem__('document_1',
+                    #                                  "https://v2apis.vendorsin.com/media/" + buyerproductobj[0].get(
+                    #                                      'buyer_document_1'))
+                    # bidproductdetails[i].__setitem__('document_2',
+                    #                                  "https://v2apis.vendorsin.com/media/" + buyerproductobj[0].get(
+                    #                                      'buyer_document_2'))
 
-            return Response({'status': 200, 'message': "Buyer Product Details List Success", 'data': bidproductdetails,'data1':docarray},
+            return Response({'status': 200, 'message': "Buyer Product Details List Success", 'data': bidproductdetails},
                             status=200)
         else:
             return Response(

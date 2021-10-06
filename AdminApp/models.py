@@ -166,6 +166,7 @@ class OpenLeadsRfq(models.Model):
     buyer_company_name = models.CharField(max_length=500,null=True,blank=True)
     maincore = models.CharField(max_length=300, null=True, blank=True)
     subcategory = models.CharField(max_length=300, null=True, blank=True)
+    rfq_title=models.TextField(null=True,blank=True)
     buyer_pk=models.ForeignKey(CreateBuyer,on_delete=models.CASCADE,null=True,blank=True)
 
     class Meta:

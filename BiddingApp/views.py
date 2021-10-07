@@ -487,15 +487,28 @@ def get_buyer_product_details_by_user_rfq(request):
         if len(bidproductdetails) > 0:
             for i in range(0,len(bidproductdetails)):
                 buyerproductobj=BuyerProductDetails.objects.filter(buyer_item_code=bidproductdetails[i].get('buyer_item_code')).values()
-                # print(len(buyerproductobj),'okkkkkkkkk')
-                if len(buyerproductobj)>0:
-                    bidproductdetails[i].__setitem__('document',"https://v2apis.vendorsin.com/media/"+buyerproductobj[0].get('buyer_document'))
-                    # bidproductdetails[i].__setitem__('document_1',
-                    #                                  "https://v2apis.vendorsin.com/media/" + buyerproductobj[0].get(
-                    #                                      'buyer_document_1'))
-                    # bidproductdetails[i].__setitem__('document_2',
-                    #                                  "https://v2apis.vendorsin.com/media/" + buyerproductobj[0].get(
-                    #                                      'buyer_document_2'))
+                if not buyerproductobj[0].get('buyer_document'):
+                    pass
+                else:
+                    bidproductdetails[i].__setitem__('document',
+                                                     "https://v2apis.vendorsin.com/media/" + buyerproductobj[0].get(
+                                                         'buyer_document'))
+
+
+                if not buyerproductobj[0].get('buyer_document_1'):
+                    bidproductdetails[i].__setitem__('document_1',"")
+                else:
+                    bidproductdetails[i].__setitem__('document_1',
+                                                     "https://v2apis.vendorsin.com/media/" + buyerproductobj[0].get(
+                                                         'buyer_document_1'))
+
+                if not buyerproductobj[0].get('buyer_document_2'):
+                    bidproductdetails[i].__setitem__('document_2',"")
+
+                else:
+                    bidproductdetails[i].__setitem__('document_2',
+                                                     "https://v2apis.vendorsin.com/media/" + buyerproductobj[0].get(
+                                                         'buyer_document_2'))
 
             return Response({'status': 200, 'message': "Buyer Product Details List Success", 'data': bidproductdetails},
                             status=200)

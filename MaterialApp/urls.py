@@ -62,6 +62,7 @@ urlpatterns = [
     path('fetch-vendor-product-details-by-pk/', views.fetch_vendor_product_details_by_pk),
     path('get_landing_page_bidding_by_pid/',views.get_landing_page_bidding_by_pid),
     path('getbuyerpostedresponse/',views.getbuyerpostedresponse),
-    path('get-buyer-posted-response-by-pk/',views.get_buyer_posted_response_by_pk)
+    path('get-buyer-posted-response-by-pk/',views.get_buyer_posted_response_by_pk),
+    path('get-buyer-award-details-by-userid/',views.get_buyer_award_details_by_userid)
 
 ]

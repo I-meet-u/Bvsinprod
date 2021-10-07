@@ -2202,13 +2202,53 @@ def get_landing_page_bidding_by_pid(request):
         return Response({'status': 500, 'error': str(e)}, status=500)
 
 
-#
-# @api_view(['post'])
-# def addtoawardspostedrfq(request):
-#     data=requset.data
-#     try:
-#
-#     except Exception as e:
-#         return Response({'status': 500, 'error': str(e)}, status=500)
+@api_view(['post'])
+def get_buyer_award_details_by_userid(request):
+    awardarray=[]
+    try:
+        getawardobj=awardpostedRFQ.objects.filter(updated_by_id=request.data['updated_by_id']).values().order_by('id')
+        if len(getawardobj)>0:
+            for i in range(0,len(getawardobj)):
+                # print(getawardobj[i].get('landingpage_bidding_id_id'),'--------------------------------------------')
+                awardobj=LandingPageBidding.objects.filter(id=getawardobj[i].get('landingpage_bidding_id_id')).values().order_by('id')
+                userid = awardobj[0].get('updated_by_id')
+                print(userid)
+                basicobj = BasicCompanyDetails.objects.filter(updated_by_id=userid).values()
+                cname = basicobj[0].get('company_name')
+                code = basicobj[0].get('company_code')
+                print(cname, 'company name')
+                if len(awardobj)>0:
+                    landingpagepublish=LandingPageBidding_Publish.objects.filter(listing_leads_id=awardobj[0].get('id')).values()
+                    if len(landingpagepublish)>0:
+                        awardarray.append({'cname':cname,
+                                           'code':code,
+                                           'item_name':getawardobj[i].get('product'),
+                                           'quantity':getawardobj[0].get('quantity'),
+                                           'buyer_publish_date':getawardobj[0].get('buyer_publish_date'),
+                                           'buyer_deadLine_date':getawardobj[0].get('buyer_deadLine_date'),
+                                           'po_status':getawardobj[0].get('po_status'),
+                                           'item_description':landingpagepublish[0].get('item_description'),
+                                           'total_amount':landingpagepublish[0].get('total_amount')
+                        })
+                    else:
+                        awardarray.append({'cname': cname,
+                                           'code': code,
+                                           'item_name': getawardobj[i].get('product'),
+                                           'quantity': getawardobj[0].get('quantity'),
+                                           'buyer_publish_date': getawardobj[0].get('buyer_publish_date'),
+                                           'buyer_deadLine_date': getawardobj[0].get('buyer_deadLine_date'),
+                                           'po_status': getawardobj[0].get('po_status'),
+                                           'item_description': "",
+                                           'total_amount': "",
+                                           })
+                else:
+                    return Response({'status': 204, 'message': 'buyer award data not exist'},
+                                        status=status.HTTP_204_NO_CONTENT)
 
+            return Response({'status': 200, 'message': 'Award data','data':awardarray}, status=status.HTTP_200_OK)
+        else:
+            return Response({'status': 204, 'message': 'Buyer Post rfq list is not present'},
+                            status=status.HTTP_204_NO_CONTENT)
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)
 

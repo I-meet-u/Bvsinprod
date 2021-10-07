@@ -1897,6 +1897,30 @@ def get_ccode_by_userid(request):
         return Response({'status': 500, 'error': str(e)}, status=500)
 
 
+
+
+@api_view(['post'])
+@permission_classes((AllowAny,))
+def get_ccode_by_userid_without_tk(request):
+    data = request.data
+    basicarray = []
+    try:
+        basicobj = BasicCompanyDetails.objects.filter(updated_by_id=data['userid']).values('company_code')
+        if len(basicobj) > 0:
+            regobj = SelfRegistration.objects.get(id=data['userid'])
+            basicarray.append({'company_code': basicobj[0].get('company_code'),
+                               'user_type': regobj.user_type,
+                               'userid':regobj.id
+                               })
+
+            return Response({'status': 200, 'message': 'Company Code', 'data': basicarray}, status=200)
+        else:
+            return Response({'status': 204, 'message': 'company code not present'}, status=204)
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)
+
+
+
 # @api_view(['post'])
 # def price_analysis_product(request):
 #     data = request.data

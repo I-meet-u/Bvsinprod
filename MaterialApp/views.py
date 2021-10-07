@@ -2222,24 +2222,29 @@ def get_buyer_award_details_by_userid(request):
                     if len(landingpagepublish)>0:
                         awardarray.append({'cname':cname,
                                            'code':code,
-                                           'item_name':getawardobj[i].get('product'),
+                                           'item_name':landingpagepublish[0].get('item_name'),
                                            'quantity':getawardobj[0].get('quantity'),
                                            'buyer_publish_date':getawardobj[0].get('buyer_publish_date'),
                                            'buyer_deadLine_date':getawardobj[0].get('buyer_deadLine_date'),
                                            'po_status':getawardobj[0].get('po_status'),
                                            'item_description':landingpagepublish[0].get('item_description'),
-                                           'total_amount':landingpagepublish[0].get('total_amount')
+                                           'total_amount':landingpagepublish[0].get('total_amount'),
+                                           'userid': basicobj[0].get('updated_by_id'),
+                                           'awarded_date':getawardobj[0].get('awarded_date')
                         })
                     else:
+                        print('not present')
                         awardarray.append({'cname': cname,
                                            'code': code,
-                                           'item_name': getawardobj[i].get('product'),
+                                           'item_name': landingpagepublish[i].get('item_name'),
                                            'quantity': getawardobj[0].get('quantity'),
                                            'buyer_publish_date': getawardobj[0].get('buyer_publish_date'),
                                            'buyer_deadLine_date': getawardobj[0].get('buyer_deadLine_date'),
                                            'po_status': getawardobj[0].get('po_status'),
                                            'item_description': "",
                                            'total_amount': "",
+                                           'userid': basicobj[0].get('updated_by_id'),
+                                             'awarded_date':getawardobj[0].get('awarded_date')
                                            })
                 else:
                     return Response({'status': 204, 'message': 'buyer award data not exist'},

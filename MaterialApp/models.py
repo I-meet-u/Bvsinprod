@@ -327,7 +327,7 @@ class awardpostedRFQ(models.Model):
     created_by = models.BigIntegerField(null=True)
     updated_by = models.ForeignKey(SelfRegistration, on_delete=models.CASCADE,null=True)
     po_status=models.CharField(max_length=50,default='Pending',null=True,blank=True)
-    awarded_date=models.CharField(max_length=100,null=True,blank=True)
+    awarded_date=models.DateField(auto_now_add=True,null=True,blank=True)
     class Meta:
         db_table="AwardpostedRFQBuyer"
 

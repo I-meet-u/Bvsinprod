@@ -2624,24 +2624,41 @@ def get_open_bids_list(request):
     data=request.data
     key=data['key']
     openleadsarray=[]
+    idarray=[]
+    count=0
     try:
+
         if key=="vsinadmindb":
             adminobj=AdminRegister.objects.filter().values()
             if len(adminobj):
                 openrfqobj=OpenLeadsRfq.objects.filter(admins=adminobj[0].get('admin_id')).values().order_by('id')
                 if len(openrfqobj):
                     for i in range(0,len(openrfqobj)):
-                        # print(openrfqobj[i].get('rfq_number'))
-                        openleadspublish=OpenLeadsVendorPublishRfq.objects.filter(vendor_rfq_number=openrfqobj[i].get('rfq_number')).values()
-                        if len(openleadspublish)>0:
-                            openleadsarray.append({'rfq_number':openrfqobj[i].get('rfq_number'),
-                                                   'rfq_title':openrfqobj[i].get('rfq_title'),
-                                                   'rfq_status':openrfqobj[i].get('rfq_status'),
-                                                   'rfq_type':openrfqobj[i].get('rfq_type'),
-                                                   'publish_date':openrfqobj[i].get('publish_date'),
-                                                   'deadline_date':openrfqobj[i].get('deadline_date'),
-                                                   'closing_date':openrfqobj[i].get('closing_date'),
-                                                   'response_count':len(openleadspublish)
+
+                        openleadsitems = OpenLeadsItems.objects.filter(open_leads_pk=openrfqobj[i].get('id')).values().order_by('quantity')
+                        if len(openleadsitems)>0:
+                            for j in range(0,len(openleadsitems)):
+                                if openleadsitems[j].get('quantity')!="":
+                                    count=count+int(openleadsitems[j].get('quantity'))
+                            print('count-------------------------------',count)
+                        else:
+                            print('items not present')
+
+
+                        openleadspublish = OpenLeadsVendorPublishRfq.objects.filter(
+                            vendor_rfq_number=openrfqobj[i].get('rfq_number')).values()
+                        if len(openleadspublish) > 0:
+                            print('-----------------------count-------------',count)
+                            openleadsarray.append({'rfq_number': openrfqobj[i].get('rfq_number'),
+                                                   'rfq_title': openrfqobj[i].get('rfq_title'),
+                                                   'rfq_status': openrfqobj[i].get('rfq_status'),
+                                                   'rfq_type': openrfqobj[i].get('rfq_type'),
+                                                   'publish_date': openrfqobj[i].get('publish_date'),
+                                                   'deadline_date': openrfqobj[i].get('deadline_date'),
+                                                   'closing_date': openrfqobj[i].get('closing_date'),
+                                                   'id':openrfqobj[i].get('id'),
+                                                   'response_count': len(openleadspublish),
+                                                   'quantity': count
 
                                                    })
                         else:
@@ -2652,10 +2669,13 @@ def get_open_bids_list(request):
                                                    'publish_date': openrfqobj[i].get('publish_date'),
                                                    'deadline_date': openrfqobj[i].get('deadline_date'),
                                                    'closing_date': openrfqobj[i].get('closing_date'),
-                                                   'response_count': 0
+                                                   'id': openrfqobj[i].get('id'),
+                                                   'response_count': 0,
+                                                   'quantity': count
 
                                                    })
 
+                        count = 0
                     return Response({'status': 200, 'message': 'Open Leads Rfq List','data':openleadsarray},status=200)
                 else:
                     return Response({'status': 204, 'message': 'Not Present'}, status=204)

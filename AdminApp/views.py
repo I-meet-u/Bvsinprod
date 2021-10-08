@@ -2552,6 +2552,13 @@ class OpenLeadsVendorPublishRfqViewSet(viewsets.ModelViewSet):
     queryset = OpenLeadsVendorPublishRfq.objects.all()
     serializer_class =OpenLeadsVendorPublishRfqSerializer
 
+    def get_queryset(self):
+        openleadsvendorobj = OpenLeadsVendorPublishRfq.objects.filter(updated_by=self.request.GET.get('updated_by')).order_by('id')
+        if openleadsvendorobj:
+            return openleadsvendorobj
+        raise ValidationError(
+            {'message': 'Vendor Bidding Open Leads Vendor Publish Rfq', 'status': 204})
+
 class OpenLeadsVendorPublishItemsViewSet(viewsets.ModelViewSet):
     queryset = OpenLeadsVendorPublishItems.objects.all()
     serializer_class = OpenLeadsVendorPublishItemsSerializer

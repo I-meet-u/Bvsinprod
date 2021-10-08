@@ -2617,3 +2617,27 @@ class OpenLeadsVendorPublishTermsDescriptionViewSet(viewsets.ModelViewSet):
 
         except Exception as e:
             return Response({'status': 500, 'message': str(e)}, status=500)
+
+@api_view(['post'])
+@permission_classes((AllowAny,))
+def get_open_bids_list(request):
+    data=request.data
+    key=data['key']
+    try:
+        if key=="vsinadmindb":
+            adminobj=AdminRegister.objects.filter().values()
+            if len(adminobj):
+                adminid=adminobj[0].get('admin_id')
+                openrfqobj=OpenLeadsRfq.objects.filter(admins=adminid).values().order_by('id')
+                if len(openrfqobj):
+                    return Response({'status': 200, 'message': 'Open Leads Rfq List','data':openrfqobj},status=200)
+                else:
+                    return Response({'status': 204, 'message': 'Not Present'}, status=204)
+            else:
+                return Response({'status': 202, 'message': 'Admin id is not present'}, status=202)
+        else:
+            return Response({'status': 400, 'message': 'Bad Request'}, status=400)
+
+
+    except Exception as e:
+        return Response({'status': 500, 'message': str(e)}, status=500)

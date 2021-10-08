@@ -56,6 +56,9 @@ router.register('open-leads-terms',views.OpenLeadsTermsDescriptionViewSet)
 router.register('open-leads-publish',views.OpenLeadsPublishViewSet)
 router.register('buyer-product-details-admin',views.BuyerProductDetailsAdminViewSet)
 
+router.register('open-leads-vendor-publish-rfq', views.OpenLeadsVendorPublishRfqViewSet)
+router.register('open-leads-vendor-publish-items', views.OpenLeadsVendorPublishItemsViewSet)
+router.register('open-leads-vendor-publish-terms',views.OpenLeadsVendorPublishTermsDescriptionViewSet)
 urlpatterns = [
     path('admin-router-urls/',include(router.urls)),
     path('admin-login/',views.admin_login),

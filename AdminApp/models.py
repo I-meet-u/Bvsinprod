@@ -138,7 +138,7 @@ class OpenLeadsRfq(models.Model):
     buyer=models.CharField(max_length=200)
     rfq_number=models.CharField(max_length=50,null=True,blank=True)
     numeric=models.IntegerField(null=True,blank=True)
-    rfq_status=models.CharField(max_length=80,null=True, blank=True)
+    rfq_status=models.CharField(max_length=80,null=True,blank=True,default='Pending')
     rfq_type=models.CharField(max_length=80)
     publish_date=models.CharField(max_length=100)
     deadline_date=models.CharField(max_length=100)
@@ -267,3 +267,73 @@ class BuyerProductDetailsAdmin(models.Model):
 
     class Meta:
         db_table = "BuyerProductDetailsAdmin"
+
+
+
+class OpenLeadsVendorPublishRfq(models.Model):
+    vendor_rfq_number = models.CharField(max_length=50, null=True, blank=True)
+    vendor_rfq_status = models.CharField(max_length=80, null=True, blank=True,default='Pending')
+    vendor_rfq_type = models.CharField(max_length=80)
+    buyer_publish_date = models.CharField(max_length=100, null=True, blank=True)
+    vendor_publish_date = models.DateField(auto_now_add=True)
+    vendor_deadline_date = models.CharField(max_length=100,null=True,blank=True)
+    vendor_closing_date = models.CharField(max_length=100, null=True, blank=True)
+    maincore = models.CharField(max_length=300, null=True, blank=True)
+    category = models.CharField(max_length=250,null=True,blank=True)
+    subcategory = models.CharField(max_length=300, null=True, blank=True)
+    vendor_bill_address = models.TextField(null=True, blank=True)
+    vendor_ship_address = models.TextField(null=True, blank=True)
+    vendor_rfq_title = models.TextField(null=True, blank=True)
+    final_amount=models.CharField(max_length=200,null=True,blank=True)
+    created_on = models.DateTimeField(auto_now_add=True, null=True)
+    updated_on = models.DateTimeField(auto_now=True, null=True)
+    created_by = models.BigIntegerField(null=True, blank=True)
+    updated_by = models.ForeignKey(SelfRegistration, on_delete=models.CASCADE)
+    open_rfq_buyer_pk = models.ForeignKey(OpenLeadsRfq, on_delete=models.CASCADE, null=True, blank=True)
+
+
+    class Meta:
+        db_table='OpenLeadsVendorPublishRfq'
+
+
+class OpenLeadsVendorPublishItems(models.Model):
+    vendor_item_type = models.CharField(max_length=100, null=True, blank=True)
+    vendor_item_code= models.CharField(max_length=100,null=True,blank=True)
+    vendor_item_name = models.CharField(max_length=300)
+    vendor_item_description = models.TextField(null=True,blank=True)
+    vendor_uom = models.CharField(max_length=100)
+    buyer_quantity = models.CharField(max_length=100,null=True,blank=True)
+    # vendor_quantity = models.CharField(max_length=100,null=True,blank=True)
+    vendor_rate = models.CharField(max_length=100,null=True,blank=True)
+    vendor_tax = models.CharField(max_length=100,null=True,blank=True)
+    vendor_discount = models.CharField(max_length=100,null=True,blank=True)
+    # vendor_final_amount = models.CharField(max_length=80,null=True,blank=True)
+    vendor_total_amount= models.CharField(max_length=80,null=True,blank=True)
+    # vendor_document=models.FileField(upload_to='OpenLeadsItemsFiles',null=True,blank=True)
+    vendor_rfq_number = models.CharField(max_length=100, null=True, blank=True)
+    # vendor_category = models.CharField(max_length=500, null=True, blank=True)
+    created_on = models.DateTimeField(auto_now_add=True,null=True,blank=True)
+    updated_on = models.DateTimeField(auto_now=True)
+    created_by = models.BigIntegerField(null=True,blank=True)
+    updated_by = models.ForeignKey(SelfRegistration, on_delete=models.CASCADE)
+    vendor_open_leads_pk = models.ForeignKey(OpenLeadsVendorPublishRfq, on_delete=models.CASCADE, null=True, blank=True)
+
+
+    class Meta:
+        db_table='OpenLeadsVendorPublishItems'
+
+
+class OpenLeadsVendorPublishTermsDescription(models.Model):
+    vendor_rfq_number = models.CharField(max_length=200, null=True, blank=True)
+    vendor_terms = models.CharField(max_length=500, null=True, blank=True)
+    vendor_description = models.TextField(null=True, blank=True)
+    vendor_response = models.TextField(null=True, blank=True)
+    created_on = models.DateTimeField(auto_now_add=True)
+    updated_on = models.DateTimeField(auto_now=True)
+    created_by = models.BigIntegerField(null=True, blank=True)
+    updated_by = models.ForeignKey(SelfRegistration, on_delete=models.CASCADE)
+    vendor_open_leads_pk = models.ForeignKey(OpenLeadsVendorPublishRfq, on_delete=models.CASCADE, null=True, blank=True)
+    vendor_rfq_type = models.CharField(max_length=150, null=True, blank=True)
+
+    class Meta:
+        db_table = "OpenLeadsVendorPublishTermsDescription"

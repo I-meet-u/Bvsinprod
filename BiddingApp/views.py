@@ -855,12 +855,6 @@ class VendorRfqTermsDescriptionView(viewsets.ModelViewSet):
     queryset = VendorRfqTermsDescription.objects.all()
     serializer_class = VendorRfqTermsDescriptionSerializer
 
-    class VendorRfqTermsDescriptionView(viewsets.ModelViewSet):
-        # permission_classes = [permissions.AllowAny]
-        queryset = VendorRfqTermsDescription.objects.all()
-        serializer_class = VendorRfqTermsDescriptionSerializer
-        ordering_fields = ['id']
-        ordering = ['id']
 
     def create(self, request, *args, **kwargs):
         vendor_rfq_number = request.data['vendor_rfq_number']

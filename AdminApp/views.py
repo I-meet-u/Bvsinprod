@@ -1037,12 +1037,14 @@ from rest_framework.exceptions import ValidationError
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from django.db.models import Q
+from .serializers import *
 from RegistrationApp.models import SelfRegistration, BasicCompanyDetails, IndustrialInfo, IndustrialHierarchy, \
     BankDetails, LegalDocuments, Employee_CompanyDetails, Employee_IndustryInfo
 from .models import *
 from AdminApp.serializers import AdminInviteSerializer, CreateUserSerializer, AdminRegisterSerializer, \
     CreateBuyerSerializer, OpenLeadsRfqSerializer, OpenLeadsItemsSerializer, OpenLeadsPublishSerializer, \
     BuyerProductDetailsAdminSerializer
+
 
 
 class AdminRegisterView(viewsets.ModelViewSet):
@@ -2206,6 +2208,7 @@ class OpenLeadsItemsViewSet(viewsets.ModelViewSet):
                                                                     item_type=itemsarray[i].get('item_type'),
                                                                     uom=itemsarray[i].get('uom'),
                                                                     quantity=itemsarray[i].get('quantity'),
+                                                                    dcouments=itemsarray[i].get('documents'),
                                                                     admins=AdminRegister.objects.get(admin_id=admins),
                                                                     open_leads_pk=OpenLeadsRfq.objects.get(id=open_leads_pk),
                                                                     buyer_company_code=buyer_company_code,
@@ -2542,3 +2545,68 @@ def fetch_open_leads_rfq(request):
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)
 
+
+
+
+class OpenLeadsVendorPublishRfqViewSet(viewsets.ModelViewSet):
+    queryset = OpenLeadsVendorPublishRfq.objects.all()
+    serializer_class =OpenLeadsVendorPublishRfqSerializer
+
+class OpenLeadsVendorPublishItemsViewSet(viewsets.ModelViewSet):
+    queryset = OpenLeadsVendorPublishItems.objects.all()
+    serializer_class = OpenLeadsVendorPublishItemsSerializer
+
+    def create(self, request, *args, **kwargs):
+        itemsarray=request.data['itemsarray']
+        updated_by=request.data.get('updated_by',None)
+        vendor_open_leads_pk=request.data.get('vendor_open_leads_pk',None)
+        try:
+
+            for i in range(0,len(itemsarray)):
+                openleadsitemsobj=OpenLeadsVendorPublishItems.objects.create(vendor_item_code=itemsarray[i].get('item_code'),
+                                                                vendor_item_name=itemsarray[i].get('item_name'),
+                                                                vendor_item_description=itemsarray[i].get('item_description'),
+                                                                vendor_uom=itemsarray[i].get('uom'),
+                                                                buyer_quantity=itemsarray[i].get('quantity'),
+                                                                vendor_rate=itemsarray[i].get('rate'),
+                                                                vendor_tax=itemsarray[i].get('tax'),
+                                                                vendor_discount=itemsarray[i].get('discount'),
+                                                                vendor_total_amount=itemsarray[i].get('total_amount'),
+                                                                vendor_item_type=itemsarray[i].get('item_type'),
+                                                                updated_by=SelfRegistration.objects.get(id=updated_by),
+                                                                created_by=updated_by,
+                                                                vendor_open_leads_pk=OpenLeadsVendorPublishRfq.objects.get(id=vendor_open_leads_pk),
+                                                                )
+            return Response({'status': 201, 'message': 'Open Leads Vendor Items are created'}, status=201)
+
+        except Exception as e:
+            return Response({'status':500,'error':str(e)},status=500)
+
+
+class OpenLeadsVendorPublishTermsDescriptionViewSet(viewsets.ModelViewSet):
+    queryset = OpenLeadsVendorPublishTermsDescription.objects.all()
+    serializer_class = OpenLeadsVendorPublishTermsDescriptionSerializer
+
+    def create(self, request, *args, **kwargs):
+        vendor_rfq_number = request.data['vendor_rfq_number']
+        dictsqueries = request.data['dictsqueries']
+        vendor_open_leads_pk = request.data.get('open_leads_pk', None)
+        updated_by=request.data.get('updated_by',None)
+        vendor_rfq_type=request.data.get('vendor_rfq_type',None)
+        try:
+            for i in range(0, len(dictsqueries)):
+                for keys in dictsqueries[i]:
+                    OpenLeadsVendorPublishTermsDescription.objects.create(vendor_rfq_number=vendor_rfq_number,
+                                                                   vendor_terms=keys,
+                                                                  vendor_description=dictsqueries[i][keys][0],
+                                                                  vendor_response=dictsqueries[i][keys][1],
+                                                                  vendor_open_leads_pk=OpenLeadsVendorPublishRfq.objects.get(
+                                                                     id=vendor_open_leads_pk),
+                                                                   vendor_rfq_type=vendor_rfq_type,
+                                                                   updated_by=SelfRegistration.objects.get(id=updated_by),
+                                                                   created_by=updated_by
+                                                                   )
+            return Response({'status': 201, 'message': 'Open Leads Vendor Terms and Descriptions are created'}, status=201)
+
+        except Exception as e:
+            return Response({'status': 500, 'message': str(e)}, status=500)

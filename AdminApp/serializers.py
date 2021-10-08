@@ -124,3 +124,24 @@ class BuyerProductDetailsAdminSerializer(serializers.ModelSerializer):
     class Meta:
         model=BuyerProductDetailsAdmin
         fields='__all__'
+
+
+
+class OpenLeadsVendorPublishRfqSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model=OpenLeadsVendorPublishRfq
+        fields = '__all__'
+
+
+
+class OpenLeadsVendorPublishItemsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model=OpenLeadsVendorPublishItems
+        fields = '__all__'
+
+
+class OpenLeadsVendorPublishTermsDescriptionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model=OpenLeadsVendorPublishTermsDescription
+        fields = '__all__'

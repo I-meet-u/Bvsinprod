@@ -2209,13 +2209,7 @@ class OpenLeadsItemsViewSet(viewsets.ModelViewSet):
                                                                     admins=AdminRegister.objects.get(admin_id=admins),
                                                                     open_leads_pk=OpenLeadsRfq.objects.get(id=open_leads_pk),
                                                                     buyer_company_code=buyer_company_code,
-                                                                    buyer_company_name=buyer_company_name,
-
-                                                                    # buyer_pk=CreateBuyer.objects.get(id=buyer_pk)
-
-
-
-
+                                                                    buyer_company_name=buyer_company_name
                                                                     )
                 return Response({'status': 201, 'message': 'Open Leads Items are created'}, status=201)
             else:
@@ -2481,6 +2475,28 @@ def get_all_open_leads_by_pk(request):
         if key == "vsinadmindb":
             openleadsobj=OpenLeadsRfq.objects.filter(id=userpk).values().order_by('id')
             openleadsitemsobj=OpenLeadsItems.objects.filter(open_leads_pk_id=userpk).values().order_by('id')
+            for i in range(0,len(openleadsitemsobj)):
+                if len(openleadsitemsobj)>0:
+                    print(openleadsitemsobj[i].get('item_code'))
+                    buyerobj=BuyerProductDetailsAdmin.objects.filter(item_code=openleadsitemsobj[i].get('item_code')).values().order_by('product_id')
+                    if len(buyerobj)>0:
+                        if not buyerobj[0].get('document1'):
+                            openleadsitemsobj[i].__setitem__('buyer_doc1',"")
+                        else:
+                            openleadsitemsobj[i].__setitem__('buyer_doc1',buyerobj[0].get('document1'))
+
+                        if not buyerobj[0].get('document2'):
+                            openleadsitemsobj[i].__setitem__('buyer_doc2', "")
+                        else:
+                            openleadsitemsobj[i].__setitem__('buyer_doc2', buyerobj[0].get('document2'))
+
+                        if not buyerobj[0].get('document3'):
+                            openleadsitemsobj[i].__setitem__('buyer_doc3', "")
+                        else:
+                            openleadsitemsobj[i].__setitem__('buyer_doc3', buyerobj[0].get('document2'))
+                    else:
+                        pass
+
             openleadsterms=OpenLeadsTermsDescription.objects.filter(open_leads_pk_id=userpk).values().order_by('id')
             if len(openleadsobj)>0 or len(openleadsitemsobj)>0 or len(openleadsterms)>0:
                 return Response({'status': 200, 'message': 'Open Bids Rfq List', 'data':openleadsobj,'data1':openleadsitemsobj,'data3':openleadsterms}, status=200)

@@ -2623,14 +2623,40 @@ class OpenLeadsVendorPublishTermsDescriptionViewSet(viewsets.ModelViewSet):
 def get_open_bids_list(request):
     data=request.data
     key=data['key']
+    openleadsarray=[]
     try:
         if key=="vsinadmindb":
             adminobj=AdminRegister.objects.filter().values()
             if len(adminobj):
-                adminid=adminobj[0].get('admin_id')
-                openrfqobj=OpenLeadsRfq.objects.filter(admins=adminid).values().order_by('id')
+                openrfqobj=OpenLeadsRfq.objects.filter(admins=adminobj[0].get('admin_id')).values().order_by('id')
                 if len(openrfqobj):
-                    return Response({'status': 200, 'message': 'Open Leads Rfq List','data':openrfqobj},status=200)
+                    for i in range(0,len(openrfqobj)):
+                        # print(openrfqobj[i].get('rfq_number'))
+                        openleadspublish=OpenLeadsVendorPublishRfq.objects.filter(vendor_rfq_number=openrfqobj[i].get('rfq_number')).values()
+                        if len(openleadspublish)>0:
+                            openleadsarray.append({'rfq_number':openrfqobj[i].get('rfq_number'),
+                                                   'rfq_title':openrfqobj[i].get('rfq_title'),
+                                                   'rfq_status':openrfqobj[i].get('rfq_status'),
+                                                   'rfq_type':openrfqobj[i].get('rfq_type'),
+                                                   'publish_date':openrfqobj[i].get('publish_date'),
+                                                   'deadline_date':openrfqobj[i].get('deadline_date'),
+                                                   'closing_date':openrfqobj[i].get('closing_date'),
+                                                   'response_count':len(openleadspublish)
+
+                                                   })
+                        else:
+                            openleadsarray.append({'rfq_number': openrfqobj[i].get('rfq_number'),
+                                                   'rfq_title': openrfqobj[i].get('rfq_title'),
+                                                   'rfq_status': openrfqobj[i].get('rfq_status'),
+                                                   'rfq_type': openrfqobj[i].get('rfq_type'),
+                                                   'publish_date': openrfqobj[i].get('publish_date'),
+                                                   'deadline_date': openrfqobj[i].get('deadline_date'),
+                                                   'closing_date': openrfqobj[i].get('closing_date'),
+                                                   'response_count': 0
+
+                                                   })
+
+                    return Response({'status': 200, 'message': 'Open Leads Rfq List','data':openleadsarray},status=200)
                 else:
                     return Response({'status': 204, 'message': 'Not Present'}, status=204)
             else:
@@ -2641,3 +2667,5 @@ def get_open_bids_list(request):
 
     except Exception as e:
         return Response({'status': 500, 'message': str(e)}, status=500)
+
+

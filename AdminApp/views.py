@@ -2160,6 +2160,7 @@ def add_data_based_on_user_type_to_create_user(request):
 class CreateBuyerView(viewsets.ModelViewSet):
     queryset = CreateBuyer.objects.all()
     serializer_class = CreateBuyerSerializer
+    permission_classes = (AllowAny,)
 
 
     def get_queryset(self):

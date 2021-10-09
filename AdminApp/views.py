@@ -2163,22 +2163,18 @@ class CreateBuyerView(viewsets.ModelViewSet):
     permission_classes = (AllowAny,)
 
 
-    def create(self, request, *args, **kwargs):
-        token = request.data.get('token', None)
-        if token == "4aoedpde123Vyeyweuo2":
-            return super().create(request, *args, **kwargs)
-        else:
-            return Response({'status': 401, 'message': 'UnAuthorized'}, status=401)
+    # def create(self, request, *args, **kwargs):
+    #     token = request.data.get('token', None)
+    #     if token == "4aoedpde123Vyeyweuo2":
+    #         return super().create(request, *args, **kwargs)
+    #     else:
+    #         return Response({'status': 401, 'message': 'UnAuthorized'}, status=401)
 
     def get_queryset(self):
-        token = self.request.query_params.get('token')
-        if token is not None and token=="4aoedpde123Vyeyweuo2":
-            createbuyerobj=CreateBuyer.objects.filter(admins=self.request.GET.get('admins'))
-            if not createbuyerobj:
-                raise ValidationError({'message': 'Create Buyer Details are not found', 'status': 204})
-            return  createbuyerobj
-        else:
-            raise ValidationError({'message':'Bad Request','status':400})
+        createbuyerobj=CreateBuyer.objects.filter(admins=self.request.GET.get('admins'))
+        if not createbuyerobj:
+            raise ValidationError({'message': 'Create Buyer Details are not found', 'status': 204})
+        return  createbuyerobj
 
 
 class OpenLeadsRfqViewSet(viewsets.ModelViewSet):
@@ -2194,14 +2190,10 @@ class OpenLeadsRfqViewSet(viewsets.ModelViewSet):
             return Response({'status': 401, 'message': 'UnAuthorized'}, status=401)
 
     def get_queryset(self):
-        token = self.request.query_params.get('token')
-        if token is not None and token == "4aoedpde123Vyeyweuo2":
-            openleadsobj=OpenLeadsRfq.objects.filter(admins=self.request.GET.get('admins'))
-            if not openleadsobj:
-                raise ValidationError({'message': 'Create Open Leads Details are not found', 'status': 204})
-            return  openleadsobj
-        else:
-            raise ValidationError({'message': 'Bad Request', 'status': 400})
+        openleadsobj=OpenLeadsRfq.objects.filter(admins=self.request.GET.get('admins'))
+        if not openleadsobj:
+            raise ValidationError({'message': 'Create Open Leads Details are not found', 'status': 204})
+        return  openleadsobj
 
 class OpenLeadsItemsViewSet(viewsets.ModelViewSet):
     queryset = OpenLeadsItems.objects.all()

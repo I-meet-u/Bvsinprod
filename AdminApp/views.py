@@ -2732,3 +2732,20 @@ def fetch_vendor_open_leads(request):
 
     except Exception as e:
         return Response({'status': 500, 'message': str(e)}, status=500)
+
+
+@api_view(['post'])
+@permission_classes((AllowAny,))
+def fetch_all_open_leads_rfq(request):
+    try:
+        if request.data['key']=="vsinadmindb":
+            openleadsobj=OpenLeadsRfq.objects.filter().values().order_by('id')
+            if len(openleadsobj)>0:
+                return Response({'status': 200, 'message': 'Open Leads Rfq List','data':openleadsobj},status=200)
+            else:
+                return Response({'status': 204, 'message': 'Not Present'}, status=204)
+        else:
+            return Response({'status': 400, 'message': 'Bad Request'}, status=400)
+
+    except Exception as e:
+        return Response({'status': 500, 'message': str(e)}, status=500)

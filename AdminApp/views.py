@@ -2307,10 +2307,6 @@ class BuyerProductDetailsAdminViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.AllowAny]
     queryset = BuyerProductDetailsAdmin.objects.all()
     serializer_class = BuyerProductDetailsAdminSerializer
-    # parser_classes = (MultiPartParser,)
-    ordering_fields = ['buyer_product_id']
-    ordering = ['buyer_product_id']
-
 
     def create(self, request, *args, **kwargs):
         token=request.data.get('token',None)
@@ -2388,13 +2384,6 @@ class BuyerProductDetailsAdminViewSet(viewsets.ModelViewSet):
                 return Response({'status': 401, 'message': 'UnAuthorized'}, status=401)
         except Exception as e:
             return Response({'status': 500, 'error': str(e)}, status=500)
-
-    def get_queryset(self):
-        buyerproductobj=BuyerProductDetailsAdmin.objects.filter(admins=self.request.GET.get('admins'))
-        if buyerproductobj:
-            return buyerproductobj
-        raise ValidationError({'message':'Buyer Product Details Admin Not Present','status':204})
-
 @api_view(['post'])
 @permission_classes([AllowAny,])
 def getbuyeraddedadminbyccode(request):
@@ -2689,3 +2678,44 @@ def get_open_bids_list(request):
         return Response({'status': 500, 'message': str(e)}, status=500)
 
 
+@api_view(['post'])
+@permission_classes((AllowAny,))
+def fetch_buyer_product_details_admin(request):
+    data=request.data
+    try:
+        if data['token']=="4aoedpde123Vyeyweuo2":
+            adminproductobj=BuyerProductDetailsAdmin.objects.filter(admins=data['adminid']).values().order_by('product_id')
+            if len(adminproductobj)>0:
+                return Response({'status': 200, 'message': 'Admin Added Products List', 'data': adminproductobj}, status=200)
+            else:
+                return Response({'status': 204, 'message': 'Not Present'}, status=204)
+        else:
+            return Response({'status': 400, 'message': 'Bad Request'}, status=400)
+
+    except Exception as e:
+        return Response({'status': 500, 'message': str(e)}, status=500)
+
+
+@api_view(['post'])
+def fetch_vendor_open_leads(request):
+    data=request.data
+    rfqnumber=data['rfqnumber']
+    try:
+        openleadsvendorobj=OpenLeadsVendorPublishRfq.objects.filter(vendor_rfq_number=rfqnumber).values().order_by('id')
+        if len(openleadsvendorobj)>0:
+            for i in range(0, len(openleadsvendorobj)):
+                vendorproductobj = OpenLeadsVendorPublishItems.objects.filter(vendor_open_leads_pk=openleadsvendorobj[i].get('id')).values().order_by('id')
+                for j in range(0, len(vendorproductobj)):
+                    print('s print')
+                vendorterms = OpenLeadsVendorPublishTermsDescription.objects.filter(vendor_rfq_number=rfqnumber).values().order_by('id')
+                for k in range(0, len(vendorterms)):
+                    print('correct')
+                openleadsvendorobj[i].__setitem__('product', vendorproductobj)
+                openleadsvendorobj[i].__setitem__('vendor_rfq_terms', vendorterms)
+
+            return Response({'status': 200, 'message': 'Admin Added Products List', 'data': openleadsvendorobj}, status=200)
+        else:
+            return Response({'status': 204, 'message': 'Not Present'}, status=204)
+
+    except Exception as e:
+        return Response({'status': 500, 'message': str(e)}, status=500)

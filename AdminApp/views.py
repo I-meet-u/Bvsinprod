@@ -2163,6 +2163,7 @@ class CreateBuyerView(viewsets.ModelViewSet):
 
 
     def get_queryset(self):
+
         createbuyerobj=CreateBuyer.objects.filter(admins=self.request.GET.get('admins'))
         if not createbuyerobj:
             raise ValidationError({'message': 'Create Buyer Details are not found', 'status': 204})
@@ -2180,11 +2181,12 @@ class OpenLeadsRfqViewSet(viewsets.ModelViewSet):
             return super().create(request, *args, **kwargs)
         else:
             return Response({'status': 401, 'message': 'UnAuthorized'}, status=401)
-    # def get_queryset(self):
-    #     openleadsobj=OpenLeadsRfq.objects.filter(admins=self.request.GET.get('admins'))
-    #     if not openleadsobj:
-    #         raise ValidationError({'message': 'Create Open Leads Details are not found', 'status': 204})
-    #     return  openleadsobj
+
+    def get_queryset(self):
+        openleadsobj=OpenLeadsRfq.objects.filter(admins=self.request.GET.get('admins'))
+        if not openleadsobj:
+            raise ValidationError({'message': 'Create Open Leads Details are not found', 'status': 204})
+        return  openleadsobj
 
 class OpenLeadsItemsViewSet(viewsets.ModelViewSet):
     queryset = OpenLeadsItems.objects.all()

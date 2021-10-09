@@ -2697,25 +2697,29 @@ def fetch_buyer_product_details_admin(request):
 
 
 @api_view(['post'])
+@permission_classes((AllowAny,))
 def fetch_vendor_open_leads(request):
     data=request.data
     rfqnumber=data['rfqnumber']
     try:
-        openleadsvendorobj=OpenLeadsVendorPublishRfq.objects.filter(vendor_rfq_number=rfqnumber).values().order_by('id')
-        if len(openleadsvendorobj)>0:
-            for i in range(0, len(openleadsvendorobj)):
-                vendorproductobj = OpenLeadsVendorPublishItems.objects.filter(vendor_open_leads_pk=openleadsvendorobj[i].get('id')).values().order_by('id')
-                for j in range(0, len(vendorproductobj)):
-                    print('s print')
-                vendorterms = OpenLeadsVendorPublishTermsDescription.objects.filter(vendor_rfq_number=rfqnumber).values().order_by('id')
-                for k in range(0, len(vendorterms)):
-                    print('correct')
-                openleadsvendorobj[i].__setitem__('product', vendorproductobj)
-                openleadsvendorobj[i].__setitem__('vendor_rfq_terms', vendorterms)
+        if data['token'] == "4aoedpde123Vyeyweuo2":
+            openleadsvendorobj=OpenLeadsVendorPublishRfq.objects.filter(vendor_rfq_number=rfqnumber).values().order_by('id')
+            if len(openleadsvendorobj)>0:
+                for i in range(0, len(openleadsvendorobj)):
+                    vendorproductobj = OpenLeadsVendorPublishItems.objects.filter(vendor_open_leads_pk=openleadsvendorobj[i].get('id')).values().order_by('id')
+                    for j in range(0, len(vendorproductobj)):
+                        print('s print')
+                    vendorterms = OpenLeadsVendorPublishTermsDescription.objects.filter(vendor_rfq_number=rfqnumber).values().order_by('id')
+                    for k in range(0, len(vendorterms)):
+                        print('correct')
+                    openleadsvendorobj[i].__setitem__('product', vendorproductobj)
+                    openleadsvendorobj[i].__setitem__('vendor_rfq_terms', vendorterms)
 
-            return Response({'status': 200, 'message': 'Admin Added Products List', 'data': openleadsvendorobj}, status=200)
+                return Response({'status': 200, 'message': 'Admin Added Products List', 'data': openleadsvendorobj}, status=200)
+            else:
+                return Response({'status': 204, 'message': 'Not Present'}, status=204)
         else:
-            return Response({'status': 204, 'message': 'Not Present'}, status=204)
+            return Response({'status': 400, 'message': 'Bad Request'}, status=400)
 
     except Exception as e:
         return Response({'status': 500, 'message': str(e)}, status=500)

@@ -2684,7 +2684,7 @@ def fetch_buyer_product_details_admin(request):
     data=request.data
     try:
         if data['token']=="4aoedpde123Vyeyweuo2":
-            adminproductobj=BuyerProductDetailsAdmin.objects.filter(admins=data['adminid']).values().order_by('product_id')
+            adminproductobj=BuyerProductDetailsAdmin.objects.filter(admins=data['adminid'],product_status='Active').values().order_by('product_id')
             if len(adminproductobj)>0:
                 return Response({'status': 200, 'message': 'Admin Added Products List', 'data': adminproductobj}, status=200)
             else:

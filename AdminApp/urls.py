@@ -95,7 +95,8 @@ urlpatterns = [
     path('get-open-bids-list/',views.get_open_bids_list),
     path('fetch-buyer-product-details-admin/',views.fetch_buyer_product_details_admin),
     path('fetch-vendor-open-leads/',views.fetch_vendor_open_leads),
-    path('fetch-all-open-leads-rfq/',views.fetch_all_open_leads_rfq)
+    path('fetch-all-open-leads-rfq/',views.fetch_all_open_leads_rfq),
+    path('fetch-vendor-open-leads-by-pk/',views.fetch_vendor_open_leads_by_pk)
 
 
 

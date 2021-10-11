@@ -1770,7 +1770,7 @@ def fetch_vendor_open_leads_by_pk(request):
                     openleadsvendorobj[i].__setitem__('product', vendorproductobj)
                     openleadsvendorobj[i].__setitem__('vendor_rfq_terms', vendorterms)
 
-                return Response({'status': 200, 'message': 'Admin Added Products List', 'data': openleadsvendorobj}, status=200)
+                return Response({'status': 200, 'message': 'Vendor Open Leads  List', 'data': openleadsvendorobj}, status=200)
             else:
                 return Response({'status': 204, 'message': 'Not Present'}, status=204)
         else:

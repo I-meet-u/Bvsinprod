@@ -8,8 +8,6 @@ from .views import sendSMS, sendOtpmail
 
 router=routers.DefaultRouter()
 
-# wwww
-# wwww
 #routers are used with ViewSets in django rest framework to auto config the urls.
 #when we are used serializers and viewsets we used router
 router.register('user-register',views.SelfRegisterView)
@@ -22,7 +20,6 @@ router.register('industrial-hierarchy',views.IndustrialHierarchyView),
 router.register('bank-details',views.BankDetailsView)
 router.register('legal-documents',views.LegalDocumentsView)
 router.register('basic-company-details-others',views.BasicCompanyDetailsOthersView)
-# router.register('employee-registration',views.EmployeeRegistrationView)
 router.register('employee-basic-details',views.Employee_CompanyDetailsView)
 router.register('employee-industry-info',views.EmployeeIndustrialInfoView)
 router.register('contact-details',views.ContactDetailsViewset)
@@ -32,24 +29,17 @@ urlpatterns = [
 
     #normal urls other than router
     path('logout/',views.Logout.as_view()), # logout
-    # path('phone-verification-otp/',views.phone_verification_otp),
-    # path('email-verification-otp/',views.email_verification_otp),
     path('get-token-key-by-userid/',views.get_token_key_by_userid),
     path('get-userid-by-token/',views.get_userid_by_token),
-    # path('email-verification-otp-to-change-email/',views.email_verification_otp_to_change_email),
     path('change-email/',views.change_email),
-    # path('phone-otp-verfication-to-change-phonenumber/',views.phone_otp_verfication_to_change_phonenumber),
     path('change-phonenumber/',views.change_phonenumber),
     path('change-password-with-phone-number/',views.change_password_with_phone_number),
     path('change-password-with-email/',views.change_password_with_email),
-    # path('waiting-mail-for-admin-approval/',views.waiting_mail_for_admin_approval),
     path('otp-session-time-out-of-phone-and-email/',views.otp_session_time_out_of_phone_and_email),
     path('phone-otp-session-out/',views.phone_otp_session_out),
     path('email-otp-session-out/',views.email_otp_session_out),
-    # path('send_mail/',views.send_mail),
     path('list-documents-user/',views.list_documents_user),
     path('all-basic-data/',views.all_basic_data),
-    # path('registration-list/',views.registration_list),
     path('sendbluemail/',views.sendbluemail),
     path('sendSMS/',sendSMS),
     path('sendOtpmail/',sendOtpmail),
@@ -61,14 +51,12 @@ urlpatterns = [
     path('uploaduserprofile/',views.uploaduserprofile),
     path('phone-otp-verify/',views.phone_otp_verify),
     path('email-otp-verify/',views.email_otp_verify),
-    # path('employee-login/',views.employee_login),
     path('get-profile-photo/', views.get_profile_photo),
     path('getcompanycode/',views.getcompanycode),
     path('update-basic-details/',views.update_basic_details),
     path('admin-approval-mail-send/',views.admin_approval_mail_send),
     path('registration-list-by-user-id/', views.registration_list_by_user_id),
     path('employee-registration-list-by-user-id/',views.employee_registration_list_by_user_id),
-
     path('changeempinddetails/',views.changeempinddetails),
     path('changecompprofile/',views.changecompprofile),
     path('buyer-login/',views.buyer_login),
@@ -87,10 +75,6 @@ urlpatterns = [
     path('get-contact-details/',views.get_contact_details),
     path('get-communication-details/',views.get_communication_details),
     path('get-billing-address-by-user-id/',views.get_billing_address_by_user_id),
-    # path('fetch-all-basic-company-details/',views.fetch_all_basic_company_details)
-
-    # path('send_mail_template/',views.send_mail_template)
-    # path('subscribe_email/', MailSubscriptionAPIView.as_view(),name='subscribe-email')
     path('get-all-basic-details-without-token/', views.get_basic_details_without_token),
     path('get-all-basic-details-without-token-with-userid/', views.get_basic_details_without_token_and_with_userid),
     path('get-billing-address-without-token/', views.get_billing_address_without_token),
@@ -102,8 +86,4 @@ urlpatterns = [
     path('get-employee-industry-info-without-token/', views.get_employee_industry_info_without_token),
     path('get-industry-info-without-token/', views.get_industry_info_without_token),
     path('vendor-buyer-list/',views.vendor_buyer_list)
-
-
-
-
 ]

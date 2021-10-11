@@ -247,48 +247,6 @@ def get_all_details_for_business_request(request):
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)
 
-
-# @api_view(['post'])
-# # @permission_classes((AllowAny,))
-# def external_vendor(request):
-#     data = request.data
-#     userid = data['userid']
-#     internalarray = []
-#     externalarray = []
-#     try:
-#         regobjdata= SelfRegistration.objects.filter(Q(user_type='Vendor')| Q(user_type='Both'),admin_approve='Approved').values().order_by('id')
-#         internalobj = InternalVendor.objects.filter(updated_by_id=userid).values()
-#         for i in range(0, len(internalobj)):
-#             internalarray.append(internalobj[i].get('company_code'))
-#         if len(regobjdata)>0:
-#             for i in range(0, len(regobjdata)):
-#                 basicobj = BasicCompanyDetails.objects.get(updated_by_id=regobjdata[i].get('id'))
-#                 industryobj = IndustrialInfo.objects.get(updated_by_id=regobjdata[i].get('id'),company_code=basicobj.company_code)
-#                 hierarchyobj = IndustrialHierarchy.objects.get(updated_by_id=regobjdata[i].get('id'))
-#                 billingobj = BillingAddress.objects.filter(updated_by_id=regobjdata[i].get('id')).values()
-#                 if basicobj.company_code not in internalarray:
-#                     externalarray.append({'company_code': basicobj.company_code,
-#                                           'company_name': basicobj.company_name,
-#                                           'nature_of_business': industryobj.nature_of_business,
-#                                           'industry_to_serve': industryobj.industry_to_serve,
-#                                           'maincore': hierarchyobj.maincore,
-#                                           'category': hierarchyobj.category,
-#                                           'subcategory': hierarchyobj.subcategory,
-#                                           'bill_city': billingobj[0].get('bill_city'),
-#                                           'bill_state': billingobj[0].get('bill_state'),
-#                                           'gst_number':basicobj.gst_number,
-#                                           'phone_no':regobjdata[i].get('phone_number'),
-#                                           'email_id':regobjdata[i].get('username')
-#                                           })
-#
-#             return Response({'status': 200, 'message': 'External Vendor List', 'data': externalarray}, status=200)
-#         else:
-#             return Response({'status': 204, 'message': 'Not Present'}, status=204)
-#
-#
-#     except Exception as e:
-#         return Response({'status': 500, 'error': str(e)}, status=500)
-
 @api_view(['post'])
 # @permission_classes((AllowAny,))
 def external_vendor(request):
@@ -373,7 +331,6 @@ def advance_search_external_vendor(request):
     company_code = data['company_code']
     company_name = data['company_name']
     valuearray = data['valuearray']
-    # maincorearray=data['maincorearray']
     externalarraysearch = []
     try:
         for i in range(0, len(valuearray)):
@@ -403,9 +360,6 @@ def buzrequestcreate(request):
     data = request.data
     compcode = data['compcode']
     userid = data['userid']
-    # email=data['email']
-    # phone=data['phone']
-    # gst=data['gst']
     emptyarra=[]
 
     try:
@@ -570,7 +524,6 @@ def search_business_request_advance_search(request):
     send_status=data['send_status']
     userid=data['userid']
     serveappend = []
-    nobappend=[]
     try:
         serveappend.append(industry_to_serve)
         businessrequestadvancesearch=BusinessRequest.objects.filter(updated_by_id=userid).filter(company_code__icontains=company_code).filter(company_name__icontains=company_name).filter(state__icontains=state).filter(industry_to_serve__in=industry_to_serve).filter(nature_of_business__in=nature_of_business).filter(send_status__icontains=send_status).values()
@@ -648,76 +601,6 @@ def searchinternalvendor(request):
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)
 
-
-
-# @api_view(['post'])
-# # @permission_classes((AllowAny,))
-# def reg_list(request):
-#     data = request.data
-#     userid = data['userid']
-#     internalarray = []
-#     regarray = []
-#     try:
-#         regobjdata= SelfRegistration.objects.filter(Q(user_type='Vendor')| Q(user_type='Both'),admin_approve='Approved').values().order_by('id')
-#         internalobj = InternalVendor.objects.filter().values()
-#         for i in range(0, len(internalobj)):
-#             internalarray.append(internalobj[i].get('company_code'))
-#         if len(regobjdata)>0:
-#             for i in range(0, len(regobjdata)):
-#                 basicobj = BasicCompanyDetails.objects.get(updated_by_id=regobjdata[i].get('id'))
-#                 industryobj = IndustrialInfo.objects.get(updated_by_id=regobjdata[i].get('id'),company_code=basicobj.company_code)
-#                 hierarchyobj = IndustrialHierarchy.objects.get(updated_by_id=regobjdata[i].get('id'))
-#                 billingobj = BillingAddress.objects.filter(updated_by_id=regobjdata[i].get('id')).values()
-#                 if basicobj.company_code not in internalarray:
-#                     regarray.append({'company_code': basicobj.company_code,
-#                                           'company_name': basicobj.company_name,
-#                                           'nature_of_business': industryobj.nature_of_business,
-#                                           'industry_to_serve': industryobj.industry_to_serve,
-#                                           'maincore': hierarchyobj.maincore,
-#                                           'category': hierarchyobj.category,
-#                                           'subcategory': hierarchyobj.subcategory,
-#                                           'bill_city': billingobj[0].get('bill_city'),
-#                                           'bill_state': billingobj[0].get('bill_state')
-#                                           })
-#             regobj = SelfRegistration.objects.filter(admin_approve='Approved', user_type='Buyer').values().order_by(
-#                 'id')
-#             print(len(regobj))
-#             internalobj = InternalVendor.objects.filter().values()
-#             for i in range(0, len(internalobj)):
-#                 internalarray.append(internalobj[i].get('company_code'))
-#
-#             if len(regobj) > 0:
-#                 for i in range(0, len(regobj)):
-#                     basicobj = BasicCompanyDetails.objects.get(updated_by_id=regobj[i].get('id'))
-#                     industryobj = IndustrialInfo.objects.get(updated_by_id=regobj[i].get('id'),
-#                                                              company_code=basicobj.company_code)
-#                     # hierarchyobj = IndustrialHierarchy.objects.get(updated_by_id=regobj[i].get('id'))
-#                     billingobj = BillingAddress.objects.filter(updated_by_id=regobj[i].get('id')).values()
-#                     if basicobj.company_code not in internalarray:
-#                         print('ok')
-#
-#                         regarray.append({'company_code': basicobj.company_code,
-#                                               'company_name': basicobj.company_name,
-#                                               'nature_of_business': industryobj.nature_of_business,
-#                                               'industry_to_serve': industryobj.industry_to_serve,
-#                                               'maincore': "",
-#                                               'category': "",
-#                                               'subcategory': "",
-#                                               'bill_city': billingobj[0].get('bill_city'),
-#                                               'bill_state': billingobj[0].get('bill_state'),
-#                                               # 'user_type':regobj[i].get('user_type')
-#
-#                                               })
-#                     else:
-#                         print('already present')
-#
-#             return Response({'status': 200, 'message': 'External Vendor List', 'data': regarray}, status=200)
-#         else:
-#             return Response({'status': 204, 'message': 'Not Present'}, status=204)
-
-    #
-    # except Exception as e:
-    #     return Response({'status': 500, 'error': str(e)}, status=500)
 
 @api_view(['post'])
 def buyer_list(request):
@@ -1083,103 +966,6 @@ def business_request_reject_list(request):
         return Response({'status': 500, 'error': str(e)}, status=500)
 
 
-# @api_view(['post'])
-# def buyer_dashboard_charts_counts(request):
-#     data=request.data
-#     userid=data['userid']
-#     from_registration=data['from_registration']
-#     totalsentcount = 0
-#     totalacceptcount = 0
-#     totalrejectcount = 0
-#     totalpendingcount = 0
-#     totalfullresponse = 0
-#     buyercharts=[]
-#     try:
-#         auth_token = request.headers['Authorization']
-#         print(auth_token)
-#         closedrfqlist = get_deadline_date(userid, auth_token)
-#         buyerbidobjpublished = BuyerProductBidding.objects.filter(updated_by_id=userid,
-#                                                                   product_rfq_status='Published').values()
-#         responsecount=total_all_responses_buyer(userid,from_registration,auth_token)
-#         values_list=responsecount['data']
-#         for i in range(0,len(values_list)):
-#             sent=values_list[i].get('total_sent')
-#             totalsentcount = totalsentcount + sent
-#             accept = values_list[i].get('total_accepted')
-#             totalacceptcount=totalacceptcount+accept
-#             reject = values_list[i].get('total_rejected')
-#             totalrejectcount = totalrejectcount + reject
-#             pending = values_list[i].get('pending')
-#             totalpendingcount = totalpendingcount + pending
-#             totalfullresponse = totalacceptcount + totalrejectcount
-#             print('--------------------------done--------------------------------')
-#         confirmed_po = PurchaseOrder.objects.filter(updated_by_id=userid).values()
-#         invitevendorobj=InviteVendor.objects.filter(updated_by_invites_id=userid).values()
-#         invites_approved=BusinessRequest.objects.filter(send_status='Accept',updated_by_id=userid).values()
-#         internalvendor=InternalVendor.objects.filter(updated_by_id=userid).values()
-#         trailvendors=TrailVendors.objects.filter(updated_by_id=userid).values()
-#         source_published=SourcePublish.objects.filter(updated_by_id=userid).values()
-#         sourcelistcreateitesmsobj=SourceList_CreateItems.objects.filter(updated_by_id=userid).values()
-#         sourceresponse = get_source_created_items(userid, auth_token)
-#         pendingsourcevalues=len(sourcelistcreateitesmsobj)-len(sourceresponse['data'])
-#         print('\n',pendingsourcevalues)
-#         if closedrfqlist['status']==500 or len(closedrfqlist['data'])==[] or len(buyerbidobjpublished)<=0 or len(responsecount['data'])==[] or responsecount['status']==500 or len(invites_approved)<=0 or len(internalvendor)<=0 or len(trailvendors)<=0 or len(source_published)<=0 or pendingsourcevalues<=0 or len(sourcelistcreateitesmsobj)<=0 or len(sourceresponse[data])==[] or sourceresponse['status']==500:
-#             # or buyerawarded['status']==204 or buyerawarded['status']==500 or len(confirmed_po)<=0 or pending_po<=0 or len(invitevendorobj)<=0 or business_requested['status']==204 or business_requested['status']==500:
-#             buyercharts.append({'closed_rfq':len(closedrfqlist['data']),
-#                                 'published_leads':len(buyerbidobjpublished),
-#                                 'response_totalsentcount': totalsentcount,
-#                                 'response_acceptedcount': totalacceptcount,
-#                                 'response_rejected': totalrejectcount,
-#                                 'response_pendingcount': totalpendingcount,
-#                                 'response_totalfullresponse': totalfullresponse,
-#                                 # 'buyer_awarded':buyerawardcount,
-#                                 'confirmed_po':len(confirmed_po),
-#                                 'total_business_invites':len(invitevendorobj),
-#                                 'invites_approved':len(invites_approved),
-#                                 'internal_vendor':len(internalvendor),
-#                                 'trail_vendors':len(trailvendors),
-#                                 'source_published': len(source_published),
-#                                 'source_response':len(sourceresponse['data']),
-#                                 'source_pending':pendingsourcevalues
-#                                 })
-#         else:
-#             buyercharts.append({'closed_rfq': len(closedrfqlist['data']),
-#                                 'published_leads': len(buyerbidobjpublished),
-#                                 'response_totalsentcount': totalsentcount,
-#                                 'response_acceptedcount': totalacceptcount,
-#                                 'response_rejected': totalrejectcount,
-#                                 'response_pendingcount': totalpendingcount,
-#                                 'response_totalfullresponse': totalfullresponse,
-#                                 # 'buyer_awarded': buyerawardcount,
-#                                 'confirmed_po': len(confirmed_po),
-#                                 'total_business_invites': len(invitevendorobj),
-#                                 'invites_approved': len(invites_approved),
-#                                 'internal_vendor': len(internalvendor),
-#                                 'trail_vendors': len(trailvendors),
-#                                 'source_published':len(source_published),
-#                                 'source_response': len(sourceresponse['data']),
-#                                 'source_pending': pendingsourcevalues
-#
-#                                 })
-#     # # else:
-#     # #     print('came')
-#     # #     buyercharts.append({'closed_rfq': len(closedrfqlist),
-#     # #                         'published_leads': len(buyerbidobjpublished),
-#     # #                         'response_totalsentcount': totalsentcount,
-#     # #                         'response_acceptedcount': totalacceptcount,
-#     # #                         'response_rejected': totalrejectcount,
-#     # #                         'response_pendingcount': totalpendingcount,
-#     # #                         'response_totalfullresponse': totalfullresponse,
-#     # #                         'buyer_awarded': buyerawardcount,
-#     # #                         'confirmed_po':len(confirmed_po),
-#     # #                         'pending_po': 0,
-#     # #                         'total_business_invites': len(invitevendorobj),
-#     # #                         'business_requested':business_requestedcount
-#     # #                         })
-#         return Response({'status': 200, 'message': 'Buyer Charts Count List','data':buyercharts}, status=200)
-#
-#     except Exception as e:
-#         return Response({'status': 500, 'error': str(e)}, status=500)
 
 @api_view(['post'])
 # @permission_classes([AllowAny, ])
@@ -1308,117 +1094,6 @@ def buyer_dashboard_charts_counts(request):
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)
 
-
-# @api_view(['post'])
-# def vendor_dashboard_count(request):
-#     data=request.data
-#     userid=data['userid']
-#     from_registration=data['from_registration']
-#     totalvendorarray=[]
-#     vendorproductarray=[]
-#     closedarray=[]
-#     deadlinearray=[]
-#     try:
-#         auth_token = request.headers['Authorization']
-#         vendorobj=VendorProduct_BasicDetails.objects.filter(updated_by_id=userid).values()
-#         print(len(vendorobj))
-#         landingpagepublish=LandingPageBidding_Publish.objects.filter(updated_by_id=userid).values()
-#         print(len(landingpagepublish))
-#         landingpageobj = LandingPageBidding.objects.filter(vendor_user_id=userid).values()
-#
-#         for i in range(0,len(landingpageobj)):
-#             deadlinedateval = datetime.strptime(landingpageobj[i].get('deadline_date'), '%Y-%m-%d')
-#             deadlinedateconvertion = datetime.date(deadlinedateval)
-#             todaydate = date.today()
-#             if deadlinedateconvertion > todaydate:
-#                 print('sssss')
-#                 closedarray.append(landingpageobj[i].get('deadline_date'))
-#         source_pending=get_source_list_leads(userid,auth_token)
-#         source_publish=SourcePublish.objects.filter(source_user_id=userid).values()
-#         sourceobj=SourceList_CreateItems.objects.filter(updated_by_id=userid).values()
-#         for i in range(0,len(sourceobj)):
-#             deadlinedateval = datetime.strptime(sourceobj[i].get('deadline_date'), '%Y-%m-%d')
-#             deadlinedateconvertion = datetime.date(deadlinedateval)
-#             print(deadlinedateconvertion)
-#             todaydate = date.today()
-#             print(todaydate,'todats')
-#             if deadlinedateconvertion > todaydate:
-#                 print('kkk')
-#                 deadlinearray.append(sourceobj[i].get('deadline_date'))
-#         sourceaward=SourceAwards.objects.filter(updated_by_id=userid).values()
-#         totalopenbidlist = get_open_bid_list(userid, from_registration, auth_token)
-#         print('\n')
-#         print(totalopenbidlist['data'])
-#         closedrfqlist = get_deadline_date(userid, from_registration, auth_token)
-#         publishedobj = get_vendor_published_list(userid, auth_token)
-#         rejectedobj = SelectVendorsForBiddingProduct.objects.filter(updated_by_id=userid,
-#                                                                     vendor_status='Reject').values()
-#         vendorsaward = get_vendor_award_list(userid, auth_token)
-#         award_pending = len(publishedobj['data']) - (len(vendorsaward['data']))
-#         purchaserodervendorslist = get_purchase_order_vendor_list(userid, auth_token)
-#         pending_po = len(vendorsaward['data']) - (len(purchaserodervendorslist['data']))
-#         inviteobj = InviteVendor.objects.filter(updated_by_invites_id=userid).values()
-#         businessacceptlist=get_business_accept_list(userid,auth_token)
-#         businessrequestlist=get_business_requests_list(userid,auth_token)
-#         businessconnections=get_business_connections(userid,auth_token)
-#         # if totalopenbidlist['data']==202:
-#         #     totalvendorarray.append({'listing_leads_published': len(landingpagepublish),
-#         #                              'listing_leads_pending': len(vendorobj),
-#         #                              'listing_leads_closed': len(closedarray),
-#         #                              'source_pending': len(source_pending['data']),
-#         #                              'source_publish': len(source_publish),
-#         #                              'source_closed': len(deadlinearray),
-#         #                              'source_award': len(sourceaward),
-#         #                              'rfq_publish_pending':0
-#         #                              })
-#         if (award_pending<0 or pending_po<0) or award_pending<0 or pending_po<0:
-#             print('s')
-#             totalvendorarray.append({'listing_leads_published': len(landingpagepublish),
-#                                      'listing_leads_pending': len(vendorobj),
-#                                      'listing_leads_closed': len(closedarray),
-#                                      'source_pending':len(source_pending['data']),
-#                                      'source_publish':len(source_publish),
-#                                      'source_closed':len(deadlinearray),
-#                                      'source_award':len(sourceaward),
-#                                      'rfq_publish_pending': len(totalopenbidlist['data']),
-#                                      'rfq_closed_bid': len(closedrfqlist['data']),
-#                                      'published_leads': len(publishedobj['data']),
-#                                      'reject_leads': len(rejectedobj),
-#                                      'awarded': len(vendorsaward['data']),
-#                                      'award_pending': 0,
-#                                      'confirmed_purchase_order_vendor': len(purchaserodervendorslist['data']),
-#                                      'pending_po': 0,
-#                                      'business_invite_count': len(inviteobj),
-#                                      'businesss_request_list': len(businessrequestlist['data']),
-#                                      'business_connections':len(businessconnections['data']),
-#                                      'invites_approved':len(businessacceptlist['data'])
-#                                      })
-#         else:
-#             totalvendorarray.append({'listing_leads_published': len(landingpagepublish),
-#                                      'listing_leads_pending': len(vendorobj),
-#                                      'listing_leads_closed': len(closedarray),
-#                                      'source_pending': len(source_pending['data']),
-#                                      'source_publish': len(source_publish),
-#                                      'source_closed': len(deadlinearray),
-#                                      'source_award': len(sourceaward),
-#                                      'rfq_publish_pending': len(totalopenbidlist['data']),
-#                                      'rfq_closed_bid': len(closedrfqlist['data']),
-#                                      'published_leads': len(publishedobj['data']),
-#                                      'reject_leads': len(rejectedobj),
-#                                      'awarded': len(vendorsaward['data']),
-#                                      'award_pending': award_pending,
-#                                      'confirmed_purchase_order_vendor': len(purchaserodervendorslist['data']),
-#                                      'pending_po': pending_po,
-#                                      'business_invite_count': len(inviteobj),
-#                                      'businesss_request_list': len(businessrequestlist['data']),
-#                                      'business_connections': len(businessconnections['data']),
-#                                      'invites_approved':len(businessacceptlist['data']),
-#                                      })
-#
-#         return Response({'status': 200, 'message': 'ok', 'data': totalvendorarray}, status=200)
-#
-#     except Exception as e:
-#         return Response({'status': 500, 'error': str(e)}, status=500)
 
 @api_view(['post'])
 def vendor_dashboard_count(request):

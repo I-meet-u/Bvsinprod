@@ -1772,6 +1772,7 @@ def get_employee_industry_info_without_token(request):
 @api_view(['post'])
 @permission_classes((AllowAny,))
 def vendor_buyer_list(request):
+    # all vendors and buyer list fetching
     data=request.data
     detailslist=[]
     token=data['token']

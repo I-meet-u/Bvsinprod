@@ -537,80 +537,6 @@ def get_buyer_bid_terms_by_user_rfq(request):
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)
 
-
-# @api_view(['post'])
-# # @permission_classes((AllowAny,))
-# def open_bid_list_buyer_publish_list(request):
-#     data = request.data
-#     userid = data['userid']
-#     from_registration=data['from_registration']
-#     openbidarray = []
-#     try:
-#         if from_registration=='False':
-#             basicobj = BasicCompanyDetails.objects.get(updated_by=userid)
-#             # print(basicobj)
-#             selectvendorsobj = SelectVendorsForBiddingProduct.objects.filter(vendor_code=basicobj.company_code,
-#                                                                              vendor_status='Pending',from_registration='False').values()
-#             # print(len(selectvendorsobj),'length')
-#             if len(selectvendorsobj) > 0:
-#                 for i in range(0, len(selectvendorsobj)):
-#                     # print(selectvendorsobj[i].get('rfq_number'),'selected vendors rfq')
-#                     biddingval = BuyerProductBidding.objects.get(user_rfq_number=selectvendorsobj[i].get('rfq_number'),from_registration=from_registration)
-#                     if biddingval.product_rfq_status=='Pending':
-#                         basicobjval = BasicCompanyDetails.objects.get(updated_by_id=biddingval.updated_by_id)
-#                         openbidarray.append({'vendor_code': basicobjval.company_code,
-#                                              'user_rfq_number': biddingval.user_rfq_number,
-#                                              'company_name': basicobjval.company_name,
-#                                              'product_rfq_type': biddingval.product_rfq_type,
-#                                              'product_rfq_title': biddingval.product_rfq_title,
-#                                              'product_rfq_status': biddingval.product_rfq_status,
-#                                              'product_publish_date': biddingval.product_publish_date,
-#                                              'product_deadline_date': biddingval.product_deadline_date,
-#                                              'product_delivery_date': biddingval.product_delivery_date,
-#                                              'product_rfq_currency': biddingval.product_rfq_currency,
-#                                              'product_rfq_category': biddingval.product_rfq_category,
-#                                              'product_department': biddingval.product_department,
-#                                                  })
-#                     else:
-#                         pass
-#
-#                 return Response({'status': 200, 'message': "Open Leads", 'data': openbidarray}, status=200)
-#             else:
-#                 return Response({'status': 202, 'message': 'Vendors are not selected for any bidding','data':openbidarray}, status=202)
-#         elif from_registration=='True':
-#                 basicobj = BasicCompanyDetails.objects.get(updated_by=userid)
-#                 print(basicobj)
-#                 selectvendorsobj = SelectVendorsForBiddingProduct.objects.filter(vendor_code=basicobj.company_code,
-#                                                                                  vendor_status='Pending',from_registration=from_registration).values()
-#
-#                 print(len(selectvendorsobj),'length')
-#                 if len(selectvendorsobj) > 0:
-#                     for i in range(0, len(selectvendorsobj)):
-#                         print(selectvendorsobj[i].get('auto_rfq_number'))
-#                         biddingval = BuyerProductBidding.objects.get(product_rfq_number=selectvendorsobj[i].get('auto_rfq_number'),from_registration='True')
-#                         basicobjval = BasicCompanyDetails.objects.get(updated_by_id=biddingval.updated_by_id)
-#                         print(basicobjval)
-#                         openbidarray.append({'vendor_code': basicobjval.company_code,
-#                                              'auto_rfq_number': biddingval.product_rfq_number,
-#                                              'user_rfq_number':"",
-#                                              'company_name': basicobjval.company_name,
-#                                              'product_rfq_type': biddingval.product_rfq_type,
-#                                              'product_rfq_title': biddingval.product_rfq_title,
-#                                              'product_rfq_status': biddingval.product_rfq_status,
-#                                              'product_publish_date': biddingval.product_publish_date,
-#                                              'product_deadline_date': biddingval.product_deadline_date,
-#                                              'product_delivery_date': biddingval.product_delivery_date,
-#                                              'product_rfq_currency': biddingval.product_rfq_currency,
-#                                              'product_rfq_category': biddingval.product_rfq_category,
-#                                              'product_department': biddingval.product_department,
-#                                                  })
-#
-#                     return Response({'status': 200, 'message': "Open Leads Values", 'data': openbidarray}, status=200)
-#                 else:
-#                     return Response({'status': 202, 'message': 'Vendors are not selected for any bidding','data':openbidarray}, status=202)
-#     except Exception as e:
-#         return Response({'status': 500, 'error': str(e)}, status=500)
-
 @api_view(['post'])
 # @permission_classes((AllowAny,))
 def open_bid_list_buyer_publish_list(request):
@@ -986,56 +912,6 @@ def update_buyer_bidding_deadline_date(request):
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-
-# @api_view(['put'])
-# def status_vendor_accept(request):
-#     data = request.data
-#     rfq_number = data['rfq_number']
-#     vendor_code = data['vendor_code']
-#     try:
-#         vends = SelectVendorsForBiddingProduct.objects.filter(rfq_number=rfq_number,
-#                                                               vendor_code=vendor_code).values().order_by('rfq_number')
-#
-#         for i in range(0, len(vends)):
-#             vendobj = SelectVendorsForBiddingProduct.objects.get(id=vends[i].get('id'))
-#             print(vendobj)
-#             if vendobj.vendor_status == 'Pending':
-#                 vendobj.vendor_status = 'Accept'
-#                 vendobj.save()
-#                 return Response({'status': 200, 'message': 'Status Updated to Accepted', 'data': vendobj.vendor_status},
-#                                 status=status.HTTP_200_OK)
-#             else:
-#                 return Response({'status': 202, 'error': 'Already Accepted'}, status=status.HTTP_202_ACCEPTED)
-#
-#     except Exception as e:
-#         return Response({'status': 500, 'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-#
-#
-# @api_view(['put'])
-# def status_vendor_reject(request):
-#     data = request.data
-#     rfq_number = data['rfq_number']
-#     vendor_code = data['vendor_code']
-#     userid = data['userid']
-#     try:
-#         vends = SelectVendorsForBiddingProduct.objects.filter(rfq_number=rfq_number, vendor_code=vendor_code,
-#                                                               updated_by=userid).values().order_by('rfq_number')
-#
-#         for i in range(0, len(vends)):
-#             vendobj = SelectVendorsForBiddingProduct.objects.get(id=vends[i].get('id'))
-#             print(vendobj)
-#             if vendobj.vendor_status == 'Pending':
-#                 vendobj.vendor_status = 'Reject'
-#                 vendobj.save()
-#                 return Response({'status': 200, 'message': 'Status Updated to Rejected', 'data': vendobj.vendor_status},
-#                                 status=status.HTTP_200_OK)
-#             else:
-#                 return Response({'status': 202, 'error': 'Already rejected'}, status=status.HTTP_202_ACCEPTED)
-#
-#     except Exception as e:
-#         return Response({'status': 500, 'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-
-
 @api_view(['post'])
 def vendor_bidding_all_details(request):
     data = request.data
@@ -1216,9 +1092,6 @@ def source_list_leads(request):
         else:
             return Response({'status': 204, 'message': 'Basic details are not present','data':[]}, status=204)
 
-
-        # return Response({'status':200,'message':"OK"},status=200)
-
     except Exception as e:
         return Response({'status': 500, 'message': str(e)}, status=500)
 
@@ -1285,26 +1158,6 @@ class SourcePublishViewSet(viewsets.ModelViewSet):
     serializer_class = SourcePublishSerializer
     ordering_fields = ['id']
     ordering = ['id']
-
-
-# @api_view(['put'])
-# def source_status_update_to_publish(request):
-#     data = request.data
-#     source_id = data['source_id']
-#     try:
-#         sourceitems = SourceList_CreateItems.objects.filter(id=source_id).values()
-#         if len(sourceitems) > 0:
-#             sourceobj = SourceList_CreateItems.objects.get(id=source_id)
-#             if sourceobj.status == 'Pending':
-#                 sourceobj.status = 'Published'
-#                 sourceobj.save()
-#                 return Response({'status': 200, 'message': 'Status Changed to Publish'}, status=status.HTTP_200_OK)
-#             else:
-#                 return Response({'status': 202, 'message': 'Already Published'}, status=status.HTTP_202_ACCEPTED)
-#         else:
-#             return Response({'status': 204, 'message': 'Not Present'}, status=status.HTTP_204_NO_CONTENT)
-#     except Exception as e:
-#         return Response({'status': 500, 'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
 @api_view(['put'])
@@ -1453,51 +1306,7 @@ def source_list_advance_search(request):
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)
 
-# @api_view(['post'])
-# def total_all_response_product(request):
-#     data = request.data
-#     pendingarray = []
-#     rfq_number = data['rfq_number']
-#     responses = data['responses']
-#     updated_by = data['updated_by']
-#
-#     try:
-#         if responses == 'Pending':
-#             vendobj = SelectVendorsForBiddingProduct.objects.filter(rfq_number=rfq_number, updated_by_id=updated_by,
-#                                                                vendor_status=responses).values()
-#             print(len(vendobj))
-#             for i in range(0, len(vendobj)):
-#                 ccode = vendobj[i].get('vendor_code')
-#                 print(ccode)
-#                 rfq_number = vendobj[i].get('rfq_number')
-#                 print(rfq_number)
-#                 basicobj = BasicCompanyDetails.objects.filter(company_code=ccode).values('company_name')
-#                 print(basicobj)
-#                 for i in range(0, len(basicobj)):
-#                     pendingarray.append({'company_code': ccode,
-#                                          'company_name': basicobj[i].get('company_name'),
-#                                          'rfq_number': rfq_number
-#                                          })
-#         elif responses == 'Reject':
-#             vendobj = SelectVendorsForBiddingProduct.objects.filter(rfq_number=rfq_number, updated_by_id=updated_by,
-#                                                                vendor_status=responses).values()
-#             print(len(vendobj))
-#             for i in range(0, len(vendobj)):
-#                 ccode = vendobj[i].get('vendor_code')
-#                 print(ccode)
-#                 rfq_number = vendobj[i].get('rfq_number')
-#                 print(rfq_number)
-#                 basicobj = BasicCompanyDetails.objects.filter(company_code=ccode).values('company_name')
-#                 print(basicobj)
-#                 for i in range(0, len(basicobj)):
-#                     pendingarray.append({'company_code': ccode,
-#                                          'company_name': basicobj[i].get('company_name'),
-#                                          'rfq_number': rfq_number
-#                                          })
-#
-#         return Response({'status': 200, 'message': 'List', 'data': pendingarray}, status=200)
-#     except Exception as e:
-#         return Response({'status': 500, 'error': str(e)}, status=500)
+
 
 
 @api_view(['post'])
@@ -1932,133 +1741,7 @@ def get_ccode_by_userid_without_tk(request):
 
 
 
-# @api_view(['post'])
-# def price_analysis_product(request):
-#     data = request.data
-#     rfq_number = data['rfq_number']
-#     vendor_code = data['vendor_code']
-#     vendorcodesarray = []
-#     vendorbidarray = []
-#     try:
-#         priceobj = SelectVendorsForBiddingProduct.objects.filter(rfq_number=rfq_number, vendor_code__in=vendor_code,
-#                                                             vendor_status='Accept').values('vendor_code')
-#         print(len(priceobj))
-#         for i in range(0, len(priceobj)):
-#             vendorcodesarray.append(priceobj[i].get('vendor_code'))
-#             print('select', vendorcodesarray)
-#         productobj = VendorBiddingBuyerProductDetails.objects.filter(vendor_rfq_number=rfq_number,
-#                                                                      vendor_code__in=vendorcodesarray).values()
-#         print(len(productobj))
-#         if len(productobj)>0:
-#             for k in range(0, len(productobj)):
-#                 vendorbidarray.append({
-#                     'vendor_product_id': productobj[k].get('id'),
-#                     'vendor_item_code': productobj[k].get('vendor_item_code'),
-#                     'vendor_item_name': productobj[k].get('vendor_item_name'),
-#                     'vendor_item_description': productobj[k].get('vendor_item_description'),
-#                     'buyer_quantity': productobj[k].get('buyer_quantity'),
-#                     'vendor_quantity': productobj[k].get('vendor_quantity'),
-#                     'vendor_rate': productobj[k].get('vendor_rate'),
-#                     'vendor_uom': productobj[k].get('vendor_uom'),
-#                     'vendor_total_amount': productobj[k].get('vendor_total_amount')
-#
-#                 })
-#             return Response({'status': 200, 'message': 'ok', 'data': vendorbidarray}, status=200)
-#         else:
-#             return Response({'status': 204, 'message': 'No details present'}, status=204)
-#     except Exception as e:
-#         return Response({'status': 500, 'error': str(e)}, status=500)
 
-
-# ------------------------price analysis of vendor side--------------------------
-# @api_view(['post'])
-# def vendor_bidding_list_for_price_analysis(request):
-#     data = request.data
-#     rfq_number = data['rfq_number']
-#     vendorcode = data['vendorcode']
-#     vendorcodesarray = []
-#     vendorbidarray_bidetails = []
-#     try:
-#         priceobj = SelectVendorsForBiddingProduct.objects.filter(rfq_number=rfq_number, vendor_code__in=vendorcode,
-#                                                             vendor_status='Accept').values('vendor_code')
-#         print(len(priceobj))
-#         for i in range(0, len(priceobj)):
-#             vendorcodesarray.append(priceobj[i].get('vendor_code'))
-#             print('select', vendorcodesarray)
-#
-#         venobj = VendorProductBidding.objects.filter(vendor_user_rfq_number=rfq_number).values()
-#         print(len(venobj))
-#         for i in range(0, len(venobj)):
-#             basicobj = BasicCompanyDetails.objects.filter(company_code__in=vendorcodesarray).values()
-#             venobj = VendorProductBidding.objects.filter(vendor_user_rfq_number=rfq_number,
-#                                                            vendor_code__in=vendorcodesarray).values()
-#             for i in range(0, len(venobj)):
-#                 basicobj = BasicCompanyDetails.objects.filter(company_code__in=vendorcodesarray).values()
-#                 vendorbidarray_bidetails.append({'rfq_number': rfq_number,
-#                                                  'rfq_status': venobj[i].get('rfq_status'),
-#                                                  'rfq_title': venobj[i].get('rfq_title'),
-#                                                  'payment_terms': venobj[i].get('payment_terms'),
-#                                                  'delivery_period': venobj[i].get('delivery_period'),
-#                                                  'freight_transportation': venobj[i].get('freight_transportation'),
-#                                                  'packaging_forwarding': venobj[i].get('packaging_forwarding'),
-#                                                  'transit_insurance': venobj[i].get('transit_insurance'),
-#                                                  'test_certificate': venobj[i].get('test_certificate'),
-#                                                  'warranty_guarantee': venobj[i].get('warranty_guarantee'),
-#                                                  'validity': venobj[i].get('validity'),
-#                                                  'company_name': basicobj[i].get('company_name'),
-#                                                  'bill_city': basicobj[i].get('bill_city')
-#                                                  })
-#             return Response({'status': 200, 'message': 'ok', 'data': vendorbidarray_bidetails}, status=200)
-#
-#
-#     except Exception as e:
-#         return Response({'status': 500, 'error': str(e)}, status=500)
-
-
-# @api_view(['post'])
-# def price_analysis_product(request):
-#     data = request.data
-#     resarray = []
-#     rfq_number = data['rfq_number']
-#     vendor_code = data['vendor_code']
-#     rfq_type=data['rfq_type']
-#
-#     try:
-#         if rfq_type=='Product':
-#             biddingbuyerproductdetailsobj = BiddingBuyerProductDetails.objects.filter(buyer_rfq_number=rfq_number,buyer_item_type='Product').values()
-#             if len(biddingbuyerproductdetailsobj)>0:
-#                 # print(biddingbuyerproductdetailsobj)
-#                 for i in range(0, len(biddingbuyerproductdetailsobj)):
-#                     resarray.append({'product_code': biddingbuyerproductdetailsobj[i].get('buyer_item_code'),
-#                                      'product_name': biddingbuyerproductdetailsobj[i].get('buyer_item_name'),
-#                                      'Material_Description': biddingbuyerproductdetailsobj[i].get('buyer_item_description'),
-#                                      'UOM': biddingbuyerproductdetailsobj[i].get('buyer_uom'),
-#                                      'Quantity': biddingbuyerproductdetailsobj[i].get('buyer_quantity')})
-#
-#                     vpdetails = VendorBiddingBuyerProductDetails.objects.filter(vendor_rfq_number=rfq_number, vendor_code__in=vendor_code,
-#                                                                                 vendor_item_code=biddingbuyerproductdetailsobj[
-#                                                                                     i].get('buyer_item_code'),vendor_item_type='Product').values().order_by('vendor_code')
-#
-#                     for j in range(0, len(vpdetails)):
-#
-#                         resarray[i].setdefault('ccode' + str(j), vpdetails[j].get('vendor_code'))
-#                         resarray[i].setdefault('rate' + str(j), vpdetails[j].get('vendor_rate'))
-#                         resarray[i].setdefault('tax' + str(j), vpdetails[j].get('vendor_tax'))
-#                         resarray[i].setdefault('discount' + str(j), vpdetails[j].get('vendor_discount'))
-#                         resarray[i].setdefault('totalcost' + str(j), vpdetails[j].get('vendor_final_amount'))
-#                         resarray[i].setdefault('total_all_cost' + str(j), vpdetails[j].get('vendor_total_amount'))
-#                     print("---------------------------------")
-#                     # for j in range(0,len())
-#
-#                 return Response({'status': 200, 'message': 'Product Price Analysis', 'data': resarray}, status=200)
-#             else:
-#                 return Response({'status': 204, 'message': 'Buyer Product Details Not Present'}, status=204)
-#         else:
-#             return Response({'status': 202, 'message': 'product rfq_type is mis-spelled or not present'}, status=202)
-#
-#
-#     except Exception as e:
-#         return Response({'status': 500, 'error': str(e)}, status=500)
 
 
 @api_view(['post'])
@@ -3293,47 +2976,7 @@ def award_machinary_create(request):
         return Response({'status': 500, 'error': str(e)}, status=500)
 
 
-# @api_view(['post'])
-# # @permission_classes((AllowAny,))
-# def get_purchase_code_product(request):
-#     data=request.data
-#     userpocode=""
-#     try:
-#         poobj=PurchaseOrder.objects.filter().last()
-#         print(poobj)
-#         poobjuser=PurchaseOrder.objects.filter(updated_by_id=data['updated_by']).values()
-#         if len(poobjuser)!=0:
-#             userpocode=poobjuser[0].get('PO_num')
-#             return Response({'status': 200, 'lastcompanycode':poobj.PO_num,'userpocode':userpocode}, status=200)
-#         else:
-#             return Response({'status': 202, 'lastcompanycode': poobj.PO_num, 'usercode':0},
-#                             status=202)
-#     except Exception as e:
-#         return Response({'status': 500, 'error': str(e)}, status=500)
 
-
-# @api_view(['post'])
-# # @permission_classes((AllowAny,))
-# def get_purchase_code_product(request):
-#     data=request.data
-#     userpocode1=""
-#     try:
-#         poobjuser=PurchaseOrder.objects.filter(updated_by_id=data['updated_by']).values()
-#         poobj = PurchaseOrder.objects.filter().last()
-#         print(poobj)
-#         if len(poobjuser)==0:
-#             userpocode1 = 720001
-#             return Response({'status': 202,'message':'No data present', 'lastcompanycode':0, 'userpocode':userpocode1},
-#                             status=202)
-#         else:
-#             userpocode1 = int(poobj.PO_num)+1
-#             # userpocode=data['userpocode']
-#             # userpocode1=userpocode
-#             return Response(
-#                 {'status': 200, 'message': 'Incremented','userpocode':userpocode1},
-#                 status=200)
-#     except Exception as e:
-#         return Response({'status': 500, 'error': str(e)}, status=500)
 
 @api_view(['put'])
 def po_status_update_product(request):
@@ -3359,85 +3002,7 @@ def po_status_update_product(request):
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)
 
-# @api_view(['post'])
-# def fetch_vendor_bid_details(request):
-#     data=request.data
-#     rfqtype=data['rfqtype']
-#     rfqnumber=data['rfqnumber']
-#     vendorcode=data['vendorcode']
-#     vendorarray=[]
-#     try:
-#         basicobj=BasicCompanyDetails.objects.get(company_code=vendorcode)
-#         if rfqtype=='Product':
-#             vendorobj=VendorProductBidding.objects.filter(vendor_user_rfq_number=rfqnumber,vendor_product_rfq_type='Product',vendor_code=vendorcode).values().order_by('vendor_product_bidding_id')
-#             if len(vendorobj)>0:
-#                 for i in range(0,len(vendorobj)):
-#                     vendorproductobj=VendorBiddingBuyerProductDetails.objects.filter(vendor_rfq_number=rfqnumber,vendor_item_type='Product',vendor_code=vendorcode).values().order_by('id')
-#                     for j in range(0,len(vendorproductobj)):
-#                         print('s print')
-#                     vendorterms=VendorRfqTermsDescription.objects.filter(vendor_rfq_number=rfqnumber,rfq_type='Product',updated_by_id=basicobj.updated_by_id).values().order_by('id')
-#                     for k in range(0,len(vendorterms)):
-#                         print('correct')
-#                     vendorobj[i].__setitem__('product',vendorproductobj)
-#                     vendorobj[i].__setitem__('vendor_rfq_terms',vendorterms)
-#
-#                 return Response({'status': 200, 'message': 'Vendor Product Bidding List','data':vendorobj}, status=200)
-#             else:
-#                 return Response({'status': 204, 'message': 'Not Present'}, status=204)
-#         elif rfqtype=='Service':
-#             vendorserviceobj = VendorProductBidding.objects.filter(vendor_user_rfq_number=rfqnumber,
-#                                                             vendor_product_rfq_type='Service',vendor_code=vendorcode).values().order_by('vendor_product_bidding_id')
-#             if len(vendorserviceobj) > 0:
-#                 for i in range(0, len(vendorserviceobj)):
-#                     vendorservicedetailsobj = VendorProductBidding.objects.filter(vendor_product_rfq_number=rfqnumber,
-#                                                                                        vendor_product_rfq_type='Service',
-#                                                                                        vendor_code=vendorcode).values().order_by('vendor_product_bidding_id')
-#                     for j in range(0, len(vendorserviceobj)):
-#                         print('s print')
-#                     vendorserviceterms = VendorRfqTermsDescription.objects.filter(vendor_rfq_number=rfqnumber,
-#                                                                            rfq_type='Service',
-#                                                                            updated_by_id=basicobj.updated_by_id).values().order_by('id')
-#                     for k in range(0, len(vendorserviceterms)):
-#                         print('correct')
-#                     vendorserviceobj[i].__setitem__('product', vendorservicedetailsobj)
-#                     vendorserviceobj[i].__setitem__('vendor_rfq_terms', vendorserviceterms)
-#
-#                 return Response({'status': 200, 'message': 'Vendor Service Bidding List', 'data': vendorserviceobj},
-#                                 status=200)
-#             else:
-#                 return Response({'status': 204, 'message': 'Not Present'}, status=204)
-#         elif rfqtype=='Machinary & equipments':
-#             vendormachinaryobj = VendorProductBidding.objects.filter(vendor_user_rfq_number=rfqnumber,
-#                                                             vendor_product_rfq_type='Machinary & equipments',
-#                                                             vendor_code=vendorcode).values().order_by('vendor_product_bidding_id')
-#             if len(vendormachinaryobj) > 0:
-#                 for i in range(0, len(vendormachinaryobj)):
-#                     vendormachinarydetailsobj = VendorBiddingBuyerMachinaryDetails.objects.filter(
-#                         vendor_machinary_rfq_number=rfqnumber,
-#                         vendor_machinary_item_type='Machinary & equipments',
-#                         vendor_code=vendorcode).values().order_by('id')
-#                     for j in range(0, len(vendormachinarydetailsobj)):
-#                         print('s print')
-#                     vendormachinaryterms = VendorRfqTermsDescription.objects.filter(vendor_rfq_number=rfqnumber,
-#                                                                                   rfq_type='Machinary & equipments',
-#                                                                                   updated_by_id=basicobj.updated_by_id).values().order_by(
-#                         'id')
-#                     for k in range(0, len(vendormachinaryterms)):
-#                         print('correct')
-#                     vendormachinaryobj[i].__setitem__('machinary', vendormachinarydetailsobj)
-#                     vendormachinaryobj[i].__setitem__('vendor_machinary_rfq_terms', vendormachinaryterms)
-#
-#                 return Response({'status': 200, 'message': 'Vendor Machinary Bidding List', 'data': vendormachinaryobj},
-#                                 status=200)
-#             else:
-#                 return Response({'status': 204, 'message': 'Not Present'}, status=204)
-#
-#         else:
-#             return Response({'status': 202, 'message': 'rfq type is mispelled or not present'}, status=202)
-#
-#
-#     except Exception as e:
-#         return Response({'status': 500, 'error': str(e)}, status=500)
+
 
 
 @api_view(['post'])
@@ -3525,47 +3090,7 @@ def fetch_vendor_bid_details(request):
         return Response({'status': 500, 'error': str(e)}, status=500)
 
 
-# @api_view(['post'])
-# def price_analysis_vendor_terms_list(request):
-#     data = request.data
-#     rfq_number = data['rfq_number']
-#     vendor_code = data['vendor_code']
-#     selectsarray=[]
-#     priceanalysisarray=[]
-#     vendorterms=[]
-#     dival={}
-#     vendorterms1=[]
-#
-#     try:
-#         selectobj=SelectVendorsForBiddingProduct.objects.filter(rfq_number=rfq_number,vendor_code__in=vendor_code).values()
-#         for i in range(0,len(selectobj)):
-#             selectsarray.append(selectobj[i].get('rfq_number'))
-#         buyerobj = RfqTermsDescription.objects.filter(rfq_number__in=selectsarray).values().order_by('terms')
-#         vendorobj=VendorRfqTermsDescription.objects.filter(vendor_rfq_number__in=selectsarray).values().order_by('vendor_terms')
-#         for i in range(0,len(vendorobj)):
-#             vendorterms.append(vendorobj[i].get('updated_by_id'))
-#
-#             basicobj=BasicCompanyDetails.objects.filter(updated_by_id__in=vendorterms).values()
-#             for j in range(0,len(basicobj)):
-#                 vendorterms1.append(
-#                     {'company_name':basicobj[j].get('company_name'),
-#                      'company_code':basicobj[j].get('company_code')
-#                      })
-#             vendorobj[i].__setitem__('company_name',vendorterms1)
-#
-#
-#             # vendorterms.append({
-#             #                     "company_name":basicobj.company_name,
-#             #                     "company_code":basicobj.company_code,
-#             #                     "vendor_terms":vendorobj[i].get('vendor_terms'),
-#             #                     "vendor_description":vendorobj[i].get('vendor_description'),
-#             #                     "vendor_response":vendorobj[i].get('vendor_response'),
-#             #                     "rfq_type":vendorobj[i].get('rfq_type')
-#             #
-#             #                     })
-#         return Response({'status': 200, 'message': 'Success','vendorterms':vendorobj,'buyerterms':buyerobj}, status=200)
-#     except Exception as e:
-#         return Response({'status': 500, 'error': str(e)}, status=500)
+
 
 
 @api_view(['post'])
@@ -3590,17 +3115,6 @@ def price_analysis_vendor_terms_list(request):
             print('-------------------------------------------------------------------')
             priceanalysisarray.append(vendorobj[i].get('updated_by_id'))
         print(priceanalysisarray)
-            # basicobj=BasicCompanyDetails.objects.get(updated_by_id=vendorobj[i].get('updated_by_id'))
-
-            # vendorterms.append({
-            #                     "company_name":basicobj.company_name,
-            #                     "company_code":basicobj.company_code,
-            #                     "vendor_terms":vendorobj[i].get('vendor_terms'),
-            #                     "vendor_description":vendorobj[i].get('vendor_description'),
-            #                     "vendor_response":vendorobj[i].get('vendor_response'),
-            #                     "rfq_type":vendorobj[i].get('rfq_type')
-            #
-            #                     })
         return Response({'status': 200, 'message': 'Success','vendorterms': vendorterms}, status=200)
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)
@@ -4175,48 +3689,6 @@ def createbuyerbidding(request):
 
 
 
-            # if BuyerProductBiddingobj:
-            #     lastnumeric=BuyerProductBiddingobj[0].get()
-            #     BuyerProductBiddingobj=BuyerProductBidding.objects.create(product_rfq_number=rfq,user_rfq_number=rfq,
-            #                                                       product_rfq_type=rfqtype,
-            #                                                       product_publish_date=pdate,
-            #                                                       product_deadline_date=deadlinedate,
-            #                                                       product_delivery_date=delidate,
-            #                                                       product_rfq_currency=currency,
-            #                                                       product_rfq_category=category,
-            #                                                       product_department=dept,
-            #                                                       product_bill_address=billto,
-            #                                                       product_ship_address=shipto,
-            #                                                       product_rfq_title=rfqtitle,
-            #                                                       created_by=userid,
-            #                                                       updated_by=SelfRegistration.objects.get(id=userid)
-            #                                                       )
-            #
-            #     for i in range(0,len(productdetails)):
-            #         print(productdetails[i].get('buyer_item_type'))
-            #         print(productdetails[i].get('buyer_quantity'))
-            #         BiddingBuyerProductDetails.objects.create(buyer_item_type=productdetails[i].get('buyer_item_type'),
-            #                                               buyer_item_code=productdetails[i].get('itemcode'),
-            #                                               buyer_item_name=productdetails[i].get('itemname'),
-            #                                               buyer_item_description=productdetails[i].get('itemdes'),
-            #                                               buyer_uom=productdetails[i].get('uom'),
-            #                                               buyer_category=productdetails[i].get('cate'),
-            #                                               buyer_quantity=productdetails[i].get('buyer_quantity'),
-            #                                               buyer_rfq_number=rfq,
-            #                                               updated_by=SelfRegistration.objects.get(id=userid),
-            #                                               created_by=userid)
-            #
-            #     for i  in range(0,len(terms)):
-            #         for keys in terms[i]:
-            #             RfqTermsDescription.objects.create(rfq_number=rfq,
-            #                                            terms=keys,
-            #                                            description=terms[i][keys],
-            #                                            created_by=userid,
-            #                                            updated_by=SelfRegistration.objects.get(id=userid),
-            #                                            product_biddings=BuyerProductBidding.objects.get(product_bidding_id=BuyerProductBiddingobj.product_bidding_id),
-            #                                            rfq_type=rfqtype)
-
-
 
             return Response({'status': 200, 'message': 'Buyer  Bidding created'}, status=200)
 
@@ -4434,133 +3906,6 @@ def extended_deadline_list_show(request):
 
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)
-
-
-# @api_view(['post'])
-# def accepted_response_list_new(request):
-#     data = request.data
-#     rfq_number = data['rfq_number']
-#     updated_by = data['updated_by']
-#     responses = data['responses']
-#     rfqtype=data['rfqtype']
-#     responselistarray = []
-#
-#     try:
-#         if responses == 'Accept' and rfqtype=='Product':
-#             vendobj = SelectVendorsForBiddingProduct.objects.filter(rfq_number=rfq_number, updated_by_id=updated_by,
-#                                                                vendor_status=responses,rfq_type=rfqtype).values()
-#             if len(vendobj) > 0:
-#                 for i in range(0, len(vendobj)):
-#                     ratesum = 0
-#                     orderqtsum = 0
-#                     discountsum = 0
-#                     ccode = vendobj[i].get('vendor_code')
-#                     basicobj = BasicCompanyDetails.objects.get(company_code=ccode)
-#                     cname = basicobj.company_name
-#                     productdetailsvalue = VendorBiddingBuyerProductDetails.objects.filter(vendor_rfq_number=rfq_number,
-#                                                                                       vendor_code=ccode).values()
-#                     if len(productdetailsvalue) == 0:
-#                         raise ValueError({'message': 'vendor not present in vendor product details', 'status': 204})
-#                     else:
-#
-#                         for i in range(0, len(productdetailsvalue)):
-#                             orderqtsum = orderqtsum + int(productdetailsvalue[i].get('buyer_quantity'))
-#                             ratesum = ratesum + int(productdetailsvalue[i].get('vendor_rate'))
-#                             discountsum = discountsum + int(productdetailsvalue[i].get('vendor_discount'))
-#                         responselistarray.append({'rfq_number': rfq_number,
-#                                                   'order_quantity': orderqtsum,
-#                                                   'total_discount': discountsum,
-#                                                   'total_rate': ratesum,
-#                                                   'final_amount': productdetailsvalue[i].get('vendor_final_amount'),
-#                                                   'total_amount': productdetailsvalue[i].get('vendor_total_amount'),
-#                                                   'company_code': ccode,
-#                                                   'company_name': cname
-#                                                   })
-#                 return Response({'status': 200, 'message': 'Response List Product', 'data': responselistarray},
-#                                 status=200)
-#             else:
-#                 return Response({'status': 204, 'message': 'No Product  details found'}, status=204)
-#
-#         elif responses=='Accept' and rfqtype=='Service':
-#             vendobj = SelectVendorsForBiddingProduct.objects.filter(rfq_number=rfq_number, updated_by_id=updated_by,
-#                                                                     vendor_status=responses, rfq_type=rfqtype).values()
-#             if len(vendobj) > 0:
-#                 for i in range(0, len(vendobj)):
-#                     ratesum = 0
-#                     orderqtsum = 0
-#                     discountsum = 0
-#                     ccode = vendobj[i].get('vendor_code')
-#                     basicobj = BasicCompanyDetails.objects.get(company_code=ccode)
-#                     cname = basicobj.company_name
-#                     servicedetailsvalue = VendorBiddingBuyerProductDetails.objects.filter(vendor_rfq_number=rfq_number,
-#                                                                                           vendor_code=ccode).values()
-#                     if len(servicedetailsvalue) == 0:
-#                         raise ValueError({'message': 'vendor not present in vendor service details', 'status': 204})
-#                     else:
-#
-#                         for i in range(0, len(servicedetailsvalue)):
-#                             orderqtsum = orderqtsum + int(servicedetailsvalue[i].get('buyer_quantity'))
-#                             ratesum = ratesum + int(servicedetailsvalue[i].get('vendor_tax'))
-#                             discountsum = discountsum + int(servicedetailsvalue[i].get('vendor_discount'))
-#                         responselistarray.append({'rfq_number': rfq_number,
-#                                                   'order_quantity': orderqtsum,
-#                                                   'total_discount': discountsum,
-#                                                   'total_rate': ratesum,
-#                                                   'final_amount': servicedetailsvalue[i].get('vendor_final_amount'),
-#                                                   'total_amount': servicedetailsvalue[i].get('vendor_total_amount'),
-#                                                   'company_code': ccode,
-#                                                   'company_name': cname
-#                                                   })
-#                 return Response({'status': 200, 'message': 'Response List Service', 'data': responselistarray},
-#                                 status=200)
-#             else:
-#                 return Response({'status': 204, 'message': 'No Service details found'}, status=204)
-#
-#
-#         elif responses == 'Accept' and rfqtype == 'Machinary & equipments':
-#             vendobj = SelectVendorsForBiddingProduct.objects.filter(rfq_number=rfq_number, updated_by_id=updated_by,
-#                                                                     vendor_status=responses, rfq_type=rfqtype).values()
-#             if len(vendobj) > 0:
-#                 for i in range(0, len(vendobj)):
-#                     ratesum = 0
-#                     orderqtsum = 0
-#                     discountsum = 0
-#                     ccode = vendobj[i].get('vendor_code')
-#                     basicobj = BasicCompanyDetails.objects.get(company_code=ccode)
-#                     cname = basicobj.company_name
-#                     machinarydetailsvalue = VendorBiddingBuyerProductDetails.objects.filter(vendor_rfq_number=rfq_number,
-#                                                                                           vendor_code=ccode).values()
-#                     if len(machinarydetailsvalue) == 0:
-#                         raise ValueError({'message': 'vendor not present in vendor machinary details', 'status': 204})
-#                     else:
-#
-#                         for i in range(0, len(machinarydetailsvalue)):
-#                             orderqtsum = orderqtsum + int(machinarydetailsvalue[i].get('buyer_quantity'))
-#                             ratesum = ratesum + int(machinarydetailsvalue[i].get('vendor_tax'))
-#                             discountsum = discountsum + int(machinarydetailsvalue[i].get('vendor_discount'))
-#                         responselistarray.append({'rfq_number': rfq_number,
-#                                                   'order_quantity': orderqtsum,
-#                                                   'total_discount': discountsum,
-#                                                   'total_rate': ratesum,
-#                                                   'final_amount': machinarydetailsvalue[i].get(
-#                                                       'vendor_final_amount'),
-#                                                   'total_amount': machinarydetailsvalue[i].get(
-#                                                       'vendor_total_amount'),
-#                                                   'company_code': ccode,
-#                                                   'company_name': cname
-#                                                   })
-#                 return Response({'status': 200, 'message': 'Response List Service', 'data': responselistarray},
-#                                 status=200)
-#             else:
-#                 return Response({'status': 204, 'message': 'No Machinary details found'}, status=204)
-#
-#
-#         else:
-#             return Response({'status': 202, 'message': 'No data present for this response or mis-spelled'}, status=202)
-#
-#     except Exception as e:
-#         return Response({'status': 500, 'error': str(e)}, status=500)
-
 
 
 @api_view(['post'])
@@ -5208,20 +4553,6 @@ def purchase_order_email(request):
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)
 
-
-# @api_view(['post'])
-# @permission_classes((AllowAny,))
-# def purchase_order_email(request):
-#     data = request.data
-#     pkid = data['pkid']
-#     rfq_type = data['rfq_type']
-#     try:
-#         print("The bold text is", '\033[1m' + 'Python' + '\033[0m')
-#         return Response({'status': 200, 'message': 'ok', 'data': poobj}, status=200)
-#     except Exception as e:
-#         return Response({'status': 500, 'error': str(e)}, status=500)
-
-
 @api_view(['post'])
 def source_list_leads_all(request):
     data = request.data
@@ -5259,9 +4590,6 @@ def source_list_leads_all(request):
 
         else:
             return Response({'status': 204, 'message': 'Basic details are not present','data':[]}, status=204)
-
-
-        # return Response({'status':200,'message':"OK"},status=200)
 
     except Exception as e:
         return Response({'status': 500, 'message': str(e)}, status=500)

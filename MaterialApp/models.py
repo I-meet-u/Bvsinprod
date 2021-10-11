@@ -6,7 +6,7 @@ from django.db import models
 from django.db import models
 from simple_history.models import HistoricalRecords
 
-from RegistrationApp.models import SelfRegistration, BasicCompanyDetails
+from RegistrationApp.models import SelfRegistration
 
 
 class VendorProduct_BasicDetails(models.Model):
@@ -62,19 +62,9 @@ class VendorProduct_GeneralDetails(models.Model):
     department = models.CharField(max_length=400, blank=True)
     guarantee=models.CharField(max_length=400, blank=True)
     not_covered_w_g = models.CharField(max_length=400, blank=True)
-    # min_order_quantity = models.CharField(max_length=400, blank=True)
     after_sale_service=models.CharField(max_length=400, blank=True)
     available_stock = models.CharField(max_length=100, blank=True)
     packing_type = models.CharField(max_length=400, blank=True)
-    # standard_measures = models.CharField(max_length=100, blank=True)
-    # product_length = models.CharField(max_length=100, blank=True)
-    # shipping_uom = models.CharField(max_length=100, blank=True)
-    # item_weight = models.CharField(max_length=100, blank=True)
-    # product_width = models.CharField(max_length=100, blank=True)
-    # shipping_weight = models.CharField(max_length=100, blank=True)
-    # packed_weight = models.CharField(max_length=100, blank=True)
-    # product_height = models.CharField(max_length=100, blank=True)
-    # ship_via = models.CharField(max_length=100, blank=True)
     created_on = models.DateTimeField(auto_now_add=True)
     updated_on = models.DateTimeField(auto_now=True)
     created_by = models.BigIntegerField()
@@ -89,7 +79,6 @@ class VendorProduct_TechnicalSpecifications(models.Model):
 
     item_specification = models.CharField(max_length=100, blank=True)
     item_description = models.TextField(null=True,blank=True)
-    # description = models.TextField(null=True,blank=True)
     created_on = models.DateTimeField(auto_now_add=True)
     updated_on = models.DateTimeField(auto_now=True)
     created_by = models.BigIntegerField()
@@ -104,7 +93,6 @@ class VendorProduct_TechnicalSpecifications(models.Model):
 class VendorProduct_ProductFeatures(models.Model):
     product_item_specification = models.CharField(max_length=100, blank=True)
     product_item_description = models.TextField(null=True, blank=True)
-    # description = models.TextField(null=True, blank=True)
     created_on = models.DateTimeField(auto_now_add=True)
     updated_on = models.DateTimeField(auto_now=True)
     created_by = models.BigIntegerField()
@@ -146,7 +134,6 @@ class BuyerProductDetails(models.Model):
     buyer_unit_price = models.CharField(max_length=100, blank=True,null=True)
     buyer_prefix = models.CharField(max_length=50,null=True, blank=True)
     buyer_suffix = models.CharField(max_length=50,null=True, blank=True)
-    # buyer_country_of_origin = models.CharField(max_length=50, blank=True)
     buyer_category=models.CharField(max_length=500,null=True,blank=True)
     buyer_department=models.CharField(max_length=400,null=True,blank=True)
     buyer_item_group = models.CharField(max_length=500, blank=True,null=True)
@@ -181,7 +168,6 @@ class BuyerServiceDetails(models.Model):
     buyer_service_unit_price = models.CharField(max_length=100, blank=True,null=True)
     buyer_service_prefix = models.CharField(max_length=50,null=True,blank=True)
     buyer_service_suffix = models.CharField(max_length=50,null=True,blank=True)
-    # buyer_country_of_origin = models.CharField(max_length=50, blank=True)
     buyer_service_category=models.CharField(max_length=500,null=True,blank=True)
     buyer_service_department=models.CharField(max_length=400,null=True,blank=True)
     buyer_service_item_group = models.CharField(max_length=500, blank=True,null=True)
@@ -266,7 +252,6 @@ class LandingPageBidding(models.Model):
     quantity=models.BigIntegerField()
     vendor_product_pk=models.BigIntegerField()
     item_type = models.CharField(max_length=300, null=True, blank=True)
-    # vendor_product_subcategory=models.CharField(max_length=800)
     vendors_code=ArrayField(models.CharField(max_length=200),null=True,blank=True)
     created_on = models.DateTimeField(auto_now_add=True)
     updated_on = models.DateTimeField(auto_now=True)

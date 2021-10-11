@@ -197,23 +197,6 @@ class ShippingAddress_Others(models.Model):
         db_table = "ShippingAddress_Others"
 
 
-# class EmployeeRegistration(models.Model):
-#     emp_id=models.BigAutoField(primary_key=True)
-#     username=models.CharField(max_length=100)
-#     employee_user_type=models.CharField(max_length=100,null=True,blank=True)
-#     country=models.CharField(max_length=100)
-#     department=models.CharField(max_length=100)
-#     designation=models.CharField(max_length=100)
-#     email_id=models.CharField(max_length=100,unique=True)
-#     phone_no=models.CharField(max_length=20,unique=True)
-#     employee_usertype=models.CharField(max_length=70,null=True)
-#     password=models.CharField(max_length=300)
-#     created_on_others = models.DateTimeField(auto_now_add=True)
-#     updated_on_others = models.DateTimeField(auto_now=True)
-#
-#     class Meta:
-#         db_table="EmployeeRegistration"
-
 class Employee_CompanyDetails(models.Model):
     # basic details model fields
     emp_company_id=models.BigAutoField(primary_key=True)
@@ -249,6 +232,7 @@ class Employee_CompanyDetails(models.Model):
 
 
 class Employee_IndustryInfo(models.Model):
+    # employee industry info
     emp_nature_of_business = ArrayField(models.CharField(max_length=800))
     emp_supply_capabilites = ArrayField(models.CharField(max_length=800))
     emp_industry_to_serve = ArrayField(models.CharField(max_length=800))
@@ -263,6 +247,7 @@ class Employee_IndustryInfo(models.Model):
 
 
 class ContactDetails(models.Model):
+    # contact details
     name=models.CharField(max_length=100,null=True,blank=True)
     division=models.CharField(max_length=100,null=True,blank=True)
     department = models.CharField(max_length=200, null=True, blank=True)
@@ -280,6 +265,7 @@ class ContactDetails(models.Model):
 
 
 class CommunicationDetails(models.Model):
+    # communication details
     unit_name=models.CharField(max_length=150,null=True,blank=True)
     state = models.CharField(max_length=50, null=True, blank=True)
     address = models.TextField(null=True, blank=True)

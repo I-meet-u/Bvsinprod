@@ -152,13 +152,6 @@ class BasicCompanyDetailsOthersSerializers(serializers.ModelSerializer):
         values = BasicCompanyDetails_Others.objects.create(company_code=company_code,**validate_data)
         return values
 
-
-# class EmployeeRegistrationSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = EmployeeRegistration
-#         fields = '__all__'
-
-
 class Employee_CompanyDetailsSerializers(serializers.ModelSerializer):
     # employee basic info details serializers
     emp_company_code = serializers.SerializerMethodField()

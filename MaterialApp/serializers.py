@@ -13,6 +13,7 @@ class VendorProduct_BasicDetailsSerializer(serializers.ModelSerializer):
     class Meta:
         model=VendorProduct_BasicDetails
         fields='__all__'
+
     def create(self, validate_data):
         # to add any extra details into the object before saving
         vendorobj = VendorProduct_BasicDetails.objects.count()
@@ -56,13 +57,7 @@ class BuyerProductDetailsSerializer(serializers.ModelSerializer):
     class Meta:
         model=BuyerProductDetails
         fields='__all__'
-    #
-    # def get_queryset(self):
-    #     # overriding get_queryset by passing user_id. Here user_id is nothing but updated_by
-    #     buyerproductobj = BuyerProductDetails.objects.filter(updated_by=self.request.GET.get('updated_by')).order_by('buyer_product_id')
-    #     if buyerproductobj:
-    #         return buyerproductobj
-    #     raise  ValidationError({'message':"Buyer Product Details not exist",'status':204})
+
 class BuyerServiceDetailsSerializer(serializers.ModelSerializer):
 
     class Meta:

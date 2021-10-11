@@ -141,8 +141,6 @@ class VendorProductBidding(models.Model):
     created_by = models.BigIntegerField()
     updated_by = models.ForeignKey(SelfRegistration, on_delete=models.CASCADE)
     vendor_code=models.CharField(max_length=100,null=True,blank=True)
-    # from_registration = models.CharField(max_length=100, null=True, blank=True, default='False')
-    # auto_rfq_number = models.CharField(max_length=40, null=True, blank=True)
     history=HistoricalRecords()
 
     class Meta:
@@ -170,8 +168,6 @@ class VendorBiddingBuyerProductDetails(models.Model):
     vendor_rfq_number=models.CharField(max_length=100,null=True,blank=True)
     vendor_code=models.CharField(max_length=200,null=True,blank=True)
     updated_by = models.ForeignKey(SelfRegistration, on_delete=models.CASCADE)
-    # from_registration = models.CharField(max_length=100, null=True, blank=True, default='False')
-    # auto_rfq_number = models.CharField(max_length=40, null=True, blank=True)
     history = HistoricalRecords()
 
     class Meta:
@@ -189,8 +185,6 @@ class VendorRfqTermsDescription(models.Model):
     updated_by = models.ForeignKey(SelfRegistration, on_delete=models.CASCADE)
     vendor_product_biddings=models.ForeignKey(VendorProductBidding, on_delete=models.CASCADE,null=True,blank=True)
     rfq_type = models.CharField(max_length=100, null=True, blank=True)
-    # from_registration = models.CharField(max_length=100, null=True, blank=True, default='False')
-    # auto_rfq_number = models.CharField(max_length=40, null=True, blank=True)
     history = HistoricalRecords()
 
     class Meta:
@@ -203,11 +197,8 @@ class Awards(models.Model):
     rfq_number = models.CharField(max_length=50)
     company_code =models.CharField(max_length=100,null=True,blank=True)
     company_name=models.CharField(max_length=200,null=True,blank=True)
-    # order_quantity=models.CharField(max_length=100,null=True,blank=True)
     buyer_bid_quantity = models.CharField(max_length=100, null=True, blank=True)
     vendor_bid_quantity = models.CharField(max_length=100, null=True, blank=True)
-    # frieght_cost=models.CharField(max_length=500, null=True, blank=True)
-    # p_f_charge=models.CharField(max_length=500, null=True, blank=True)
     totalamount=models.CharField(max_length=200, null=True, blank=True)
     rfq_title = models.CharField(max_length=100, null=True, blank=True)
     rfq_status = models.CharField(max_length=100, null=True, default="Pending", blank=True)
@@ -225,8 +216,6 @@ class Awards(models.Model):
     updated_by = models.ForeignKey(SelfRegistration, on_delete=models.CASCADE)
     postatus=models.CharField(max_length=100,default='Pending',blank=True,null=True)
     rfq_type=models.CharField(max_length=100,null=True,blank=True)
-    # from_registration = models.CharField(max_length=100, null=True, blank=True, default='False')
-    # auto_rfq_number = models.CharField(max_length=40, null=True, blank=True)
     history = HistoricalRecords()
 
     class Meta:
@@ -236,11 +225,8 @@ class ServiceAwards(models.Model):
     service_rfq_number = models.CharField(max_length=50)
     service_company_code =models.CharField(max_length=100,null=True,blank=True)
     service_company_name=models.CharField(max_length=200,null=True,blank=True)
-    # order_quantity=models.CharField(max_length=100,null=True,blank=True)
     service_buyer_bid_quantity = models.CharField(max_length=100, null=True, blank=True)
     service_vendor_bid_quantity = models.CharField(max_length=100, null=True, blank=True)
-    # frieght_cost=models.CharField(max_length=500, null=True, blank=True)
-    # p_f_charge=models.CharField(max_length=500, null=True, blank=True)
     service_totalamount=models.CharField(max_length=200, null=True, blank=True)
     service_rfq_title = models.CharField(max_length=100, null=True, blank=True)
     service_rfq_status = models.CharField(max_length=100, null=True, default="Pending", blank=True)
@@ -258,8 +244,6 @@ class ServiceAwards(models.Model):
     updated_by = models.ForeignKey(SelfRegistration, on_delete=models.CASCADE)
     service_po_status=models.CharField(max_length=100,default='Pending',blank=True,null=True)
     rfq_type = models.CharField(max_length=100, null=True, blank=True)
-    # from_registration = models.CharField(max_length=100, null=True, blank=True, default='False')
-    # auto_rfq_number = models.CharField(max_length=40, null=True, blank=True)
     history = HistoricalRecords()
 
     class Meta:
@@ -270,11 +254,8 @@ class MachinaryAwards(models.Model):
     machinary_rfq_number = models.CharField(max_length=50)
     machinary_company_code =models.CharField(max_length=100,null=True,blank=True)
     machinary_company_name=models.CharField(max_length=200,null=True,blank=True)
-    # order_quantity=models.CharField(max_length=100,null=True,blank=True)
     machinary_buyer_bid_quantity = models.CharField(max_length=100, null=True, blank=True)
     machinary_vendor_bid_quantity = models.CharField(max_length=100, null=True, blank=True)
-    # frieght_cost=models.CharField(max_length=500, null=True, blank=True)
-    # p_f_charge=models.CharField(max_length=500, null=True, blank=True)
     machinary_totalamount=models.CharField(max_length=200, null=True, blank=True)
     machinary_rfq_title = models.CharField(max_length=100, null=True, blank=True)
     machinary_rfq_status = models.CharField(max_length=100, null=True, default="Pending", blank=True)
@@ -292,8 +273,6 @@ class MachinaryAwards(models.Model):
     updated_by = models.ForeignKey(SelfRegistration, on_delete=models.CASCADE)
     machinary_po_status=models.CharField(max_length=100,default='Pending',blank=True,null=True)
     rfq_type = models.CharField(max_length=100, null=True, blank=True)
-    # from_registration = models.CharField(max_length=100, null=True, blank=True, default='False')
-    # auto_rfq_number = models.CharField(max_length=40, null=True, blank=True)
     history = HistoricalRecords()
 
     class Meta:
@@ -368,8 +347,6 @@ class VendorBiddingBuyerServiceDetails(models.Model):
     vendor_service_rfq_number=models.CharField(max_length=100,null=True,blank=True)
     vendor_code=models.CharField(max_length=200,null=True,blank=True)
     updated_by = models.ForeignKey(SelfRegistration, on_delete=models.CASCADE)
-    # from_registration = models.CharField(max_length=100, null=True, blank=True, default='False')
-    # auto_rfq_number = models.CharField(max_length=40, null=True, blank=True)
     history = HistoricalRecords()
 
     class Meta:
@@ -397,8 +374,6 @@ class VendorBiddingBuyerMachinaryDetails(models.Model):
     vendor_machinary_rfq_number=models.CharField(max_length=100,null=True,blank=True)
     vendor_code=models.CharField(max_length=200,null=True,blank=True)
     updated_by = models.ForeignKey(SelfRegistration, on_delete=models.CASCADE)
-    # from_registration = models.CharField(max_length=100, null=True, blank=True, default='False')
-    # auto_rfq_number = models.CharField(max_length=40, null=True, blank=True)
     history = HistoricalRecords()
 
     class Meta:
@@ -429,8 +404,6 @@ class PurchaseOrder(models.Model):
     po_numeric=models.CharField(max_length=100,null=True,blank=True)
     rfq_type=models.CharField(max_length=120,null=True,blank=True)
     city=models.CharField(max_length=200,null=True,blank=True)
-    # from_registration = models.CharField(max_length=100, null=True, blank=True, default='False')
-    # auto_rfq_number = models.CharField(max_length=40, null=True, blank=True)
 
     class Meta:
         db_table = "PurchaseOrder"
@@ -465,7 +438,6 @@ class SourceList_CreateItems(models.Model):
     document_1=models.FileField(upload_to='SourceListFiles',null=True,blank=True)
     document_2 = models.FileField(upload_to='SourceListFiles',null=True,blank=True)
     document_3= models.FileField(upload_to='SourceListFiles',null=True,blank=True)
-    # status=models.CharField(max_length=40,default='Pending')
     created_on = models.DateTimeField(auto_now_add=True)
     updated_on = models.DateTimeField(auto_now=True)
     created_by = models.BigIntegerField()

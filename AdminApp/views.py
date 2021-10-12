@@ -1185,6 +1185,7 @@ class OpenLeadsItemsViewSet(viewsets.ModelViewSet):
         buyer_company_code =request.data.get('buyer_company_code',None)
         buyer_company_name = request.data.get('buyer_company_name',None)
         token = request.data.get('token', None)
+        rfq_number=request.data.get('rfq_number',None)
         # buyer_pk =request.data.get('buyer_pk',None)
         try:
             if token == "4aoedpde123Vyeyweuo2":
@@ -1199,7 +1200,8 @@ class OpenLeadsItemsViewSet(viewsets.ModelViewSet):
                                                                     admins=AdminRegister.objects.get(admin_id=admins),
                                                                     open_leads_pk=OpenLeadsRfq.objects.get(id=open_leads_pk),
                                                                     buyer_company_code=buyer_company_code,
-                                                                    buyer_company_name=buyer_company_name
+                                                                    buyer_company_name=buyer_company_name,
+                                                                    rfq_number=rfq_number
                                                                     )
                 return Response({'status': 201, 'message': 'Open Leads Items are created'}, status=201)
             else:
@@ -1209,8 +1211,8 @@ class OpenLeadsItemsViewSet(viewsets.ModelViewSet):
 
 
 class OpenLeadsTermsDescriptionViewSet(viewsets.ModelViewSet):
-    queryset = OpenLeadsItems.objects.all()
-    serializer_class = OpenLeadsItemsSerializer
+    queryset = OpenLeadsTermsDescription.objects.all()
+    serializer_class = OpenLeadsTermsDescriptionSerializer
     permission_classes = ((AllowAny,))
 
     def create(self, request, *args, **kwargs):
@@ -1237,6 +1239,7 @@ class OpenLeadsTermsDescriptionViewSet(viewsets.ModelViewSet):
                                                                  buyer_company_code=buyer_company_code,
                                                                  buyer_company_name=buyer_company_name,
                                                                  buyer_pk=CreateBuyer.objects.get(id=buyer_pk)
+
                                                                  )
 
                 return Response({'status': 201, 'message': 'Open Leads Terms and Descriptions are created'}, status=201)
@@ -1544,8 +1547,7 @@ class OpenLeadsVendorPublishItemsViewSet(viewsets.ModelViewSet):
         itemsarray=request.data['itemsarray']
         updated_by=request.data.get('updated_by',None)
         vendor_open_leads_pk=request.data.get('vendor_open_leads_pk',None)
-        buyer_company_code=request.data.get('buyer_company_code',None)
-        buyer_company_name=request.data.get('buyer_company_name',None)
+        vendor_code=request.data.get('vendor_code',None)
         try:
 
             for i in range(0,len(itemsarray)):
@@ -1562,8 +1564,7 @@ class OpenLeadsVendorPublishItemsViewSet(viewsets.ModelViewSet):
                                                                 updated_by=SelfRegistration.objects.get(id=updated_by),
                                                                 created_by=updated_by,
                                                                 vendor_open_leads_pk=OpenLeadsVendorPublishRfq.objects.get(id=vendor_open_leads_pk),
-                                                                buyer_company_code=buyer_company_code,
-                                                                buyer_company_name=buyer_company_name
+                                                                vendor_code=vendor_code
                                                                 )
             return Response({'status': 201, 'message': 'Open Leads Vendor Items are created'}, status=201)
 
@@ -1581,8 +1582,7 @@ class OpenLeadsVendorPublishTermsDescriptionViewSet(viewsets.ModelViewSet):
         vendor_open_leads_pk = request.data.get('open_leads_pk', None)
         updated_by=request.data.get('updated_by',None)
         vendor_rfq_type=request.data.get('vendor_rfq_type',None)
-        buyer_company_code = request.data.get('buyer_company_code', None)
-        buyer_company_name = request.data.get('buyer_company_name', None)
+        vendor_code = request.data.get('vendor_code', None)
         try:
             for i in range(0, len(dictsqueries)):
                 for keys in dictsqueries[i]:
@@ -1595,8 +1595,7 @@ class OpenLeadsVendorPublishTermsDescriptionViewSet(viewsets.ModelViewSet):
                                                                   vendor_rfq_type=vendor_rfq_type,
                                                                   updated_by=SelfRegistration.objects.get(id=updated_by),
                                                                   created_by=updated_by,
-                                                                  buyer_company_code=buyer_company_code,
-                                                                  buyer_company_name=buyer_company_name
+                                                                  vendor_code=vendor_code
                                                                    )
             return Response({'status': 201, 'message': 'Open Leads Vendor Terms and Descriptions are created'}, status=201)
 
@@ -1851,34 +1850,36 @@ class OpenLeadsAwardsViewSet(viewsets.ModelViewSet):
 def price_analysis_admin(request):
     data = request.data
     resarray = []
+    token = data['token']
     rfq_number = data['rfq_number']
-    # vendor_code = data['vendor_code']
-    admins=data['admins']
     buyerarray=[]
     vendor_code = data['vendor_code']
     try:
-        buyeropenleads=OpenLeadsItems.objects.filter(admins=admins).values().order_by('id')
-        if len(buyeropenleads)>0:
-            for i in range(0,len(buyeropenleads)):
-                buyerarray.append({'item_code':buyeropenleads[i].get('item_code'),
-                                   'item_name':buyeropenleads[i].get('item_name'),
-                                   'item_description':buyeropenleads[i].get('item_description'),
-                                   'uom':buyeropenleads[i].get('uom'),
-                                   'quantity':buyeropenleads[i].get('quantity'),
-                                   'item_type':buyeropenleads[i].get('item_type')
-                                   })
-                vpdetails = OpenLeadsVendorPublishItems.objects.filter(vendor_rfq_number=rfq_number,buyer_company_code__in=vendor_code,
-                                                                       vendor_item_code=buyeropenleads[i].get('item_code')).values().order_by('id')
-                print(vpdetails)
+        if token=="4aoedpde123Vyeyweuo2":
+            buyeropenleads=OpenLeadsItems.objects.filter(rfq_number=rfq_number).values().order_by('id')
+            if len(buyeropenleads)>0:
+                for i in range(0,len(buyeropenleads)):
+                    buyerarray.append({'item_code':buyeropenleads[i].get('item_code'),
+                                       'item_name':buyeropenleads[i].get('item_name'),
+                                       'item_description':buyeropenleads[i].get('item_description'),
+                                       'uom':buyeropenleads[i].get('uom'),
+                                       'quantity':buyeropenleads[i].get('quantity'),
+                                       'item_type':buyeropenleads[i].get('item_type')
+                                       })
+                    vpdetails = OpenLeadsVendorPublishItems.objects.filter(vendor_rfq_number=rfq_number,vendor_code__in=vendor_code,
+                                                                           vendor_item_code=buyeropenleads[i].get('item_code')).values().order_by('vendor_code')
+                    print(len(vpdetails))
 
-                for j in range(0, len(vpdetails)):
-                    # resarray[i].setdefault('ccode' + str(j), vpdetails[j].get('vendor_code'))
-                    buyerarray[i].setdefault('rate' + str(j), vpdetails[j].get('vendor_rate'))
-                    buyerarray[i].setdefault('tax' + str(j), vpdetails[j].get('vendor_tax'))
-                    buyerarray[i].setdefault('discount' + str(j), vpdetails[j].get('vendor_discount'))
-                    # resarray[i].setdefault('totalcost' + str(j), vpdetails[j].get('vendor_final_amount'))
-                    buyerarray[i].setdefault('total_all_cost' + str(j), vpdetails[j].get('vendor_total_amount'))
-                print("---------------------------------")
-            return Response({'status': 200, 'message': 'price analysis','data':buyerarray},status=200)
+                    for j in range(0, len(vpdetails)):
+                        buyerarray[i].setdefault('ccode' + str(j), vpdetails[j].get('vendor_code'))
+                        buyerarray[i].setdefault('rate' + str(j), vpdetails[j].get('vendor_rate'))
+                        buyerarray[i].setdefault('tax' + str(j), vpdetails[j].get('vendor_tax'))
+                        buyerarray[i].setdefault('discount' + str(j), vpdetails[j].get('vendor_discount'))
+                        # resarray[i].setdefault('totalcost' + str(j), vpdetails[j].get('vendor_final_amount'))
+                        buyerarray[i].setdefault('total_all_cost' + str(j), vpdetails[j].get('vendor_total_amount'))
+                    print("---------------------------------")
+                return Response({'status': 200, 'message': 'price analysis','data':buyerarray},status=200)
+        else:
+            return Response({'status': 400, 'message': 'bad request'}, status=400)
     except Exception as e:
         return Response({'status': 500, 'message': str(e)}, status=500)

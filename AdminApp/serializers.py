@@ -113,10 +113,10 @@ class OpenLeadsTermsDescriptionSerializer(serializers.ModelSerializer):
 
 
 
-class OpenLeadsPublishSerializer(serializers.ModelSerializer):
-    class Meta:
-        model=OpenLeadsPublish
-        fields = '__all__'
+# class OpenLeadsPublishSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model=OpenLeadsPublish
+#         fields = '__all__'
 
 
 class BuyerProductDetailsAdminSerializer(serializers.ModelSerializer):

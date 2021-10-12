@@ -1778,3 +1778,62 @@ def fetch_vendor_open_leads_by_pk(request):
 
     except Exception as e:
         return Response({'status': 500, 'message': str(e)}, status=500)
+
+
+
+class OpenLeadsAwardsViewSet(viewsets.ModelViewSet):
+    queryset = OpenLeadsAwards.objects.all()
+    serializer_class = OpenLeadsAwardsSerializer
+    permission_classes = ((AllowAny,))
+
+    def create(self, request, *args, **kwargs):
+        token=request.data.get('token',None)
+        adminid=request.data.get('adminid',None)
+        vendorpk=request.data.get('vendorpk',None)
+        company_code=request.data.get('company_code',None)
+        order_quantity=request.data.get('order_quantity',None)
+        pcode=[]
+        pname=[]
+        pdesc=[]
+        try:
+            if token=="4aoedpde123Vyeyweuo2":
+                vendorobj=OpenLeadsVendorPublishRfq.objects.filter(id=vendorpk).values()
+                if len(vendorobj)>0:
+                    openleadsitems=OpenLeadsVendorPublishItems.objects.filter(vendor_open_leads_pk=vendorobj[0].get('id')).values()
+                    if len(openleadsitems)>0:
+                        basicoj = BasicCompanyDetails.objects.filter(company_code=company_code).values()
+                        if len(basicoj)>0:
+                            for i in range(0,len(openleadsitems)):
+                                print(vendorobj[0].get('vendor_rfq_number'),'ok')
+                                print(openleadsitems[i].get('vendor_item_code'),'--------------------------------')
+                                pcode.append(openleadsitems[i].get('vendor_item_code'))
+                                pname.append(openleadsitems[i].get('vendor_item_name'))
+                                pdesc.append(openleadsitems[i].get('vendor_item_description'))
+
+                            awardobj=OpenLeadsAwards.objects.create(rfq_number=vendorobj[0].get('vendor_rfq_number'),
+                                                                    company_code=[company_code],
+                                                                    company_name=[basicoj[0].get('company_name')],
+                                                                    buyer_bid_quantity=order_quantity,
+                                                                    product_code=pcode,
+                                                                    product_name=pname,
+                                                                    product_description=pdesc,
+                                                                    admins=AdminRegister.objects.get(admin_id=adminid)
+                                                                    )
+                            return Response({'status': 200, 'message': 'Open Leads Award Created'},
+                                            status=200)
+                        else:
+                            pass
+
+
+                    else:
+                        return Response({'status': 204, 'message': 'Open Leads Items are not present'},
+                                        status=204)
+                else:
+                    return Response({'status': 204, 'message': 'Rfq Published details are not present Present'}, status=204)
+            else:
+                return Response({'status': 400, 'message': 'Bad Request'}, status=400)
+
+
+        except Exception as e:
+            return Response({'status': 500, 'message': str(e)}, status=500)
+

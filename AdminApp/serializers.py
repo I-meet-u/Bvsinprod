@@ -145,3 +145,10 @@ class OpenLeadsVendorPublishTermsDescriptionSerializer(serializers.ModelSerializ
     class Meta:
         model=OpenLeadsVendorPublishTermsDescription
         fields = '__all__'
+
+
+
+class OpenLeadsAwardsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model=OpenLeadsAwards
+        fields = '__all__'

@@ -339,3 +339,31 @@ class OpenLeadsVendorPublishTermsDescription(models.Model):
 
     class Meta:
         db_table = "OpenLeadsVendorPublishTermsDescription"
+
+
+class OpenLeadsAwards(models.Model):
+    rfq_number = models.CharField(max_length=50)
+    company_code=ArrayField(models.CharField(max_length=200),null=True,blank=True)
+    company_name=ArrayField(models.CharField(max_length=200),null=True,blank=True)
+    buyer_bid_quantity = models.CharField(max_length=100, null=True, blank=True)
+    totalamount=models.CharField(max_length=200, null=True, blank=True)
+    rfq_title = models.CharField(max_length=100, null=True, blank=True)
+    rfq_status = models.CharField(max_length=100, null=True, default="Pending", blank=True)
+    product_code=ArrayField(models.CharField(max_length=200),null=True,blank=True)
+    product_name = ArrayField(models.CharField(max_length=200),null=True,blank=True)
+    daterange = models.DateField(null=True,blank=True)
+    product_description = ArrayField(models.CharField(max_length=800),null=True,blank=True)
+    awarded_date = models.DateField(auto_now=True, null=True, blank=True)
+    publish_date=models.CharField(max_length=100,null=True, blank=True)
+    deadline_date=models.CharField(max_length=100,null=True, blank=True)
+    # awardstatus=models.CharField(max_length=100,null=True,blank=True,default='Pending')
+    created_on = models.DateTimeField(auto_now_add=True)
+    updated_on = models.DateTimeField(auto_now=True)
+    created_by = models.BigIntegerField(null=True,blank=True)
+    updated_by = models.ForeignKey(SelfRegistration, on_delete=models.CASCADE,null=True,blank=True)
+    admins = models.ForeignKey(AdminRegister, on_delete=models.CASCADE,null=True,blank=True)
+    postatus=models.CharField(max_length=100,default='Pending',blank=True,null=True)
+    rfq_type=models.CharField(max_length=100,null=True,blank=True)
+
+    class Meta:
+        db_table = "OpenLeadsAwards"

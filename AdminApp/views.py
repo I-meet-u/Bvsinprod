@@ -1847,6 +1847,7 @@ class OpenLeadsAwardsViewSet(viewsets.ModelViewSet):
 
 
 @api_view(['post'])
+@permission_classes((AllowAny,))
 def price_analysis_admin(request):
     data = request.data
     resarray = []

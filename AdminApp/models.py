@@ -263,6 +263,7 @@ class BuyerProductDetailsAdmin(models.Model):
     updated_on = models.DateTimeField(auto_now=True)
     created_by = models.BigIntegerField(null=True,blank=True)
     admins = models.ForeignKey(AdminRegister, on_delete=models.CASCADE)
+    rfq_number=models.CharField(max_length=100,null=True,blank=True)
     history = HistoricalRecords()
 
     class Meta:

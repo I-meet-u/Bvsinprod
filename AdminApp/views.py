@@ -1837,3 +1837,25 @@ class OpenLeadsAwardsViewSet(viewsets.ModelViewSet):
         except Exception as e:
             return Response({'status': 500, 'message': str(e)}, status=500)
 
+
+@api_view(['post'])
+def price_analysis_admin(request):
+    data = request.data
+    resarray = []
+    rfq_number = data['rfq_number']
+    vendor_code = data['vendor_code']
+    admins=data['admins']
+    buyerarray=[]
+    try:
+        buyeropenleads=BuyerProductDetailsAdmin.objects.filter(admins=admins).values()
+        if len(buyeropenleads)>0:
+            for i in range(0,len(buyeropenleads)):
+                buyerarray.append({'item_code':buyeropenleads[i].get('item_code'),
+                                   'item_name':buyeropenleads[i].get('item_name'),
+                                   'item_description':buyeropenleads[i].get('item_description')
+
+
+
+                                   })
+    except Exception as e:
+        return Response({'status': 500, 'message': str(e)}, status=500)

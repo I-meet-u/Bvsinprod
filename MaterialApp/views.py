@@ -1684,13 +1684,21 @@ def landing_page_bidding_create(request):
 
 @api_view(['post'])
 def get_landing_page_bidding_by_userid_buyer_list(request):
+    i=0;
     try:
         getlistbyuserid=LandingPageBidding.objects.filter(updated_by_id=request.data['userid']).values().order_by('id')
-        if len(getlistbyuserid)>0:
-            return Response({'status': 200, 'message': 'Buyer Post rfq list by userid','data':getlistbyuserid}, status=status.HTTP_200_OK)
-        else:
-            return Response({'status': 204, 'message': 'Buyer Post rfq list is not present'},
-                            status=status.HTTP_204_NO_CONTENT)
+        while i<len(getlistbyuserid):
+            vendorproductdetails=VendorProduct_BasicDetails.objects.filter(vendor_product_id=getlistbyuserid[i].get('vendor_product_pk')).values()
+            if vendorproductdetails:
+                getlistbyuserid[i].setdefault('final_selling_price',vendorproductdetails[0].get('final_selling_price'))
+                getlistbyuserid[i].setdefault('item_description',vendorproductdetails[0].get('item_description'))
+                getlistbyuserid[i].setdefault('item_type',vendorproductdetails[0].get('item_type'))
+                getlistbyuserid[i].setdefault('unit_price',vendorproductdetails[0].get('unit_price'))
+                getlistbyuserid[i].setdefault('uom',vendorproductdetails[0].get('uom'))
+            i=i+1
+
+        return Response({'status': 200, 'message': 'Buyer Post rfq list by userid', 'data': getlistbyuserid},
+                        status=status.HTTP_200_OK)
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)
 

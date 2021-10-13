@@ -1825,31 +1825,39 @@ def landing_page_listing_leads_pending_list(request):
         openleadslistobj=LandingPageBidding.objects.filter(vendor_user_id=userid,status='Pending').values().order_by('id')
         if len(openleadslistobj)>0:
             for i in range(0,len(openleadslistobj)):
-                print(openleadslistobj[i].get('deadline_date'),'pok')
+                # print(len(openleadslistobj),'leeeeeeeeeeeeeeeeeeeeeeee')
+                # print(openleadslistobj[i].get('deadline_date'),'pok')
                 deadlinedateval = datetime.strptime(openleadslistobj[i].get('deadline_date'), '%Y-%m-%d')
                 deadlinedateconvertion = datetime.date(deadlinedateval)
                 todaydate = date.today()
                 if deadlinedateconvertion > todaydate:
                     print('yes')
-                    basicobj=BasicCompanyDetails.objects.get(updated_by_id=openleadslistobj[i].get('updated_by_id'))
-                    vendorproductarray.append({'id':openleadslistobj[i].get('id'),
-                                               'publish_date':openleadslistobj[i].get('publish_date'),
-                                               'deadline_date': openleadslistobj[i].get('deadline_date'),
-                                               'delivery_terms': openleadslistobj[i].get('delivery_terms'),
-                                               'packaging_forwarding': openleadslistobj[i].get('packaging_forwarding'),
-                                               'priority': openleadslistobj[i].get('priority'),
-                                               'payment_terms': openleadslistobj[i].get('payment_terms'),
-                                               'quantity': openleadslistobj[i].get('quantity'),
-                                               'vendor_product_pk': openleadslistobj[i].get('vendor_product_pk'),
-                                               'item_type': openleadslistobj[i].get('item_type'),
-                                               'vendors_code': basicobj.company_code,
-                                               'created_by': openleadslistobj[i].get('created_by'),
-                                               'updated_by': openleadslistobj[i].get('updated_by'),
-                                               'company_name': basicobj.company_name,
-                                               'status': openleadslistobj[i].get('status'),
-                                               'product_name': openleadslistobj[i].get('product_name'),
-                                               'vendor_user_id': openleadslistobj[i].get('vendor_user_id')
-                                               })
+                    # print(openleadslistobj[i].get('vendor_product_pk'),'ok')
+                    vendorobj=VendorProduct_BasicDetails.objects.filter(vendor_product_id=openleadslistobj[i].get('vendor_product_pk')).values()
+                    if len(vendorobj)>0:
+                        basicobj=BasicCompanyDetails.objects.get(updated_by_id=openleadslistobj[i].get('updated_by_id'))
+                        vendorproductarray.append({'id':openleadslistobj[i].get('id'),
+                                                   'publish_date':openleadslistobj[i].get('publish_date'),
+                                                   'deadline_date': openleadslistobj[i].get('deadline_date'),
+                                                   'delivery_terms': openleadslistobj[i].get('delivery_terms'),
+                                                   'packaging_forwarding': openleadslistobj[i].get('packaging_forwarding'),
+                                                   'priority': openleadslistobj[i].get('priority'),
+                                                   'payment_terms': openleadslistobj[i].get('payment_terms'),
+                                                   'quantity': openleadslistobj[i].get('quantity'),
+                                                   'vendor_product_pk': openleadslistobj[i].get('vendor_product_pk'),
+                                                   'item_type': openleadslistobj[i].get('item_type'),
+                                                   'vendors_code': basicobj.company_code,
+                                                   'created_by': openleadslistobj[i].get('created_by'),
+                                                   'updated_by': openleadslistobj[i].get('updated_by'),
+                                                   'company_name': basicobj.company_name,
+                                                   'status': openleadslistobj[i].get('status'),
+                                                   'product_name': openleadslistobj[i].get('product_name'),
+                                                   'vendor_user_id': openleadslistobj[i].get('vendor_user_id'),
+                                                   'product_description':vendorobj[0].get('item_description'),
+                                                   'uom':vendorobj[0].get('uom')
+                                                   })
+                    else:
+                        pass
                 else:
                     print('deadline is expired')
 

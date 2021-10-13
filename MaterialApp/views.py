@@ -12,7 +12,7 @@ from rest_framework.parsers import MultiPartParser
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 
-from RegistrationApp.models import SelfRegistration, IndustrialInfo, BillingAddress
+from RegistrationApp.models import SelfRegistration, IndustrialInfo, BillingAddress, BasicCompanyDetails
 from .models import *
 import sib_api_v3_sdk
 from sib_api_v3_sdk.rest import ApiException
@@ -1556,12 +1556,12 @@ def get_vendor_details_by_sub_category(request):
     try:
         vendorobj = VendorProduct_BasicDetails.objects.filter(sub_category__icontains=subcategoryname).distinct('sub_category','company_code').values()
         for i in range(0,len(vendorobj)):
-            basicobj=BasicCompanyDetails.objects.get(company_code=vendorobj[i].get('company_code'))
-            regobj=SelfRegistration.objects.filter(id=basicobj.updated_by_id).values()
+            basicobj=BasicCompanyDetails.objects.filter(company_code=vendorobj[i].get('company_code')).values()
+            regobj=SelfRegistration.objects.filter(id=basicobj[0].get('updated_by_id')).values()
             industryobj=IndustrialInfo.objects.get(company_code=vendorobj[i].get('company_code'))
             billobj=BillingAddress.objects.filter(company_code_id=vendorobj[i].get('company_code')).values()
             vendordetails.append({
-                'company_name':basicobj.company_name,
+                'company_name':basicobj[0].get('company_name'),
                 'name': regobj[0].get('contact_person'),
                 'email':regobj[0].get('username'),
                 'phone_number':regobj[0].get('phone_number'),

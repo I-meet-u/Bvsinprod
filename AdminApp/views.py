@@ -167,32 +167,18 @@ def registration_list(request):
                     if industry_info:
                         industry_hierarchy = IndustrialHierarchy.objects.filter(updated_by=x).values()
                         if industry_hierarchy:
-                            bankdetails = BankDetails.objects.filter(updated_by=x).values()
-                            if bankdetails:
-                                legalobj = LegalDocuments.objects.filter(updated_by=x).values()
-                                if legalobj:
-                                    emptydata.append({"id":x ,
-                                            "company_code":basicobj[0].get('company_code'),
-                                            "company_name":basicobj[0].get('company_name'),
-                                            "username": regobj[i].get('contact_person'),
-                                            "user_type": regobj[i].get('user_type'),
-                                            "email": regobj[i].get('username'),
-                                            "phone_number": regobj[i].get('phone_number'),
-                                            "nature_of_business": regobj[i].get('nature_of_business'),
-                                            "business_type": regobj[i].get('business_to_serve'),
-                                            "registration_status": "Registration completed"})
-                                else:
-                                    emptydata.append({"id": x,
-                                                      "company_code": basicobj[0].get('company_code'),
-                                                      "company_name": basicobj[0].get('company_name'),
-                                                      "username": regobj[i].get('contact_person'),
-                                                      "user_type": regobj[i].get('user_type'),
-                                                      "email": regobj[i].get('username'),
-                                                      "phone_number": regobj[i].get('phone_number'),
-                                                      "nature_of_business": regobj[i].get('nature_of_business'),
-                                                      "business_type": regobj[i].get('business_to_serve'),
-                                                      "registration_status": "Bank Details"})
-
+                            legalobj = LegalDocuments.objects.filter(updated_by=x).values()
+                            if legalobj:
+                                emptydata.append({"id": x,
+                                                  "company_code": basicobj[0].get('company_code'),
+                                                  "company_name": basicobj[0].get('company_name'),
+                                                  "username": regobj[i].get('contact_person'),
+                                                  "user_type": regobj[i].get('user_type'),
+                                                  "email": regobj[i].get('username'),
+                                                  "phone_number": regobj[i].get('phone_number'),
+                                                  "nature_of_business": regobj[i].get('nature_of_business'),
+                                                  "business_type": regobj[i].get('business_to_serve'),
+                                                  "registration_status": "Registration completed"})
                             else:
                                 emptydata.append({"id": x,
                                                   "company_code": basicobj[0].get('company_code'),
@@ -204,7 +190,6 @@ def registration_list(request):
                                                   "nature_of_business": regobj[i].get('nature_of_business'),
                                                   "business_type": regobj[i].get('business_to_serve'),
                                                   "registration_status": "Industry hierarchy"})
-
                         else:
                             emptydata.append({"id": x,
                                               "company_code": basicobj[0].get('company_code'),
@@ -216,10 +201,6 @@ def registration_list(request):
                                               "nature_of_business": regobj[i].get('nature_of_business'),
                                               "business_type": regobj[i].get('business_to_serve'),
                                               "registration_status": "Seller info"})
-
-
-
-
                     else:
                         emptydata.append({"id": x,
                                           "company_code": basicobj[0].get('company_code'),
@@ -1882,5 +1863,20 @@ def price_analysis_admin(request):
                 return Response({'status': 200, 'message': 'price analysis','data':buyerarray},status=200)
         else:
             return Response({'status': 400, 'message': 'bad request'}, status=400)
+    except Exception as e:
+        return Response({'status': 500, 'message': str(e)}, status=500)
+
+
+@api_view(['post'])
+@permission_classes((AllowAny,))
+def get_buyer_name_by_ccode(request):
+    data=request.data
+    try:
+        if data['token']=="vsinadmindb":
+            buyerobj=CreateBuyer.objects.filter(company_code=data['buyercode']).values('company_name')
+            if len(buyerobj)>0:
+                return Response({'status': 200, 'message': 'Success', 'data': buyerobj}, status=200)
+            else:
+                return Response({'status': 204, 'message': 'Not Present'}, status=204)
     except Exception as e:
         return Response({'status': 500, 'message': str(e)}, status=500)

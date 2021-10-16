@@ -2283,16 +2283,19 @@ class LandingPageBiddingRFQ_SelectVendorSerializerview(viewsets.ModelViewSet):
     serializer_class = LandingPageBiddingRFQ_SelectVendorSerializer
 
     def create(self, request, *args, **kwargs):
-        vendor_code=request.data.get('vendor_code',None)
         LandingPageBiddingid=request.data.get('LandingPageBiddingid',None)
         vendor_product_pk=request.data.get('vendor_product_pk',None)
         try:
-            for i in range(0,len(vendor_code)):
-                print(vendor_code[i])
-                landingobj=landingpagelistingleadsselectvendors.objects.create(LandingPageBiddingid=LandingPageBidding.objects.get(id=LandingPageBiddingid),
-                                                                               selectedvendorcode=vendor_code[i],
-                                                                               vendor_product_pk=vendor_product_pk
-                                                                               )
+            landingobj=LandingPageBidding.objects.filter(id=LandingPageBiddingid).values()
+            print(landingobj[0].get('vendor_product_pk'))
+            vendorobj=VendorProduct_BasicDetails.objects.filter(vendor_product_id=landingobj[0].get('vendor_product_pk')).values()
+            print(vendorobj[0].get('sub_category'))
+            vendorproductdata=VendorProduct_BasicDetails.objects.filter(sub_category__icontains=vendorobj[0].get('sub_category')).values().order_by('vendor_product_id')
+            for i in range(0,len(vendorproductdata)):
+                selectlanding=landingpagelistingleadsselectvendors.objects.create(selectedvendorcode=vendorproductdata[i].get('company_code'),
+                                                                                  vendor_product_pk=vendor_product_pk,
+                                                                                  LandingPageBiddingid=LandingPageBidding.objects.get(id=LandingPageBiddingid)
+                                                                                  )
 
             return Response({'status':201,'message':'Listing Leads Created'},status=201)
 

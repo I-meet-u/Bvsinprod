@@ -1634,6 +1634,7 @@ def landing_page_bidding_create(request):
                 print(useridcode,'sfsd')
                 basic = BasicCompanyDetails.objects.get(updated_by_id=useridcode)
                 vendorcodearray.append(basic.company_code)
+                print(vendorcodearray,'ok')
                 company_namearray.append(basic.company_name)
                 print(basic.updated_by_id)
                 regobj = SelfRegistration.objects.get(id=basic.updated_by_id)
@@ -1684,7 +1685,7 @@ def landing_page_bidding_create(request):
 
 @api_view(['post'])
 def get_landing_page_bidding_by_userid_buyer_list(request):
-    i=0;
+    i=0
     try:
         getlistbyuserid=LandingPageBidding.objects.filter(updated_by_id=request.data['userid']).values().order_by('id')
         while i<len(getlistbyuserid):
@@ -1754,14 +1755,14 @@ def get_landing_page_bidding_by_userid_vendors_list(request):
                                                           'quantity': landingobj[i].get('quantity'),
                                                           'item_code': vendorproductobj.item_code,
                                                           'item_type': landingobj[i].get('item_type'),
-                                                          'bill_city': billobj[0].get('bill_city')
+                                                          'bill_city': ""
 
                                                           })
 
                 return Response({'status': 200, 'message': 'Vendor Post rfq list by userid','data':vendorlandingpagebidarray},
                                 status=status.HTTP_200_OK)
             else:
-                return Response({'status': 204, 'message': 'Vendor Post rfq is not present', 'data': vendorlandingpagebidarray},
+                return Response({'status': 204, 'message': 'Vendor Post rfq is not present'},
                                 status=status.HTTP_204_NO_CONTENT)
         else:
 

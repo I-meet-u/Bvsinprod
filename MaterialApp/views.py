@@ -2281,3 +2281,21 @@ def get_buyer_award_details_by_userid(request):
 class LandingPageBiddingRFQ_SelectVendorSerializerview(viewsets.ModelViewSet):
     queryset = landingpagelistingleadsselectvendors.objects.all()
     serializer_class = LandingPageBiddingRFQ_SelectVendorSerializer
+
+    def create(self, request, *args, **kwargs):
+        vendor_code=request.data.get('vendor_code',None)
+        LandingPageBiddingid=request.data.get('LandingPageBiddingid',None)
+        vendor_product_pk=request.data.get('vendor_product_pk',None)
+        try:
+            for i in range(0,len(vendor_code)):
+                print(vendor_code[i])
+                landingobj=landingpagelistingleadsselectvendors.objects.create(LandingPageBiddingid=LandingPageBidding.objects.get(id=LandingPageBiddingid),
+                                                                               selectedvendorcode=vendor_code[i],
+                                                                               vendor_product_pk=vendor_product_pk
+                                                                               )
+
+            return Response({'status':201,'message':'Listing Leads Created'},status=201)
+
+
+        except Exception as e:
+            return Response({'status': 500, 'error': str(e)}, status=500)

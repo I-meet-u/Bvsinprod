@@ -322,6 +322,8 @@ class landingpagelistingleadsselectvendors(models.Model):
     selectedvendorcode=models.CharField(max_length=100,null=True,blank=True)
     vendor_product_pk=models.BigIntegerField()
     listingstatus=models.CharField(max_length=100,default='Pending')
+    created_on = models.DateTimeField(auto_now_add=True, null=True,blank=True)
+    updated_on = models.DateTimeField(auto_now=True, null=True,blank=True)
     class Meta:
         db_table="LandingPageBiddingSelectedVendors"
 

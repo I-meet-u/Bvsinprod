@@ -2309,31 +2309,35 @@ def pending_list_listing_leads(request):
     userid=data['userid']
     landingarray=[]
     try:
-        landingpageobj=LandingPageBidding.objects.filter(vendor_user_id=userid,status='Pending').values()
-        if len(landingpageobj)>0:
-            for i in range(0,len(landingpageobj)):
-                basicobj=BasicCompanyDetails.objects.filter(updated_by_id=landingpageobj[i].get('updated_by_id')).values()
+        landingpageobj = LandingPageBidding.objects.filter(vendor_user_id=userid).values()
+
+        if len(landingpageobj) > 0:
+            basicobj = BasicCompanyDetails.objects.filter(updated_by_id=landingpageobj[0].get('updated_by_id')).values()
+            landingvendors = landingpagelistingleadsselectvendors.objects.filter(selectedvendorcode=basicobj[0].get('company_code'),listingstatus='Pending').values()
+            for i in range(0,len(landingvendors)):
+                landingdata=LandingPageBidding.objects.filter(id=landingvendors[i].get('LandingPageBiddingid_id')).values()
+                basicobj = BasicCompanyDetails.objects.filter(updated_by_id=landingdata[0].get('updated_by_id')).values().order_by('company_code')
+                billingobj=BillingAddress.objects.filter(updated_by_id=basicobj[0].get('updated_by_id')).values().order_by('id')
+                vendorobj=VendorProduct_BasicDetails.objects.filter(vendor_product_id=landingdata[0].get('vendor_product_pk')).values()
                 landingarray.append({'company_code':basicobj[0].get('company_code'),
-                                     'company_name':basicobj[0].get('company_name'),
-                                     'publish_date':landingpageobj[i].get('publish_date'),
-                                     'deadline_date':landingpageobj[i].get('deadline_date'),
-                                     'delivery_terms':landingpageobj[i].get('delivery_terms'),
-                                     'packaging_forwarding':landingpageobj[i].get('packaging_forwarding'),
-                                     'priority':landingpageobj[i].get('priority'),
-                                     'payment_terms':landingpageobj[i].get('payment_terms'),
-                                     'quantity':landingpageobj[i].get('quantity'),
-                                     'vendor_product_pk':landingpageobj[i].get('vendor_product_pk'),
-                                     'item_type':landingpageobj[i].get('item_type'),
-                                     'status':landingpageobj[i].get('status'),
-                                     'product_name':landingpageobj[i].get('product_name'),
-                                     'vendor_user_id':landingpageobj[i].get('vendor_user_id'),
-                                     'landing_page_pk':landingpageobj[i].get('id')
+                                     'company_name': basicobj[0].get('company_name'),
+                                     'city':billingobj[0].get('bill_city'),
+                                     'item_name':vendorobj[0].get('item_name'),
+                                     'item_description': vendorobj[0].get('item_description'),
+                                     'uom':vendorobj[0].get('uom'),
+                                     'quantity':landingdata[0].get('quantity'),
+                                     'publish_date': landingdata[0].get('publish_date'),
+                                     'deadline_date': landingdata[0].get('deadline_date'),
+                                     'vendor_user_id': landingdata[0].get('vendor_user_id'),
+                                     'landing_page_pk': landingdata[0].get('id')
+
+
+
 
                                      })
             return Response({'status': 200, 'message': 'Listing Leads List','data':landingarray}, status=200)
         else:
-            return Response({'status': 204, 'message': 'Not Present'},
-                            status=status.HTTP_204_NO_CONTENT)
+            return Response({'status': 204, 'message': 'Not Present'},status=status.HTTP_204_NO_CONTENT)
 
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)

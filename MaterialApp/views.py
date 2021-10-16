@@ -1881,7 +1881,7 @@ def update_landing_page_status_to_decline(request):
             if landingget.status=='Pending':
                 landingget.status='Reject'
                 landingget.save()
-                landingobjtotal = LandingPageBidding.objects.filter(vendor_user_id=userid).values().order_by('id')
+                landingobjtotal = LandingPageBidding.objects.filter(vendor_user_id=userid,status='Reject').values().order_by('id')
 
                 return Response({'status': 200, 'message': 'Rejected','data':landingobjtotal},status=200)
             elif landingget.status=='Reject':

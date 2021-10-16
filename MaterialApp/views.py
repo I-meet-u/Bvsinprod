@@ -1672,9 +1672,12 @@ def landing_page_bidding_create(request):
                                                                       vendor_user_id=vendor_user_id
 
                                                                       )
+            data={
+                'id':landingpagebiddingobj.id
+            }
 
 
-            return Response({'status': 201, 'message': 'Post RFQ'},status=status.HTTP_201_CREATED)
+            return Response({'status': 201, 'message': 'Post RFQ','data':data},status=status.HTTP_201_CREATED)
         else:
             return Response({'status': 204, 'message': 'Product Name is not present'}, status=status.HTTP_204_NO_CONTENT)
 

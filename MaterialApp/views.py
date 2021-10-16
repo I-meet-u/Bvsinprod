@@ -2330,10 +2330,6 @@ def pending_list_listing_leads(request):
                                      'deadline_date': landingdata[0].get('deadline_date'),
                                      'vendor_user_id': landingdata[0].get('vendor_user_id'),
                                      'landing_page_pk': landingdata[0].get('id')
-
-
-
-
                                      })
             return Response({'status': 200, 'message': 'Listing Leads List','data':landingarray}, status=200)
         else:

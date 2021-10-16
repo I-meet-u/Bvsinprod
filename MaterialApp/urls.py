@@ -66,6 +66,7 @@ urlpatterns = [
     path('get-buyer-posted-response-by-pk/',views.get_buyer_posted_response_by_pk),
     path('get-buyer-award-details-by-userid/',views.get_buyer_award_details_by_userid),
     path('pending-list-listing-leads/',views.pending_list_listing_leads),
-    path('update-status-from-pending-to-published/',views.update_status_from_pending_to_published)
+    path('update-status-from-pending-to-reject/', views.update_status_from_pending_to_reject),
+    path('update-status-from-pending-to-published/',views.update_status_from_pending_to_published),
 
 ]

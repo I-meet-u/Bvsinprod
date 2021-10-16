@@ -2339,7 +2339,7 @@ def pending_list_listing_leads(request):
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)
 
-@api_view(['put'])
+@api_view(['post'])
 def update_status_from_pending_to_reject(request):
     data=request.data
     landing_pk=data['landing_pk']

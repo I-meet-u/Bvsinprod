@@ -2338,3 +2338,22 @@ def pending_list_listing_leads(request):
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)
 
+@api_view(['put'])
+def update_status_from_pending_to_published(request):
+    data=request.data
+    landing_pk=data['landing_pk']
+    try:
+        landingobj=LandingPageBidding.objects.filter(id=landing_pk).values()
+        if len(landingobj)>0:
+            landingdata=LandingPageBidding.objects.get(id=landingobj[0].get('id'))
+            if landingdata.status=='Pending':
+                landingdata.status='Published'
+                landingdata.save()
+                return Response({'status': 200, 'message': 'Status Updated to Published'}, status=200)
+            else:
+                return Response({'status':202 , 'message': 'Status Already Published'}, status=202)
+        else:
+            return Response({'status': 204, 'message': 'Not Present'}, status=204)
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)
+

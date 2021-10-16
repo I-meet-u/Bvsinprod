@@ -65,6 +65,7 @@ urlpatterns = [
     path('getbuyerpostedresponse/',views.getbuyerpostedresponse),
     path('get-buyer-posted-response-by-pk/',views.get_buyer_posted_response_by_pk),
     path('get-buyer-award-details-by-userid/',views.get_buyer_award_details_by_userid),
+    path('pending-list-listing-leads/',views.pending_list_listing_leads)
     # path('LandingPageBiddingRFQ_SelectVendorSerializerview/',views.LandingPageBiddingRFQ_SelectVendorSerializerview)
 
 ]

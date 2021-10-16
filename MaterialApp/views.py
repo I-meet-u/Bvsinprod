@@ -2326,7 +2326,8 @@ def pending_list_listing_leads(request):
                                      'item_type':landingpageobj[i].get('item_type'),
                                      'status':landingpageobj[i].get('status'),
                                      'product_name':landingpageobj[i].get('product_name'),
-                                     'vendor_user_id':landingpageobj[i].get('vendor_user_id')
+                                     'vendor_user_id':landingpageobj[i].get('vendor_user_id'),
+                                     'landing_page_pk':landingpageobj[i].get('id')
 
                                      })
             return Response({'status': 200, 'message': 'Listing Leads List','data':landingarray}, status=200)

@@ -2273,3 +2273,7 @@ def get_buyer_award_details_by_userid(request):
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)
 
+
+class LandingPageBiddingRFQ_SelectVendorSerializerview(viewsets.ModelViewSet):
+    queryset = landingpagelistingleadsselectvendors.objects.all()
+    serializer_class = LandingPageBiddingRFQ_SelectVendorSerializer

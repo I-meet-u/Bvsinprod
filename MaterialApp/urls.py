@@ -15,6 +15,7 @@ router.register('buyer-machinary-details', views.BuyerMachinaryDetailsView)
 router.register('item-code-settings', views.ItemCodeSettingsView)
 router.register('landing-page-bidding-publish',views.LandingPageBidding_PublishViewSet)
 router.register('LandingPageBiddingRFQAwardsSerializerViewSet',views.LandingPageBiddingRFQAwardsSerializerViewSet)
+router.register('LandingPageBiddingRFQ_SelectVendorSerializerview',views.LandingPageBiddingRFQ_SelectVendorSerializerview)
 urlpatterns = [
     path('vendor-product-router-urls/',include(router.urls)),
     path('get-itemtype-based-on-userid/',views.get_itemtype_based_on_userid),
@@ -63,6 +64,7 @@ urlpatterns = [
     path('get_landing_page_bidding_by_pid/',views.get_landing_page_bidding_by_pid),
     path('getbuyerpostedresponse/',views.getbuyerpostedresponse),
     path('get-buyer-posted-response-by-pk/',views.get_buyer_posted_response_by_pk),
-    path('get-buyer-award-details-by-userid/',views.get_buyer_award_details_by_userid)
+    path('get-buyer-award-details-by-userid/',views.get_buyer_award_details_by_userid),
+    # path('LandingPageBiddingRFQ_SelectVendorSerializerview/',views.LandingPageBiddingRFQ_SelectVendorSerializerview)
 
 ]

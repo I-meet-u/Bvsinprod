@@ -88,3 +88,8 @@ class LandingPageBiddingRFQAwardsSerializer(serializers.ModelSerializer):
     class Meta:
         model = awardpostedRFQ
         fields = '__all__'
+
+class LandingPageBiddingRFQ_SelectVendorSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = landingpagelistingleadsselectvendors
+        fields = '__all__'

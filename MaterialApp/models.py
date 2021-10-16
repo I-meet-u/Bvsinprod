@@ -317,5 +317,16 @@ class awardpostedRFQ(models.Model):
         db_table="AwardpostedRFQBuyer"
 
 
+class landingpagelistingleadsselectvendors(models.Model):
+    LandingPageBiddingid=models.ForeignKey(LandingPageBidding,on_delete=models.CASCADE)
+    selectedvendorcode=models.CharField(max_length=100,null=True,blank=True)
+    vendor_product_pk=models.BigIntegerField()
+    listingstatus=models.CharField(max_length=100,default='Pending')
+    class Meta:
+        db_table="LandingPageBiddingSelectedVendors"
+
+
+
+
 
 

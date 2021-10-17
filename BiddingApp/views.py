@@ -1699,7 +1699,7 @@ def get_ccode_by_userid(request):
     data = request.data
     basicarray = []
     try:
-        basicobj = BasicCompanyDetails.objects.filter(updated_by_id=data['userid']).values('company_code')
+        basicobj = BasicCompanyDetails.objects.filter(updated_by_id=data['userid']).values()
         if len(basicobj) > 0:
             regobj = SelfRegistration.objects.get(id=data['userid'])
             basicarray.append({'company_code': basicobj[0].get('company_code'),

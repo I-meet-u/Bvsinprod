@@ -1983,6 +1983,24 @@ class LandingPageBiddingRFQAwardsSerializerViewSet(viewsets.ModelViewSet):
 
 
 @api_view(['post'])
+def getawardlistoflistingleadsnew(request):
+    data=request.data
+    res=[]
+    landing_vendor_publish_leading_data=[]
+    userid=data['userid']
+    try:
+        awardpostedRFQobj=awardpostedRFQ.objects.filter(updated_by=userid).values()
+        print(awardpostedRFQobj)
+        for i in range(len(awardpostedRFQobj)):
+            dummyvar=LandingPageBidding_Publish.objects.filter(id__in=awardpostedRFQobj[i].get('landing_page_bidding_publish_id')).values()
+
+            res = list(chain(landing_vendor_publish_leading_data, dummyvar))
+            dummyvar=[]
+        return Response({'status': 200, 'message': 'Ok', 'data': res}, status=200)
+    except Exception as e:
+        return Response({'status': 500, 'message': str(e)}, status=500)
+
+@api_view(['post'])
 def getbuyerpostedresponse(request):
     data=request.data
     userid=data['userid']

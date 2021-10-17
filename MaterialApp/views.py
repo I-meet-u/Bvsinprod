@@ -2309,11 +2309,12 @@ def pending_list_listing_leads(request):
     userid=data['userid']
     landingarray=[]
     try:
-        landingpageobj = LandingPageBidding.objects.filter(vendor_user_id=userid).values()
-
-        if len(landingpageobj) > 0:
-            basicobj = BasicCompanyDetails.objects.filter(updated_by_id=landingpageobj[0].get('updated_by_id')).values()
-            landingvendors = landingpagelistingleadsselectvendors.objects.filter(selectedvendorcode=basicobj[0].get('company_code'),listingstatus='Pending').values()
+        # landingpageobj = LandingPageBidding.objects.filter(vendor_user_id=userid).values()
+        # print("len==",len(landingpageobj))
+        #
+        # if len(landingpageobj) > 0:
+            basicobj1 = BasicCompanyDetails.objects.filter(updated_by_id=userid).values()
+            landingvendors = landingpagelistingleadsselectvendors.objects.filter(selectedvendorcode=basicobj1[0].get('company_code'),listingstatus='Pending').values()
             for i in range(0,len(landingvendors)):
                 landingdata=LandingPageBidding.objects.filter(id=landingvendors[i].get('LandingPageBiddingid_id')).values()
                 basicobj = BasicCompanyDetails.objects.filter(updated_by_id=landingdata[0].get('updated_by_id')).values().order_by('company_code')
@@ -2333,8 +2334,8 @@ def pending_list_listing_leads(request):
                                      'landing_vendors':landingvendors[i].get('id')
                                      })
             return Response({'status': 200, 'message': 'Listing Leads List','data':landingarray}, status=200)
-        else:
-            return Response({'status': 204, 'message': 'Not Present'},status=status.HTTP_204_NO_CONTENT)
+        # else:
+        #     return Response({'status': 204, 'message': 'Not Present'},status=status.HTTP_204_NO_CONTENT)
 
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)

@@ -1703,7 +1703,8 @@ def get_ccode_by_userid(request):
         if len(basicobj) > 0:
             regobj = SelfRegistration.objects.get(id=data['userid'])
             basicarray.append({'company_code': basicobj[0].get('company_code'),
-                               'user_type': regobj.user_type
+                               'user_type': regobj.user_type,
+                               'cname':basicobj[0].get('company_name')
                                })
 
             return Response({'status': 200, 'message': 'Company Code', 'data': basicarray}, status=200)

@@ -70,6 +70,7 @@ urlpatterns = [
     path('update-status-from-pending-to-published/',views.update_status_from_pending_to_published),
     path('getawardlistoflistingleadsnew/',views.getawardlistoflistingleadsnew),
     path('landing-page-listing-leads-rejected-list/',views.landing_page_listing_leads_rejected_list),
-    path('landing-page-published-list-by-user-id/',views.landing_page_published_list_by_user_id)
+    path('landing-page-published-list-by-user-id/',views.landing_page_published_list_by_user_id),
+    path('landing-page-listing-leads-expired-list/',views.landing_page_listing_leads_expired_list),
 
 ]

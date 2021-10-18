@@ -2488,7 +2488,7 @@ def landing_page_listing_leads_rejected_list(request):
 def landing_page_published_list_by_user_id(request):
     data=request.data
     try:
-        landingpublishobj=LandingPageBidding_Publish.objects.filter(updated_by_id=data['userid']).values().order_by('listing_leads_id')
+        landingpublishobj=LandingPageBidding_Publish.objects.filter(updated_by_id=data['userid'],id=data['vendor_pk']).values().order_by('listing_leads_id')
         if len(landingpublishobj)>0:
             for i in range(0,len(landingpublishobj)):
                 landingobj=LandingPageBidding.objects.filter(id=landingpublishobj[i].get('listing_leads_id')).values('id','packaging_forwarding','payment_terms','delivery_terms').order_by('id')
@@ -2507,6 +2507,62 @@ def landing_page_published_list_by_user_id(request):
             return Response({'status':200,'message':'ok','data':landingpublishobj},status=200)
         else:
             return Response({'status': 204, 'message': 'Data Not Present'}, status=204)
+
+
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)
+
+
+@api_view(['post'])
+def landing_page_listing_leads_expired_list(request):
+    data = request.data
+    userid = data['userid']
+    vendorproductarray = []
+    try:
+        openleadslistobj = LandingPageBidding.objects.filter(vendor_user_id=userid).values().order_by(
+            'id')
+        if len(openleadslistobj) > 0:
+            for i in range(0, len(openleadslistobj)):
+                deadlinedateval = datetime.strptime(openleadslistobj[i].get('deadline_date'), '%Y-%m-%d')
+                deadlinedateconvertion = datetime.date(deadlinedateval)
+                todaydate = date.today()
+                if deadlinedateconvertion < todaydate:
+                    print('yes')
+                    vendorobj = VendorProduct_BasicDetails.objects.filter(
+                        vendor_product_id=openleadslistobj[i].get('vendor_product_pk')).values()
+                    if len(vendorobj) > 0:
+                        basicobj = BasicCompanyDetails.objects.get(
+                            updated_by_id=openleadslistobj[i].get('updated_by_id'))
+                        vendorproductarray.append({'id': openleadslistobj[i].get('id'),
+                                                   'publish_date': openleadslistobj[i].get('publish_date'),
+                                                   'deadline_date': openleadslistobj[i].get('deadline_date'),
+                                                   'delivery_terms': openleadslistobj[i].get('delivery_terms'),
+                                                   'packaging_forwarding': openleadslistobj[i].get(
+                                                       'packaging_forwarding'),
+                                                   'priority': openleadslistobj[i].get('priority'),
+                                                   'payment_terms': openleadslistobj[i].get('payment_terms'),
+                                                   'quantity': openleadslistobj[i].get('quantity'),
+                                                   'vendor_product_pk': openleadslistobj[i].get('vendor_product_pk'),
+                                                   'item_type': openleadslistobj[i].get('item_type'),
+                                                   'vendors_code': basicobj.company_code,
+                                                   'created_by': openleadslistobj[i].get('created_by'),
+                                                   'updated_by': openleadslistobj[i].get('updated_by'),
+                                                   'company_name': basicobj.company_name,
+                                                   'status': openleadslistobj[i].get('status'),
+                                                   'product_name': openleadslistobj[i].get('product_name'),
+                                                   'vendor_user_id': openleadslistobj[i].get('vendor_user_id'),
+                                                   'product_description': vendorobj[0].get('item_description'),
+                                                   'uom': vendorobj[0].get('uom')
+                                                   })
+                    else:
+                        pass
+                else:
+                    print('deadline is not expired')
+
+            return Response({'status': 200, 'message': 'Open Leads Expired List of Listing Leads', 'data': vendorproductarray},
+                            status=200)
+        else:
+            return Response({'status': 204, 'message': 'Data Not Present', 'data': vendorproductarray}, status=204)
 
 
     except Exception as e:

@@ -2572,9 +2572,17 @@ def landing_page_listing_leads_expired_list(request):
 @api_view(['post'])
 def landing_page_published_list(request):
     data=request.data
+    published_array=[]
     try:
         landingpublishobj=LandingPageBidding_Publish.objects.filter(updated_by_id=data['userid']).values().order_by('id')
         if len(landingpublishobj)>0:
+            for i in range(0,len(landingpublishobj)):
+                landingobj = LandingPageBidding.objects.filter(id=landingpublishobj[i].get('listing_leads_id')).values().order_by('id')
+                basicobj=BasicCompanyDetails.objects.filter(updated_by_id=landingobj[0].get('vendor_user_id')).values()
+                landingpublishobj[i].__setitem__('buyer_company_name',
+                                                 basicobj[0].get('company_name'))
+                landingpublishobj[i].__setitem__('buyer_company_code',
+                                                 basicobj[0].get('company_code'))
 
             return Response({'status':200,'message':'Published Listing Leads','data':landingpublishobj},status=200)
         else:

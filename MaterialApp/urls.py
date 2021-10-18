@@ -68,6 +68,7 @@ urlpatterns = [
     path('pending-list-listing-leads/',views.pending_list_listing_leads),
     path('update-status-from-pending-to-reject/', views.update_status_from_pending_to_reject),
     path('update-status-from-pending-to-published/',views.update_status_from_pending_to_published),
-    path('getawardlistoflistingleadsnew/',views.getawardlistoflistingleadsnew)
+    path('getawardlistoflistingleadsnew/',views.getawardlistoflistingleadsnew),
+    path('landing-page-listing-leads-rejected-list/',views.landing_page_listing_leads_rejected_list)
 
 ]

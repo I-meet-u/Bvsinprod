@@ -2595,3 +2595,24 @@ def landing_page_published_list(request):
 
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)
+
+
+@api_view(['put'])
+def updatelandingpagevendor_publish_update(request):
+    data=request.data
+    pkid=data['pkid']
+    try:
+        obj=LandingPageBidding_Publish.objects.get(id=pkid)
+        if obj:
+            obj.unit_rate=data['unit_rate']
+            obj.tax=data['tax']
+            obj.discount=data['discount']
+            obj.total_amount=data['total_amount']
+            obj.pf_charges=data['pf_charges']
+            obj.payment_charges=data['payment_charges']
+            obj.delivery_charges=data['delivery_charges']
+            obj.save()
+
+            return Response({'status': 200, 'message': 'Updated'}, status=200)
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)

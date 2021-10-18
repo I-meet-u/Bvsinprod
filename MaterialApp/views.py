@@ -2567,3 +2567,19 @@ def landing_page_listing_leads_expired_list(request):
 
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)
+
+
+@api_view(['post'])
+def landing_page_published_list(request):
+    data=request.data
+    try:
+        landingpublishobj=LandingPageBidding_Publish.objects.filter(updated_by_id=data['userid']).values().order_by('listing_leads_id')
+        if len(landingpublishobj)>0:
+
+            return Response({'status':200,'message':'Published Listing Leads','data':landingpublishobj},status=200)
+        else:
+            return Response({'status': 204, 'message': 'Data Not Present'}, status=204)
+
+
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)

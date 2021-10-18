@@ -2573,7 +2573,7 @@ def landing_page_listing_leads_expired_list(request):
 def landing_page_published_list(request):
     data=request.data
     try:
-        landingpublishobj=LandingPageBidding_Publish.objects.filter(updated_by_id=data['userid']).values().order_by('listing_leads_id')
+        landingpublishobj=LandingPageBidding_Publish.objects.filter(updated_by_id=data['userid']).values().order_by('id')
         if len(landingpublishobj)>0:
 
             return Response({'status':200,'message':'Published Listing Leads','data':landingpublishobj},status=200)

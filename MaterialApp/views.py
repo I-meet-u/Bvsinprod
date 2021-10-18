@@ -1974,6 +1974,33 @@ class LandingPageBiddingRFQAwardsSerializerViewSet(viewsets.ModelViewSet):
     queryset = awardpostedRFQ.objects.all()
     serializer_class = LandingPageBiddingRFQAwardsSerializer
 
+    def create(self, request, *args, **kwargs):
+        landingpagepublishobj=LandingPageBidding_Publish.objects.filter(id__in=request.data['landing_page_bidding_publish_id']).values()
+        print(len(landingpagepublishobj))
+        for i in range(0,len(landingpagepublishobj)):
+            ccode=landingpagepublishobj[i].get('company_code')
+            cname=landingpagepublishobj[i].get('company_name')
+            basic = BasicCompanyDetails.objects.get(company_code=ccode)
+            print(basic.company_code, 'fdfdf')
+            regobj = SelfRegistration.objects.get(id=basic.updated_by_id)
+            print(regobj.username)
+            configuration = sib_api_v3_sdk.Configuration()
+            configuration.api_key[
+                'api-key'] = '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'
+
+            api_instance = sib_api_v3_sdk.TransactionalEmailsApi(sib_api_v3_sdk.ApiClient(configuration))
+            subject = "Published  RFQ"
+            text_content = "Dear " + regobj.contact_person + "\n\n" + "Your  " + basic.company_name + " company is awarded." + "\n\n" + "NOTE: Please Don't Share this to anyone"
+            sender = {"name": "VENDORSIN COMMERCE PRIVATE LIMITED", "email": "admin@vendorsin.com"}
+            # text_content = 'Hello '+regobj.contact_person+',''\n You are selected for bidding'
+            to = [{"email": regobj.username, "name": regobj.contact_person}]
+            reply_to = {"email": "admin@vendorsin.com", "name": "Admin"}
+            send_smtp_email = sib_api_v3_sdk.SendSmtpEmail(to=to, reply_to=reply_to, text_content=text_content,
+                                                           sender=sender, subject=subject)
+            print(send_smtp_email)
+            api_response = api_instance.send_transac_email(send_smtp_email)
+            pprint(api_response)
+        return super().create(request, *args, **kwargs)
     def get_queryset(self):
         landingpageobj = awardpostedRFQ.objects.filter(
             updated_by=self.request.GET.get('updated_by')).order_by('id')
@@ -1990,13 +2017,13 @@ def getawardlistoflistingleadsnew(request):
     userid=data['userid']
     try:
         awardpostedRFQobj=awardpostedRFQ.objects.filter(updated_by=userid).values()
-        print(awardpostedRFQobj)
         for i in range(len(awardpostedRFQobj)):
             dummyvar=LandingPageBidding_Publish.objects.filter(id__in=awardpostedRFQobj[i].get('landing_page_bidding_publish_id')).values()
-
+            print(len(dummyvar))
+            for j in range(0,len(dummyvar)):
+                dummyvar[j].__setitem__('award_pk', awardpostedRFQobj[i].get('id'))
             res = list(chain(landing_vendor_publish_leading_data, dummyvar))
-            dummyvar=[]
-        return Response({'status': 200, 'message': 'Ok', 'data': res}, status=200)
+        return Response({'status': 200, 'message': 'Ok', 'data':res}, status=200)
     except Exception as e:
         return Response({'status': 500, 'message': str(e)}, status=500)
 

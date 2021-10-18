@@ -4,6 +4,7 @@ from django.db import models
 # Create your models here.
 from simple_history.models import HistoricalRecords
 
+from AdminApp.models import AdminRegister
 from RegistrationApp.models import SelfRegistration
 
 
@@ -442,6 +443,8 @@ class SourceList_CreateItems(models.Model):
     updated_on = models.DateTimeField(auto_now=True)
     created_by = models.BigIntegerField()
     updated_by = models.ForeignKey(SelfRegistration, on_delete=models.CASCADE)
+    admins = models.ForeignKey(AdminRegister, on_delete=models.CASCADE,null=True,blank=True)
+    source_status=models.CharField(max_length=100,null=True,blank=True,default='Pending')
 
     class Meta:
         db_table="SourceList_CreateItems"
@@ -473,6 +476,7 @@ class SourcePublish(models.Model):
     updated_on = models.DateTimeField(auto_now=True)
     created_by = models.BigIntegerField()
     updated_by = models.ForeignKey(SelfRegistration, on_delete=models.CASCADE)
+    admins = models.ForeignKey(AdminRegister, on_delete=models.CASCADE, null=True, blank=True)
 
     class Meta:
         db_table="SourcePublish"
@@ -528,6 +532,7 @@ class SourceAwards(models.Model):
     company_code=models.CharField(max_length=100,null=True,blank=True)
     updated_by = models.ForeignKey(SelfRegistration, on_delete=models.CASCADE)
     source_po_status=models.CharField(max_length=200,default='Pending')
+    admins = models.ForeignKey(AdminRegister, on_delete=models.CASCADE, null=True, blank=True)
 
     class Meta:
         db_table="SourceAwards"

@@ -2491,7 +2491,9 @@ def landing_page_published_list_by_user_id(request):
         landingpublishobj=LandingPageBidding_Publish.objects.filter(updated_by_id=data['userid'],id=data['vendor_pk']).values().order_by('listing_leads_id')
         if len(landingpublishobj)>0:
             for i in range(0,len(landingpublishobj)):
-                landingobj=LandingPageBidding.objects.filter(id=landingpublishobj[i].get('listing_leads_id')).values('id','packaging_forwarding','payment_terms','delivery_terms').order_by('id')
+                landingobj=LandingPageBidding.objects.filter(id=landingpublishobj[i].get('listing_leads_id')).values().order_by('id')
+                basicobj = BasicCompanyDetails.objects.filter(updated_by_id=landingobj[0].get('updated_by_id')).values()
+                # print(basicobj[0].get('company_code'),'cccccccc')
                 if len(landingobj)>0:
                     for j in range(0,len(landingobj)):
                         landingpublishobj[i].__setitem__('buyer_packaging_forwarding',landingobj[0].get('packaging_forwarding'))
@@ -2501,6 +2503,8 @@ def landing_page_published_list_by_user_id(request):
                                                          landingobj[0].get('delivery_terms'))
                         landingpublishobj[i].__setitem__('buyer_pk',
                                                          landingobj[0].get('id'))
+                        landingpublishobj[i].__setitem__('buyer_company_code',basicobj[0].get('company_code'))
+                        landingpublishobj[i].__setitem__('buyer_company_name', basicobj[0].get('company_name'))
                 else:
                     pass
 

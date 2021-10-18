@@ -2578,7 +2578,7 @@ def landing_page_published_list(request):
         if len(landingpublishobj)>0:
             for i in range(0,len(landingpublishobj)):
                 landingobj = LandingPageBidding.objects.filter(id=landingpublishobj[i].get('listing_leads_id')).values().order_by('id')
-                basicobj=BasicCompanyDetails.objects.filter(updated_by_id=landingobj[0].get('vendor_user_id')).values()
+                basicobj=BasicCompanyDetails.objects.filter(updated_by_id=landingobj[0].get('updated_by_id')).values()
                 landingpublishobj[i].__setitem__('buyer_company_name',
                                                  basicobj[0].get('company_name'))
                 landingpublishobj[i].__setitem__('buyer_company_code',

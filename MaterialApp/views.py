@@ -2493,6 +2493,7 @@ def landing_page_published_list_by_user_id(request):
             for i in range(0,len(landingpublishobj)):
                 landingobj=LandingPageBidding.objects.filter(id=landingpublishobj[i].get('listing_leads_id')).values().order_by('id')
                 basicobj = BasicCompanyDetails.objects.filter(updated_by_id=landingobj[0].get('updated_by_id')).values()
+                billobj=BillingAddress.objects.filter(updated_by_id=landingobj[0].get('updated_by_id')).values()
                 # print(basicobj[0].get('company_code'),'cccccccc')
                 if len(landingobj)>0:
                     for j in range(0,len(landingobj)):
@@ -2505,6 +2506,8 @@ def landing_page_published_list_by_user_id(request):
                                                          landingobj[0].get('id'))
                         landingpublishobj[i].__setitem__('buyer_company_code',basicobj[0].get('company_code'))
                         landingpublishobj[i].__setitem__('buyer_company_name', basicobj[0].get('company_name'))
+                        landingpublishobj[i].__setitem__('buyer_city', billobj[0].get('bill_city'))
+                        landingpublishobj[i].__setitem__('publish_date',landingobj[0].get('publish_date'))
                 else:
                     pass
 

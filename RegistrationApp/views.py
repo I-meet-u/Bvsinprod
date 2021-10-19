@@ -1241,20 +1241,12 @@ def registration_list_by_user_id(request):
                     if industry_info:
                         industry_hierarchy = IndustrialHierarchy.objects.filter(updated_by=userval).values()
                         if industry_hierarchy:
-                            bankdetails = BankDetails.objects.filter(updated_by=userval).values()
-                            if bankdetails:
-                                legalobj = LegalDocuments.objects.filter(updated_by=userval).values()
-                                if legalobj:
-                                    emptydata.append({"id":userval,
-                                                      "user_type": regobj[0].get('user_type'),
-                                                      'company_code': basicobj[0].get('company_code'),
-                                                       "registration_status": "Legal Documents"})
-                                else:
-                                    emptydata.append({"id":userval,
-                                                      "user_type": regobj[0].get('user_type'),
-                                                      'company_code': basicobj[0].get('company_code'),
-                                                      "registration_status": "Bank Details"})
-
+                            legalobj = LegalDocuments.objects.filter(updated_by=userval).values()
+                            if legalobj:
+                                emptydata.append({"id":userval,
+                                                  "user_type": regobj[0].get('user_type'),
+                                                  'company_code': basicobj[0].get('company_code'),
+                                                   "registration_status": "Legal Documents"})
                             else:
                                 emptydata.append({"id":userval,
                                                   "user_type": regobj[0].get('user_type'),

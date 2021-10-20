@@ -100,9 +100,8 @@ urlpatterns = [
     path('fetch-vendor-open-leads-by-pk/',views.fetch_vendor_open_leads_by_pk),
     path('price-analysis-admin/',views.price_analysis_admin),
     path('get-buyer-name-by-ccode/',views.get_buyer_name_by_ccode),
-    path('get_create_buyer_list/', views.get_create_buyer_list)
-
-
+    path('get_create_buyer_list/', views.get_create_buyer_list),
+    path('get_create_buyer_list_companycode/',views.get_create_buyer_list_companycode)
 
 
 ]

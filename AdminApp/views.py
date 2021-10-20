@@ -1879,3 +1879,23 @@ def get_create_buyer_list(request):
 
     except Exception as e:
         return Response({'status': 500, 'message': str(e)}, status=500)
+
+@api_view(['post'])
+@permission_classes((AllowAny,))
+def get_create_buyer_list_companycode(request):
+    data = request.data
+    try:
+        if data['token'] == "vsinadmindb":
+            create_buyer = CreateBuyer.objects.filter(company_code = data['c_code']).values()
+            if len(create_buyer)>0:
+                return Response({'status': 200, 'message': 'Success', 'data': create_buyer}, status=200)
+            else:
+                return Response({'status': 204, 'message': ' Create Buyer details are Not Present'}, status=204)
+
+        else:
+            return Response({'status': 400, 'message': 'Bad Request'}, status=400)
+
+    except Exception as e:
+        return Response({'status': 500, 'message': str(e)}, status=500)
+
+

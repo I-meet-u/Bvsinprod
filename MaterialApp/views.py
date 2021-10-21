@@ -1720,12 +1720,12 @@ def get_landing_page_bidding_by_userid_vendors_list(request):
             print(len(landingobj))
             if len(landingobj)>0:
                 for i in range(0,len(landingobj)):
-                    basicobj1=BasicCompanyDetails.objects.get(updated_by_id=landingobj[i].get('updated_by_id'))
+                    basicobj1=BasicCompanyDetails.objects.filter(updated_by_id=landingobj[i].get('updated_by_id')).values()
                     vendorproductobj=VendorProduct_BasicDetails.objects.get(updated_by_id=userid,item_name=landingobj[i].get('product_name'))
                     billobj=BillingAddress.objects.filter(updated_by_id=landingobj[i].get('updated_by_id')).values()
                     if len(billobj)>0:
-                        vendorlandingpagebidarray.append({'vendor_code':basicobj1.company_code,
-                                                          'vendor_company_name':basicobj1.company_name,
+                        vendorlandingpagebidarray.append({'vendor_code':basicobj1[0].get('company_code'),
+                                                          'vendor_company_name':basicobj1[0].get('company_name'),
                                                           'item_name':landingobj[i].get('product_name'),
                                                           'item_description':vendorproductobj.item_description,
                                                           'uom':vendorproductobj.uom,
@@ -1839,7 +1839,7 @@ def landing_page_listing_leads_pending_list(request):
                     # print(openleadslistobj[i].get('vendor_product_pk'),'ok')
                     vendorobj=VendorProduct_BasicDetails.objects.filter(vendor_product_id=openleadslistobj[i].get('vendor_product_pk')).values()
                     if len(vendorobj)>0:
-                        basicobj=BasicCompanyDetails.objects.get(updated_by_id=openleadslistobj[i].get('updated_by_id'))
+                        basicobj=BasicCompanyDetails.objects.filter(updated_by_id=openleadslistobj[i].get('updated_by_id')).values()
                         vendorproductarray.append({'id':openleadslistobj[i].get('id'),
                                                    'publish_date':openleadslistobj[i].get('publish_date'),
                                                    'deadline_date': openleadslistobj[i].get('deadline_date'),
@@ -1850,10 +1850,10 @@ def landing_page_listing_leads_pending_list(request):
                                                    'quantity': openleadslistobj[i].get('quantity'),
                                                    'vendor_product_pk': openleadslistobj[i].get('vendor_product_pk'),
                                                    'item_type': openleadslistobj[i].get('item_type'),
-                                                   'vendors_code': basicobj.company_code,
+                                                   'vendors_code': basicobj[0].get('company_code'),
                                                    'created_by': openleadslistobj[i].get('created_by'),
                                                    'updated_by': openleadslistobj[i].get('updated_by'),
-                                                   'company_name': basicobj.company_name,
+                                                   'company_name': basicobj[0].get('company_name'),
                                                    'status': openleadslistobj[i].get('status'),
                                                    'product_name': openleadslistobj[i].get('product_name'),
                                                    'vendor_user_id': openleadslistobj[i].get('vendor_user_id'),
@@ -1906,11 +1906,11 @@ def get_landing_page_bidding_by_pk(request):
     try:
         landingobj=LandingPageBidding.objects.filter(id=landingpk).values()
         if len(landingobj)>0:
-            basicobj = BasicCompanyDetails.objects.get(updated_by_id=landingobj[0].get('updated_by_id'))
+            basicobj = BasicCompanyDetails.objects.filter(updated_by_id=landingobj[0].get('updated_by_id')).values()
             billobj=BillingAddress.objects.filter(updated_by_id=landingobj[0].get('updated_by_id')).values()
             vendorproductobj=VendorProduct_BasicDetails.objects.filter(vendor_product_id=landingobj[0].get('vendor_product_pk')).values()
-            basicarray.setdefault('ccode',str(basicobj.company_code))
-            basicarray.setdefault('cname',basicobj.company_name)
+            basicarray.setdefault('ccode',str(basicobj[0].get('company_code')))
+            basicarray.setdefault('cname',basicobj[0].get('company_name'))
             landingobj[0].setdefault('basic_details',basicarray)
             landingobj[0].setdefault('bill_city',billobj[0].get('bill_city'))
             return Response({'status':200,'message':'Landing Page Bidding List','landingpagedata':landingobj,'vendorproductdata':vendorproductobj},status=200)
@@ -2446,8 +2446,8 @@ def landing_page_listing_leads_rejected_list(request):
                     vendorobj = VendorProduct_BasicDetails.objects.filter(
                         vendor_product_id=openleadslistobj[i].get('vendor_product_pk')).values()
                     if len(vendorobj) > 0:
-                        basicobj = BasicCompanyDetails.objects.get(
-                            updated_by_id=openleadslistobj[i].get('updated_by_id'))
+                        basicobj = BasicCompanyDetails.objects.filter(
+                            updated_by_id=openleadslistobj[i].get('updated_by_id')).values()
                         vendorproductarray.append({'id': openleadslistobj[i].get('id'),
                                                    'publish_date': openleadslistobj[i].get('publish_date'),
                                                    'deadline_date': openleadslistobj[i].get('deadline_date'),
@@ -2459,10 +2459,10 @@ def landing_page_listing_leads_rejected_list(request):
                                                    'quantity': openleadslistobj[i].get('quantity'),
                                                    'vendor_product_pk': openleadslistobj[i].get('vendor_product_pk'),
                                                    'item_type': openleadslistobj[i].get('item_type'),
-                                                   'vendors_code': basicobj.company_code,
+                                                   'vendors_code': basicobj[0].get('company_code'),
                                                    'created_by': openleadslistobj[i].get('created_by'),
                                                    'updated_by': openleadslistobj[i].get('updated_by'),
-                                                   'company_name': basicobj.company_name,
+                                                   'company_name': basicobj[0].get('company_name'),
                                                    'status': openleadslistobj[i].get('status'),
                                                    'product_name': openleadslistobj[i].get('product_name'),
                                                    'vendor_user_id': openleadslistobj[i].get('vendor_user_id'),
@@ -2538,8 +2538,8 @@ def landing_page_listing_leads_expired_list(request):
                     vendorobj = VendorProduct_BasicDetails.objects.filter(
                         vendor_product_id=openleadslistobj[i].get('vendor_product_pk')).values()
                     if len(vendorobj) > 0:
-                        basicobj = BasicCompanyDetails.objects.get(
-                            updated_by_id=openleadslistobj[i].get('updated_by_id'))
+                        basicobj = BasicCompanyDetails.objects.filter(
+                            updated_by_id=openleadslistobj[i].get('updated_by_id')).values()
                         vendorproductarray.append({'id': openleadslistobj[i].get('id'),
                                                    'publish_date': openleadslistobj[i].get('publish_date'),
                                                    'deadline_date': openleadslistobj[i].get('deadline_date'),
@@ -2551,10 +2551,10 @@ def landing_page_listing_leads_expired_list(request):
                                                    'quantity': openleadslistobj[i].get('quantity'),
                                                    'vendor_product_pk': openleadslistobj[i].get('vendor_product_pk'),
                                                    'item_type': openleadslistobj[i].get('item_type'),
-                                                   'vendors_code': basicobj.company_code,
+                                                   'vendors_code': basicobj[0].get('company_code'),
                                                    'created_by': openleadslistobj[i].get('created_by'),
                                                    'updated_by': openleadslistobj[i].get('updated_by'),
-                                                   'company_name': basicobj.company_name,
+                                                   'company_name': basicobj[0].get('company_name'),
                                                    'status': openleadslistobj[i].get('status'),
                                                    'product_name': openleadslistobj[i].get('product_name'),
                                                    'vendor_user_id': openleadslistobj[i].get('vendor_user_id'),

@@ -401,8 +401,8 @@ def sendergetbuzrequestdata(request):
         buzobj = BusinessRequest.objects.filter(updated_by_id=userid).order_by('company_code').values()
         if len(buzobj)>0:
             for i in range(0,len(buzobj)):
-                basicobj=BasicCompanyDetails.objects.get(company_code=buzobj[i].get('company_code'))
-                regobj=SelfRegistration.objects.get(id=basicobj.updated_by_id)
+                basicobj=BasicCompanyDetails.objects.filter(company_code=buzobj[i].get('company_code')).values()
+                regobj=SelfRegistration.objects.get(id=basicobj[0].get('updated_by_id'))
                 businessrequestarray.append({'company_code':buzobj[i].get('company_code'),
                                              'company_name':buzobj[i].get('company_name'),
                                              'city':buzobj[i].get('city'),
@@ -441,21 +441,21 @@ def buzrequest(request):
             if len(businessrequest)>0:
                 for i in range(0,len(businessrequest)):
                     regobj=SelfRegistration.objects.filter(id=businessrequest[i].get('updated_by_id')).values()
-                    basival = BasicCompanyDetails.objects.get(updated_by_id=businessrequest[i].get('updated_by_id'))
-                    print(basival.updated_by_id,'ds')
-                    industryinfoobj = IndustrialInfo.objects.filter(company_code_id=basival.company_code).values()
-                    billsaddrsobj = BillingAddress.objects.filter(company_code_id=basival.company_code,updated_by_id=businessrequest[i].get('updated_by_id')).values()
+                    basival = BasicCompanyDetails.objects.filter(updated_by_id=businessrequest[i].get('updated_by_id')).values()
+                    # print(basival[0].get('updated_by_id'),'ds')
+                    industryinfoobj = IndustrialInfo.objects.filter(company_code_id=basival[0].get('company_code')).values()
+                    billsaddrsobj = BillingAddress.objects.filter(company_code_id=basival[0].get('company_code'),updated_by_id=businessrequest[i].get('updated_by_id')).values()
                     if not billsaddrsobj:
                         states=""
                         city=""
                         userbuzdata.append({'profile_photo': regobj[0].get('profile_cover_photo'),
-                                            'ccode': basival.company_code,
-                                            'cname': basival.company_name,
-                                            'gst_number': basival.gst_number,
+                                            'ccode':basival[0].get('company_code'),
+                                            'cname': basival[0].get('company_name'),
+                                            'gst_number': basival[0].get('gst_number'),
                                             'Industry': industryinfoobj[0].get('industry_to_serve'),
                                             'natureofbuz': industryinfoobj[0].get('nature_of_business'),
                                             'business_id': businessrequest[i].get('id'),
-                                            'user_id': basival.updated_by_id,
+                                            'user_id': basival[0].get('updated_by_id'),
                                             'state':states,
                                             'city':city,
                                             'status':businessrequest[i].get('send_status')
@@ -464,13 +464,13 @@ def buzrequest(request):
                         states= billsaddrsobj[0].get('bill_state')
                         city=billsaddrsobj[0].get('bill_city')
                         userbuzdata.append({'profile_photo': regobj[0].get('profile_cover_photo'),
-                                            'ccode': basival.company_code,
-                                            'cname': basival.company_name,
-                                            'gst_number': basival.gst_number,
+                                            'ccode': basival[0].get('company_code'),
+                                            'cname': basival[0].get('company_name'),
+                                            'gst_number': basival[0].get('gst_number'),
                                             'Industry': industryinfoobj[0].get('industry_to_serve'),
                                             'natureofbuz': industryinfoobj[0].get('nature_of_business'),
                                             'business_id': businessrequest[i].get('id'),
-                                            'user_id': basival.updated_by_id,
+                                            'user_id': basival[0].get('updated_by_id'),
                                             'state': states,
                                             'city': city,
                                             'status': businessrequest[i].get('send_status')
@@ -618,16 +618,16 @@ def buyer_list(request):
 
         if len(regobj) > 0:
             for i in range(0, len(regobj)):
-                basicobj = BasicCompanyDetails.objects.get(updated_by_id=regobj[i].get('id'))
+                basicobj = BasicCompanyDetails.objects.filter(updated_by_id=regobj[i].get('id')).values()
                 industryobj = IndustrialInfo.objects.get(updated_by_id=regobj[i].get('id'),
-                                                         company_code=basicobj.company_code)
+                                                         company_code=basicobj[0].get('company_code'))
                 # hierarchyobj = IndustrialHierarchy.objects.get(updated_by_id=regobj[i].get('id'))
                 billingobj = BillingAddress.objects.filter(updated_by_id=regobj[i].get('id')).values()
-                if basicobj.company_code not in internalbuyerarray:
+                if basicobj[0].get('company_code') not in internalbuyerarray:
                     print('ok')
 
-                    buyerarray.append({'company_code': basicobj.company_code,
-                                       'company_name': basicobj.company_name,
+                    buyerarray.append({'company_code': basicobj[0].get('company_code'),
+                                       'company_name': basicobj[0].get('company_name'),
                                        'nature_of_business': industryobj.nature_of_business,
                                        'industry_to_serve': industryobj.industry_to_serve,
                                        'bill_city': billingobj[0].get('bill_city'),
@@ -890,12 +890,12 @@ def business_request_accept_list(request):
         businessacceptobj = BusinessRequest.objects.filter(company_code=ccode,send_status='Accept').values().order_by('id')
         if len(businessacceptobj)>0:
             for i in range(0, len(businessacceptobj)):
-                basicobj=BasicCompanyDetails.objects.get(updated_by_id=businessacceptobj[i].get('updated_by_id'))
-                billobj=BillingAddress.objects.filter(updated_by_id=basicobj.updated_by_id).values()
-                inudstryinfoobj=IndustrialInfo.objects.get(updated_by_id=basicobj.updated_by_id)
-                arraycode.append({'company_code':basicobj.company_code,
-                                  'company_name':basicobj.company_name,
-                                  'gst_number':basicobj.gst_number,
+                basicobj=BasicCompanyDetails.objects.filter(updated_by_id=businessacceptobj[i].get('updated_by_id')).values()
+                billobj=BillingAddress.objects.filter(updated_by_id=basicobj[0].get('updated_by_id')).values()
+                inudstryinfoobj=IndustrialInfo.objects.get(updated_by_id=basicobj[0].get('updated_by_id'))
+                arraycode.append({'company_code':basicobj[0].get('company_code'),
+                                  'company_name':basicobj[0].get('company_name'),
+                                  'gst_number':basicobj[0].get('gst_number'),
                                   'city':billobj[0].get('bill_city'),
                                   'state':billobj[0].get('bill_state'),
                                   'nature_of_business': inudstryinfoobj.nature_of_business,
@@ -918,12 +918,12 @@ def business_request_accept_list_user_id(request):
             businessacceptobj = BusinessRequest.objects.filter(company_code=basicobj[0].get('company_code'),send_status='Accept').values().order_by('id')
             if len(businessacceptobj)>0:
                 for i in range(0, len(businessacceptobj)):
-                    basicobj=BasicCompanyDetails.objects.get(updated_by_id=businessacceptobj[i].get('updated_by_id'))
-                    billobj=BillingAddress.objects.filter(updated_by_id=basicobj.updated_by_id).values()
-                    inudstryinfoobj=IndustrialInfo.objects.get(updated_by_id=basicobj.updated_by_id)
-                    arraycode.append({'company_code':basicobj.company_code,
-                                      'company_name':basicobj.company_name,
-                                      'gst_number':basicobj.gst_number,
+                    basicobj=BasicCompanyDetails.objects.filter(updated_by_id=businessacceptobj[i].get('updated_by_id')).values()
+                    billobj=BillingAddress.objects.filter(updated_by_id=basicobj[0].get('updated_by_id')).values()
+                    inudstryinfoobj=IndustrialInfo.objects.get(updated_by_id=basicobj[0].get('updated_by_id'))
+                    arraycode.append({'company_code':basicobj[0].get('company_code'),
+                                      'company_name':basicobj[0].get('company_name'),
+                                      'gst_number':basicobj[0].get('gst_number'),
                                       'city':billobj[0].get('bill_city'),
                                       'state':billobj[0].get('bill_state'),
                                       'nature_of_business': inudstryinfoobj.nature_of_business,
@@ -947,12 +947,12 @@ def business_request_reject_list(request):
             'id')
         if len(businessrejectobj) > 0:
             for i in range(0, len(businessrejectobj)):
-                basicobj = BasicCompanyDetails.objects.get(updated_by_id=businessrejectobj[i].get('updated_by_id'))
-                billobj = BillingAddress.objects.filter(updated_by_id=basicobj.updated_by_id).values()
-                industryinfoobj = IndustrialInfo.objects.get(updated_by_id=basicobj.updated_by_id)
-                arraycode.append({'company_code': basicobj.company_code,
-                                  'company_name': basicobj.company_name,
-                                  'gst_number': basicobj.gst_number,
+                basicobj = BasicCompanyDetails.objects.filter(updated_by_id=businessrejectobj[i].get('updated_by_id')).values()
+                billobj = BillingAddress.objects.filter(updated_by_id=basicobj[0].get('updated_by_id')).values()
+                industryinfoobj = IndustrialInfo.objects.get(updated_by_id=basicobj[0].get('updated_by_id'))
+                arraycode.append({'company_code': basicobj[0].get('company_code'),
+                                  'company_name': basicobj[0].get('company_name'),
+                                  'gst_number': basicobj[0].get('gst_number'),
                                   'city': billobj[0].get('bill_city'),
                                   'state': billobj[0].get('bill_state'),
                                   'nature_of_business': industryinfoobj.nature_of_business,

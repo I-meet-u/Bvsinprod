@@ -546,19 +546,19 @@ def open_bid_list_buyer_publish_list(request):
     openbidarray = []
     try:
         if from_registration=='False':
-            basicobj = BasicCompanyDetails.objects.get(updated_by=userid)
-            print(basicobj)
-            selectvendorsobj = SelectVendorsForBiddingProduct.objects.filter(vendor_code=basicobj.company_code,
+            basicobj = BasicCompanyDetails.objects.filter(updated_by=userid).values()
+            # print(basicobj)
+            selectvendorsobj = SelectVendorsForBiddingProduct.objects.filter(vendor_code=basicobj[0].get('company_code'),
                                                                              vendor_status='Pending',from_registration='False').values()
             print(len(selectvendorsobj),'length')
             if len(selectvendorsobj) > 0:
                 for i in range(0, len(selectvendorsobj)):
                     print(selectvendorsobj[i].get('rfq_number'),'selected vendors rfq')
                     biddingval = BuyerProductBidding.objects.get(user_rfq_number=selectvendorsobj[i].get('rfq_number'),from_registration=from_registration)
-                    basicobjval = BasicCompanyDetails.objects.get(updated_by_id=biddingval.updated_by_id)
-                    openbidarray.append({'vendor_code': basicobjval.company_code,
+                    basicobjval = BasicCompanyDetails.objects.filter(updated_by_id=biddingval.updated_by_id).values()
+                    openbidarray.append({'vendor_code': basicobjval[0].get('company_code'),
                                          'user_rfq_number': biddingval.user_rfq_number,
-                                         'company_name': basicobjval.company_name,
+                                         'company_name': basicobjval[0].get('company_name'),
                                          'product_rfq_type': biddingval.product_rfq_type,
                                          'product_rfq_title': biddingval.product_rfq_title,
                                          'product_rfq_status': biddingval.product_rfq_status,
@@ -574,36 +574,36 @@ def open_bid_list_buyer_publish_list(request):
             else:
                 return Response({'status': 202, 'message': 'Vendors are not selected for any bidding','data':openbidarray}, status=202)
         elif from_registration=='True':
-                basicobj = BasicCompanyDetails.objects.get(updated_by=userid)
-                print(basicobj)
-                selectvendorsobj = SelectVendorsForBiddingProduct.objects.filter(vendor_code=basicobj.company_code,
-                                                                                 vendor_status='Pending',from_registration=from_registration).values()
+            basicobj = BasicCompanyDetails.objects.filter(updated_by=userid).values()
+                # print(basicobj)
+            selectvendorsobj = SelectVendorsForBiddingProduct.objects.filter(vendor_code=basicobj[0].get('company_code'),
+                                                                             vendor_status='Pending',from_registration=from_registration).values()
 
-                print(len(selectvendorsobj),'length')
-                if len(selectvendorsobj) > 0:
-                    for i in range(0, len(selectvendorsobj)):
-                        print(selectvendorsobj[i].get('auto_rfq_number'))
-                        biddingval = BuyerProductBidding.objects.get(product_rfq_number=selectvendorsobj[i].get('auto_rfq_number'),from_registration='True')
-                        basicobjval = BasicCompanyDetails.objects.get(updated_by_id=biddingval.updated_by_id)
-                        print(basicobjval)
-                        openbidarray.append({'vendor_code': basicobjval.company_code,
-                                             'auto_rfq_number': biddingval.product_rfq_number,
-                                             'user_rfq_number':"",
-                                             'company_name': basicobjval.company_name,
-                                             'product_rfq_type': biddingval.product_rfq_type,
-                                             'product_rfq_title': biddingval.product_rfq_title,
-                                             'product_rfq_status': biddingval.product_rfq_status,
-                                             'product_publish_date': biddingval.product_publish_date,
-                                             'product_deadline_date': biddingval.product_deadline_date,
-                                             'product_delivery_date': biddingval.product_delivery_date,
-                                             'product_rfq_currency': biddingval.product_rfq_currency,
-                                             'product_rfq_category': biddingval.product_rfq_category,
-                                             'product_department': biddingval.product_department,
-                                                 })
+            print(len(selectvendorsobj),'length')
+            if len(selectvendorsobj) > 0:
+                for i in range(0, len(selectvendorsobj)):
+                    print(selectvendorsobj[i].get('auto_rfq_number'))
+                    biddingval = BuyerProductBidding.objects.get(product_rfq_number=selectvendorsobj[i].get('auto_rfq_number'),from_registration='True')
+                    basicobjval = BasicCompanyDetails.objects.filter(updated_by_id=biddingval.updated_by_id).values()
+                    print(basicobjval)
+                    openbidarray.append({'vendor_code': basicobjval[0].get('company_code'),
+                                         'auto_rfq_number': biddingval.product_rfq_number,
+                                         'user_rfq_number':"",
+                                         'company_name': basicobjval[0].get('company_name'),
+                                         'product_rfq_type': biddingval.product_rfq_type,
+                                         'product_rfq_title': biddingval.product_rfq_title,
+                                         'product_rfq_status': biddingval.product_rfq_status,
+                                         'product_publish_date': biddingval.product_publish_date,
+                                         'product_deadline_date': biddingval.product_deadline_date,
+                                         'product_delivery_date': biddingval.product_delivery_date,
+                                         'product_rfq_currency': biddingval.product_rfq_currency,
+                                         'product_rfq_category': biddingval.product_rfq_category,
+                                         'product_department': biddingval.product_department,
+                                             })
 
-                    return Response({'status': 200, 'message': "Open Leads Values", 'data': openbidarray}, status=200)
-                else:
-                    return Response({'status': 202, 'message': 'Vendors are not selected for any bidding','data':openbidarray}, status=202)
+                return Response({'status': 200, 'message': "Open Leads Values", 'data': openbidarray}, status=200)
+            else:
+                return Response({'status': 202, 'message': 'Vendors are not selected for any bidding','data':openbidarray}, status=202)
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)
 
@@ -934,9 +934,9 @@ def get_vendor_published_leads(request):
     vendorpublishleads = []
     selectsarray = []
     try:
-        basic = BasicCompanyDetails.objects.get(updated_by_id=userid)
-        print(basic.company_code)
-        selects = SelectVendorsForBiddingProduct.objects.filter(vendor_code=basic.company_code,vendor_status='Accept').values().order_by('id')
+        basic = BasicCompanyDetails.objects.filter(updated_by_id=userid).values()
+        print(basic[0].get('company_code'))
+        selects = SelectVendorsForBiddingProduct.objects.filter(vendor_code=basic[0].get('company_code'),vendor_status='Accept').values().order_by('id')
         print(len(selects))
         if len(selects) > 0:
             for i in range(0, len(selects)):
@@ -946,9 +946,9 @@ def get_vendor_published_leads(request):
                 'user_rfq_number')
             print(len(bidobj))
             for i in range(0, len(selects)):
-                basicobj = BasicCompanyDetails.objects.get(updated_by_id=bidobj[i].get('updated_by_id'))
+                basicobj = BasicCompanyDetails.objects.filter(updated_by_id=bidobj[i].get('updated_by_id')).values()
                 vendorpublishleads.append({'user_rfq_number': bidobj[i].get('user_rfq_number'),
-                                           'vendor_code': basicobj.company_code,
+                                           'vendor_code': basicobj[0].get('company_code'),
                                            'vendor_status': selects[i].get('vendor_status'),
                                            'updatedby': selects[i].get('updated_by_id'),
                                            'product_bidding_id': bidobj[i].get('product_bidding_id'),
@@ -960,7 +960,7 @@ def get_vendor_published_leads(request):
                                            'product_bill_address': bidobj[i].get('product_bill_address'),
                                            'product_ship_address': bidobj[i].get('product_ship_address'),
                                            'product_rfq_title': bidobj[i].get('product_rfq_title'),
-                                           'company_name': basicobj.company_name
+                                           'company_name': basicobj[0].get('company_name')
 
                                            })
 
@@ -1204,11 +1204,6 @@ def get_source_items_list_by_source_user_id(request):
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-
-    except Exception as e:
-        return Response({'status': 500, 'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-
-
 @api_view(['post'])
 # @permission_classes((AllowAny,))
 def get_buyer_product_based_on_userid_pk(request):
@@ -1418,8 +1413,8 @@ def status_vendor_accept(request):
     rfq_number = data['rfq_number']
     userid = data['userid']
     try:
-        basicobj = BasicCompanyDetails.objects.get(updated_by_id=userid)
-        vends = SelectVendorsForBiddingProduct.objects.filter(rfq_number__icontains=rfq_number,vendor_code=basicobj.company_code).values().order_by('rfq_number')
+        basicobj = BasicCompanyDetails.objects.filter(updated_by_id=userid).values()
+        vends = SelectVendorsForBiddingProduct.objects.filter(rfq_number__icontains=rfq_number,vendor_code=basicobj[0].get('company_code')).values().order_by('rfq_number')
         if len(vends)>0:
             for i in range(0, len(vends)):
                 vendobj = SelectVendorsForBiddingProduct.objects.get(id=vends[i].get('id'))
@@ -1445,8 +1440,8 @@ def status_vendor_reject(request):
     rfq_number = data['rfq_number']
     userid = data['userid']
     try:
-        basicobj=BasicCompanyDetails.objects.get(updated_by_id=userid)
-        vends = SelectVendorsForBiddingProduct.objects.filter(rfq_number__icontains=rfq_number,vendor_code=basicobj.company_code).values().order_by('rfq_number')
+        basicobj=BasicCompanyDetails.objects.filter(updated_by_id=userid).values()
+        vends = SelectVendorsForBiddingProduct.objects.filter(rfq_number__icontains=rfq_number,vendor_code=basicobj[0].get('company_code')).values().order_by('rfq_number')
         print(vends)
         if len(vends)>0:
             for i in range(0, len(vends)):
@@ -1520,8 +1515,8 @@ def accepted_response_list(request):
                     orderqtsum = 0
                     discountsum = 0
                     ccode = vendobj[i].get('vendor_code')
-                    basicobj = BasicCompanyDetails.objects.get(company_code=ccode)
-                    cname = basicobj.company_name
+                    basicobj = BasicCompanyDetails.objects.filter(company_code=ccode).values()
+                    cname = basicobj[0].get('company_name')
                     productdetailsvalue = VendorBiddingBuyerProductDetails.objects.filter(vendor_rfq_number=rfq_number,
                                                                                       vendor_code=ccode).values()
                     if len(productdetailsvalue) == 0:
@@ -1555,8 +1550,8 @@ def accepted_response_list(request):
                     orderqtsum = 0
                     discountsum = 0
                     ccode = vendobj[i].get('vendor_code')
-                    basicobj = BasicCompanyDetails.objects.get(company_code=ccode)
-                    cname = basicobj.company_name
+                    basicobj = BasicCompanyDetails.objects.filter(company_code=ccode).values()
+                    cname = basicobj[0].get('company_name')
                     productdetailsvalue = VendorBiddingBuyerProductDetails.objects.filter(vendor_rfq_number=rfq_number,
                                                                                           vendor_code=ccode).values()
                     if len(productdetailsvalue) == 0:
@@ -1591,8 +1586,8 @@ def accepted_response_list(request):
                     orderqtsum = 0
                     discountsum = 0
                     ccode = vendobj[i].get('vendor_code')
-                    basicobj = BasicCompanyDetails.objects.get(company_code=ccode)
-                    cname = basicobj.company_name
+                    basicobj = BasicCompanyDetails.objects.filter(company_code=ccode).values()
+                    cname = basicobj[0].get('company_name')
                     productdetailsvalue = VendorBiddingBuyerProductDetails.objects.filter(vendor_rfq_number=rfq_number,
                                                                                           vendor_code=ccode).values()
                     if len(productdetailsvalue) == 0:
@@ -1904,8 +1899,8 @@ def vendor_query_description(request):
         vendorbidobj = VendorRfqTermsDescription.objects.filter(vendor_rfq_number=rfq_number).values()
         if len(vendorbidobj)>0:
             for i in range(0, len(vendorbidobj)):
-                basicobj = BasicCompanyDetails.objects.get(updated_by_id=vendorbidobj[i].get('updated_by_id'))
-                resarray.append({'cname':basicobj.company_name,
+                basicobj = BasicCompanyDetails.objects.filter(updated_by_id=vendorbidobj[i].get('updated_by_id')).values()
+                resarray.append({'cname':basicobj[0].get('company_name'),
                                  'vendor_terms':vendorbidobj[i].get('vendor_terms'),
                                  'vendor_description':vendorbidobj[i].get('vendor_description'),
                                  'vendor_response':vendorbidobj[i].get('vendor_response')
@@ -2028,13 +2023,13 @@ def award_get_list_of_vendor(request):
         if len(awardobj) > 0:
             for i in range(0,len(awardobj)):
                 awardeecode = awardobj[i].get('company_code')
-                basicobj = BasicCompanyDetails.objects.get(company_code=awardeecode)
-                print(basicobj, 'userbasic')
+                basicobj = BasicCompanyDetails.objects.filter(company_code=awardeecode).values()
+                # print(basicobj, 'userbasic')
                 awardarray.append({
                     'rfq_number':awardobj[i].get('rfq_number'),
                    'rfq_title': awardobj[i].get('rfq_title'),
-                    'company_code': basicobj.company_code,
-                    'company_name':basicobj.company_name,
+                    'company_code': basicobj[0].get('company_code'),
+                    'company_name':basicobj[0].get('company_name'),
                    'awarded_date': awardobj[i].get('awarded_date'),
                    'publish_date': awardobj[i].get('publish_date'),
                    'deadline_date': awardobj[i].get('deadline_date'),
@@ -2111,7 +2106,7 @@ class BiddingBuyerMachinaryDetailsView(viewsets.ModelViewSet):
         from_registration = request.data.get('from_registration', None)
         userid = request.data.get('userid', None)
         try:
-            bidobj = BuyerProductBidding.objects.get(user_rfq_number=machinary_buyer_rfq_number)
+            bidobj = BuyerProductBidding.objects.filter(user_rfq_number=machinary_buyer_rfq_number).values()
             for i in range(0, len(machinarydetails)):
                 BiddingBuyerMachinaryDetails.objects.create(machinary_buyer_rfq_number=machinary_buyer_rfq_number,
                                                           machinary_buyer_item_code=machinarydetails[i].get('buyer_machinary_item_code'),
@@ -2124,7 +2119,7 @@ class BiddingBuyerMachinaryDetailsView(viewsets.ModelViewSet):
                                                           machinary_buyer_document=machinarydetails[i].get('buyer_machinary_document'),
                                                           machinary_item_type=machinarydetails[i].get('buyer_machinary_item_type'),
                                                           updated_by=SelfRegistration.objects.get(id=userid),
-                                                            auto_rfq_number=bidobj.product_rfq_number,
+                                                            auto_rfq_number=bidobj[0].get('product_rfq_number'),
                                                             from_registration=from_registration,
                                                           created_by=userid)
 
@@ -3014,7 +3009,7 @@ def fetch_vendor_bid_details(request):
     vendorcode=data['vendorcode']
     vendorarray=[]
     try:
-        basicobj=BasicCompanyDetails.objects.get(company_code=vendorcode)
+        basicobj=BasicCompanyDetails.objects.filter(company_code=vendorcode).values()
         if rfqtype=='Product':
             vendorobj=VendorProductBidding.objects.filter(vendor_user_rfq_number=rfqnumber,vendor_product_rfq_type='Product',vendor_code=vendorcode).values().order_by('vendor_product_bidding_id')
             if len(vendorobj)>0:
@@ -3022,7 +3017,7 @@ def fetch_vendor_bid_details(request):
                     vendorproductobj=VendorBiddingBuyerProductDetails.objects.filter(vendor_rfq_number=rfqnumber,vendor_item_type='Product',vendor_code=vendorcode).values().order_by('id')
                     for j in range(0,len(vendorproductobj)):
                         print('s print')
-                    vendorterms=VendorRfqTermsDescription.objects.filter(vendor_rfq_number=rfqnumber,rfq_type='Product',updated_by_id=basicobj.updated_by_id).values().order_by('id')
+                    vendorterms=VendorRfqTermsDescription.objects.filter(vendor_rfq_number=rfqnumber,rfq_type='Product',updated_by_id=basicobj[0].get('updated_by_id')).values().order_by('id')
                     for k in range(0,len(vendorterms)):
                         print('correct')
                     vendorobj[i].__setitem__('product',vendorproductobj)
@@ -3046,7 +3041,7 @@ def fetch_vendor_bid_details(request):
                         print('s print')
                     vendorterms = VendorRfqTermsDescription.objects.filter(vendor_rfq_number=rfqnumber,
                                                                            rfq_type='Service',
-                                                                           updated_by_id=basicobj.updated_by_id).values().order_by(
+                                                                           updated_by_id=basicobj[0].get('updated_by_id')).values().order_by(
                         'id')
                     for k in range(0, len(vendorterms)):
                         print('correct')
@@ -3072,7 +3067,7 @@ def fetch_vendor_bid_details(request):
                         print('s print')
                     vendorterms = VendorRfqTermsDescription.objects.filter(vendor_rfq_number=rfqnumber,
                                                                            rfq_type='Machinary & equipments',
-                                                                           updated_by_id=basicobj.updated_by_id).values().order_by(
+                                                                           updated_by_id=basicobj[0].get('updated_by_id')).values().order_by(
                         'id')
                     for k in range(0, len(vendorterms)):
                         print('correct')
@@ -3162,7 +3157,7 @@ def fetch_vendor_bid_details_userid(request):
     userid=data['userid']
     vendorarray=[]
     try:
-        basicobj=BasicCompanyDetails.objects.get(company_code=vendorcode)
+        basicobj=BasicCompanyDetails.objects.filter(company_code=vendorcode).values()
         if rfqtype=='Product':
             vendorobj=VendorProductBidding.objects.filter(vendor_user_rfq_number=rfqnumber,vendor_product_rfq_type='Product',vendor_code=vendorcode,updated_by_id=userid).values().order_by('vendor_product_bidding_id')
             if len(vendorobj)>0:
@@ -3170,7 +3165,7 @@ def fetch_vendor_bid_details_userid(request):
                     vendorproductobj=VendorBiddingBuyerProductDetails.objects.filter(vendor_rfq_number=rfqnumber,vendor_item_type='Product',vendor_code=vendorcode,updated_by_id=userid).values().order_by('id')
                     for j in range(0,len(vendorproductobj)):
                         print('s print')
-                    vendorterms=VendorRfqTermsDescription.objects.filter(vendor_rfq_number=rfqnumber,rfq_type='Product',updated_by_id=basicobj.updated_by_id).values().order_by('id')
+                    vendorterms=VendorRfqTermsDescription.objects.filter(vendor_rfq_number=rfqnumber,rfq_type='Product',updated_by_id=basicobj[0].get('updated_by_id')).values().order_by('id')
                     for k in range(0,len(vendorterms)):
                         print('correct')
                     vendorobj[i].__setitem__('product',vendorproductobj)
@@ -3194,7 +3189,7 @@ def fetch_vendor_bid_details_userid(request):
                         print('s print')
                     vendorterms = VendorRfqTermsDescription.objects.filter(vendor_rfq_number=rfqnumber,
                                                                            rfq_type='Service',
-                                                                           updated_by_id=basicobj.updated_by_id).values().order_by(
+                                                                           updated_by_id=basicobj[0].get('updated_by_id')).values().order_by(
                         'id')
                     for k in range(0, len(vendorterms)):
                         print('correct')
@@ -3220,7 +3215,7 @@ def fetch_vendor_bid_details_userid(request):
                         print('s print')
                     vendorterms = VendorRfqTermsDescription.objects.filter(vendor_rfq_number=rfqnumber,
                                                                            rfq_type='Machinary & equipments',
-                                                                           updated_by_id=basicobj.updated_by_id).values().order_by(
+                                                                           updated_by_id=basicobj[0].get('updated_by_id')).values().order_by(
                         'id')
                     for k in range(0, len(vendorterms)):
                         print('correct')
@@ -3481,9 +3476,9 @@ def purchase_order_vendors_list(request):
     userid = data['userid']
     purchaseorderarray = []
     try:
-        basicobj=BasicCompanyDetails.objects.get(updated_by_id=userid)
-        print(basicobj.company_code)
-        poobj = PurchaseOrder.objects.filter(vendorcode=basicobj.company_code).values()
+        basicobj=BasicCompanyDetails.objects.filter(updated_by_id=userid).values()
+        # print(basicobj.company_code)
+        poobj = PurchaseOrder.objects.filter(vendorcode=basicobj[0].get('company_code')).values()
         if len(poobj) > 0:
             for i in range(0, len(poobj)):
                 print(poobj[i].get('rfq_number'))
@@ -3491,7 +3486,7 @@ def purchase_order_vendors_list(request):
                 print(len(selectsobj),'asfdfsdf')
                 if len(selectsobj)>0:
                     selecteduserid = selectsobj[0].get('updated_by_id')
-                    basicobj = BasicCompanyDetails.objects.get(updated_by_id=selecteduserid)
+                    basicobj = BasicCompanyDetails.objects.filter(updated_by_id=selecteduserid).values()
                     purchaseorderarray.append({'rfq_number': poobj[i].get('rfq_number'),
                                                'rfq_title': poobj[i].get('rfq_title'),
                                                'PO_date': poobj[i].get('PO_date'),
@@ -3504,8 +3499,8 @@ def purchase_order_vendors_list(request):
                                                'delivery_date': poobj[i].get('delivery_date'),
                                                'remind_date': poobj[i].get('remind_date'),
                                                'delivery_days': poobj[i].get('delivery_days'),
-                                               'company_code': basicobj.company_code,
-                                               'company_name': basicobj.company_name,
+                                               'company_code': basicobj[0].get('company_code'),
+                                               'company_name': basicobj[0].get('company_name'),
                                                'rfq_type':poobj[i].get('rfq_type'),
                                                'userid': poobj[i].get('updated_by_id')
 
@@ -3529,20 +3524,20 @@ def awards_vendor_list(request):
     userid=data['userid']
     awardarray = []
     try:
-        basicobj=BasicCompanyDetails.objects.get(updated_by_id=userid)
-        awardobj = Awards.objects.filter(company_code=basicobj.company_code).values()
+        basicobj=BasicCompanyDetails.objects.filter(updated_by_id=userid).values()
+        awardobj = Awards.objects.filter(company_code=basicobj[0].get('company_code')).values()
         for i in range(0,len(awardobj)):
             print(awardobj[i].get('company_code'))
             selectsobj = SelectVendorsForBiddingProduct.objects.filter(vendor_code=awardobj[i].get('company_code')).values()
             if len(selectsobj)>0:
                 print(len(selectsobj))
                 selecteduserid = selectsobj[i].get('updated_by_id')
-                basicobj = BasicCompanyDetails.objects.get(updated_by_id=selecteduserid)
+                basicobj = BasicCompanyDetails.objects.filter(updated_by_id=selecteduserid).values()
                 awardarray.append({
                     'rfq_number':awardobj[i].get('rfq_number'),
                     'rfq_title': awardobj[i].get('rfq_title'),
-                    'company_code': basicobj.company_code,
-                    'company_name':basicobj.company_name,
+                    'company_code': basicobj[0].get('company_code'),
+                    'company_name':basicobj[0].get('company_name'),
                     'buyer_bid_quantity':awardobj[i].get('buyer_bid_quantity'),
                     'vendor_bid_quantity':awardobj[i].get('vendor_bid_quantity'),
                     'totalamount': awardobj[i].get('totalamount'),
@@ -3793,8 +3788,8 @@ def deadline_expired_list(request):
     selectsarray=[]
     expiredlistarray=[]
     try:
-        basicobj = BasicCompanyDetails.objects.get(updated_by_id=userid)
-        selectobj = SelectVendorsForBiddingProduct.objects.filter(vendor_code=basicobj.company_code).values().order_by('id')
+        basicobj = BasicCompanyDetails.objects.filter(updated_by_id=userid).values()
+        selectobj = SelectVendorsForBiddingProduct.objects.filter(vendor_code=basicobj[0].get('company_code')).values().order_by('id')
         if len(selectobj)>0:
             for i in range(0,len(selectobj)):
                 selectsarray.append(selectobj[i].get('rfq_number'))
@@ -3812,11 +3807,11 @@ def deadline_expired_list(request):
                         bids = BuyerProductBidding.objects.get(user_rfq_number=bidobj[i].get('user_rfq_number'))
                         bids.product_rfq_status = 'Expired'
                         bids.save()
-                        basicobjval = BasicCompanyDetails.objects.get(updated_by_id=bidobj[i].get('updated_by_id'))
+                        basicobjval = BasicCompanyDetails.objects.filter(updated_by_id=bidobj[i].get('updated_by_id')).values()
                         bidobjdata = BuyerProductBidding.objects.get(user_rfq_number=bids.user_rfq_number, product_rfq_status='Expired')
                         expiredlistarray.append({'rfq_number': bidobjdata.user_rfq_number,
-                                                'vendorcode': basicobjval.company_code,
-                                                'company_name': basicobjval.company_name,
+                                                'vendorcode': basicobjval[0].get('company_code'),
+                                                'company_name': basicobjval[0].get('company_name'),
                                                 'rfq_title': bidobjdata.product_rfq_title,
                                                 'updatedby_id': bidobjdata.updated_by_id,
                                                 'publishdate': bidobjdata.product_publish_date,
@@ -3844,29 +3839,29 @@ def extended_deadline_date_list_create(request):
     rfqnumber = data['rfqnumber']
     deadline_date = data['deadline_date']
     try:
-        bidobj = BuyerProductBidding.objects.get(user_rfq_number=rfqnumber)
-        bidrfq = bidobj.user_rfq_number
+        bidobj = BuyerProductBidding.objects.filter(user_rfq_number=rfqnumber).values()
+        bidrfq = bidobj[0].get('user_rfq_number')
         selectobj = SelectVendorsForBiddingProduct.objects.filter(rfq_number=bidrfq,vendor_status='Accept').values()
         if len(selectobj)>0:
             for i in range(0, len(selectobj)):
                 print(selectobj[i].get('vendor_code'))
                 vendorcode = selectobj[i].get('vendor_code')
-                basicobj = BasicCompanyDetails.objects.get(company_code=vendorcode)
-                print(basicobj.updated_by_id)
+                basicobj = BasicCompanyDetails.objects.filter(company_code=vendorcode).values()
+                print(basicobj[0].get('updated_by_id'))
                 extended = ExtendedDateListBuyer.objects.create(user_rfq_number=bidrfq,
                                                               vendor_code=selectobj[i].get('vendor_code'),
-                                                              product_bidding_id=bidobj.product_bidding_id,
-                                                              product_rfq_status=bidobj.product_rfq_status,
-                                                              rfq_type=bidobj.product_rfq_type,
-                                                              product_publish_date=bidobj.product_publish_date,
-                                                              product_department=bidobj.product_department,
+                                                              product_bidding_id=bidobj[0].get('product_bidding_id'),
+                                                              product_rfq_status=bidobj[0].get('product_rfq_status'),
+                                                              rfq_type=bidobj[0].get('product_rfq_type'),
+                                                              product_publish_date=bidobj[0].get('product_publish_date'),
+                                                              product_department=bidobj[0].get('product_department'),
                                                               product_deadline_date=deadline_date,
-                                                              product_rfq_title=bidobj.product_rfq_title,
+                                                              product_rfq_title=bidobj[0].get('product_rfq_title'),
                                                               updated_by=SelfRegistration.objects.get(
                                                                   id=selectobj[i].get('updated_by_id')),
                                                               created_by=selectobj[i].get('updated_by_id'),
                                                               userid=userid,
-                                                              company_name=basicobj.company_name)
+                                                              company_name=basicobj[0].get('company_name'))
             return Response({'status': 201, 'message': 'Extended DeadLine Data Created Successfully'}, status=201)
         else:
             return Response({'status': 204, 'message': 'Vendors Not Present'}, status=204)
@@ -3890,9 +3885,9 @@ def extended_deadline_list_show(request):
                 print(len(selectsobj),'select')
                 if len(selectsobj)>0:
                     userids = selectsobj[i].get('updated_by_id')
-                    basicobj = BasicCompanyDetails.objects.get(updated_by_id=userids)
-                    newarray.append({'ccode': basicobj.company_code,
-                                     'cname': basicobj.company_name,
+                    basicobj = BasicCompanyDetails.objects.filter(updated_by_id=userids).values()
+                    newarray.append({'ccode': basicobj[0].get('company_code'),
+                                     'cname': basicobj[0].get('company_name'),
                                      'rfq_number': extendedobj[i].get('user_rfq_number'),
                                      'rfq_title': extendedobj[i].get('product_rfq_title'),
                                      'rfq_type': extendedobj[i].get('rfq_type'),
@@ -4309,9 +4304,9 @@ def deadline_date_list(request):
     expiredarray=[]
     try:
         if from_registration == 'False':
-            basicobj = BasicCompanyDetails.objects.get(updated_by=userid)
+            basicobj = BasicCompanyDetails.objects.filter(updated_by=userid).values()
             # print(basicobj)
-            selectvendorsobj = SelectVendorsForBiddingProduct.objects.filter(vendor_code=basicobj.company_code,
+            selectvendorsobj = SelectVendorsForBiddingProduct.objects.filter(vendor_code=basicobj[0].get('company_code'),
                                                                              vendor_status='Pending',
                                                                              from_registration='False').values()
             # print(len(selectvendorsobj),'length')
@@ -4322,15 +4317,15 @@ def deadline_date_list(request):
                     biddingval = BuyerProductBidding.objects.get(user_rfq_number=selectvendorsobj[i].get('rfq_number'),
                                                                  from_registration=from_registration)
                     print(biddingval.product_deadline_date, '--------')
-                    basicobjval = BasicCompanyDetails.objects.get(updated_by_id=biddingval.updated_by_id)
+                    basicobjval = BasicCompanyDetails.objects.filter(updated_by_id=biddingval.updated_by_id).values()
                     todaydate = date.today()
                     if biddingval.product_deadline_date > todaydate:
                         pass
                     else:
 
-                        expiredarray.append({'vendor_code': basicobjval.company_code,
+                        expiredarray.append({'vendor_code': basicobjval[0].get('company_code'),
                                              'user_rfq_number': biddingval.user_rfq_number,
-                                             'company_name': basicobjval.company_name,
+                                             'company_name': basicobjval[0].get('company_name'),
                                              'product_rfq_type': biddingval.product_rfq_type,
                                              'product_rfq_title': biddingval.product_rfq_title,
                                              'product_rfq_status': biddingval.product_rfq_status,
@@ -4480,8 +4475,8 @@ def purchase_order_email(request):
                     ccode = awardobj[0].get('company_code')
                     quantity = awardobj[0].get('buyer_bid_quantity')
                     itemstotal = awardobj[0].get('product_code')
-                    basicobj = BasicCompanyDetails.objects.get(company_code=ccode)
-                    regobj = SelfRegistration.objects.get(id=basicobj.updated_by_id)
+                    basicobj = BasicCompanyDetails.objects.filter(company_code=ccode).values()
+                    regobj = SelfRegistration.objects.get(id=basicobj[0].get('updated_by_id'))
                     if poobjget.attachment1:
                         urlvalue1 = "https://v2apis.vendorsin.com/" + poobjget.attachment1.url
                         dictval.append({"url":urlvalue1})
@@ -4510,7 +4505,7 @@ def purchase_order_email(request):
                             "poexpiry": poobjget.PO_expirydate,
                             "quantity": str(quantity),
                             'items': str(len(itemstotal)),
-                            "companyname": basicobj.company_name
+                            "companyname": basicobj[0].get('company_name')
                         },
                         headers=headers,
                         subject='PO Confirm',
@@ -4522,8 +4517,8 @@ def purchase_order_email(request):
                     ccode = awardobj[0].get('company_code')
                     quantity = awardobj[0].get('buyer_bid_quantity')
                     itemstotal = awardobj[0].get('product_code')
-                    basicobj = BasicCompanyDetails.objects.get(company_code=ccode)
-                    regobj = SelfRegistration.objects.get(id=basicobj.updated_by_id)
+                    basicobj = BasicCompanyDetails.objects.filter(company_code=ccode).values()
+                    regobj = SelfRegistration.objects.get(id=basicobj[0].get('updated_by_id'))
                     configuration = sib_api_v3_sdk.Configuration()
                     configuration.api_key[
                         'api-key'] = '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'
@@ -4541,7 +4536,7 @@ def purchase_order_email(request):
                             "poexpiry": poobjget.PO_expirydate,
                             "quantity": str(quantity),
                             'items': str(len(itemstotal)),
-                            "companyname": basicobj.company_name
+                            "companyname": basicobj[0].get('company_name')
                         },
                         headers=headers,
                         subject='PO Confirm'

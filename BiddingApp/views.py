@@ -1478,20 +1478,20 @@ def selected_vendors_product_list(request):
         print(len(selectobj))
         if selectobj:
             for i in range(0, len(selectobj)):
-                basicobj = BasicCompanyDetails.objects.get(company_code=selectobj[i].get('vendor_code'))
-                billobj=BillingAddress.objects.filter(updated_by_id=basicobj.updated_by_id).values()
-                print(basicobj.updated_by_id)
-                regobj = SelfRegistration.objects.get(id=basicobj.updated_by_id)
+                basicobj = BasicCompanyDetails.objects.filter(company_code=selectobj[i].get('vendor_code')).values()
+                billobj=BillingAddress.objects.filter(updated_by_id=basicobj[0].get('updated_by_id')).values()
+                print(basicobj[0].get('updated_by_id'))
+                regobj = SelfRegistration.objects.filter(id=basicobj[0].get('updated_by_id')).values()
                 selectarray.append({'rfq_number': selectobj[i].get('rfq_number'),
-                                    'vendorcode': basicobj.company_code,
-                                    'company_name': basicobj.company_name,
+                                    'vendorcode': basicobj[0].get('company_code'),
+                                    'company_name': basicobj[0].get('company_name'),
                                     'userid': selectobj[i].get('updated_by_id'),
                                     'vendor_status': selectobj[i].get('vendor_status'),
-                                    'company_type': basicobj.company_type,
-                                    'nature_of_business': regobj.nature_of_business,
+                                    'company_type': basicobj[0].get('company_type'),
+                                    'nature_of_business': regobj[0].get('nature_of_business'),
                                     'bill_state': billobj[0].get('bill_state'),
-                                    'email': regobj.username,
-                                    'phoneno': regobj.phone_number
+                                    'email': regobj[0].get('username'),
+                                    'phoneno': regobj[0].get('phone_number')
                                     })
 
             return Response({'status': 200, 'message': 'Selected Vendors Of Products List', 'data': selectarray},

@@ -1471,23 +1471,29 @@ def selected_vendors_product_list(request):
         selectobj = SelectVendorsForBiddingProduct.objects.filter(updated_by_id=userid, rfq_number=rfqnumber).values().order_by(
             'vendor_code')
         print(len(selectobj))
-        if selectobj:
+        if len(selectobj)>0:
+            # print('yes')
             for i in range(0, len(selectobj)):
+                # print(len(selectobj),selectobj[i].get('vendor_code'))
+
                 basicobj = BasicCompanyDetails.objects.filter(company_code=selectobj[i].get('vendor_code')).values()
-                billobj=BillingAddress.objects.filter(updated_by_id=basicobj[0].get('updated_by_id')).values()
-                print(basicobj[0].get('updated_by_id'))
-                regobj = SelfRegistration.objects.filter(id=basicobj[0].get('updated_by_id')).values()
-                selectarray.append({'rfq_number': selectobj[i].get('rfq_number'),
-                                    'vendorcode': basicobj[0].get('company_code'),
-                                    'company_name': basicobj[0].get('company_name'),
-                                    'userid': selectobj[i].get('updated_by_id'),
-                                    'vendor_status': selectobj[i].get('vendor_status'),
-                                    'company_type': basicobj[0].get('company_type'),
-                                    'nature_of_business': regobj[0].get('nature_of_business'),
-                                    'bill_state': billobj[0].get('bill_state'),
-                                    'email': regobj[0].get('username'),
-                                    'phoneno': regobj[0].get('phone_number')
-                                    })
+                if len(basicobj)>0:
+                    billobj=BillingAddress.objects.filter(updated_by_id=basicobj[0].get('updated_by_id')).values()
+                    # print(basicobj[0].get('updated_by_id'))
+                    regobj = SelfRegistration.objects.filter(id=basicobj[0].get('updated_by_id')).values()
+                    selectarray.append({'rfq_number': selectobj[i].get('rfq_number'),
+                                        'vendorcode': basicobj[0].get('company_code'),
+                                        'company_name': basicobj[0].get('company_name'),
+                                        'userid': selectobj[i].get('updated_by_id'),
+                                        'vendor_status': selectobj[i].get('vendor_status'),
+                                        'company_type': basicobj[0].get('company_type'),
+                                        'nature_of_business': regobj[0].get('nature_of_business'),
+                                        'bill_state': billobj[0].get('bill_state'),
+                                        'email': regobj[0].get('username'),
+                                        'phoneno': regobj[0].get('phone_number')
+                                        })
+                else:
+                    pass
 
             return Response({'status': 200, 'message': 'Selected Vendors Of Products List', 'data': selectarray},
                             status=200)

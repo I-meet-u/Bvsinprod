@@ -997,13 +997,16 @@ def email_otp_verify(request):
 def getcompanycode(request):
     data=request.data
     usercompcode=""
+    updated_by=data['updated_by']
     try:
         basicobj=BasicCompanyDetails.objects.filter().last()
         print(basicobj)
-        Basicobjuser=BasicCompanyDetails.objects.filter(updated_by=data['updated_by']).values()
+        Basicobjuser=BasicCompanyDetails.objects.filter(updated_by=updated_by).values()
         if len(Basicobjuser)!=0:
+            regobj=SelfRegistration.objects.filter(id=updated_by).values()
             usercompcode=Basicobjuser[0].get('company_code')
-            return Response({'status': 200, 'lastcompanycode':basicobj.company_code,'usercode':usercompcode}, status=200)
+            usertype=regobj[0].get('user_type')
+            return Response({'status': 200, 'lastcompanycode':basicobj.company_code,'usercode':usercompcode,'usertype':usertype}, status=200)
         else:
             return Response({'status': 202, 'lastcompanycode': basicobj.company_code, 'usercode':0},
                             status=202)

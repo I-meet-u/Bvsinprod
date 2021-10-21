@@ -1008,7 +1008,9 @@ def getcompanycode(request):
             usertype=regobj[0].get('user_type')
             return Response({'status': 200, 'lastcompanycode':basicobj.company_code,'usercode':usercompcode,'usertype':usertype}, status=200)
         else:
-            return Response({'status': 202, 'lastcompanycode': basicobj.company_code, 'usercode':0},
+            regobj = SelfRegistration.objects.filter(id=updated_by).values()
+            usertype = regobj[0].get('user_type')
+            return Response({'status': 202, 'lastcompanycode': basicobj.company_code, 'usercode':0,'usertype':usertype},
                             status=202)
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)

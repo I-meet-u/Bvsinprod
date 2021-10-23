@@ -340,10 +340,10 @@ def admin_pending_list(request):
                             "phone_number": regobj[i].get('phone_number'),
                             "nature_of_business": regobj[i].get('nature_of_business'),
                             "business_type": regobj[i].get('business_to_serve'),
+                            "dateofreg":regobj[i].get('created_on'),
                             "userid": regobj[i].get('id'),
                             "status":regobj[i].get('admin_approve')
-
-                                           })
+                        })
                     else:
                         adminarray.append({
                             "company_code": "",
@@ -354,6 +354,7 @@ def admin_pending_list(request):
                             "phone_number": regobj[i].get('phone_number'),
                             "nature_of_business": regobj[i].get('nature_of_business'),
                             "business_type": regobj[i].get('business_to_serve'),
+                            "dateofreg": regobj[i].get('created_on'),
                             "userid": regobj[i].get('id'),
                             "status": regobj[i].get('admin_approve')
                         })

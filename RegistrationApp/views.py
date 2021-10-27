@@ -1816,3 +1816,19 @@ def vendor_buyer_list(request):
             return Response({'status':401,'message':'UnAuthorized'},status=401)
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)
+
+@api_view(['put'])
+@permission_classes((AllowAny,))
+def admin_reject(request):
+    data=request.data
+    userid=data['userid']
+    try:
+        if data['token'] == "vsinadmindb":
+            for id in userid:
+                approve=SelfRegistration.objects.get(id=id)
+                if approve:
+                    approve.admin_approve ='pending'
+                    approve.save()
+                    return Response({'status': 200, 'message': 'ok'}, status=200)
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)

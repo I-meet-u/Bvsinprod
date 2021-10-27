@@ -1845,7 +1845,7 @@ def update_setup_status(request):
             update_status=SelfRegistration.objects.get(id=user_id)
             if update_status:
                 update_status.setupdate =date.today()
-                update_status.setupstatus = 'active'
+                update_status.setupstatus = 'Active'
                 update_status.subscriptionflag = 'True'
                 update_status.save()
                 return Response({'status': 200, 'message': 'ok'}, status=200)

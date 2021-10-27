@@ -818,6 +818,7 @@ def company_registration_list(request):
                                                   "setupstatus":regobj[i].get('setupstatus'),
                                                   "setupdate":regobj[i].get('setupdate'),
                                                   "subcriptionstatus":regobj[i].get('subscriptionflag'),
+                                                  "adminapprove": regobj[i].get('admin_approve'),
                                                   "registration_status": "Registration completed"})
                             else:
                                 emptydata.append({"id": x,
@@ -832,6 +833,7 @@ def company_registration_list(request):
                                                   "setupstatus": regobj[i].get('setupstatus'),
                                                   "setupdate": regobj[i].get('setupdate'),
                                                   "subcriptionstatus": regobj[i].get('subscriptionflag'),
+                                                  "adminapprove": regobj[i].get('admin_approve'),
                                                   "registration_status": "Industry hierarchy"})
                         else:
                             emptydata.append({"id": x,
@@ -846,6 +848,7 @@ def company_registration_list(request):
                                               "setupstatus": regobj[i].get('setupstatus'),
                                               "setupdate": regobj[i].get('setupdate'),
                                               "subcriptionstatus": regobj[i].get('subscriptionflag'),
+                                              "adminapprove":regobj[i].get('admin_approve'),
                                               "registration_status": "Seller info"})
                     else:
                         emptydata.append({"id": x,
@@ -860,6 +863,7 @@ def company_registration_list(request):
                                           "setupstatus": regobj[i].get('setupstatus'),
                                           "setupdate": regobj[i].get('setupdate'),
                                           "subcriptionstatus": regobj[i].get('subscriptionflag'),
+                                          "adminapprove": regobj[i].get('admin_approve'),
                                           "registration_status": "company details"})
 
             return Response({'status': 200, 'message': 'ok', 'data': emptydata}, status=200)

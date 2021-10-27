@@ -1852,3 +1852,22 @@ def update_setup_status(request):
 
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)
+
+
+@api_view(['put'])
+@permission_classes((AllowAny,))
+def update_setup_status_disable(request):
+    data = request.data
+    user_id= data['userid']
+    try:
+        if data['token'] == "vsinadmindb":
+            update_status=SelfRegistration.objects.get(id=user_id)
+            if update_status:
+                update_status.setupdate =date.today()
+                update_status.setupstatus = 'Pending'
+                update_status.subscriptionflag = False
+                update_status.save()
+                return Response({'status': 200, 'message': 'ok'}, status=200)
+
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)

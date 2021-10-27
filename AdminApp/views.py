@@ -815,6 +815,9 @@ def company_registration_list(request):
                                                   "phone_number": regobj[i].get('phone_number'),
                                                   "nature_of_business": regobj[i].get('nature_of_business'),
                                                   "business_type": regobj[i].get('business_to_serve'),
+                                                  "setupstatus":regobj[i].get('setupstatus'),
+                                                  "setupdate":regobj[i].get('setupdate'),
+                                                  "subcriptionstatus":regobj[i].get('subscriptionflag'),
                                                   "registration_status": "Registration completed"})
                             else:
                                 emptydata.append({"id": x,
@@ -826,6 +829,9 @@ def company_registration_list(request):
                                                   "phone_number": regobj[i].get('phone_number'),
                                                   "nature_of_business": regobj[i].get('nature_of_business'),
                                                   "business_type": regobj[i].get('business_to_serve'),
+                                                  "setupstatus": regobj[i].get('setupstatus'),
+                                                  "setupdate": regobj[i].get('setupdate'),
+                                                  "subcriptionstatus": regobj[i].get('subscriptionflag'),
                                                   "registration_status": "Industry hierarchy"})
                         else:
                             emptydata.append({"id": x,
@@ -837,6 +843,9 @@ def company_registration_list(request):
                                               "phone_number": regobj[i].get('phone_number'),
                                               "nature_of_business": regobj[i].get('nature_of_business'),
                                               "business_type": regobj[i].get('business_to_serve'),
+                                              "setupstatus": regobj[i].get('setupstatus'),
+                                              "setupdate": regobj[i].get('setupdate'),
+                                              "subcriptionstatus": regobj[i].get('subscriptionflag'),
                                               "registration_status": "Seller info"})
                     else:
                         emptydata.append({"id": x,
@@ -848,6 +857,9 @@ def company_registration_list(request):
                                           "phone_number": regobj[i].get('phone_number'),
                                           "nature_of_business": regobj[i].get('nature_of_business'),
                                           "business_type": regobj[i].get('business_to_serve'),
+                                          "setupstatus": regobj[i].get('setupstatus'),
+                                          "setupdate": regobj[i].get('setupdate'),
+                                          "subcriptionstatus": regobj[i].get('subscriptionflag'),
                                           "registration_status": "company details"})
 
             return Response({'status': 200, 'message': 'ok', 'data': emptydata}, status=200)

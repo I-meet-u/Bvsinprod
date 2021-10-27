@@ -397,7 +397,7 @@ def admin_approved_list(request):
                             "userid":regobj[i].get('id'),
                             "status": regobj[i].get('admin_approve'),
                             "setupstatus":regobj[i].get('setupstatus'),
-                            "subscriptionflag":regobj[i].get('admin_approve')
+                            "subscriptionflag":regobj[i].get('subscriptionflag')
 
                         })
                     else:
@@ -413,7 +413,7 @@ def admin_approved_list(request):
                             "userid": regobj[i].get('id'),
                             "status": regobj[i].get('admin_approve'),
                             "setupstatus": regobj[i].get('setupstatus'),
-                            "subscriptionflag": regobj[i].get('admin_approve')
+                            "subscriptionflag": regobj[i].get('subscriptionflag')
                         })
                 return Response({'status': 200, 'message': 'Approved List', 'data': adminarray}, status=200)
             else:

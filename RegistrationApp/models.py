@@ -24,6 +24,10 @@ class SelfRegistration(AbstractUser):
     department=models.CharField(max_length=100,null=True,blank=True)
     designation = models.CharField(max_length=100, null=True, blank=True)
     profile_cover_photo = models.FileField(upload_to='coverphoto',null=True)
+    setupstatus=models.CharField(max_length=50, default='Pending')
+    setupdate = models.CharField(max_length=100,null=True, blank=True)
+    subscriptionflag= models.BooleanField(default=False)
+
     # registration_status = models.CharField(max_length=80, default='Not Registered')
 
     class Meta:

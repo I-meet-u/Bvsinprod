@@ -395,7 +395,10 @@ def admin_approved_list(request):
                             "nature_of_business": regobj[i].get('nature_of_business'),
                             "business_type": regobj[i].get('business_to_serve'),
                             "userid":regobj[i].get('id'),
-                            "status": regobj[i].get('admin_approve')
+                            "status": regobj[i].get('admin_approve'),
+                            "setupstatus":regobj[i].get('setupstatus'),
+                            "subscriptionflag":regobj[i].get('admin_approve')
+
                         })
                     else:
                         adminarray.append({
@@ -408,7 +411,9 @@ def admin_approved_list(request):
                             "nature_of_business": regobj[i].get('nature_of_business'),
                             "business_type": regobj[i].get('business_to_serve'),
                             "userid": regobj[i].get('id'),
-                            "status": regobj[i].get('admin_approve')
+                            "status": regobj[i].get('admin_approve'),
+                            "setupstatus": regobj[i].get('setupstatus'),
+                            "subscriptionflag": regobj[i].get('admin_approve')
                         })
                 return Response({'status': 200, 'message': 'Approved List', 'data': adminarray}, status=200)
             else:

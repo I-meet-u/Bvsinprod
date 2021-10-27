@@ -1,6 +1,7 @@
 from __future__ import print_function
 import time
 import urllib
+from datetime import date
 from pprint import pprint
 import itertools
 import json
@@ -1830,5 +1831,24 @@ def admin_reject(request):
                     approve.admin_approve ='pending'
                     approve.save()
                     return Response({'status': 200, 'message': 'ok'}, status=200)
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)
+
+
+@api_view(['put'])
+@permission_classes((AllowAny,))
+def update_setup_status(request):
+    data = request.data
+    user_id= data['userid']
+    try:
+        if data['token'] == "vsinadmindb":
+            update_status=SelfRegistration.objects.get(id=user_id)
+            if update_status:
+                update_status.setupdate =date.today()
+                update_status.setupstatus = 'active'
+                update_status.subscriptionflag = 'True'
+                update_status.save()
+                return Response({'status': 200, 'message': 'ok'}, status=200)
+
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)

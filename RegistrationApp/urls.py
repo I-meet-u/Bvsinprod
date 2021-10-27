@@ -86,5 +86,6 @@ urlpatterns = [
     path('get-employee-industry-info-without-token/', views.get_employee_industry_info_without_token),
     path('get-industry-info-without-token/', views.get_industry_info_without_token),
     path('vendor-buyer-list/',views.vendor_buyer_list),
-    path('admin_reject/',views.admin_reject)
+    path('admin_reject/',views.admin_reject),
+    path('update_setup_status/',views.update_setup_status)
 ]

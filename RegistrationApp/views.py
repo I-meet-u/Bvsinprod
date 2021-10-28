@@ -1828,7 +1828,7 @@ def admin_reject(request):
             for id in userid:
                 approve=SelfRegistration.objects.get(id=id)
                 if approve:
-                    approve.admin_approve ='pending'
+                    approve.admin_approve ='Pending'
                     approve.save()
                     return Response({'status': 200, 'message': 'ok'}, status=200)
     except Exception as e:

@@ -948,6 +948,10 @@ def update_buyer_products(request):
             buyer_document = data['buyer_document']
             buyer_additional_specifications = data['buyer_additional_specifications']
             buyer_add_product_supplies = data['buyer_add_product_supplies']
+            buyer_document_1=data['buyer_document_1']
+            buyer_document_2=data['buyer_document_2']
+
+
 
             productobj= BuyerProductDetails.objects.filter(updated_by_id=userid,buyer_product_id=buyer_product_id,buyer_item_type=itemtype).values()
             if len(productobj)>0:
@@ -999,6 +1003,14 @@ def update_buyer_products(request):
 
                     if productobjget.buyer_document != buyer_document:
                         productobjget.buyer_document = buyer_document
+                        productobjget.save()
+
+                    if productobjget.buyer_document_1!=buyer_document_1:
+                        productobjget.buyer_document_1 = buyer_document_1
+                        productobjget.save()
+
+                    if productobjget.buyer_document_2!=buyer_document_2:
+                        productobjget.buyer_document_2 = buyer_document_2
                         productobjget.save()
 
                     if productobjget.buyer_additional_specifications != buyer_additional_specifications:

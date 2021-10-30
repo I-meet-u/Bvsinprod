@@ -1000,18 +1000,19 @@ def update_buyer_products(request):
                     if productobjget.buyer_model_no != buyer_model_no:
                         productobjget.buyer_model_no = buyer_model_no
                         productobjget.save()
+                    if buyer_document!="":
+                        if productobjget.buyer_document != buyer_document:
+                            productobjget.buyer_document = buyer_document
+                            productobjget.save()
+                    if buyer_document_1!="":
+                        if productobjget.buyer_document_1!=buyer_document_1:
+                            productobjget.buyer_document_1 = buyer_document_1
+                            productobjget.save()
 
-                    if productobjget.buyer_document != buyer_document:
-                        productobjget.buyer_document = buyer_document
-                        productobjget.save()
-
-                    if productobjget.buyer_document_1!=buyer_document_1:
-                        productobjget.buyer_document_1 = buyer_document_1
-                        productobjget.save()
-
-                    if productobjget.buyer_document_2!=buyer_document_2:
-                        productobjget.buyer_document_2 = buyer_document_2
-                        productobjget.save()
+                    if buyer_document_2!="":
+                        if productobjget.buyer_document_2!=buyer_document_2:
+                            productobjget.buyer_document_2 = buyer_document_2
+                            productobjget.save()
 
                     if productobjget.buyer_additional_specifications != buyer_additional_specifications:
                         productobjget.buyer_additional_specifications = buyer_additional_specifications

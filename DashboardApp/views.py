@@ -22,7 +22,8 @@ from pprint import pprint
 from BiddingApp.models import VendorProductBidding, SourceList_CreateItems, SelectVendorsForBiddingProduct, \
     BuyerProductBidding, PurchaseOrder, SourcePublish, SourceAwards, Awards
 from MastersApp.models import MaincoreMaster
-from MaterialApp.models import LandingPageBidding, LandingPageBidding_Publish, VendorProduct_BasicDetails
+from MaterialApp.models import LandingPageBidding, LandingPageBidding_Publish, VendorProduct_BasicDetails, \
+    awardpostedRFQ
 from RegistrationApp.models import BasicCompanyDetails, IndustrialInfo, IndustrialHierarchy, BillingAddress
 from .models import *
 from .serializers import *
@@ -1078,6 +1079,7 @@ def buyer_dashboard_charts_counts(request):
         landingpageobj=LandingPageBidding.objects.filter(updated_by_id=userid).values()
         landingpagepending = LandingPageBidding.objects.filter(updated_by_id=userid,status='Pending').values()
         landingpagepublish= LandingPageBidding_Publish.objects.filter(updated_by_id=userid).values()
+        landingpageawardobj=awardpostedRFQ.objects.filter(updated_by_id=userid).values()
         landingpageclosedobj = LandingPageBidding.objects.filter(updated_by_id=userid, status='Pending').values().order_by(
             'id')
         landingpageresponseobj=get_listed_list_response(userid,auth_token)
@@ -1111,6 +1113,7 @@ def buyer_dashboard_charts_counts(request):
                             'listing_leads_publish':len(landingpagepublish),
                             'listing_leads_closed':len(listingleadsclosedarray),
                             'listing_leads_response':len(landingpageresponseobj['data']),
+                            'listing_leads_awards':len(landingpageawardobj),
                             'buyer_awards':len(awardobj)
                             })
         return Response({'status': 200, 'message': 'Buyer Charts Count List','data':buyercharts}, status=200)

@@ -229,3 +229,25 @@ def get_source_list_leads(userid,auth_token):
             return json2
     except Exception as e:
         return e
+
+
+# https://v2apis.vendorsin.com/materials/getbuyerpostedresponse/
+
+def get_listed_list_response(userid,auth_token):
+    try:
+        # json1 = {'status': 204, 'message': 'Not Present', 'data': []}
+        json2 = {'status': 500, 'message': 'Not Present', 'data': []}
+        auth={'Authorization':auth_token}
+        url = "https://v2apis.vendorsin.com/materials/getbuyerpostedresponse/"
+        # url="http://20.193.226.5/bidding/deadline-date-list/"
+        dataobj={'userid':userid}
+        r = requests.post(url, headers=auth,json=dataobj)
+        print('---------------------',r.status_code)
+
+        if r.status_code==200:
+            vendorpublishedval = r.json()
+            return vendorpublishedval
+        if r.status_code==500:
+            return json2
+    except Exception as e:
+        return e

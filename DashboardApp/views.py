@@ -27,7 +27,8 @@ from RegistrationApp.models import BasicCompanyDetails, IndustrialInfo, Industri
 from .models import *
 from .serializers import *
 from .service import get_open_bid_list, get_vendor_award_list, get_purchase_order_vendor_list, get_source_created_items, \
-    get_deadline_date, total_all_responses_buyer, get_vendor_published_list, get_source_list_leads,get_business_connections, get_business_requests_list, get_business_accept_list
+    get_deadline_date, total_all_responses_buyer, get_vendor_published_list, get_source_list_leads, \
+    get_business_connections, get_business_requests_list, get_business_accept_list, get_listed_list_response
 
 
 class InviteVendorView(viewsets.ModelViewSet):
@@ -1079,6 +1080,7 @@ def buyer_dashboard_charts_counts(request):
         landingpagepublish= LandingPageBidding_Publish.objects.filter(updated_by_id=userid).values()
         landingpageclosedobj = LandingPageBidding.objects.filter(updated_by_id=userid, status='Pending').values().order_by(
             'id')
+        landingpageresponseobj=get_listed_list_response(userid,auth_token)
         awardobj=Awards.objects.filter(updated_by_id=userid).values()
         for i in range(0, len(landingpageclosedobj)):
             deadlinedateval = datetime.strptime(landingpageclosedobj[i].get('deadline_date'), '%Y-%m-%d')
@@ -1108,6 +1110,7 @@ def buyer_dashboard_charts_counts(request):
                             'listing_leads_pending':len(landingpagepending),
                             'listing_leads_publish':len(landingpagepublish),
                             'listing_leads_closed':len(listingleadsclosedarray),
+                            'listing_leads_response':len(landingpageresponseobj['data']),
                             'buyer_awards':len(awardobj)
                             })
         return Response({'status': 200, 'message': 'Buyer Charts Count List','data':buyercharts}, status=200)

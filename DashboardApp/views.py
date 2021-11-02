@@ -401,26 +401,47 @@ def sendergetbuzrequestdata(request):
         buzobj = BusinessRequest.objects.filter(updated_by_id=userid).order_by('company_code').values()
         if len(buzobj)>0:
             for i in range(0,len(buzobj)):
+                print('came')
                 basicobj=BasicCompanyDetails.objects.filter(company_code=buzobj[i].get('company_code')).values()
-                regobj=SelfRegistration.objects.get(id=basicobj[0].get('updated_by_id'))
-                businessrequestarray.append({'company_code':buzobj[i].get('company_code'),
-                                             'company_name':buzobj[i].get('company_name'),
-                                             'city':buzobj[i].get('city'),
-                                             'state':buzobj[i].get('state'),
-                                             'nature_of_business':buzobj[i].get('nature_of_business'),
-                                             'supply_capabilites':buzobj[i].get('supply_capabilites'),
-                                             'industry_to_serve':buzobj[i].get('industry_to_serve'),
-                                             'maincore':buzobj[i].get('maincore'),
-                                             'category':buzobj[i].get('category'),
-                                             'gst_number': buzobj[i].get('gst_number'),
-                                             'sub_category':buzobj[i].get('sub_category'),
-                                             'send_status':buzobj[i].get('send_status'),
-                                             'created_by':buzobj[i].get('created_by'),
-                                             'updated_by':buzobj[i].get('updated_by_id'),
-                                             'usertype':regobj.user_type
+                if len(basicobj)>0:
+                    regobj=SelfRegistration.objects.get(id=basicobj[0].get('updated_by_id'))
+                    businessrequestarray.append({'company_code':buzobj[i].get('company_code'),
+                                                 'company_name':buzobj[i].get('company_name'),
+                                                 'city':buzobj[i].get('city'),
+                                                 'state':buzobj[i].get('state'),
+                                                 'nature_of_business':buzobj[i].get('nature_of_business'),
+                                                 'supply_capabilites':buzobj[i].get('supply_capabilites'),
+                                                 'industry_to_serve':buzobj[i].get('industry_to_serve'),
+                                                 'maincore':buzobj[i].get('maincore'),
+                                                 'category':buzobj[i].get('category'),
+                                                 'gst_number': buzobj[i].get('gst_number'),
+                                                 'sub_category':buzobj[i].get('sub_category'),
+                                                 'send_status':buzobj[i].get('send_status'),
+                                                 'created_by':buzobj[i].get('created_by'),
+                                                 'updated_by':buzobj[i].get('updated_by_id'),
+                                                 'usertype':regobj.user_type
 
 
-                                             })
+                                                 })
+                else:
+                    businessrequestarray.append({'company_code': buzobj[i].get('company_code'),
+                                                 'company_name': buzobj[i].get('company_name'),
+                                                 'city': buzobj[i].get('city'),
+                                                 'state': buzobj[i].get('state'),
+                                                 'nature_of_business': buzobj[i].get('nature_of_business'),
+                                                 'supply_capabilites': buzobj[i].get('supply_capabilites'),
+                                                 'industry_to_serve': buzobj[i].get('industry_to_serve'),
+                                                 'maincore': buzobj[i].get('maincore'),
+                                                 'category': buzobj[i].get('category'),
+                                                 'gst_number': buzobj[i].get('gst_number'),
+                                                 'sub_category': buzobj[i].get('sub_category'),
+                                                 'send_status': buzobj[i].get('send_status'),
+                                                 'created_by': buzobj[i].get('created_by'),
+                                                 'updated_by': buzobj[i].get('updated_by_id'),
+                                                 'usertype': "",
+
+                                                 })
+
             return Response({'status': 200, 'message': 'ok', 'data': businessrequestarray}, status=200)
         else:
             return Response({'status': 204, 'message': 'No data present in business request','data':[]}, status=204)

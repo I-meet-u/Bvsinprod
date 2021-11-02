@@ -1080,7 +1080,7 @@ def buyer_dashboard_charts_counts(request):
         landingpagepending = LandingPageBidding.objects.filter(updated_by_id=userid,status='Pending').values()
         landingpagepublish= LandingPageBidding_Publish.objects.filter(updated_by_id=userid).values()
         landingpageawardobj=awardpostedRFQ.objects.filter(updated_by_id=userid).values()
-        landingpageclosedobj = LandingPageBidding.objects.filter(updated_by_id=userid, status='Pending').values().order_by(
+        landingpageclosedobj = LandingPageBidding.objects.filter(updated_by_id=userid).values().order_by(
             'id')
         landingpageresponseobj=get_listed_list_response(userid,auth_token)
         awardobj=Awards.objects.filter(updated_by_id=userid).values()

@@ -1793,7 +1793,9 @@ def vendor_buyer_list(request):
                                                 "profile_image": regobj[i].get('profile_cover_photo'),
                                                 "user_type": regobj[i].get('user_type'),
                                                 "nature_of_business":regobj[i].get('nature_of_business'),
-                                                "maincore": maincoreobj[0].get('maincore')
+                                                "maincore": maincoreobj[0].get('maincore'),
+                                                "category":maincoreobj[0].get('category'),
+                                                "subcategory":maincoreobj[0].get('subcategory')
 
 
                                                 })

@@ -1084,6 +1084,8 @@ def buyer_dashboard_charts_counts(request):
             'id')
         landingpageresponseobj=get_listed_list_response(userid,auth_token)
         awardobj=Awards.objects.filter(updated_by_id=userid).values()
+        businessrequestlist = get_business_requests_list(userid, auth_token)
+        businessconnections = get_business_connections(userid, auth_token)
         for i in range(0, len(landingpageclosedobj)):
             deadlinedateval = datetime.strptime(landingpageclosedobj[i].get('deadline_date'), '%Y-%m-%d')
             deadlinedateconvertion = datetime.date(deadlinedateval)
@@ -1114,6 +1116,8 @@ def buyer_dashboard_charts_counts(request):
                             'listing_leads_closed':len(listingleadsclosedarray),
                             'listing_leads_response':len(landingpageresponseobj['data']),
                             'listing_leads_awards':len(landingpageawardobj),
+                            'bizRequestVendorLength':len(businessrequestlist['data']),
+                            'bizConnectionsVendorLength':len(businessconnections['data']),
                             'buyer_awards':len(awardobj)
                             })
         return Response({'status': 200, 'message': 'Buyer Charts Count List','data':buyercharts}, status=200)

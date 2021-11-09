@@ -4595,3 +4595,17 @@ def source_list_leads_all(request):
 
     except Exception as e:
         return Response({'status': 500, 'message': str(e)}, status=500)
+
+
+@api_view(['post'])
+def fetch_source_data_by_userid(request):
+    data=request.data
+    userid=data['userid']
+    try:
+        sourceobj=SourceList_CreateItems.objects.filter(updated_by_id=userid).values().order_by('id')
+        if len(sourceobj)>0:
+            return Response({'status':200,'message':'Source List','data':sourceobj},status=status.HTTP_200_OK)
+        else:
+            return  Response({'status':204,'message':'Source Data Not Present'},status=status.HTTP_204_NO_CONTENT)
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)

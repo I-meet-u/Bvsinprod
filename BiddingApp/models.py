@@ -448,6 +448,8 @@ class SourceList_CreateItems(models.Model):
     payment_terms=models.CharField(max_length=200,null=True,blank=True)
     warranty=models.CharField(max_length=200,null=True,blank=True)
     remarks=models.CharField(max_length=200,null=True,blank=True)
+    maincore = models.CharField(max_length=200, null=True, blank=True)
+    category = models.CharField(max_length=200, null=True, blank=True)
 
 
     class Meta:

@@ -541,6 +541,7 @@ class BuyerProductDetailsView(viewsets.ModelViewSet):
         buyer_document_2 = request.data.get('buyer_document_2', None)
         buyer_additional_specifications = request.data.get('buyer_additional_specifications',None)
         buyer_add_product_supplies = request.data.get('buyer_add_product_supplies',None)
+        custom_code=request.data.get('custom_code',None)
         userid = request.data.get('userid',None)
         try:
             itemcodesettingsobj = ItemCodeSettings.objects.filter(updated_by=userid,item_type='Product').order_by('-id').values()
@@ -571,7 +572,9 @@ class BuyerProductDetailsView(viewsets.ModelViewSet):
                                                                   buyer_additional_specifications=buyer_additional_specifications,
                                                                   buyer_add_product_supplies=buyer_add_product_supplies,
                                                                   updated_by=SelfRegistration.objects.get(id=userid),
-                                                                  created_by=userid)
+                                                                  created_by=userid,
+                                                                  custom_code=custom_code
+                                                                  )
                 else:
                     buyerobj = BuyerProductDetails.objects.create(buyer_item_type=buyer_item_type,
                                                                   buyer_prefix=buyerproductobj[0].get('buyer_prefix'),
@@ -595,7 +598,9 @@ class BuyerProductDetailsView(viewsets.ModelViewSet):
                                                                   buyer_additional_specifications=buyer_additional_specifications,
                                                                   buyer_add_product_supplies=buyer_add_product_supplies,
                                                                   updated_by=SelfRegistration.objects.get(id=userid),
-                                                                  created_by=userid)
+                                                                  created_by=userid,
+                                                                  custom_code=custom_code
+                                                                  )
                 return Response({'status':201,'message':'Buyer Product Created'},status=201)
             else:
                 return Response(
@@ -637,6 +642,7 @@ class BuyerServiceDetailsView(viewsets.ModelViewSet):
         buyer_service_document_2 = request.data.get('buyer_service_document_2',None)
         buyer_service_additional_specifications = request.data.get('buyer_service_additional_specifications',None)
         buyer_service_add_product_supplies = request.data.get('buyer_service_add_product_supplies',None)
+        custom_code=request.data.get('custom_code',None)
         userid = request.data.get('userid',None)
         try:
             itemcodesettingsobj = ItemCodeSettings.objects.filter(updated_by=userid,item_type='Service').order_by('-id').values()
@@ -666,7 +672,9 @@ class BuyerServiceDetailsView(viewsets.ModelViewSet):
                                                                   buyer_service_additional_specifications=buyer_service_additional_specifications,
                                                                   buyer_service_add_product_supplies=buyer_service_add_product_supplies,
                                                                   updated_by=SelfRegistration.objects.get(id=userid),
-                                                                  created_by=userid)
+                                                                  created_by=userid,
+                                                                  custom_code=custom_code
+                                                                         )
                 else:
                     buyerserviceobj = BuyerServiceDetails.objects.create(buyer_service_item_type=buyer_service_item_type,
                                                                   buyer_service_prefix=buyerserviceobj[0].get('buyer_service_prefix'),
@@ -690,7 +698,9 @@ class BuyerServiceDetailsView(viewsets.ModelViewSet):
                                                                   buyer_service_additional_specifications=buyer_service_additional_specifications,
                                                                   buyer_service_add_product_supplies=buyer_service_add_product_supplies,
                                                                   updated_by=SelfRegistration.objects.get(id=userid),
-                                                                  created_by=userid)
+                                                                  created_by=userid,
+                                                                  custom_code=custom_code
+                                                                         )
                 return Response({'status':201,'message':'Buyer Service Created'},status=201)
             else:
                 return Response(
@@ -732,6 +742,7 @@ class BuyerMachinaryDetailsView(viewsets.ModelViewSet):
         buyer_machinary_document_2= request.data.get('buyer_machinary_document_2', None)
         buyer_machinary_additional_specifications = request.data.get('buyer_machinary_additional_specifications',None)
         buyer_machinary_add_product_supplies = request.data.get('buyer_machinary_add_product_supplies',None)
+        custom_code = request.data.get('custom_code', None)
         userid = request.data.get('userid',None)
         try:
             itemcodesettingsobj = ItemCodeSettings.objects.filter(updated_by=userid,item_type='Machinary & equipments').order_by('-id').values()
@@ -761,7 +772,9 @@ class BuyerMachinaryDetailsView(viewsets.ModelViewSet):
                                                                   buyer_machinary_additional_specifications=buyer_machinary_additional_specifications,
                                                                   buyer_machinary_add_product_supplies=buyer_machinary_add_product_supplies,
                                                                   updated_by=SelfRegistration.objects.get(id=userid),
-                                                                  created_by=userid)
+                                                                  created_by=userid,
+                                                                  custom_code=custom_code
+                                                                          )
                 else:
                     buyermachinary = BuyerMachinaryDetails.objects.create(buyer_machinary_item_type=buyer_machinary_item_type,
                                                                   buyer_machinary_prefix=buyermachinaryobj[0].get('buyer_machinary_prefix'),
@@ -785,7 +798,9 @@ class BuyerMachinaryDetailsView(viewsets.ModelViewSet):
                                                                   buyer_machinary_additional_specifications=buyer_machinary_additional_specifications,
                                                                   buyer_machinary_add_product_supplies=buyer_machinary_add_product_supplies,
                                                                   updated_by=SelfRegistration.objects.get(id=userid),
-                                                                  created_by=userid)
+                                                                  created_by=userid,
+                                                                  custom_code=custom_code
+                                                                          )
                 return Response({'status':201,'message':'Buyer Equipments Created'},status=201)
             else:
                 return Response(

@@ -4610,3 +4610,23 @@ def fetch_source_data_by_userid(request):
             return  Response({'status':204,'message':'Source Data Not Present'},status=status.HTTP_204_NO_CONTENT)
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)
+
+@api_view(['post'])
+@permission_classes((AllowAny,))
+def buyer_award_bidding(request):
+    data = request.data
+    company_code= data['company_code']
+    rfq_number = data['rfq_number']
+    try:
+            company_details=BasicCompanyDetails.objects.filter(company_code=company_code).values()
+            if company_details:
+                vendor_product_bidding =VendorProductBidding.objects.filter(vendor_user_rfq_number=rfq_number,updated_by=company_details[0].get('updated_by_id')).values()
+                if vendor_product_bidding:
+                    Vendor_Bidding_Buyer_Product_Details =VendorBiddingBuyerProductDetails.objects.filter(vendor_rfq_number=rfq_number,updated_by=company_details[0].get('updated_by_id')).values()
+                    Vendor_Rfq_Terms_Description = VendorRfqTermsDescription.objects.filter(vendor_rfq_number=rfq_number,vendor_product_biddings =vendor_product_bidding[0].get('vendor_product_bidding_id')).values()
+                return Response({'status': 200, 'message': 'ok','vendorbidbasic':vendor_product_bidding,'vendorbiddingbyerproductdetails':Vendor_Bidding_Buyer_Product_Details,'vendorrfqtermsdescription':Vendor_Rfq_Terms_Description}, status=200)
+
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)
+
+

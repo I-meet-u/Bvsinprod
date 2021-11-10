@@ -4632,6 +4632,7 @@ def buyer_award_bidding(request):
 
 
 @api_view(['post'])
+@permission_classes((AllowAny,))
 def get_all_source_leads(request):
     try:
         bidobj =SourceList_CreateItems.objects.filter().values()
@@ -4643,6 +4644,7 @@ def get_all_source_leads(request):
         return Response({'status': 500, 'error': str(e)}, status=500)
 
 @api_view(['post'])
+@permission_classes((AllowAny,))
 def get_all_source_leads_by_id(request):
     data = request.data
     id = data['source_pk']

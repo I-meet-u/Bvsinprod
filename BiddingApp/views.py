@@ -4630,3 +4630,27 @@ def buyer_award_bidding(request):
         return Response({'status': 500, 'error': str(e)}, status=500)
 
 
+
+@api_view(['post'])
+def get_all_source_leads(request):
+    try:
+        bidobj =SourceList_CreateItems.objects.filter().values()
+        if len(bidobj)>-0:
+            return Response({'status': 200, 'message': 'ok', 'data': bidobj}, status=200)
+        else:
+            return Response({'status': 204, 'message': 'Not Present'}, status=204)
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)
+
+@api_view(['post'])
+def get_all_source_leads_by_id(request):
+    data = request.data
+    id = data['source_pk']
+    try:
+        bidobj =SourceList_CreateItems.objects.filter(id=id).values()
+        if len(bidobj)>0:
+            return Response({'status': 200, 'message': 'ok', 'data': bidobj}, status=200)
+        else:
+            return Response({'status': 204, 'message': 'Not Present'}, status=204)
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)

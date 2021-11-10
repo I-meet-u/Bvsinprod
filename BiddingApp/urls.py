@@ -111,7 +111,10 @@ urlpatterns = [
     path('purchase_order_email/',views.purchase_order_email),
     path('source-list-leads-all/', views.source_list_leads_all),
     path('fetch-source-data-by-userid/',views.fetch_source_data_by_userid),
-    path('buyer_award_bidding/',views.buyer_award_bidding)
+    path('buyer_award_bidding/',views.buyer_award_bidding),
+    path('allsourcelist/',views.get_all_source_leads),
+    path('allsourcelistbyid/',views.get_all_source_leads_by_id)
+
 
 
 ]

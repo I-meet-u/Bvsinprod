@@ -150,6 +150,7 @@ class BuyerProductDetails(models.Model):
     updated_on = models.DateTimeField(auto_now=True)
     created_by = models.BigIntegerField()
     updated_by = models.ForeignKey(SelfRegistration, on_delete=models.CASCADE)
+    custom_code=models.CharField(max_length=200,null=True,blank=True)
     history = HistoricalRecords()
 
     class Meta:
@@ -184,6 +185,7 @@ class BuyerServiceDetails(models.Model):
     updated_on = models.DateTimeField(auto_now=True)
     created_by = models.BigIntegerField()
     updated_by = models.ForeignKey(SelfRegistration, on_delete=models.CASCADE)
+    custom_code = models.CharField(max_length=200, null=True, blank=True)
     history = HistoricalRecords()
 
     class Meta:
@@ -219,6 +221,7 @@ class BuyerMachinaryDetails(models.Model):
     updated_on = models.DateTimeField(auto_now=True)
     created_by = models.BigIntegerField()
     updated_by = models.ForeignKey(SelfRegistration,on_delete=models.CASCADE)
+    custom_code = models.CharField(max_length=200, null=True, blank=True)
     history = HistoricalRecords()
 
     class Meta:

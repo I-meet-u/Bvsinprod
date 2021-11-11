@@ -1021,8 +1021,7 @@ class SourceList_CreateItemViewSet(viewsets.ModelViewSet):
     queryset = SourceList_CreateItems.objects.all()
     serializer_class = SourceList_CreateItemsSerializer
     parser = [MultiPartParser]
-    ordering_fields = ['id']
-    ordering = ['id']
+
 
     def get_queryset(self):
         sourcelistcreateitemsobj = SourceList_CreateItems.objects.filter(updated_by=self.request.GET.get('updated_by'))
@@ -4634,12 +4633,16 @@ def buyer_award_bidding(request):
 @api_view(['post'])
 @permission_classes((AllowAny,))
 def get_all_source_leads(request):
+    get_vendors=request.data['get_vendors']
     try:
-        bidobj =SourceList_CreateItems.objects.filter().values()
-        if len(bidobj)>-0:
-            return Response({'status': 200, 'message': 'ok', 'data': bidobj}, status=200)
+        if get_vendors=='True':
+            bidobj =SourceList_CreateItems.objects.filter(get_vendors=get_vendors).values()
+            if len(bidobj)>-0:
+                return Response({'status': 200, 'message': 'ok', 'data': bidobj}, status=200)
+            else:
+                return Response({'status': 204, 'message': 'Not Present'}, status=204)
         else:
-            return Response({'status': 204, 'message': 'Not Present'}, status=204)
+            return Response({'status': 202, 'message': 'Matching data does not exist'}, status=202)
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)
 

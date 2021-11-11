@@ -1322,7 +1322,7 @@ def bidding_data_responses_count(request):
                 if uservendorrfxdetails[i].get('rfq_number') not in rfxarray:
                     rfxarray.append(uservendorrfxdetails[i].get('rfq_number'))
             for i in range(0, len(rfxarray)):
-                biddingbasicdatadetails = BuyerProductBidding.objects.get(user_rfq_number=rfxarray[i],from_registration=from_registration)
+                biddingbasicdatadetails = BuyerProductBidding.objects.filter(user_rfq_number=rfxarray[i],from_registration=from_registration).values()
                 basicobj=BasicCompanyDetails.objects.filter(updated_by_id=userid).values()
 
                 rfxdetails = SelectVendorsForBiddingProduct.objects.filter(rfq_number=rfxarray[i],from_registration=from_registration).values().order_by(
@@ -1335,23 +1335,26 @@ def bidding_data_responses_count(request):
                         rejected = rejected + 1
                     if (rfxdetails[j].get('vendor_status') == "Pending"):
                         pending = pending + 1
-                totalresponse.append({'rfq_number': rfxarray[i],
-                                      'rfq_title': biddingbasicdatadetails.product_rfq_title,
-                                      'rfq_type':biddingbasicdatadetails.product_rfq_type,
+
+                if len(biddingbasicdatadetails)!=0:
+
+                    totalresponse.append({'rfq_number': rfxarray[i],
+                                      'rfq_title': biddingbasicdatadetails[0].get('product_rfq_title'),
+                                      'rfq_type':biddingbasicdatadetails[0].get('product_rfq_type'),
                                       'total_sent': totalsent,
                                       'total_response': accepted + rejected,
                                       'pending': pending,
                                       'total_rejected': rejected,
                                       'total_accepted': accepted,
-                                      'publish_date': biddingbasicdatadetails.product_publish_date,
-                                      'deadline_date': biddingbasicdatadetails.product_deadline_date,
-                                      'department_master': biddingbasicdatadetails.product_department,
+                                      'publish_date': biddingbasicdatadetails[0].get('product_publish_date'),
+                                      'deadline_date': biddingbasicdatadetails[0].get('product_deadline_date'),
+                                      'department_master': biddingbasicdatadetails[0].get('product_department'),
                                       'company_code':basicobj[0].get('company_code'),
                                       'company_name':basicobj[0].get('company_name'),
-                                      'rfq_status':biddingbasicdatadetails.product_rfq_status
+                                      'rfq_status':biddingbasicdatadetails[0].get('product_rfq_status')
 
                                       })
-                print(biddingbasicdatadetails.product_rfq_title)
+
                 pending = 0
                 totalsent = 0
                 accepted = 0

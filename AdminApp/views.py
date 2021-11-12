@@ -1921,3 +1921,29 @@ def get_create_buyer_list_companycode(request):
         return Response({'status': 500, 'message': str(e)}, status=500)
 
 
+
+@api_view(['post'])
+def open_leads_vendor_publish_rfq(request):
+    data = request.data
+    user_id = data['user_id']
+    open_leads_vendor_publish_rfq_data=[]
+    try:
+
+        vendor_publish_rfq_data=OpenLeadsVendorPublishRfq.objects.filter( updated_by=user_id).values()
+        for i in range(0,len(vendor_publish_rfq_data)):
+            print(vendor_publish_rfq_data[i].get('buyer_company_code'))
+            create_buyer_data =CreateBuyer.objects.filter(company_code=vendor_publish_rfq_data[i].get('buyer_company_code')).values()
+            open_leads_vendor_publish_rfq_data.append({'ccode': vendor_publish_rfq_data[i].get('buyer_company_code'),
+                                                       'cname':create_buyer_data[0].get('company_name'),
+                                                       'city':create_buyer_data[0].get('bill_city'),
+                                                       'rfq_number': vendor_publish_rfq_data[i].get('vendor_rfq_number'),
+                                                       'rfq_title': vendor_publish_rfq_data[i].get('vendor_rfq_title'),
+                                                       'rfq_type': vendor_publish_rfq_data[i].get('vendor_rfq_type'),
+                                                       'final_amount':vendor_publish_rfq_data[i].get('final_amount'),
+                                                       'publish_date': vendor_publish_rfq_data[i].get('vendor_publish_date'),
+                                                       'deadline_date': vendor_publish_rfq_data[i].get('vendor_deadline_date')
+
+            })
+        return Response({'status': 200, 'message': 'ok','opnleadsvendorpublishrfg':open_leads_vendor_publish_rfq_data,}, status=200)
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)

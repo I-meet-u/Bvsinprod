@@ -1921,7 +1921,6 @@ def get_create_buyer_list_companycode(request):
         return Response({'status': 500, 'message': str(e)}, status=500)
 
 
-
 @api_view(['post'])
 def open_leads_vendor_publish_rfq(request):
     data = request.data
@@ -1933,7 +1932,8 @@ def open_leads_vendor_publish_rfq(request):
         for i in range(0,len(vendor_publish_rfq_data)):
             print(vendor_publish_rfq_data[i].get('buyer_company_code'))
             create_buyer_data =CreateBuyer.objects.filter(company_code=vendor_publish_rfq_data[i].get('buyer_company_code')).values()
-            open_leads_vendor_publish_rfq_data.append({'ccode': vendor_publish_rfq_data[i].get('buyer_company_code'),
+            open_leads_vendor_publish_rfq_data.append({'id':vendor_publish_rfq_data[i].get('vendor_rfq_number'),
+                                                       'ccode': vendor_publish_rfq_data[i].get('buyer_company_code'),
                                                        'cname':create_buyer_data[0].get('company_name'),
                                                        'city':create_buyer_data[0].get('bill_city'),
                                                        'rfq_number': vendor_publish_rfq_data[i].get('vendor_rfq_number'),

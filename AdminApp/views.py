@@ -1932,7 +1932,7 @@ def open_leads_vendor_publish_rfq(request):
         for i in range(0,len(vendor_publish_rfq_data)):
             print(vendor_publish_rfq_data[i].get('buyer_company_code'))
             create_buyer_data =CreateBuyer.objects.filter(company_code=vendor_publish_rfq_data[i].get('buyer_company_code')).values()
-            open_leads_vendor_publish_rfq_data.append({'id':vendor_publish_rfq_data[i].get('vendor_rfq_number'),
+            open_leads_vendor_publish_rfq_data.append({'id':vendor_publish_rfq_data[i].get('id'),
                                                        'ccode': vendor_publish_rfq_data[i].get('buyer_company_code'),
                                                        'cname':create_buyer_data[0].get('company_name'),
                                                        'city':create_buyer_data[0].get('bill_city'),

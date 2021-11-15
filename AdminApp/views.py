@@ -1947,3 +1947,16 @@ def open_leads_vendor_publish_rfq(request):
         return Response({'status': 200, 'message': 'ok','opnleadsvendorpublishrfg':open_leads_vendor_publish_rfq_data,}, status=200)
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)
+
+
+@api_view(['post'])
+def open_leads_vendor_publishrfq_view(request):
+    data = request.data
+    pk = data['pk']
+    try:
+        open_leads_vendor_publish_rfq_view = OpenLeadsVendorPublishRfq.objects.filter(id=pk).values()
+        open_leads_vendor_publish_rfq_items =OpenLeadsVendorPublishItems.objects.filter( vendor_open_leads_pk =pk).values()
+        open_leads_vendor_publish_rfq_terms =OpenLeadsVendorPublishTermsDescription.objects.filter( vendor_open_leads_pk=pk).values()
+        return Response({'status': 200, 'message': 'ok', 'OpenLeadsVendorPublishRfqView': open_leads_vendor_publish_rfq_view, 'OpenLeadsVendorPublishRfqItems':open_leads_vendor_publish_rfq_items,'OpenLeadsVendorPublishRfqTerms':open_leads_vendor_publish_rfq_terms,},status=200)
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)

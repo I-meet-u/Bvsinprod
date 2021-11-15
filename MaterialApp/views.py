@@ -2669,3 +2669,76 @@ def get_award_list_by_pk_value(request):
             return Response({'status': 204, 'message': 'Awarded Data Not Present'}, status=204)
     except Exception as e:
         return Response({'status': 500, 'message': str(e)}, status=500)
+
+@api_view(['put'])
+def listing_leads_po_status_update(request):
+    data = request.data
+    awardpk = data['awardpk']
+    try:
+        awardobj = awardpostedRFQ.objects.filter(id=awardpk).values()
+        if len(awardobj) > 0:
+            awards = awardpostedRFQ.objects.get(id=awardpk)
+            if awards.po_status == 'Pending':
+                awards.po_status = 'PO_Sent'
+                awards.save()
+                return Response({'status': 200, 'message': 'Listing Leads PO sent successfully ', 'data': awards.po_status}, status=200)
+            else:
+                if awards.po_status=='PO_Sent':
+                    return Response({'status': 202, 'message': 'PO Already Sent'}, status=202)
+                else:
+                    return Response({'status': 202, 'message': 'PO sent failed or po not sent'}, status=202)
+
+        else:
+            return Response({'status': 204, 'message': 'No data found'}, status=204)
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)
+
+
+class LandingPageListingLeadsPurchaseOrderViewSet(viewsets.ModelViewSet):
+    queryset = LandingPageListingLeadsPurchaseOrder.objects.all()
+    serializer_class = LandingPageListingLeadsPurchaseOrderSerializer
+    parser = [MultiPartParser]
+
+    # def create(self, request, *args, **kwargs):
+    #     rfq_number = request.data.get('rfq_number', None)
+    #     vendorcode = request.data.get('vendorcode', None)
+    #     configuration = sib_api_v3_sdk.Configuration()
+    #     configuration.api_key[
+    #         'api-key'] = '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'
+    #     headers = {
+    #         'accept': 'application/json',
+    #         'content-type': 'application/json',
+    #     }
+    #     awardobj = awardpostedRFQ.objects.filter(company_code=vendorcode).values()
+    #     ccode = awardobj[0].get('company_code')
+    #     quantity = awardobj[0].get('buyer_bid_quantity')
+    #     itemstotal = awardobj[0].get('product_code')
+    #     print(len(itemstotal), 'length')
+    #     basicobj = BasicCompanyDetails.objects.get(company_code=ccode)
+    #     regobj = SelfRegistration.objects.get(id=basicobj.updated_by_id)
+    #     print(regobj.username, 'ok')
+    #     api_instance = sib_api_v3_sdk.TransactionalEmailsApi(sib_api_v3_sdk.ApiClient(configuration))
+    #     send_smtp_email = sib_api_v3_sdk.SendSmtpEmail(
+    #         to=[{"email": regobj.username, "name": regobj.contact_person}],
+    #         template_id=23, params={
+    #             "podate": request.data['PO_date'],
+    #             "ponumber": request.data['PO_num'],
+    #             "poexpiry": request.data['PO_expirydate'],
+    #             "quantity": str(quantity),
+    #             'items': str(len(itemstotal)),
+    #             "companyname": basicobj.company_name
+    #         },
+    #         headers=headers,
+    #         subject='PO Confirm'
+    #     )  # SendSmtpEmail | Values to send a transactional email
+    #     # Send a transactional email
+    #     api_response = api_instance.send_transac_email(send_smtp_email)
+    #     print(api_response)
+    #     return super().create(request, *args, **kwargs)
+
+    def get_queryset(self):
+        poobj = LandingPageListingLeadsPurchaseOrder.objects.filter(updated_by=self.request.GET.get('updated_by')).order_by('id')
+        if poobj:
+            return poobj
+        raise ValidationError(
+            {'message': 'Listing leads Purchase Order details of particular user id is not exist', 'status': 204})

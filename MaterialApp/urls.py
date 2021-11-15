@@ -16,6 +16,7 @@ router.register('item-code-settings', views.ItemCodeSettingsView)
 router.register('landing-page-bidding-publish',views.LandingPageBidding_PublishViewSet)
 router.register('LandingPageBiddingRFQAwardsSerializerViewSet',views.LandingPageBiddingRFQAwardsSerializerViewSet)
 router.register('LandingPageBiddingRFQ_SelectVendorSerializerview',views.LandingPageBiddingRFQ_SelectVendorSerializerview)
+router.register('landing-page-po',views.LandingPageListingLeadsPurchaseOrderViewSet)
 urlpatterns = [
     path('vendor-product-router-urls/',include(router.urls)),
     path('get-itemtype-based-on-userid/',views.get_itemtype_based_on_userid),
@@ -74,6 +75,7 @@ urlpatterns = [
     path('landing-page-listing-leads-expired-list/',views.landing_page_listing_leads_expired_list),
     path('landing-page-published-list/',views.landing_page_published_list),
     path('updatelandingpagevendor_publish/',views.updatelandingpagevendor_publish_update),
-    path('get-award-list-by-pk-value/',views.get_award_list_by_pk_value)
+    path('get-award-list-by-pk-value/',views.get_award_list_by_pk_value),
+    path('listing-leads-po-status-update/',views.listing_leads_po_status_update)
 
 ]

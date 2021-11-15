@@ -333,5 +333,27 @@ class landingpagelistingleadsselectvendors(models.Model):
 
 
 
+class LandingPageListingLeadsPurchaseOrder(models.Model):
 
+    PO_date = models.CharField(max_length=400,null=True,blank=True)
+    PO_expirydate = models.CharField(max_length=400,null=True,blank=True)
+    subject = models.TextField(null=True,blank=True)
+    attachment1 = models.FileField(upload_to='POfile', null=True, blank=True)
+    attachment2 = models.FileField(upload_to='POfile', null=True, blank=True)
+    attachment3 = models.FileField(upload_to='POfile', null=True, blank=True)
+    PO_num = models.CharField(max_length=80,unique=True)
+    delivery_date = models.CharField(max_length=400,null=True,blank=True)
+    remind_date = models.CharField(max_length=400,null=True,blank=True)
+    delivery_days = models.CharField(max_length=100,null=True,blank=True)
+    vendorcode = models.CharField(max_length=30)
+    company_name = models.CharField(max_length=100, null=True, blank=True)
+    createdon = models.DateTimeField(null=True, auto_now_add=True, blank=True)
+    updatedon = models.DateTimeField(auto_now=True, null=True, blank=True)
+    created_by=models.BigIntegerField(null=True,blank=True)
+    updated_by = models.ForeignKey(SelfRegistration, on_delete=models.CASCADE, null=True, blank=True)
+    po_numeric=models.CharField(max_length=100,null=True,blank=True)
+    rfq_type=models.CharField(max_length=120,null=True,blank=True)
+    city=models.CharField(max_length=200,null=True,blank=True)
 
+    class Meta:
+        db_table = "LandingPageListingLeadsPurchaseOrder"

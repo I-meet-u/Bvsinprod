@@ -93,3 +93,9 @@ class LandingPageBiddingRFQ_SelectVendorSerializer(serializers.ModelSerializer):
     class Meta:
         model = landingpagelistingleadsselectvendors
         fields = '__all__'
+
+
+class LandingPageListingLeadsPurchaseOrderSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = LandingPageListingLeadsPurchaseOrder
+        fields = "__all__"

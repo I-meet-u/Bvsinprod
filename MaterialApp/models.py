@@ -351,9 +351,9 @@ class LandingPageListingLeadsPurchaseOrder(models.Model):
     updatedon = models.DateTimeField(auto_now=True, null=True, blank=True)
     created_by=models.BigIntegerField(null=True,blank=True)
     updated_by = models.ForeignKey(SelfRegistration, on_delete=models.CASCADE, null=True, blank=True)
-    po_numeric=models.CharField(max_length=100,null=True,blank=True)
-    rfq_type=models.CharField(max_length=120,null=True,blank=True)
     city=models.CharField(max_length=200,null=True,blank=True)
+    award_pk=models.ForeignKey(awardpostedRFQ,on_delete=models.CASCADE,null=True,blank=True)
+    landing_page_publish_pk = models.ForeignKey(LandingPageBidding_Publish, on_delete=models.CASCADE, null=True, blank=True)
 
     class Meta:
         db_table = "LandingPageListingLeadsPurchaseOrder"

@@ -103,7 +103,8 @@ urlpatterns = [
     path('get_create_buyer_list/', views.get_create_buyer_list),
     path('get_create_buyer_list_companycode/',views.get_create_buyer_list_companycode),
     path('open_leads_vendor_publish_rfq/',views.open_leads_vendor_publish_rfq),
-    path('open_leads_vendor_publishrfq_view/',views.open_leads_vendor_publishrfq_view)
+    path('open_leads_vendor_publishrfq_view/',views.open_leads_vendor_publishrfq_view),
+    path('channel_leads_closed_leads_deadline_date/',views.channel_leads_closed_leads_deadline_date)
 
 
 ]

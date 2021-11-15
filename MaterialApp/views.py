@@ -2700,8 +2700,8 @@ class LandingPageListingLeadsPurchaseOrderViewSet(viewsets.ModelViewSet):
     parser = [MultiPartParser]
 
     # def create(self, request, *args, **kwargs):
-    #     rfq_number = request.data.get('rfq_number', None)
-    #     vendorcode = request.data.get('vendorcode', None)
+    #     award_pk = request.data.get('vendorcode', None)
+    #     landing_page_publish_pk=request.data.get('landing_page_publish_pk',None)
     #     configuration = sib_api_v3_sdk.Configuration()
     #     configuration.api_key[
     #         'api-key'] = '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'
@@ -2709,9 +2709,8 @@ class LandingPageListingLeadsPurchaseOrderViewSet(viewsets.ModelViewSet):
     #         'accept': 'application/json',
     #         'content-type': 'application/json',
     #     }
-    #     awardobj = awardpostedRFQ.objects.filter(company_code=vendorcode).values()
-    #     ccode = awardobj[0].get('company_code')
-    #     quantity = awardobj[0].get('buyer_bid_quantity')
+    #     awardobj = awardpostedRFQ.objects.filter(id=award_pk).values()
+    #     landingobj=LandingPageBidding_Publish.objects.filter(id=landing_page_publish_pk).values()
     #     itemstotal = awardobj[0].get('product_code')
     #     print(len(itemstotal), 'length')
     #     basicobj = BasicCompanyDetails.objects.get(company_code=ccode)

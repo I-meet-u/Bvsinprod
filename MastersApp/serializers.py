@@ -557,11 +557,3 @@ class  DivisionMasterSerializer(serializers.ModelSerializer):
             division_code = int(divisionobj.division_code) + 1
         values = DivisionMaster.objects.create(division_code=division_code, **validate_data)
         return values
-
-
-
-class  TermMastersSettingsDescriptionSerializer(serializers.ModelSerializer):
-    # terms  master serializer
-    class Meta:
-        model = TermMastersSettingsDescription
-        fields = '__all__'

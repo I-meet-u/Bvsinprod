@@ -37,7 +37,6 @@ router.register('tax-duties-master',views.TaxesAndDutiesMasterView)
 router.register('test-qap-master',views.TestAndQapMasterView)
 router.register('performance-guarantee-master',views.PerformanceGuaranteesMasterView)
 router.register('division-master',views.DivisionMasterView)
-router.register('terms-master-settings-description',views.TermMastersSettingsDescriptionViewsets)
 
 # router.register('SubCategoryMasterPaginationView',views.SubCategoryMasterPaginationView)
 urlpatterns = [

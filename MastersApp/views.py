@@ -2665,22 +2665,3 @@ def getopenbidsmasters(request):
         return Response({'status': 200, 'message': 'ok','categorymaster':categorymasterobj,'currencymasters':currencymasters,'deptmasters':deptobj}, status=200)
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)
-
-class TermMastersSettingsDescriptionViewsets(viewsets.ModelViewSet):
-    # industry_servce master viewsets
-    permission_classes = (AllowAny,)
-    queryset = TermMastersSettingsDescription.objects.all().order_by('id')
-    serializer_class = TermMastersSettingsDescriptionSerializer
-
-    # def create(self, request, *args, **kwargs):
-    #     terms_description=request.data.get('description',None)
-    #     userid=request.data.get('userid',None)
-    #     for i in range(0,len(terms_description)):
-    #         termobj=TermMastersSettingsDescription.objects.create(terms_name=terms_name,
-    #                                                               terms_description=description,
-    #                                                               updated_by=SelfRegistration.objects.get(id=userid),
-    #                                                               created_by=userid
-    #
-    #
-    #
-    #                                                               )

@@ -681,16 +681,3 @@ class DivisionMaster(models.Model):
 
     class Meta:
         db_table = "DivisionMaster"
-
-
-class TermMastersSettingsDescription(models.Model):
-    terms_name=models.CharField(max_length=100,null=True,blank=True)
-    terms_code=models.CharField(max_length=100,null=True,blank=True)
-    terms_description=ArrayField(models.CharField(max_length=200),null=True,blank=True)
-    created_on = models.DateTimeField(auto_now_add=True)
-    updated_on = models.DateTimeField(auto_now=True)
-    updated_by = models.ForeignKey(SelfRegistration, on_delete=models.CASCADE, null=True, blank=True)
-    created_by = models.BigIntegerField(null=True, blank=True)
-
-    class Meta:
-        db_table="TermMastersSettingsDescription"

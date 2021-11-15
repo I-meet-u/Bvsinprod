@@ -4662,3 +4662,19 @@ def get_all_source_leads_by_id(request):
             return Response({'status': 204, 'message': 'Not Present'}, status=204)
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)
+
+
+
+@api_view(['post'])
+def terms_master_description_settings(request):
+    data=request.data
+    userid=data['userid']
+    try:
+        termmastersettingsobj=BiddingTermMasterSettings.objects.create(terms_name=data['terms_name'],
+                                                                       terms_description=data['terms_description'],
+                                                                       updated_by=SelfRegistration.objects.get(id=userid),
+                                                                       created_by=userid
+                                                                       )
+        return Response({'status': 201, 'message': 'Terms Created'}, status=201)
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)

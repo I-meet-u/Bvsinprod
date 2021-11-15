@@ -73,6 +73,7 @@ urlpatterns = [
     path('landing-page-published-list-by-user-id/',views.landing_page_published_list_by_user_id),
     path('landing-page-listing-leads-expired-list/',views.landing_page_listing_leads_expired_list),
     path('landing-page-published-list/',views.landing_page_published_list),
-    path('updatelandingpagevendor_publish/',views.updatelandingpagevendor_publish_update)
+    path('updatelandingpagevendor_publish/',views.updatelandingpagevendor_publish_update),
+    path('get-award-list-by-pk-value/',views.get_award_list_by_pk_value)
 
 ]

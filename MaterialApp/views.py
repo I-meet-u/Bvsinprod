@@ -2692,41 +2692,38 @@ class LandingPageListingLeadsPurchaseOrderViewSet(viewsets.ModelViewSet):
     serializer_class = LandingPageListingLeadsPurchaseOrderSerializer
     parser = [MultiPartParser]
 
-    # def create(self, request, *args, **kwargs):
-    #     award_pk = request.data.get('vendorcode', None)
-    #     landing_page_publish_pk=request.data.get('landing_page_publish_pk',None)
-    #     configuration = sib_api_v3_sdk.Configuration()
-    #     configuration.api_key[
-    #         'api-key'] = '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'
-    #     headers = {
-    #         'accept': 'application/json',
-    #         'content-type': 'application/json',
-    #     }
-    #     awardobj = awardpostedRFQ.objects.filter(id=award_pk).values()
-    #     landingobj=LandingPageBidding_Publish.objects.filter(id=landing_page_publish_pk).values()
-    #     itemstotal = awardobj[0].get('product_code')
-    #     print(len(itemstotal), 'length')
-    #     basicobj = BasicCompanyDetails.objects.get(company_code=ccode)
-    #     regobj = SelfRegistration.objects.get(id=basicobj.updated_by_id)
-    #     print(regobj.username, 'ok')
-    #     api_instance = sib_api_v3_sdk.TransactionalEmailsApi(sib_api_v3_sdk.ApiClient(configuration))
-    #     send_smtp_email = sib_api_v3_sdk.SendSmtpEmail(
-    #         to=[{"email": regobj.username, "name": regobj.contact_person}],
-    #         template_id=23, params={
-    #             "podate": request.data['PO_date'],
-    #             "ponumber": request.data['PO_num'],
-    #             "poexpiry": request.data['PO_expirydate'],
-    #             "quantity": str(quantity),
-    #             'items': str(len(itemstotal)),
-    #             "companyname": basicobj.company_name
-    #         },
-    #         headers=headers,
-    #         subject='PO Confirm'
-    #     )  # SendSmtpEmail | Values to send a transactional email
-    #     # Send a transactional email
-    #     api_response = api_instance.send_transac_email(send_smtp_email)
-    #     print(api_response)
-    #     return super().create(request, *args, **kwargs)
+    def create(self, request, *args, **kwargs):
+        landing_page_publish_pk=request.data.get('landing_page_publish_pk',None)
+        configuration = sib_api_v3_sdk.Configuration()
+        configuration.api_key[
+            'api-key'] = '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'
+        headers = {
+            'accept': 'application/json',
+            'content-type': 'application/json',
+        }
+        landingobj=LandingPageBidding_Publish.objects.filter(id=landing_page_publish_pk).values()
+        basicobj = BasicCompanyDetails.objects.get(company_code=landingobj[0].get('company_code'))
+        regobj = SelfRegistration.objects.get(id=basicobj.updated_by_id)
+        print(regobj.username, 'ok')
+        api_instance = sib_api_v3_sdk.TransactionalEmailsApi(sib_api_v3_sdk.ApiClient(configuration))
+        send_smtp_email = sib_api_v3_sdk.SendSmtpEmail(
+            to=[{"email": regobj.username, "name": regobj.contact_person}],
+            template_id=24, params={
+                "itemname":request.data['item_name'],
+                "itemdescription":request.data['item_description'],
+                "podate": request.data['PO_date'],
+                "ponum": request.data['PO_num'],
+                "poexpires": request.data['PO_expirydate'],
+                "quantity":landingobj[0].get('quantity'),
+                "companyname": basicobj.company_name
+            },
+            headers=headers,
+            subject='PO Confirmation'
+        )  # SendSmtpEmail | Values to send a transactional email
+        # Send a transactional email
+        api_response = api_instance.send_transac_email(send_smtp_email)
+        print(api_response)
+        return super().create(request, *args, **kwargs)
 
     def get_queryset(self):
         poobj = LandingPageListingLeadsPurchaseOrder.objects.filter(updated_by=self.request.GET.get('updated_by')).order_by('id')

@@ -1978,6 +1978,7 @@ def channel_leads_closed_leads_deadline_date(request):
             date2=datetime.strptime(id_data[j].get('deadline_date'),'%Y-%m-%d')
             if date2.date() < date.today():
                 resarr.append(id_data[j])
+
         return Response({'status': 200, 'message': 'ok', 'ChannelLeadsClosedLeadsDeadlineDateData':resarr,}, status=200)
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)

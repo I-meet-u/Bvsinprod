@@ -4687,9 +4687,26 @@ def terms_master_settings(request):
     userid=data['userid']
     try:
         termmastersettingsobj=BiddingTermMasterSettings.objects.create(terms_name=data['terms_name'],
+                                                                       terms_description=[],
                                                                        updated_by=SelfRegistration.objects.get(id=userid),
                                                                        created_by=userid
                                                                        )
         return Response({'status': 201, 'message': 'Terms Created'}, status=201)
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)
+
+
+
+# @api_view(['put'])
+# def edit_terms_master_settings(request):
+#     data=request.data
+#     termid=data['termid']
+#     try:
+#         termobj=BiddingTermMasterSettings.objects.filter(id=id).values()
+#         if len(termobj)>0:
+#             termbidobj=BiddingTermMasterSettings.objects.get(id=id)
+#             if termbidobj:
+#                 termobj.term
+#         return Response({'status': 201, 'message': 'Terms Created'}, status=201)
+#     except Exception as e:
+#         return Response({'status': 500, 'error': str(e)}, status=500)

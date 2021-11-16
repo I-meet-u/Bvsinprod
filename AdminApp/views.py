@@ -1968,23 +1968,16 @@ def channel_leads_closed_leads_deadline_date(request):
     data = request.data
     user_id = data['user_id']
     key_array =[]
-    id_data=[]
     resarr=[]
     try:
-
         ChannelLeads_ClosedLeads_DeadlineDate_Data = OpenLeadsVendorPublishRfq.objects.filter(updated_by=user_id).values()
         for i in range(0, len(ChannelLeads_ClosedLeads_DeadlineDate_Data)):
             key_array.append(ChannelLeads_ClosedLeads_DeadlineDate_Data[i].get('open_rfq_buyer_pk_id'))
-        print(key_array)
         id_data=OpenLeadsRfq.objects.filter(~Q(id__in=key_array)).values()
-        print(id_data)
         for j in range(0,len(id_data)):
-            date2=datetime.strptime(id_data[j].get('deadline_date'), '%Y-%m-%d')
+            date2=datetime.strptime(id_data[j].get('deadline_date'),'%Y-%m-%d')
             if date2.date() < date.today():
-               resarr.append(id_data)
-
-
-            print(id_data[j].get('deadline_date'))
-        return Response({'status': 200, 'message': 'ok', 'ChannelLeadsClosedLeadsDeadlineDateData':resarr}, status=200)
+                resarr.append(id_data[j])
+        return Response({'status': 200, 'message': 'ok', 'ChannelLeadsClosedLeadsDeadlineDateData':resarr,}, status=200)
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)

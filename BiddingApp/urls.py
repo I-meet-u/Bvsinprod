@@ -114,7 +114,8 @@ urlpatterns = [
     path('buyer_award_bidding/',views.buyer_award_bidding),
     path('allsourcelist/',views.get_all_source_leads),
     path('allsourcelistbyid/',views.get_all_source_leads_by_id),
-    path('terms-master-description-settings/',views.terms_master_description_settings)
+    path('terms-master-description-settings/',views.terms_master_description_settings),
+    path('terms-master-settings/', views.terms_master_settings)
 
 
 

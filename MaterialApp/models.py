@@ -352,6 +352,9 @@ class LandingPageListingLeadsPurchaseOrder(models.Model):
     created_by=models.BigIntegerField(null=True,blank=True)
     updated_by = models.ForeignKey(SelfRegistration, on_delete=models.CASCADE, null=True, blank=True)
     city=models.CharField(max_length=200,null=True,blank=True)
+    item_name=models.CharField(max_length=200,null=True,blank=True)
+    item_description=models.TextField(null=True,blank=True)
+    item_type=models.CharField(max_length=100,null=True,blank=True)
     award_pk=models.ForeignKey(awardpostedRFQ,on_delete=models.CASCADE,null=True,blank=True)
     landing_page_publish_pk = models.ForeignKey(LandingPageBidding_Publish, on_delete=models.CASCADE, null=True, blank=True)
 

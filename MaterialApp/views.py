@@ -2652,21 +2652,14 @@ def updatelandingpagevendor_publish_update(request):
 @api_view(['post'])
 def get_award_list_by_pk_value(request):
     data=request.data
-    res=[]
-    landing_vendor_publish_leading_data=[]
-    awardpk=data['awardpk']
+    id=data['id']
     try:
-        awardpostedRFQobj=awardpostedRFQ.objects.filter(id=awardpk).values().order_by('id')
-        if len(awardpostedRFQobj)>0:
-            for i in range(len(awardpostedRFQobj)):
-                dummyvar=LandingPageBidding_Publish.objects.filter(id__in=awardpostedRFQobj[0].get('landing_page_bidding_publish_id')).values().order_by('id')
-                print(len(dummyvar))
-                for j in range(0,len(dummyvar)):
-                    dummyvar[j].__setitem__('award_pk', awardpostedRFQobj[i].get('id'))
-                res = list(chain(landing_vendor_publish_leading_data, dummyvar))
-            return Response({'status': 200, 'message': 'Ok', 'data':res}, status=200)
+        landingobj = LandingPageBidding_Publish.objects.filter(id=id).values().order_by('id')
+        if len(landingobj)>0:
+            return Response({'status': 200, 'message': 'Ok', 'data':landingobj}, status=200)
         else:
-            return Response({'status': 204, 'message': 'Awarded Data Not Present'}, status=204)
+            return Response({'status': 204, 'message': 'Data Not Present'}, status=204)
+
     except Exception as e:
         return Response({'status': 500, 'message': str(e)}, status=500)
 

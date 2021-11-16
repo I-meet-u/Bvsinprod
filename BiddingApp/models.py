@@ -111,12 +111,12 @@ class SelectVendorsForBiddingProduct(models.Model):
         db_table = "SelectVendorsForBiddingProduct"
 
 class BiddingTermMasterSettings(models.Model):
-    terms_name=models.CharField(max_length=80)
+    terms_name=models.CharField(max_length=80,null=True,blank=True)
     terms_description=ArrayField(models.CharField(max_length=800,null=True,blank=True))
     created_on = models.DateTimeField(auto_now_add=True)
     updated_on = models.DateTimeField(auto_now=True)
-    created_by = models.BigIntegerField()
-    updated_by = models.ForeignKey(SelfRegistration, on_delete=models.CASCADE)
+    created_by = models.BigIntegerField(null=True,blank=True)
+    updated_by = models.ForeignKey(SelfRegistration, on_delete=models.CASCADE,null=True,blank=True)
 
     class Meta:
         db_table = "BiddingTermMasterSettings"

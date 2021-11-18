@@ -110,6 +110,7 @@ urlpatterns = [
     path('deadline-date-list/',views.deadline_date_list),
     path('purchase_order_email/',views.purchase_order_email),
     path('source-list-leads-all/', views.source_list_leads_all),
+    path('open_source_list_vendor_published/',views.source_list_open_leads_all),
     path('fetch-source-data-by-userid/',views.fetch_source_data_by_userid),
     path('buyer_award_bidding/',views.buyer_award_bidding),
     path('allsourcelist/',views.get_all_source_leads),

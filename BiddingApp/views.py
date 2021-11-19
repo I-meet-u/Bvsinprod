@@ -488,7 +488,7 @@ def get_buyer_product_details_by_user_rfq(request):
             for i in range(0,len(bidproductdetails)):
                 buyerproductobj=BuyerProductDetails.objects.filter(buyer_item_code=bidproductdetails[i].get('buyer_item_code')).values()
                 if not buyerproductobj[0].get('buyer_document'):
-                    pass
+                    bidproductdetails[i].__setitem__('document', "")
                 else:
                     bidproductdetails[i].__setitem__('document',
                                                      "https://v2apis.vendorsin.com/media/" + buyerproductobj[0].get(

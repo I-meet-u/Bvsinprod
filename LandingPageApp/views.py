@@ -211,17 +211,30 @@ def company_details_by_subcategory_id(request):
         supplyobj = IndustrialHierarchy.objects.filter(subcategory__overlap=subcatnamearrayofarray).values()
             # subcatnamearrayofarray.append({'sub_category_name': subobj[i].get('sub_category_name')})
 
+
         for i  in range(0,len(supplyobj)):
-            basicobj=BasicCompanyDetails.objects.get(company_code=supplyobj[i].get('company_code_id'))
-            basicdatavalues.append({'company_code':basicobj.company_code,
-                                    'company_name':basicobj.company_name,
-                                    'company_type':basicobj.company_type,
-                                    'listing_date':basicobj.listing_date,
-                                    'pan_number':basicobj.pan_number,
-                                    'tax_payer_type':basicobj.tax_payer_type,
-                                    'msme_registered':basicobj.msme_registered,
-                                    'company_established':basicobj.company_established,
-                                    'updated_by':basicobj.updated_by_id
+            basicobj=BasicCompanyDetails.objects.filter(company_code=supplyobj[i].get('company_code_id')).values()
+            billingobj=BillingAddress.objects.filter(company_code=supplyobj[i].get('company_code_id')).values()
+            regobj=SelfRegistration.objects.filter(id=supplyobj[i].get('updated_by_id')).values()
+            industryobj=IndustrialHierarchy.objects.filter(company_code_id=supplyobj[0].get('company_code_id')).values()
+            basicdatavalues.append({'company_code':basicobj[0].get('company_code'),
+                                    'company_name':basicobj[0].get('company_name'),
+                                    'company_type':basicobj[0].get('company_type'),
+                                    'listing_date':basicobj[0].get('listing_date'),
+                                    'pan_number':basicobj[0].get('pan_number'),
+                                    'tax_payer_type':basicobj[0].get('tax_payer_type'),
+                                    'msme_registered':basicobj[0].get('msme_registered'),
+                                    'company_established':basicobj[0].get('company_established'),
+                                    'updated_by':basicobj[0].get('updated_by_id'),
+                                    'gst_no':basicobj[0].get('gst_number'),
+                                    'billing_address':billingobj[0].get('bill_address'),
+                                    'nature_of_business':regobj[0].get('nature_of_business'),
+                                    'profile_image':regobj[0].get('profile_cover_photo'),
+                                    'maincore':industryobj[0].get('maincore'),
+                                    'category':industryobj[0].get('category'),
+                                    'subcategory':industryobj[0].get('subcategory'),
+                                    'usertype':regobj[0].get('user_type')
+
 
                                     })
 

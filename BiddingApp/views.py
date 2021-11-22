@@ -4681,7 +4681,7 @@ def get_all_source_leads(request):
     get_vendors=request.data['get_vendors']
     try:
         if get_vendors=='True':
-            bidobj =SourceList_CreateItems.objects.filter(get_vendors=get_vendors).values()
+            bidobj =SourceList_CreateItems.objects.filter(get_vendors=get_vendors).values().order_by('-id')
             if len(bidobj)>-0:
                 return Response({'status': 200, 'message': 'ok', 'data': bidobj}, status=200)
             else:

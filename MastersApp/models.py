@@ -95,6 +95,7 @@ class MaincoreMaster(models.Model):
     created_by = models.BigIntegerField(null=True,blank=True)
     updated_by_name = models.CharField(null=True, blank=True, max_length=100)
     created_by_name = models.CharField(null=True, blank=True, max_length=100)
+    maincore_image = models.FileField(upload_to='MaincoreImage', null=True, blank=True)
     # history = HistoricalRecords()
 
     class Meta:
@@ -119,6 +120,7 @@ class CategoryMaster(models.Model):
     created_by = models.BigIntegerField(null=True,blank=True)
     updated_by_name = models.CharField(null=True, blank=True, max_length=100)
     created_by_name = models.CharField(null=True, blank=True, max_length=100)
+    category_image = models.FileField(upload_to='CategoryImage', null=True, blank=True)
     # history = HistoricalRecords()
 
     class Meta:
@@ -144,6 +146,7 @@ class SubCategoryMaster(models.Model):
     created_by = models.BigIntegerField(null=True,blank=True)
     updated_by_name = models.CharField(null=True, blank=True, max_length=100)
     created_by_name = models.CharField(null=True, blank=True, max_length=100)
+    sub_category_image = models.FileField(upload_to='SubCategoryImage', null=True, blank=True)
     # history = HistoricalRecords()
 
     class Meta:

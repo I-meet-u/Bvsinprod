@@ -295,6 +295,7 @@ class OpenLeadsVendorPublishRfq(models.Model):
     open_rfq_buyer_pk = models.ForeignKey(OpenLeadsRfq, on_delete=models.CASCADE, null=True, blank=True)
     buyer_company_code = models.CharField(max_length=100, null=True, blank=True)
     buyer_company_name = models.CharField(max_length=500, null=True, blank=True)
+    vendor_comments=models.TextField(null=True, blank=True)
 
 
     class Meta:

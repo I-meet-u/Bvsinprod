@@ -1488,7 +1488,7 @@ def fetch_open_leads_rfq(request):
     count = 0
     try:
         if key == "vsinadmindb":
-            openleadsobj=OpenLeadsRfq.objects.filter().values().order_by('id')
+            openleadsobj=OpenLeadsRfq.objects.filter().values().order_by('-id')
             if len(openleadsobj)>0:
                 for i in range(0, len(openleadsobj)):
                     # print(openleadsobj[i].get('id'))

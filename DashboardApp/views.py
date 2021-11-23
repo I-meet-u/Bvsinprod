@@ -1096,7 +1096,7 @@ def buyer_dashboard_charts_counts(request):
                 listingleadsclosedarray.append({'deadline_date':landingpageclosedobj[i].get('deadline_date')})
 
         buyercharts.append({'closed_rfq':len(closedarray),
-                            'published_leads': len(buyerbidobjpublished),
+                            'rfq_published': len(buyerbidobjpublished),
                             'response_totalsentcount': totalsentcount,
                             'response_acceptedcount': totalacceptcount,
                             'response_rejected': totalrejectcount,

@@ -4602,43 +4602,44 @@ def source_list_leads_all(request):
 @api_view(['post'])
 def source_list_open_leads_all(request):
     data = request.data
-    userid = data['userid']
     sourceleadsarray = []
-    pk=[]
-    listarray=[]
+    userid = data['userid']
+    listarray = []
     try:
         sourcepublish = SourcePublish.objects.filter(updated_by_id=userid).values().order_by('id')
         for i in range(0, len(sourcepublish)):
             sourceleadsarray.append(sourcepublish[i].get('source_id'))
         print(sourceleadsarray)
+        i = 0
+        while i < len(sourcepublish):
 
-        basicobj = BasicCompanyDetails.objects.filter(updated_by_id=userid).values()
-        if len(basicobj) > 0:
-            sourcobj = SourceList_CreateItems.objects.filter(id__in=sourceleadsarray,get_vendors=True).values()
-            print("length od create items== ",len(sourcobj))
-            # print(len(sourcobj),'qwertyuuywqas')
-            for i in range(0, len(sourcobj)):
-                print(sourcobj[i].get('source_vendors'), 'ccode')
-                basicval = BasicCompanyDetails.objects.filter(updated_by_id=sourcobj[i].get('updated_by_id')).values()
+            sourcobj = SourceList_CreateItems.objects.filter(id=sourceleadsarray[i]).values()
+            if sourcobj:
+                basicval = BasicCompanyDetails.objects.filter(updated_by_id=sourcobj[0].get('updated_by_id')).values()
                 billingobj = BillingAddress.objects.filter(company_code_id=basicval[0].get('company_code'),
                                                            updated_by_id=basicval[0].get('updated_by_id')).values()
-                listarray.append({'id': sourcobj[i].get('id'),
+                listarray.append({'id': sourcobj[0].get('id'),
                                   'company_code': basicval[0].get('company_code'),
                                   'company_name': basicval[0].get('company_name'),
-                                  'source_code': sourcobj[i].get('source_code'),
-                                  'source': sourcobj[i].get('source'),
-                                  'item_type': sourcobj[i].get('item_type'),
-                                  'quantity': sourcobj[i].get('quantity'),
-                                  'source_required_city': sourcobj[i].get('source_required_city'),
-                                  'product_category': sourcobj[i].get('product_category'),
+                                  'source_code': sourcobj[0].get('source_code'),
+                                  'source': sourcobj[0].get('source'),
+                                  'item_type': sourcobj[0].get('item_type'),
+                                  'quantity': sourcobj[0].get('quantity'),
+                                  'source_required_city': sourcobj[0].get('source_required_city'),
+                                  'product_category': sourcobj[0].get('product_category'),
                                   'client_city': billingobj[0].get('bill_city'),
-                                  'updated_by': sourcobj[i].get('updated_by_id'),
-                                  'item_name': sourcobj[i].get('item_name'),
+                                  'updated_by': sourcobj[0].get('updated_by_id'),
+                                  'item_name': sourcobj[0].get('item_name'),
+                                  'vspid': sourcepublish[i].get('id')
                                   })
+            i = i + 1
 
         return Response({'status': 200, 'message': 'Source Leads', 'data': listarray}, status=200)
     except Exception as e:
         return Response({'status': 500, 'message': str(e)}, status=500)
+
+
+
 
 
 @api_view(['post'])

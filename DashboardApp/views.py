@@ -1108,6 +1108,7 @@ def buyer_dashboard_charts_counts(request):
                             'invites_approved': len(invites_approved),
                             'internal_vendor': len(internalvendor),
                             # 'trail_vendors': len(trailvendors),
+                            'source_posts':len(sourcelistcreateitesmsobj),
                             'source_published': len(source_published),
                             'source_response': len(sourceresponse['data']),
                             'source_pending': pendingsourcevalues,

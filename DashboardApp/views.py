@@ -1084,6 +1084,7 @@ def buyer_dashboard_charts_counts(request):
             'id')
         landingpageresponseobj=get_listed_list_response(userid,auth_token)
         awardobj=Awards.objects.filter(updated_by_id=userid).values()
+        pending_po = Awards.objects.filter(updated_by_id=userid,postatus='Pending').values()
         businessrequestlist = get_business_requests_list(userid, auth_token)
         businessconnections = get_business_connections(userid, auth_token)
         for i in range(0, len(landingpageclosedobj)):
@@ -1102,6 +1103,7 @@ def buyer_dashboard_charts_counts(request):
                             'response_pendingcount': totalpendingcount,
                             'response_totalfullresponse': totalfullresponse,
                             'confirmed_po': len(confirmed_po),
+                            'pending_po':len(pending_po),
                             'total_business_invites': len(invitevendorobj),
                             'invites_approved': len(invites_approved),
                             'internal_vendor': len(internalvendor),

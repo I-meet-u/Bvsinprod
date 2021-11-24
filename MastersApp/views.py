@@ -2675,7 +2675,7 @@ def getselectedcatmasters(requset):
         i=0;
         seletedarray=["Bearing &Housing Accessories","Coupling,Pulleys,Belts & V belts","Industrial Valves & Gates",
                       "Power Tools & Hand Tools","Gears,Axles,Sprockets & Chains","Bulk Material Handling Equipments",
-                      "Metal Processing & Machine Tool","Processing industries Equipments",
+                      "Metal Processing & Machine Tools","Processing industries Equipment",
                       "Mineral Grinding And Processing Machinery","Electric Motors and Components","Electrical Panels & Distribution Box",
                       "Instruments & Automation Devices","2D, 3D,CAD,CAM Design Services","3D Modeling & Rendering Services",
                       "Industrial Manufacturing Services","Machining & Fabrication services","Personal protective equipment(PPE)",

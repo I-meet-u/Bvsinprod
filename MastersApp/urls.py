@@ -192,7 +192,8 @@ urlpatterns = [
     path('getfrightbasedonid/',views.getfrightbasedonid),
     path('updatefright/',views.updatefright),
     path('getdesinationdeailsid/',views.getdesinationdeailsid),
-    path('updatedesignation/',views.updatedesignation)
+    path('updatedesignation/',views.updatedesignation),
+    path('getselectedcatmasters/',views.getselectedcatmasters)
 
 ]
 

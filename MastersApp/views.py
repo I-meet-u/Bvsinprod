@@ -2665,3 +2665,27 @@ def getopenbidsmasters(request):
         return Response({'status': 200, 'message': 'ok','categorymaster':categorymasterobj,'currencymasters':currencymasters,'deptmasters':deptobj}, status=200)
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)
+
+
+@api_view(['post'])
+@permission_classes([AllowAny,])
+def getselectedcatmasters(requset):
+    try:
+        res=[]
+        i=0;
+        seletedarray=["Bearing &Housing Accessories","Coupling,Pulleys,Belts & V belts","Industrial Valves & Gates",
+                      "Power Tools & Hand Tools","Gears,Axles,Sprockets & Chains","Bulk Material Handling Equipments",
+                      "Metal Processing & Machine Tool","Processing industries Equipments",
+                      "Mineral Grinding And Processing Machinery","Electric Motors and Components","Electrical Panels & Distribution Box",
+                      "Instruments & Automation Devices","2D, 3D,CAD,CAM Design Services","3D Modeling & Rendering Services",
+                      "Industrial Manufacturing Services","Machining & Fabrication services","Personal protective equipment(PPE)",
+                      "Heavy mobile equipments","Automotive Repair Tools & Equipments","Ground & Road Shipping Services"]
+        while i<len(seletedarray):
+            categorymasterdetails=CategoryMaster.objects.filter(category_name=seletedarray[i]).values()
+            if categorymasterdetails:
+                res.append({'category_name':categorymasterdetails[0].get('category_name'),
+                            'category_url':categorymasterdetails[0].get('category_image')})
+            i=i+1
+        return Response({'status': 200, 'message': 'ok','data':res}, status=200)
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)

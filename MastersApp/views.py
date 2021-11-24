@@ -2684,7 +2684,8 @@ def getselectedcatmasters(requset):
             categorymasterdetails=CategoryMaster.objects.filter(category_name=seletedarray[i]).values()
             if categorymasterdetails:
                 res.append({'category_name':categorymasterdetails[0].get('category_name'),
-                            'category_url':categorymasterdetails[0].get('category_image')})
+                            'category_url':categorymasterdetails[0].get('category_image'),
+                            'category_id':categorymasterdetails[0].get('category_id')})
             i=i+1
         return Response({'status': 200, 'message': 'ok','data':res}, status=200)
     except Exception as e:

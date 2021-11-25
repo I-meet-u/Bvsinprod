@@ -263,12 +263,10 @@ def category_list_by_maincore(request):
 
 
 
-
 @api_view(['post'])
 @permission_classes([AllowAny])
 def company_details_by_category_id(request):
     # get company details by passing category_id to sub_category and also fetching basic details and industry hierarchy
-
     data = request.data
     categoryid = data['categoryid']
     subcategoryarray =[]
@@ -278,7 +276,9 @@ def company_details_by_category_id(request):
         subcategoryobj = SubCategoryMaster.objects.filter(category__in=categoryid).values()
         for i in range(0,len(subcategoryobj)):
             subcatnamearrayofarray.append({'sub_category_name':subcategoryobj[i].get('sub_category_name'),
-                                           'sub_category_id':subcategoryobj[i].get('sub_category_id')})
+                                           'sub_category_id':subcategoryobj[i].get('sub_category_id'),
+                                           'sub_category_image': subcategoryobj[i].get('sub_category_image')
+                                           })
             subcategoryarray.append({subcategoryobj[i].get('sub_category_name')})
             supobj=IndustrialHierarchy.objects.filter(subcategory__icontains=subcategoryobj[i].get('sub_category_name')).values()
             for j in range(0,len(supobj)):
@@ -299,7 +299,6 @@ def company_details_by_category_id(request):
         return Response({'status': 200, 'message': 'ok','data':subcatnamearrayofarray}, status=200)
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)
-
 
 @api_view(['post'])
 @permission_classes([AllowAny])

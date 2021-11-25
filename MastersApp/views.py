@@ -2673,12 +2673,10 @@ def getselectedcatmasters(requset):
     try:
         res=[]
         i=0;
-        seletedarray=["Bearing &Housing Accessories","Coupling,Pulleys,Belts & V belts","Industrial Valves & Gates",
-                      "Power Tools & Hand Tools","Gears,Axles,Sprockets & Chains","Bulk Material Handling Equipments",
-                      "Metal Processing & Machine Tools","Processing industries Equipment",
-                      "Mineral Grinding And Processing Machinery","Electric Motors and Components","Electrical Panels & Distribution Box",
-                      "Instruments & Automation Devices","2D, 3D,CAD,CAM Design Services","3D Modeling & Rendering Services",
-                      "Industrial Manufacturing Services","Machining & Fabrication services","Personal protective equipment(PPE)",
+        seletedarray=["Bearing &Housing Accessories","Coupling,Pulleys,Belts & V belts","Industrial Valves & Gates","Power Tools & Hand Tools","Gears,Axles,Sprockets & Chains",
+                      "Material Handling Equipments","Metal Processing & Machine Tools","Processing industries Equipment","Grinding And Processing Machinery",
+                      "Electric Motors and Components","Electrical Panels & Distribution Box","Instruments & Automation Devices","2D, 3D,CAD,CAM Design Services",
+                      "3D Modeling & Rendering Services","Industrial Manufacturing Services","Machining & Fabrication services","Personal protective equipment(PPE)",
                       "Heavy mobile equipments","Automotive Repair Tools & Equipments","Ground & Road Shipping Services"]
         while i<len(seletedarray):
             categorymasterdetails=CategoryMaster.objects.filter(category_name=seletedarray[i]).values()

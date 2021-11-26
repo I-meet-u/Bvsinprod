@@ -76,6 +76,7 @@ urlpatterns = [
     path('landing-page-published-list/',views.landing_page_published_list),
     path('updatelandingpagevendor_publish/',views.updatelandingpagevendor_publish_update),
     path('get-award-list-by-pk-value/',views.get_award_list_by_pk_value),
-    path('listing-leads-po-status-update/',views.listing_leads_po_status_update)
+    path('listing-leads-po-status-update/',views.listing_leads_po_status_update),
+    path('main_cat_subcat_data/',views.main_cat_subcat_data)
 
 ]

@@ -12,6 +12,7 @@ from rest_framework.parsers import MultiPartParser
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 
+from MastersApp.models import CategoryMaster
 from RegistrationApp.models import SelfRegistration, IndustrialInfo, BillingAddress, BasicCompanyDetails
 from .models import *
 import sib_api_v3_sdk
@@ -2731,3 +2732,22 @@ class LandingPageListingLeadsPurchaseOrderViewSet(viewsets.ModelViewSet):
             return poobj
         raise ValidationError(
             {'message': 'Listing leads Purchase Order details of particular user id is not exist', 'status': 204})
+
+
+
+@api_view(['post'])
+@permission_classes([AllowAny, ])
+def main_cat_subcat_data(request):
+    data = request.data
+    main_core_text = data['main_core_text']
+    cat_id= data['cat_id']
+    sub_cat_text = data['sub_cat_text']
+    try:
+        category_text = CategoryMaster.objects.filter(category_id=cat_id).values()
+        if category_text:
+            CatProdDetaile_data=VendorProduct_BasicDetails.objects.filter(core_sector=main_core_text,category=category_text[0].get('category_name'),sub_category=sub_cat_text).values()
+            SubProdDetaile_data =VendorProduct_BasicDetails.objects.filter(core_sector=main_core_text,category=category_text[0].get('category_name')).values()
+
+        return Response({'status': 200, 'message': 'Ok', 'SubProdDetaile_data': SubProdDetaile_data,'CatProdDetaile_data': CatProdDetaile_data,}, status=200)
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)

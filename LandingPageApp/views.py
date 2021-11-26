@@ -236,7 +236,8 @@ def company_details_by_subcategory_id(request):
                                     'category':industryobj[0].get('category'),
                                     'subcategory':industryobj[0].get('subcategory'),
                                     'usertype':regobj[0].get('user_type'),
-                                    'bill_city':billingobj[0].get('bill_city')
+                                    'bill_city':billingobj[0].get('bill_city'),
+                                    'industrial_scale':basicobj[0].get('industrial_scale')
 
 
                                     })

@@ -289,7 +289,7 @@ class SelectVendorsForBiddingProductView(viewsets.ModelViewSet):
                             print("total count",totalquantity)
 
                             api_instance = sib_api_v3_sdk.TransactionalEmailsApi(sib_api_v3_sdk.ApiClient(configuration))
-                            send_smtp_email = sib_api_v3_sdk.SendSmtpEmail(to=[{"email": email, "name": "harish"}],
+                            send_smtp_email = sib_api_v3_sdk.SendSmtpEmail(to=[{"email": email, "name": Regobj.contact_person}],
                                                                            template_id=21, params={"billing": str(baddress[0].get('bill_address')),
                                                                                                    "shipping": str(saddress[0].get('ship_address')),
                                                                                                    "rfqno":rfq_number ,
@@ -298,6 +298,7 @@ class SelectVendorsForBiddingProductView(viewsets.ModelViewSet):
                                                                                                    "cname":bidcreater[0].get('company_name'),
                                                                                                    "mail": Regobj.username,
                                                                                                    "phone": Regobj.phone_number,
+                                                                                                   "contact_name":Regobj.contact_person
                                                                                                    },
                                                                            headers=headers,
                                                                            subject='Bidding Invitation'

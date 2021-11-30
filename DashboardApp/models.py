@@ -3,7 +3,7 @@ from django.db import models
 
 # Create your models here.
 
-from RegistrationApp.models import SelfRegistration
+from RegistrationApp.models import SelfRegistration, BasicCompanyDetails
 
 
 class InviteVendor(models.Model):
@@ -98,11 +98,11 @@ class InternalBuyer(models.Model):
         db_table="InternalBuyer"
 
 class TrailVendors(models.Model):
-    company_code = models.CharField(max_length=50)
+    company_code = models.ForeignKey(BasicCompanyDetails,on_delete=models.CASCADE,null=True,blank=True)
     status = models.CharField(max_length=80, default= 'Pending')
     created_on = models.DateTimeField(auto_now_add=True)
     updated_on = models.DateTimeField(auto_now=True)
-    created_by = models.BigIntegerField()
+    created_by = models.BigIntegerField(null=True, blank=True)
     updated_by = models.ForeignKey(SelfRegistration, on_delete=models.CASCADE, null=True, blank=True)
 
     class Meta:

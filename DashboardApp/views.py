@@ -1269,7 +1269,7 @@ def deleteinternalvendor(request):
             intrnavendorobj=InternalVendor.objects.get(internal_vendor_id=intvendoridarray[i])
             intrnavendorobj.delete()
 
-        return Response({'status': 200, 'message': 'Internal Users are deleted'}, status=204)
+        return Response({'status': 200, 'message': 'Internal Users are deleted'}, status=200)
 
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)
@@ -1278,3 +1278,18 @@ class TrailVendorsView(viewsets.ModelViewSet):
     # permission_classes = [permissions.AllowAny]
     queryset = TrailVendors.objects.all()
     serializer_class =TrailVendorsSerializer
+
+    def create(self, request, *args, **kwargs):
+        trailarray=request.data['trailarray']
+        try:
+            for i in range(0,len(trailarray)):
+                trailobj=TrailVendors.objects.create(company_code=BasicCompanyDetails.objects.get(company_code=trailarray[i]))
+            return Response({'status': 201, 'message': 'Trail Vendors Created'}, status=201)
+        except Exception as e:
+            return Response({'status':500,'error':str(e)},status=500)
+
+    def get_queryset(self):
+        trailobj = TrailVendors.objects.filter(updated_by=self.request.GET.get('updated_by'))
+        if not trailobj:
+            raise ValidationError({'message': 'Trail Vendor Details are not found', 'status': 204})
+        return trailobj

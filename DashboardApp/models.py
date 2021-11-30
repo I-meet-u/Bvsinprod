@@ -96,3 +96,16 @@ class InternalBuyer(models.Model):
 
     class Meta:
         db_table="InternalBuyer"
+
+class TrailVendors(models.Model):
+    company_code = models.CharField(max_length=50)
+    status = models.CharField(max_length=80, default= 'Pending')
+    created_on = models.DateTimeField(auto_now_add=True)
+    updated_on = models.DateTimeField(auto_now=True)
+    created_by = models.BigIntegerField()
+    updated_by = models.ForeignKey(SelfRegistration, on_delete=models.CASCADE, null=True, blank=True)
+
+    class Meta:
+        db_table = "TrailVendors"
+
+

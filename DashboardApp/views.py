@@ -1273,3 +1273,8 @@ def deleteinternalvendor(request):
 
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)
+
+class TrailVendorsView(viewsets.ModelViewSet):
+    # permission_classes = [permissions.AllowAny]
+    queryset = TrailVendors.objects.all()
+    serializer_class =TrailVendorsSerializer

@@ -440,7 +440,7 @@ def sendergetbuzrequestdata(request):
                                                  'send_status': buzobj[i].get('send_status'),
                                                  'created_by': buzobj[i].get('created_by'),
                                                  'updated_by': buzobj[i].get('updated_by_id'),
-                                                 'usertype': "",
+                                                 'usertype': regobj.user_type,
 
                                                  })
 

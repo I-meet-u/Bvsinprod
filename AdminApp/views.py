@@ -1154,7 +1154,7 @@ class OpenLeadsRfqViewSet(viewsets.ModelViewSet):
             return Response({'status': 401, 'message': 'UnAuthorized'}, status=401)
 
     def get_queryset(self):
-        openleadsobj=OpenLeadsRfq.objects.filter(admins=self.request.GET.get('admins'))
+        openleadsobj=OpenLeadsRfq.objects.filter(admins=self.request.GET.get('admins')).order_by('id')
         if not openleadsobj:
             raise ValidationError({'message': 'Create Open Leads Details are not found', 'status': 204})
         return  openleadsobj

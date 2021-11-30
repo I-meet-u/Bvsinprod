@@ -1949,55 +1949,6 @@ def get_landing_page_bidding_by_pk(request):
         return Response({'status': 500, 'error': str(e)}, status=500)
 
 
-class LandingPageBidding_PublishViewSet(viewsets.ModelViewSet):
-    queryset = LandingPageBidding_Publish.objects.all()
-    serializer_class = LandingPageBidding_PublishSerializer
-
-
-    def create(self, request, *args, **kwargs):
-        # listing_leads=request.data.get('listing_leads',None)
-        # print(listing_leads)
-        listobj=LandingPageBidding.objects.filter(id=request.data['listing_leads']).values()
-        print(listobj[0].get('id'))
-        if len(listobj)>0:
-            listval=LandingPageBidding.objects.get(id=listobj[0].get('id'))
-            if listval.status=='Pending':
-                listval.status='Published'
-                listval.save()
-            # else:
-            #     if listval.status=='Published':
-            #         return Response({'status': 204, 'message': 'Already Published'}, status=204)
-            #     elif listval.status=='Reject':
-            #         return Response({'status': 204, 'message': 'Rejected'}, status=204)
-            basic = BasicCompanyDetails.objects.get(company_code=request.data['company_code'])
-            print(basic.company_code,'fdfdf')
-            regobj = SelfRegistration.objects.get(id=basic.updated_by_id)
-            print(regobj.username)
-            configuration = sib_api_v3_sdk.Configuration()
-            configuration.api_key[
-                'api-key'] = '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'
-
-            api_instance = sib_api_v3_sdk.TransactionalEmailsApi(sib_api_v3_sdk.ApiClient(configuration))
-            subject = "Published  RFQ"
-            text_content = "Dear " + regobj.contact_person + "\n\n" + "Your  " + basic.company_name + " company is published."+"\n\n"+ "NOTE: Please Don't Share this to anyone"
-            sender = {"name": "VENDORSIN COMMERCE PRIVATE LIMITED", "email": "admin@vendorsin.com"}
-            # text_content = 'Hello '+regobj.contact_person+',''\n You are selected for bidding'
-            to = [{"email": regobj.username, "name": regobj.contact_person}]
-            reply_to = {"email": "admin@vendorsin.com", "name": "Admin"}
-            send_smtp_email = sib_api_v3_sdk.SendSmtpEmail(to=to, reply_to=reply_to, text_content=text_content,
-                                                           sender=sender, subject=subject)
-            print(send_smtp_email)
-            api_response = api_instance.send_transac_email(send_smtp_email)
-            pprint(api_response)
-            return super().create(request, *args, **kwargs)
-        else:
-            return Response({'status':204,'message':'Not Present'},status=204)
-
-    def get_queryset(self):
-        landingpageobj=LandingPageBidding_Publish.objects.filter(updated_by=self.request.GET.get('updated_by')).order_by('id')
-        if landingpageobj:
-            return landingpageobj
-        raise ValidationError({'message':'landing Page details of particular user id is not exist','status':204})
 
 
 class LandingPageBiddingRFQAwardsSerializerViewSet(viewsets.ModelViewSet):
@@ -2747,3 +2698,90 @@ def main_cat_subcat_data(request):
         return Response({'status': 200, 'message': 'Ok', 'subcategoryproducts': SubProdDetaile_data,'categoryproducts': CatProdDetaile_data,}, status=200)
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)
+
+
+class LandingPageBidding_PublishViewSet(viewsets.ModelViewSet):
+    queryset = LandingPageBidding_Publish.objects.all()
+    serializer_class = LandingPageBidding_PublishSerializer
+
+    def create(self, request, *args, **kwargs):
+        # listing_leads=request.data.get('listing_leads',None)
+        # print(listing_leads)
+        total_amount=float(request.data['total_amount'])
+        arraydata=[]
+        list1=[]
+        listobj = LandingPageBidding.objects.filter(id=request.data['listing_leads']).values()
+        print(listobj[0].get('id'))
+        if len(listobj) > 0:
+            listval = LandingPageBidding.objects.get(id=listobj[0].get('id'))
+            if listval.status == 'Pending':
+                listval.status = 'Published'
+                listval.save()
+
+            publishobj =LandingPageBidding_Publish.objects.filter().values().order_by('total_amount')
+            for i in range(0,len(publishobj)):
+                print(type(publishobj[0].get('total_amount')))
+                x=float(publishobj[i].get('total_amount'))
+                print(type(x),'xxxxxxxxxx type')
+                arraydata.append(x)
+                arraydata.sort(reverse=True)
+            print(arraydata)
+            l1=arraydata[0]
+            l2=arraydata[1]
+            l3=arraydata[2]
+            print(l1,l2,l3)
+            if total_amount <l1 and total_amount<l2 and total_amount<l3:
+                basic = BasicCompanyDetails.objects.get(company_code=request.data['company_code'])
+                print(basic.company_code, 'fdfdf')
+                regobj = SelfRegistration.objects.get(id=basic.updated_by_id)
+                print(regobj.username)
+                configuration = sib_api_v3_sdk.Configuration()
+                configuration.api_key[
+                    'api-key'] = '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'
+
+                api_instance = sib_api_v3_sdk.TransactionalEmailsApi(sib_api_v3_sdk.ApiClient(configuration))
+                subject = "Published  RFQ"
+                text_content = "Dear " + regobj.contact_person + "\n\n" + "Your  " + basic.company_name + " company is published." + "\n\n" + "NOTE: Please Don't Share this to anyone"
+                sender = {"name": "VENDORSIN COMMERCE PRIVATE LIMITED", "email": "admin@vendorsin.com"}
+                # text_content = 'Hello '+regobj.contact_person+',''\n You are selected for bidding'
+                to = [{"email": regobj.username, "name": regobj.contact_person}]
+                reply_to = {"email": "admin@vendorsin.com", "name": "Admin"}
+                send_smtp_email = sib_api_v3_sdk.SendSmtpEmail(to=to, reply_to=reply_to, text_content=text_content,
+                                                               sender=sender, subject=subject)
+                print(send_smtp_email)
+                api_response = api_instance.send_transac_email(send_smtp_email)
+                pprint(api_response)
+                return super().create(request, *args, **kwargs)
+            else:
+                return Response({'status':202,'message':'Top published datas are already present'},status=202)
+
+            # basic = BasicCompanyDetails.objects.get(company_code=request.data['company_code'])
+            # print(basic.company_code, 'fdfdf')
+            # regobj = SelfRegistration.objects.get(id=basic.updated_by_id)
+            # print(regobj.username)
+            # configuration = sib_api_v3_sdk.Configuration()
+            # configuration.api_key[
+            #     'api-key'] = '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'
+            #
+            # api_instance = sib_api_v3_sdk.TransactionalEmailsApi(sib_api_v3_sdk.ApiClient(configuration))
+            # subject = "Published  RFQ"
+            # text_content = "Dear " + regobj.contact_person + "\n\n" + "Your  " + basic.company_name + " company is published." + "\n\n" + "NOTE: Please Don't Share this to anyone"
+            # sender = {"name": "VENDORSIN COMMERCE PRIVATE LIMITED", "email": "admin@vendorsin.com"}
+            # # text_content = 'Hello '+regobj.contact_person+',''\n You are selected for bidding'
+            # to = [{"email": regobj.username, "name": regobj.contact_person}]
+            # reply_to = {"email": "admin@vendorsin.com", "name": "Admin"}
+            # send_smtp_email = sib_api_v3_sdk.SendSmtpEmail(to=to, reply_to=reply_to, text_content=text_content,
+            #                                                sender=sender, subject=subject)
+            # print(send_smtp_email)
+            # api_response = api_instance.send_transac_email(send_smtp_email)
+            # pprint(api_response)
+            # return super().create(request, *args, **kwargs)
+        else:
+            return Response({'status': 204, 'message': 'Not Present'}, status=204)
+
+    def get_queryset(self):
+        landingpageobj = LandingPageBidding_Publish.objects.filter(
+            updated_by=self.request.GET.get('updated_by')).order_by('id')
+        if landingpageobj:
+            return landingpageobj
+        raise ValidationError({'message': 'landing Page details of particular user id is not exist', 'status': 204})

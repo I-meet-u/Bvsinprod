@@ -24,3 +24,8 @@ class InternalBuyerSerializer(serializers.ModelSerializer):
     class Meta:
         model=InternalBuyer
         fields="__all__"
+
+class TrailVendorsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model=TrailVendors
+        fields="__all__"

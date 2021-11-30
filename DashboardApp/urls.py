@@ -9,6 +9,7 @@ router.register('invite-vendor', views.InviteVendorView)
 router.register('business-request', views.BusinessRequestView)
 router.register('internal-vendor', views.InternalVendorView)
 router.register('internal-buyer', views.InternalBuyerView)
+router.register('TrailVendors', views.TrailVendorsView)
 
 
 urlpatterns = [

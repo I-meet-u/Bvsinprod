@@ -1307,6 +1307,8 @@ class TrailVendorsView(viewsets.ModelViewSet):
         return trailobj
 
 
+
+
 @api_view(['post'])
 def trail_vendor_data_based_on_userid(request):
     data=request.data
@@ -1319,14 +1321,14 @@ def trail_vendor_data_based_on_userid(request):
             ind_serve_nature_business=IndustrialInfo.objects.filter(company_code=data1[i].get('company_code_id')).values()
             city_state=BillingAddress.objects.filter(company_code=data1[i].get('company_code_id')).values()
             if cmp_code_name_gst :
-                data3.append({'company_code': cmp_code_name_gst[i].get('company_code'),
-                            'company_name': cmp_code_name_gst[i].get('company_name'),
+                data3.append({'company_code': cmp_code_name_gst[0].get('company_code'),
+                            'company_name': cmp_code_name_gst[0].get('company_name'),
                             'city': city_state[0].get('bill_city'),
                             'state': city_state[0].get('bill_state'),
                             'indurstry_to_serve': ind_serve_nature_business[0].get('industry_to_serve'),
                             'nature_of_business': ind_serve_nature_business[0].get('nature_of_business'),
-                            'gst_number': cmp_code_name_gst[i].get('gst_number'),
+                            'gst_number': cmp_code_name_gst[0].get('gst_number'),
                               })
-            return Response({'status': 200, 'message': 'ok','trail_vendor_data':data3,}, status=200)
+        return Response({'status': 200, 'message': 'ok','trail_vendor_data':data3,}, status=200)
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)

@@ -38,5 +38,5 @@ urlpatterns = [
     path('vendor-dashboard-count/', views.vendor_dashboard_count),
     path('advance-search-item-list/', views.advance_search_item_list),
     path('deleteinternalvendor/',views.deleteinternalvendor),
-
+    path('trail_vendor_data_based_on_userid/',views.trail_vendor_data_based_on_userid)
     ]

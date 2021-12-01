@@ -1283,8 +1283,12 @@ class TrailVendorsView(viewsets.ModelViewSet):
         trailarray=request.data['trailarray']
         try:
             for i in range(0,len(trailarray)):
-                trailobj=TrailVendors.objects.create(company_code=BasicCompanyDetails.objects.get(company_code=trailarray[i]))
+                trailobj=TrailVendors.objects.create(company_code=BasicCompanyDetails.objects.get(company_code=trailarray[i]),
+                                                         created_by=request.data['created_by'],
+                                                         updated_by=SelfRegistration.objects.get(id=request.data['updated_by'])
+                                                         )
             return Response({'status': 201, 'message': 'Trail Vendors Created'}, status=201)
+
         except Exception as e:
             return Response({'status':500,'error':str(e)},status=500)
 

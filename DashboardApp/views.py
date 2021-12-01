@@ -1281,12 +1281,20 @@ class TrailVendorsView(viewsets.ModelViewSet):
 
     def create(self, request, *args, **kwargs):
         trailarray=request.data['trailarray']
+        arraytrail=[]
         try:
+            trailobj = TrailVendors.objects.filter(updated_by=request.data['updated_by']).values()
+            for i in range(0, len(trailobj)):
+                arraytrail.append(trailobj[i].get('company_code_id'))
+            print(arraytrail)
             for i in range(0,len(trailarray)):
-                trailobj=TrailVendors.objects.create(company_code=BasicCompanyDetails.objects.get(company_code=trailarray[i]),
+                if trailarray[i] not in arraytrail:
+                    trailobj=TrailVendors.objects.create(company_code=BasicCompanyDetails.objects.get(company_code=trailarray[i]),
                                                          created_by=request.data['created_by'],
-                                                         updated_by=SelfRegistration.objects.get(id=request.data['updated_by'])
-                                                         )
+                                                          updated_by=SelfRegistration.objects.get(id=request.data['updated_by'])
+                                                             )
+                else:
+                    print('already present')
             return Response({'status': 201, 'message': 'Trail Vendors Created'}, status=201)
 
         except Exception as e:

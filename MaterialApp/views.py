@@ -2802,8 +2802,6 @@ def store_vendor_publish(request):
             while i<len(Vendor_publish_obj):
                 print(Vendor_publish_obj[i].get('total_amount'))
                 if  float(total_amount)>float(Vendor_publish_obj[i].get('total_amount')):
-                    print("user amt ",total_amount)
-                    print("vendors Amt ",Vendor_publish_obj[i].get('total_amount'))
                     count=count+1
                     if count==3:
                         return Response({'status': 202, 'message': 'Upto level 3 data exist'}, status=200)
@@ -2826,7 +2824,6 @@ def store_vendor_publish(request):
                                                           listing_leads=LandingPageBidding.objects.get(id=data['listing_leads']), created_by=updated_by,
                                                           updated_by=SelfRegistration.objects.get(id=updated_by))
         else:
-            #create statement
             LandingPageBidding_Publish.objects.create(item_type=data['item_type'],company_name=data['company_name'],
                                                       company_code=data['company_code'],priority=data['priority'],
                                                       deadline_date=data['deadline_date'],item_name=data['item_name'],

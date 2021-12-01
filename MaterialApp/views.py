@@ -2786,8 +2786,6 @@ class LandingPageBidding_PublishViewSet(viewsets.ModelViewSet):
             return landingpageobj
         raise ValidationError({'message': 'landing Page details of particular user id is not exist', 'status': 204})
 
-
-
 @api_view(['post'])
 def store_vendor_publish(request):
     try:
@@ -2804,7 +2802,7 @@ def store_vendor_publish(request):
                 if  float(total_amount)>float(Vendor_publish_obj[i].get('total_amount')):
                     count=count+1
                     if count==3:
-                        return Response({'status': 202, 'message': 'Upto level 3 data exist'}, status=200)
+                        return Response({'status': 202, 'message': 'Upto level 3 data exist'}, status=202)
                 i=i+1
             if count<3:
                 LandingPageBidding_Publish.objects.create(item_type=data['item_type'],

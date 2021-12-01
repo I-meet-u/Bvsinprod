@@ -2718,7 +2718,7 @@ class LandingPageBidding_PublishViewSet(viewsets.ModelViewSet):
                 listval.status = 'Published'
                 listval.save()
 
-            publishobj =LandingPageBidding_Publish.objects.filter().values().order_by('total_amount')
+            publishobj =LandingPageBidding_Publish.objects.filter(updated_by=request.data['updated_by'],listing_leads=request.data['listing_leads']).values().order_by('total_amount')
             for i in range(0,len(publishobj)):
                 print(type(publishobj[0].get('total_amount')))
                 x=float(publishobj[i].get('total_amount'))

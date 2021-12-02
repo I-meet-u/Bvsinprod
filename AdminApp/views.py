@@ -1491,18 +1491,60 @@ def fetch_open_leads_rfq(request):
             openleadsobj=OpenLeadsRfq.objects.filter().values().order_by('-id')
             if len(openleadsobj)>0:
                 for i in range(0, len(openleadsobj)):
-                    # print(openleadsobj[i].get('id'))
-                    openobj=OpenLeadsItems.objects.filter(open_leads_pk=openleadsobj[i].get('id')).values().order_by('quantity')
-                    openleadsobj[i].__setitem__('noi',len(openobj))
-                    for j in range(len(openobj)):
-                        # print((openobj[j].get('quantity')))
-                        if openobj[j].get('quantity')!="":
-                            count=count+int(openobj[j].get('quantity'))
-                    print("====j loop ended")
-                    print(count)
-                    openleadsobj[i].__setitem__('noq', count)
-                    count=0
-                return Response({'status': 200, 'message': 'Buyer Product Details List','data':openleadsobj}, status=200)
+                    deadline = openleadsobj[i].get('deadline_date')
+                    datevalue = datetime.strptime(deadline, '%Y-%m-%d').strftime('%d-%m-%Y')
+                    datevalue1=datetime.strptime(datevalue,'%d-%m-%Y')
+                    conveteddeadlinedate = datetime.date(datevalue1)
+                    todaydate = date.today()
+                    if conveteddeadlinedate < todaydate:
+                        openleads=OpenLeadsRfq.objects.filter(rfq_number=openleadsobj[i].get('rfq_number')).values()
+                        print(openleads[0].get('deadline_date'),'lk')
+                        openobj=OpenLeadsItems.objects.filter(open_leads_pk=openleadsobj[i].get('id')).values().order_by('quantity')
+                        for j in range(len(openobj)):
+                            if openobj[j].get('quantity') != "":
+                                count = count + int(openobj[j].get('quantity'))
+                        print("====j loop ended")
+                        newarray.append({'id': openleads[0].get('id'),
+                                         'buyer': openleads[0].get('buyer'),
+                                         'rfq_number': openleads[0].get('rfq_number'),
+                                         'numeric': openleads[0].get('numeric'),
+                                         'rfq_status': openleads[0].get('rfq_status'),
+                                         'rfq_type':openleads[0].get('rfq_type'),
+                                         'publish_date': openleads[0].get('publish_date'),
+                                         'deadline_date': openleads[0].get('deadline_date'),
+                                         'closing_date': openleads[0].get('closing_date'),
+                                         'department': openleads[0].get('department'),
+                                         'currency': openleads[0].get('currency'),
+                                         'category': openleads[0].get('category'),
+                                         'bill_address': openleads[0].get('bill_address'),
+                                         'ship_address': openleads[0].get('ship_address'),
+                                         'scope_of_supply': openleads[0].get('scope_of_supply'),
+                                         'scope_of_work': openleads[0].get('scope_of_work'),
+                                         'additional_info': openleads[0].get('additional_info'),
+                                         'document_1': openleads[0].get('document_1'),
+                                         'document_name_1': openleads[0].get('document_name_1'),
+                                         'document_2': openleads[0].get('document_2'),
+                                         'document_name_2 ': openleads[0].get('document_name_2') ,
+                                         'document_3': openleads[0].get('document_3'),
+                                         'document_name_3':openleads[0].get('document_name_3'),
+                                         'created_on': openleads[0].get('created_on'),
+                                         'updated_on': openleads[0].get('updated_on'),
+                                         'created_by': openleads[0].get('created_by'),
+                                         'updated_by': openleads[0].get('updated_by'),
+                                         'admins': openleads[0].get('admins_id'),
+                                         'buyer_company_code': openleads[0].get('buyer_company_code'),
+                                         'buyer_company_name': openleads[0].get('buyer_company_name'),
+                                         'maincore': openleads[0].get('maincore'),
+                                         'subcategory': openleads[0].get('subcategory'),
+                                         'rfq_title': openleads[0].get('rfq_title'),
+                                         'buyer_pk': openleads[0].get('buyer_pk_id'),
+                                         'noi': len(openobj),
+                                         'noq': count,
+
+                                         })
+                        count = 0
+
+                return Response({'status': 200, 'message': 'Buyer Product Details List','data':newarray}, status=200)
             else:
                 return Response({'status': 204, 'message': 'Not Present'}, status=204)
 
@@ -1510,9 +1552,6 @@ def fetch_open_leads_rfq(request):
             return Response({'status': 400, 'message': 'bad request'}, status=400)
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)
-
-
-
 
 class OpenLeadsVendorPublishRfqViewSet(viewsets.ModelViewSet):
     queryset = OpenLeadsVendorPublishRfq.objects.all()

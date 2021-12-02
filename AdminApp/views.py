@@ -1496,7 +1496,7 @@ def fetch_open_leads_rfq(request):
                     datevalue1=datetime.strptime(datevalue,'%d-%m-%Y')
                     conveteddeadlinedate = datetime.date(datevalue1)
                     todaydate = date.today()
-                    if conveteddeadlinedate < todaydate:
+                    if conveteddeadlinedate >todaydate:
                         openleads=OpenLeadsRfq.objects.filter(rfq_number=openleadsobj[i].get('rfq_number')).values()
                         print(openleads[0].get('deadline_date'),'lk')
                         openobj=OpenLeadsItems.objects.filter(open_leads_pk=openleadsobj[i].get('id')).values().order_by('quantity')

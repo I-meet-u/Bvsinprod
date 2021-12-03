@@ -2838,3 +2838,15 @@ def store_vendor_publish(request):
         return Response({'status': 500, 'error': str(e)}, status=500)
 
 
+@api_view(['post'])
+@permission_classes((AllowAny,))
+def vendor_product_details_based_on_itemtype(request):
+    data= request.data
+    try:
+        if data['token'] == "vsinadmindb":
+            product_details_data =VendorProduct_BasicDetails.objects.filter(item_type='Service').values()
+            return Response({'status': 200, 'message': 'ok', 'product_details_data':product_details_data}, status=200)
+        else:
+            return Response({'status': 400, 'message': 'Bad request'}, status=400)
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)

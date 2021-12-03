@@ -78,6 +78,7 @@ urlpatterns = [
     path('get-award-list-by-pk-value/',views.get_award_list_by_pk_value),
     path('listing-leads-po-status-update/',views.listing_leads_po_status_update),
     path('main_cat_subcat_data/',views.main_cat_subcat_data),
-    path('store_vendor_publish/',views.store_vendor_publish)
+    path('store_vendor_publish/',views.store_vendor_publish),
+    path('vendor_product_details_based_on_itemtype/',views.vendor_product_details_based_on_itemtype)
 
 ]

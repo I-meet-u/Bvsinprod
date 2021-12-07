@@ -541,6 +541,7 @@ def get_all_company_products_services(request):
                                      'maincore':productobj[i].get('core_sector'),
                                      'category':Categorydetails[0].get('category_id'),
                                      'subcategory':productobj[i].get('sub_category'),
+                                     'itemtype':productobj[i].get('item_type')
                                      })
                 return Response({'status': 200, 'message': 'Vendor Product List', 'data': getarray}, status=200)
             else:
@@ -562,7 +563,8 @@ def get_all_company_products_services(request):
                                      'product_code':alldata[i].get('item_code'),
                                      'maincore':Maaincoreid[0].get('maincore_id'),
                                      'category':Categoryid[0].get('category_id'),
-                                     'subcategory':alldata[i].get('sub_category')
+                                     'subcategory':alldata[i].get('sub_category'),
+                                     'itemtype':alldata[i].get('item_type')
                                      })
             basicobj = BasicCompanyDetails.objects.filter().values()
             if len(basicobj) > 0:
@@ -586,6 +588,7 @@ def get_all_company_products_services(request):
                                      'maincore': productobj[i].get('core_sector'),
                                      'category': Categorydetails[0].get('category_id'),
                                      'subcategory': productobj[i].get('sub_category'),
+                                     'itemtype': productobj[i].get('item_type')
                                      })
                 return Response({'status': 200, 'message': 'Vendor Service List', 'data': getarray}, status=200)
             else:

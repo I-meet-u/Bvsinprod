@@ -661,7 +661,8 @@ def get_approved_companies_list(request):
                 basicobj = BasicCompanyDetails.objects.filter(updated_by_id=regobj[i].get('id')).values()
                 if len(basicobj)>0:
                     billobj = BillingAddress.objects.filter(updated_by_id=basicobj[0].get('updated_by_id')).values().order_by('company_code')
-                    basicarray.append({'company_code':basicobj[0].get('company_code'),
+                    if billobj:
+                        basicarray.append({'company_code':basicobj[0].get('company_code'),
                                        'gst_number':basicobj[0].get('gst_number'),
                                        'name':basicobj[0].get('company_name'),
                                        'company_type':basicobj[0].get('company_type'),

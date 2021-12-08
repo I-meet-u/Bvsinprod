@@ -386,6 +386,7 @@ class AdminSelectedCategories(models.Model):
     created_on = models.DateTimeField(auto_now_add=True)
     updated_on = models.DateTimeField(auto_now=True)
     category_image = models.FileField(upload_to='CategoryImage', null=True, blank=True)
+    priority=models.CharField(max_length=150,null=True,blank=True)
 
     class Meta:
         db_table="AdminSelectedCategories"

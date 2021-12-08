@@ -2033,6 +2033,7 @@ def create_admin_selected_categories(request):
     key = data['key']
     category_name=data['category_name']
     admins=data['admins']
+    priority=data['priority']
 
     try:
         if key=='vsinadmin':
@@ -2041,7 +2042,8 @@ def create_admin_selected_categories(request):
                 if categoryobj:
                     adminselectedcategory=AdminSelectedCategories.objects.create(category_name=categoryobj[0].get('category_name'),
                                                                                  category_id=categoryobj[0].get('category_id'),
-                                                                                 admins=AdminRegister.objects.get(admin_id=admins)
+                                                                                 admins=AdminRegister.objects.get(admin_id=admins),
+                                                                                 priority=priority[i]
                                                                                  )
                 else:
                     pass

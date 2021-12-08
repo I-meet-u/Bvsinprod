@@ -105,6 +105,8 @@ urlpatterns = [
     path('open_leads_vendor_publish_rfq/',views.open_leads_vendor_publish_rfq),
     path('open_leads_vendor_publishrfq_view/',views.open_leads_vendor_publishrfq_view),
     path('channel_leads_closed_leads_deadline_date/',views.channel_leads_closed_leads_deadline_date),
+    path('create-admin-selected-categories/',views.create_admin_selected_categories),
+    path('fetch-admin-selected-categories/', views.fetch_admin_selected_categories)
 
 
 ]

@@ -2024,3 +2024,49 @@ def channel_leads_closed_leads_deadline_date(request):
         return Response({'status': 200, 'message': 'ok', 'ChannelLeadsClosedLeadsDeadlineDateData':resarr,}, status=200)
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)
+
+
+@api_view(['post'])
+@permission_classes((AllowAny,))
+def create_admin_selected_categories(request):
+    data=request.data
+    key = data['key']
+    category_name=data['category_name']
+    admins=data['admins']
+
+    try:
+        if key=='vsinadmin':
+            for i in range(0,len(category_name)):
+                categoryobj=CategoryMaster.objects.filter(category_name=category_name[i]).values().order_by('category_id')
+                if categoryobj:
+                    adminselectedcategory=AdminSelectedCategories.objects.create(category_name=categoryobj[0].get('category_name'),
+                                                                                 category_id=categoryobj[0].get('category_id'),
+                                                                                 admins=AdminRegister.objects.get(admin_id=admins)
+                                                                                 )
+                else:
+                    pass
+            return Response({'status':201,'message':'Admin Selected Categories are Created'},status=201)
+        else:
+            return Response({'status': 401, 'message': 'Unauthorized' },status=401)
+
+
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)
+
+
+@api_view(['post'])
+@permission_classes((AllowAny,))
+def fetch_admin_selected_categories(request):
+    key=request.data['key']
+    try:
+        if key=='vsinadmin':
+            adminselectedcategoryobj=AdminSelectedCategories.objects.filter().values().order_by('id')
+            if len(adminselectedcategoryobj)>0:
+                return Response({'status':200,'message':'Admin Selected Categories List','data':adminselectedcategoryobj},status=200)
+            else:
+                return Response({'status': 204, 'message': 'Admin Selected Categories Not Present'}, status=204)
+        else:
+            return Response({'status': 401, 'message': 'Unauthorized'}, status=401)
+
+    except Exception as e:
+        return Response({'status':500,'error':str(e)},status=500)

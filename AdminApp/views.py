@@ -16,6 +16,8 @@ from rest_framework.exceptions import ValidationError
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from django.db.models import Q
+
+from MastersApp.models import CategoryMaster
 from .serializers import *
 from RegistrationApp.models import SelfRegistration, BasicCompanyDetails, IndustrialInfo, IndustrialHierarchy, \
     BankDetails, LegalDocuments, Employee_CompanyDetails, Employee_IndustryInfo

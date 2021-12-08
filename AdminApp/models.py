@@ -377,3 +377,16 @@ class OpenLeadsAwards(models.Model):
 
     class Meta:
         db_table = "OpenLeadsAwards"
+
+
+class AdminSelectedCategories(models.Model):
+    category_name=models.CharField(max_length=200,unique=True)
+    category_id=models.CharField(max_length=100,null=True,blank=True)
+    admins=models.ForeignKey(AdminRegister,on_delete=models.CASCADE)
+    created_on = models.DateTimeField(auto_now_add=True)
+    updated_on = models.DateTimeField(auto_now=True)
+    category_image = models.FileField(upload_to='CategoryImage', null=True, blank=True)
+
+    class Meta:
+        db_table="AdminSelectedCategories"
+

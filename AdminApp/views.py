@@ -2033,17 +2033,25 @@ def create_admin_selected_categories(request):
     key = data['key']
     category_name=data['category_name']
     admins=data['admins']
+    selectedarray=[]
 
     try:
         if key=='vsinadmin':
+            adminobj = AdminSelectedCategories.objects.filter().values()
+            for i in range(0,len(adminobj)):
+                selectedarray.append(adminobj[i].get('category_name'))
+
             for i in range(0,len(category_name)):
                 categoryobj=CategoryMaster.objects.filter(category_name=category_name[i].get('catname')).values().order_by('category_id')
                 if categoryobj:
-                    adminselectedcategory=AdminSelectedCategories.objects.create(category_name=categoryobj[0].get('category_name'),
-                                                                                 category_id=categoryobj[0].get('category_id'),
-                                                                                 admins=AdminRegister.objects.get(admin_id=admins),
-                                                                                 priority=category_name[i].get('priority')
-                                                                                 )
+                    if categoryobj[0].get('category_name') not in selectedarray:
+                        adminselectedcategory=AdminSelectedCategories.objects.create(category_name=categoryobj[0].get('category_name'),
+                                                                                     category_id=categoryobj[0].get('category_id'),
+                                                                                      admins=AdminRegister.objects.get(admin_id=admins),
+                                                                                      priority=category_name[i].get('priority')
+                                                                                     )
+                    else:
+                        pass
                 else:
                     pass
             return Response({'status':201,'message':'Admin Selected Categories are Created'},status=201)

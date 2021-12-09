@@ -2038,12 +2038,12 @@ def create_admin_selected_categories(request):
     try:
         if key=='vsinadmin':
             for i in range(0,len(category_name)):
-                categoryobj=CategoryMaster.objects.filter(category_name=category_name[i]).values().order_by('category_id')
+                categoryobj=CategoryMaster.objects.filter(category_name=category_name[i].get('catname')).values().order_by('category_id')
                 if categoryobj:
                     adminselectedcategory=AdminSelectedCategories.objects.create(category_name=categoryobj[0].get('category_name'),
                                                                                  category_id=categoryobj[0].get('category_id'),
                                                                                  admins=AdminRegister.objects.get(admin_id=admins),
-                                                                                 priority=priority[i]
+                                                                                 priority=category_name[i].get('priority')
                                                                                  )
                 else:
                     pass

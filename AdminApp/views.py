@@ -2033,7 +2033,6 @@ def create_admin_selected_categories(request):
     key = data['key']
     category_name=data['category_name']
     admins=data['admins']
-    priority=data['priority']
 
     try:
         if key=='vsinadmin':

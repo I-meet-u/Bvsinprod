@@ -391,3 +391,16 @@ class AdminSelectedCategories(models.Model):
     class Meta:
         db_table="AdminSelectedCategories"
 
+class TrendingCategories(models.Model):
+    trending_category_name=models.CharField(max_length=200,unique=True)
+    trending_category_id=models.CharField(max_length=100,null=True,blank=True)
+    admins=models.ForeignKey(AdminRegister,on_delete=models.CASCADE)
+    created_on = models.DateTimeField(auto_now_add=True)
+    updated_on = models.DateTimeField(auto_now=True)
+    trending_category_image = models.FileField(upload_to='CategoryImage', null=True, blank=True)
+    trending_priority=models.CharField(max_length=150,null=True,blank=True)
+
+    class Meta:
+        db_table="TrendingCategories"
+
+

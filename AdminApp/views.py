@@ -2105,12 +2105,15 @@ def create_admin_selected_categories(request):
                     for j in range(0,len(adminobj1)):
                         if categoryobj[0].get('category_name')==adminobj1[j].get('category_name') and category_name[i].get('priority')!=adminobj1[j].get('priority'):
                             adminobjaa=AdminSelectedCategories.objects.get(id=adminobj1[j].get('id'))
-                            print(adminobjaa)
                             adminobjaa.delete()
                         if categoryobj[0].get('category_name') == adminobj1[j].get('category_name') and category_name[
                             i].get('priority') == adminobj1[j].get('priority'):
                             adminobjaa = AdminSelectedCategories.objects.get(id=adminobj1[j].get('id'))
-                            print(adminobjaa)
+                            adminobjaa.delete()
+
+                        if categoryobj[0].get('category_name')!=adminobj1[i].get('category_name') and category_name[
+                            i].get('priority') == adminobj1[j].get('priority'):
+                            adminobjaa = AdminSelectedCategories.objects.get(id=adminobj1[j].get('id'))
                             adminobjaa.delete()
 
 
@@ -2127,4 +2130,3 @@ def create_admin_selected_categories(request):
 
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)
-

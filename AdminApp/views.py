@@ -2107,11 +2107,19 @@ def create_admin_selected_categories(request):
                             adminobjaa=AdminSelectedCategories.objects.get(id=adminobj1[j].get('id'))
                             print(adminobjaa)
                             adminobjaa.delete()
+                        if categoryobj[0].get('category_name') == adminobj1[j].get('category_name') and category_name[
+                            i].get('priority') == adminobj1[j].get('priority'):
+                            adminobjaa = AdminSelectedCategories.objects.get(id=adminobj1[j].get('id'))
+                            print(adminobjaa)
+                            adminobjaa.delete()
+
 
                     adminselectedcategory=AdminSelectedCategories.objects.create(category_name=categoryobj[0].get('category_name'),
-                                                                                 category_id=categoryobj[0].get('category_id'),
-                                                                              admins=AdminRegister.objects.get(admin_id=admins),
-                                                                              priority=category_name[i].get('priority'))
+                                                                                     category_id=categoryobj[0].get('category_id'),
+                                                                                  admins=AdminRegister.objects.get(admin_id=admins),
+                                                                                  priority=category_name[i].get('priority'))
+
+
             return Response({'status':201,'message':'Admin Selected Categories are Created'},status=201)
         else:
             return Response({'status': 401, 'message': 'Unauthorized' },status=401)

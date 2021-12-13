@@ -2320,11 +2320,24 @@ def fetch_admin_trending_categories(request):
 @permission_classes((AllowAny,))
 def fetch_admin_selected_sub_categories(request):
     key=request.data['key']
+    subcatarray=[]
     try:
         if key=='vsinadmin':
             selectedsubcategoryobj=AdminSelectedSubCategories.objects.filter().values().order_by('id')
             if len(selectedsubcategoryobj)>0:
-                return Response({'status':200,'message':'Admin Selected SubCategories List','data':selectedsubcategoryobj},status=200)
+                for i in range(0,len(selectedsubcategoryobj)):
+                    subcatobj=SubCategoryMaster.objects.filter(sub_category_name=selectedsubcategoryobj[i].get('sub_category_name')).values()
+                    subcatarray.append({'sub_category_name':selectedsubcategoryobj[i].get('sub_category_name'),
+                                        'sub_category_id':selectedsubcategoryobj[i].get('sub_category_id'),
+                                        'admins':selectedsubcategoryobj[i].get('admins'),
+                                        'created_on':selectedsubcategoryobj[i].get('created_on'),
+                                        'updated_on':selectedsubcategoryobj[i].get('updated_on'),
+                                        'sub_categories_priority':selectedsubcategoryobj[i].get('sub_categories_priority'),
+                                        'sub_category_code':subcatobj[0].get('sub_category_code'),
+                                        'sub_category_status':subcatobj[0].get('status')
+                                        })
+
+                return Response({'status':200,'message':'Admin Selected SubCategories List','data':subcatarray},status=200)
             else:
                 return Response({'status': 204, 'message': 'Admin Selected SubCategories Not Present'}, status=204)
         else:
@@ -2339,11 +2352,23 @@ def fetch_admin_selected_sub_categories(request):
 @permission_classes((AllowAny,))
 def fetch_admin_trending_sub_categories(request):
     key=request.data['key']
+    subcatarray = []
     try:
         if key=='vsinadmin':
             trendingsubcategoryobj=TrendingSubCategories.objects.filter().values().order_by('id')
             if len(trendingsubcategoryobj)>0:
-                return Response({'status':200,'message':'Admin Trending SubCategories List','data':trendingsubcategoryobj},status=200)
+                for i in range(0,len(trendingsubcategoryobj)):
+                    subcatobj=SubCategoryMaster.objects.filter(sub_category_name=trendingsubcategoryobj[i].get('trending_sub_category_name')).values()
+                    subcatarray.append({'trending_sub_category_name':trendingsubcategoryobj[i].get('trending_sub_category_name'),
+                                        'trending_sub_category_id':trendingsubcategoryobj[i].get('trending_sub_category_id'),
+                                        'admins':trendingsubcategoryobj[i].get('admins'),
+                                        'created_on':trendingsubcategoryobj[i].get('created_on'),
+                                        'updated_on':trendingsubcategoryobj[i].get('updated_on'),
+                                        'trending_sub_categories_priority':trendingsubcategoryobj[i].get('trending_sub_categories_priority'),
+                                        'sub_category_code':subcatobj[0].get('sub_category_code'),
+                                        'sub_category_status':subcatobj[0].get('status')
+                                        })
+                return Response({'status':200,'message':'Admin Trending SubCategories List','data':subcatarray},status=200)
             else:
                 return Response({'status': 204, 'message': 'Admin Trending SubCategories Not Present'}, status=204)
         else:

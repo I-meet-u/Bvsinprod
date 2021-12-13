@@ -2067,11 +2067,27 @@ def channel_leads_closed_leads_deadline_date(request):
 @permission_classes((AllowAny,))
 def fetch_admin_selected_categories(request):
     key=request.data['key']
+    catarray=[]
     try:
         if key=='vsinadmin':
             adminselectedcategoryobj=AdminSelectedCategories.objects.filter().values().order_by('id')
             if len(adminselectedcategoryobj)>0:
-                return Response({'status':200,'message':'Admin Selected Categories List','data':adminselectedcategoryobj},status=200)
+                for i in range(0,len(adminselectedcategoryobj)):
+                    catobj=CategoryMaster.objects.filter(category_name=adminselectedcategoryobj[i].get('category_name')).values()
+                    catarray.append({'category_name':adminselectedcategoryobj[i].get('category_name'),
+                                     'category_id':adminselectedcategoryobj[i].get('category_id'),
+                                     'admins':adminselectedcategoryobj[i].get('admins'),
+                                     'created_on':adminselectedcategoryobj[i].get('created_on'),
+                                     'updated_on':adminselectedcategoryobj[i].get('updated_on'),
+                                     'priority':adminselectedcategoryobj[i].get('priority'),
+                                     'category_code':catobj[0].get('category_code'),
+                                     'category_status':catobj[0].get('status')
+
+
+                                     })
+
+
+                return Response({'status':200,'message':'Admin Selected Categories List','data':catarray},status=200)
             else:
                 return Response({'status': 204, 'message': 'Admin Selected Categories Not Present'}, status=204)
         else:
@@ -2271,11 +2287,25 @@ def create_admin_trending_sub_categories(request):
 @permission_classes((AllowAny,))
 def fetch_admin_trending_categories(request):
     key=request.data['key']
+    catarray=[]
     try:
         if key=='vsinadmin':
             trendingcategoryobj=TrendingCategories.objects.filter().values().order_by('id')
             if len(trendingcategoryobj)>0:
-                return Response({'status':200,'message':'Admin Trending Categories List','data':trendingcategoryobj},status=200)
+                for i in range(0,len(trendingcategoryobj)):
+                    catobj=CategoryMaster.objects.filter(category_name=trendingcategoryobj[i].get('trending_category_name')).values()
+                    catarray.append({'trending_category_name':trendingcategoryobj[i].get('trending_category_name'),
+                                     'trending_category_id':trendingcategoryobj[i].get('trending_category_id'),
+                                     'admins':trendingcategoryobj[i].get('admins'),
+                                     'created_on':trendingcategoryobj[i].get('created_on'),
+                                     'updated_on':trendingcategoryobj[i].get('updated_on'),
+                                     'trending_priority':trendingcategoryobj[i].get('trending_priority'),
+                                     'category_code':catobj[0].get('category_code'),
+                                     'category_status':catobj[0].get('status')
+
+
+                                     })
+                return Response({'status':200,'message':'Admin Trending Categories List','data':catarray},status=200)
             else:
                 return Response({'status': 204, 'message': 'Admin Trending Categories Not Present'}, status=204)
         else:

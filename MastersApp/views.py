@@ -2679,7 +2679,11 @@ def getselectedcatmasters(request):
             if categorymasterdetails:
                 res.append({'category_name':categorymasterdetails[0].get('category_name'),
                             'category_url':categorymasterdetails[0].get('category_image'),
-                            'category_id':categorymasterdetails[0].get('category_id')})
+                            'category_id':categorymasterdetails[0].get('category_id'),
+                            'category_code':categorymasterdetails[0].get('category_code'),
+                            'category_status':categorymasterdetails[0].get('status')
+
+                            })
             i=i+1
         return Response({'status': 200, 'message': 'ok','data':res}, status=200)
     except Exception as e:
@@ -2699,8 +2703,11 @@ def get_trending_categories(request):
             categorymasterdetails=CategoryMaster.objects.filter(category_name=adminobj[i].get('trending_category_name')).values()
             if categorymasterdetails:
                 trendingcategories.append({'category_name':categorymasterdetails[0].get('category_name'),
-                            'category_url':categorymasterdetails[0].get('category_image'),
-                            'category_id':categorymasterdetails[0].get('category_id')})
+                                           'category_url':categorymasterdetails[0].get('category_image'),
+                                           'category_id':categorymasterdetails[0].get('category_id'),
+                                           'category_code': categorymasterdetails[0].get('category_code'),
+                                           'category_status': categorymasterdetails[0].get('status')
+                                           })
             i=i+1
         return Response({'status': 200, 'message': 'Trending Categoires List','data':trendingcategories}, status=200)
     except Exception as e:
@@ -2717,7 +2724,9 @@ def get_admin_selected_sub_categories(request):
             subcategoryobj=SubCategoryMaster.objects.filter(sub_category_name=selectedsubcategoriesobj[i].get('sub_category_name')).values()
             selectedsubcategory.append({'sub_category_name':subcategoryobj[0].get('sub_category_name'),
                                         'sub_category_url':subcategoryobj[0].get('sub_category_image'),
-                                        'sub_category_id':subcategoryobj[0].get('sub_category_id')
+                                        'sub_category_id':subcategoryobj[0].get('sub_category_id'),
+                                        'sub_category_code': subcategoryobj[0].get('sub_category_code'),
+                                        'sub_category_status': subcategoryobj[0].get('status')
 
             })
         return Response({'status': 200, 'message': 'Top SubCategoires List', 'data': selectedsubcategory}, status=200)
@@ -2736,7 +2745,9 @@ def get_admin_trending_sub_categories(request):
             subcategoryobj=SubCategoryMaster.objects.filter(sub_category_name=trendingsubcategoriesobj[i].get('trending_sub_category_name')).values()
             trendingsubcategory.append({'sub_category_name':subcategoryobj[0].get('sub_category_name'),
                                         'sub_category_url':subcategoryobj[0].get('sub_category_image'),
-                                        'sub_category_id':subcategoryobj[0].get('sub_category_id')
+                                        'sub_category_id':subcategoryobj[0].get('sub_category_id'),
+                                        'sub_category_code': subcategoryobj[0].get('sub_category_code'),
+                                        'sub_category_status': subcategoryobj[0].get('status')
 
             })
         return Response({'status': 200, 'message': 'Trending SubCategoires List', 'data': trendingsubcategory}, status=200)

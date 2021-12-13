@@ -193,7 +193,10 @@ urlpatterns = [
     path('updatefright/',views.updatefright),
     path('getdesinationdeailsid/',views.getdesinationdeailsid),
     path('updatedesignation/',views.updatedesignation),
-    path('getselectedcatmasters/',views.getselectedcatmasters)
+    path('getselectedcatmasters/',views.getselectedcatmasters),
+    path('get-trending-categories/',views.get_trending_categories),
+    path('get-admin-trending-sub-categories/',views.get_admin_trending_sub_categories),
+    path('get-admin-selected-sub-categories/', views.get_admin_selected_sub_categories)
 
 ]
 

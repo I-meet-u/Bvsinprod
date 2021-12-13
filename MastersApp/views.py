@@ -14,7 +14,8 @@ import io, csv
 
 from rest_framework.views import APIView
 
-from AdminApp.models import AdminRegister
+from AdminApp.models import AdminRegister, AdminSelectedCategories, TrendingCategories, AdminSelectedSubCategories, \
+    TrendingSubCategories
 from .serializers import *
 from .models import  *
 
@@ -2668,26 +2669,76 @@ def getopenbidsmasters(request):
 
 @api_view(['post'])
 @permission_classes([AllowAny,])
-def getselectedcatmasters(requset):
+def getselectedcatmasters(request):
     try:
         res=[]
         i=0
-        seletedarray=["Motors Gearboxs & Geared Motors","Warehouse Handling Equipments","Steel , iron & Stainless Products",
-                      "Engineering Quality & Inspection Services","Civil & Contraction Equipments","Material Handling Equipments",
-                      "Metal Processing & Machine Tools","Processing industries Equipment",
-                      "Grinding And Processing Machinery","Electric Motors and Components","Electrical Panels & Distribution Box",
-                      "Instruments & Automation Devices","2D, 3D,CAD,CAM Design Services","3D Modeling & Rendering Services",
-                      "Industrial Manufacturing Services","Machining & Fabrication Services","Personal protective equipment(PPE)",
-                      "Heavy mobile equipments","Automotive Repair Tools & Equipments","Ground & Road Shipping Services"]
-
-
-        while i<len(seletedarray):
-            categorymasterdetails=CategoryMaster.objects.filter(category_name=seletedarray[i]).values()
+        adminobj=AdminSelectedCategories.objects.filter().values().order_by('id')
+        while i<len(adminobj):
+            categorymasterdetails=CategoryMaster.objects.filter(category_name=adminobj[i].get('category_name')).values()
             if categorymasterdetails:
                 res.append({'category_name':categorymasterdetails[0].get('category_name'),
                             'category_url':categorymasterdetails[0].get('category_image'),
                             'category_id':categorymasterdetails[0].get('category_id')})
             i=i+1
         return Response({'status': 200, 'message': 'ok','data':res}, status=200)
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)
+
+
+@api_view(['post'])
+@permission_classes([AllowAny,])
+def get_trending_categories(request):
+    try:
+        trendingcategories=[]
+        i=0
+        adminobj=TrendingCategories.objects.filter().values().order_by('id')
+
+
+        while i<len(adminobj):
+            categorymasterdetails=CategoryMaster.objects.filter(category_name=adminobj[i].get('trending_category_name')).values()
+            if categorymasterdetails:
+                trendingcategories.append({'category_name':categorymasterdetails[0].get('category_name'),
+                            'category_url':categorymasterdetails[0].get('category_image'),
+                            'category_id':categorymasterdetails[0].get('category_id')})
+            i=i+1
+        return Response({'status': 200, 'message': 'Trending Categoires List','data':trendingcategories}, status=200)
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)
+
+
+@api_view(['post'])
+@permission_classes([AllowAny,])
+def get_admin_selected_sub_categories(requset):
+    try:
+        selectedsubcategory=[]
+        selectedsubcategoriesobj=AdminSelectedSubCategories.objects.filter().values()
+        for i in range(0,len(selectedsubcategoriesobj)):
+            subcategoryobj=SubCategoryMaster.objects.filter(sub_category_name=selectedsubcategoriesobj[i].get('sub_category_name')).values()
+            selectedsubcategory.append({'sub_category_name':subcategoryobj[0].get('sub_category_name'),
+                                        'sub_category_url':subcategoryobj[0].get('sub_category_image'),
+                                        'sub_category_id':subcategoryobj[0].get('sub_category_id')
+
+            })
+        return Response({'status': 200, 'message': 'Top SubCategoires List', 'data': selectedsubcategory}, status=200)
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)
+
+
+
+@api_view(['post'])
+@permission_classes([AllowAny,])
+def get_admin_trending_sub_categories(requset):
+    try:
+        trendingsubcategory=[]
+        trendingsubcategoriesobj=TrendingSubCategories.objects.filter().values()
+        for i in range(0,len(trendingsubcategoriesobj)):
+            subcategoryobj=SubCategoryMaster.objects.filter(sub_category_name=trendingsubcategoriesobj[i].get('trending_sub_category_name')).values()
+            trendingsubcategory.append({'sub_category_name':subcategoryobj[0].get('sub_category_name'),
+                                        'sub_category_url':subcategoryobj[0].get('sub_category_image'),
+                                        'sub_category_id':subcategoryobj[0].get('sub_category_id')
+
+            })
+        return Response({'status': 200, 'message': 'Trending SubCategoires List', 'data': trendingsubcategory}, status=200)
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)

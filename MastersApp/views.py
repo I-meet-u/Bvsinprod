@@ -2709,7 +2709,7 @@ def get_trending_categories(request):
 
 @api_view(['post'])
 @permission_classes([AllowAny,])
-def get_admin_selected_sub_categories(requset):
+def get_admin_selected_sub_categories(request):
     try:
         selectedsubcategory=[]
         selectedsubcategoriesobj=AdminSelectedSubCategories.objects.filter().values()
@@ -2728,7 +2728,7 @@ def get_admin_selected_sub_categories(requset):
 
 @api_view(['post'])
 @permission_classes([AllowAny,])
-def get_admin_trending_sub_categories(requset):
+def get_admin_trending_sub_categories(request):
     try:
         trendingsubcategory=[]
         trendingsubcategoriesobj=TrendingSubCategories.objects.filter().values()

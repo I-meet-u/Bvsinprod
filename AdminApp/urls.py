@@ -106,7 +106,13 @@ urlpatterns = [
     path('open_leads_vendor_publishrfq_view/',views.open_leads_vendor_publishrfq_view),
     path('channel_leads_closed_leads_deadline_date/',views.channel_leads_closed_leads_deadline_date),
     path('create-admin-selected-categories/',views.create_admin_selected_categories),
-    path('fetch-admin-selected-categories/', views.fetch_admin_selected_categories)
+    path('fetch-admin-selected-categories/', views.fetch_admin_selected_categories),
+    path('create-admin-selected-trending-categories/',views.create_admin_selected_trending_categories),
+    path('fetch-admin-trending-categories/', views.fetch_admin_trending_categories),
+    path('create-admin-selected-sub-categories/',views.create_admin_selected_sub_categories),
+    path('fetch-admin-selected-sub-categories/', views.fetch_admin_selected_sub_categories),
+    path('create-admin-trending-sub-categories/',views.create_admin_trending_sub_categories),
+    path('fetch-admin-trending-sub-categories/', views.fetch_admin_trending_sub_categories),
 
 
 ]

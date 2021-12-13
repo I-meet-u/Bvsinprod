@@ -404,3 +404,26 @@ class TrendingCategories(models.Model):
         db_table="TrendingCategories"
 
 
+class AdminSelectedSubCategories(models.Model):
+    sub_category_name=models.CharField(max_length=200,unique=True)
+    sub_category_id=models.CharField(max_length=100,null=True,blank=True)
+    admins=models.ForeignKey(AdminRegister,on_delete=models.CASCADE)
+    created_on = models.DateTimeField(auto_now_add=True)
+    updated_on = models.DateTimeField(auto_now=True)
+    sub_category_image = models.FileField(upload_to='CategoryImage', null=True, blank=True)
+    sub_categories_priority=models.CharField(max_length=150,null=True,blank=True)
+
+    class Meta:
+        db_table="AdminSelectedSubCategories"
+
+class TrendingSubCategories(models.Model):
+    trending_sub_category_name=models.CharField(max_length=200,unique=True)
+    trending_sub_category_id=models.CharField(max_length=100,null=True,blank=True)
+    admins=models.ForeignKey(AdminRegister,on_delete=models.CASCADE)
+    created_on = models.DateTimeField(auto_now_add=True)
+    updated_on = models.DateTimeField(auto_now=True)
+    trending_sub_category_image = models.FileField(upload_to='CategoryImage', null=True, blank=True)
+    trending_sub_categories_priority=models.CharField(max_length=150,null=True,blank=True)
+
+    class Meta:
+        db_table="TrendingSubCategories"

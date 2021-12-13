@@ -17,7 +17,7 @@ from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from django.db.models import Q
 
-from MastersApp.models import CategoryMaster
+from MastersApp.models import CategoryMaster, SubCategoryMaster
 from .serializers import *
 from RegistrationApp.models import SelfRegistration, BasicCompanyDetails, IndustrialInfo, IndustrialHierarchy, \
     BankDetails, LegalDocuments, Employee_CompanyDetails, Employee_IndustryInfo
@@ -2130,3 +2130,194 @@ def create_admin_selected_categories(request):
 
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)
+
+@api_view(['post'])
+@permission_classes((AllowAny,))
+def create_admin_selected_trending_categories(request):
+    data=request.data
+    key = data['key']
+    category_name=data['category_name']
+    admins=data['admins']
+    selectedarray=[]
+    selectedcat=[]
+
+    try:
+        if key=='vsinadmin':
+            adminobj = TrendingCategories.objects.filter().values().order_by('id')
+            for i in range(0,len(adminobj)):
+                selectedarray.append(adminobj[i].get('trending_priority'))
+                selectedcat.append(adminobj[i].get('trending_category_name'))
+
+            for i in range(0,len(category_name)):
+                categoryobj=CategoryMaster.objects.filter(category_name=category_name[i].get('catname')).values().order_by('category_id')
+                if categoryobj:
+                    adminobj1 = TrendingCategories.objects.filter().values().order_by('id')
+                    for j in range(0,len(adminobj1)):
+                        if categoryobj[0].get('category_name')==adminobj1[j].get('trending_category_name') and category_name[i].get('priority')!=adminobj1[j].get('trending_priority'):
+                            adminobjaa=TrendingCategories.objects.get(id=adminobj1[j].get('id'))
+                            adminobjaa.delete()
+                        if categoryobj[0].get('category_name') == adminobj1[j].get('trending_category_name') and category_name[i].get('priority') == adminobj1[j].get('trending_priority'):
+                            adminobjaa = TrendingCategories.objects.get(id=adminobj1[j].get('id'))
+                            adminobjaa.delete()
+
+                        if categoryobj[0].get('category_name')!=adminobj1[j].get('trending_category_name') and category_name[i].get('priority') == adminobj1[j].get('trending_priority'):
+                            adminobjaa = TrendingCategories.objects.get(id=adminobj1[j].get('id'))
+                            adminobjaa.delete()
+
+
+                    adminselectedcategory=TrendingCategories.objects.create(trending_category_name=categoryobj[0].get('category_name'),
+                                                                                     trending_category_id=categoryobj[0].get('category_id'),
+                                                                                  admins=AdminRegister.objects.get(admin_id=admins),
+                                                                                  trending_priority=category_name[i].get('priority'))
+
+
+            return Response({'status':201,'message':'Admin Trending Categories are Created'},status=201)
+        else:
+            return Response({'status': 401, 'message': 'Unauthorized' },status=401)
+
+
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)
+
+@api_view(['post'])
+@permission_classes((AllowAny,))
+def create_admin_selected_sub_categories(request):
+    data=request.data
+    key = data['key']
+    sub_category_data=data['sub_category_data']
+    admins=data['admins']
+    selectedarray=[]
+    selectedcat=[]
+
+    try:
+        if key == 'vsinadmin':
+            adminobj = AdminSelectedSubCategories.objects.filter().values().order_by('id')
+            for i in range(0, len(adminobj)):
+                selectedarray.append(adminobj[i].get('sub_categories_priority'))
+                selectedcat.append(adminobj[i].get('sub_category_name'))
+
+            for i in range(0, len(sub_category_data)):
+                subcatobj = SubCategoryMaster.objects.filter(sub_category_name=sub_category_data[i].get('subcatname')).values().order_by('sub_category_id')
+                if subcatobj:
+                    adminobj1 = AdminSelectedSubCategories.objects.filter().values().order_by('id')
+                    for j in range(0, len(adminobj1)):
+                        if subcatobj[0].get('sub_category_name') == adminobj1[j].get('sub_category_name') and sub_category_data[i].get('priority')!=adminobj1[j].get('sub_categories_priority'):
+                            adminobjaa = AdminSelectedSubCategories.objects.get(id=adminobj1[j].get('id'))
+                            adminobjaa.delete()
+
+                        if subcatobj[0].get('sub_category_name') == adminobj1[j].get('sub_category_name') and sub_category_data[i].get('priority') == adminobj1[j].get('sub_categories_priority'):
+                            adminobjaa = AdminSelectedSubCategories.objects.get(id=adminobj1[j].get('id'))
+                            adminobjaa.delete()
+
+                        if subcatobj[0].get('sub_category_name') != adminobj1[j].get('sub_category_name') and sub_category_data[i].get('priority') == adminobj1[j].get('sub_categories_priority'):
+                            adminobjaa = AdminSelectedSubCategories.objects.get(id=adminobj1[j].get('id'))
+                            adminobjaa.delete()
+                    adminselectedsibcategory = AdminSelectedSubCategories.objects.create(sub_category_name=subcatobj[0].get('sub_category_name'),
+                                                                                         sub_category_id=subcatobj[0].get('sub_category_id'),
+                                                                                         admins=AdminRegister.objects.get(admin_id=admins),
+                                                                                         sub_categories_priority=sub_category_data[i].get('priority'))
+            return Response({'status': 201, 'message': 'Admin Selected SubCategories are Created'}, status=201)
+        else:
+            return Response({'status': 401, 'message': 'Unauthorized'}, status=401)
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)
+
+
+@api_view(['post'])
+@permission_classes((AllowAny,))
+def create_admin_trending_sub_categories(request):
+    data=request.data
+    key = data['key']
+    sub_category_data=data['sub_category_data']
+    admins=data['admins']
+    selectedarray=[]
+    selectedcat=[]
+
+    try:
+        if key == 'vsinadmin':
+            adminobj = TrendingSubCategories.objects.filter().values().order_by('id')
+            for i in range(0, len(adminobj)):
+                selectedarray.append(adminobj[i].get('trending_sub_category_name'))
+                selectedcat.append(adminobj[i].get('trending_sub_category_id'))
+
+            for i in range(0, len(sub_category_data)):
+                subcatobj = SubCategoryMaster.objects.filter(sub_category_name=sub_category_data[i].get('subcatname')).values().order_by('sub_category_id')
+                if subcatobj:
+                    adminobj1 = TrendingSubCategories.objects.filter().values().order_by('id')
+                    for j in range(0, len(adminobj1)):
+                        if subcatobj[0].get('sub_category_name') == adminobj1[j].get('trending_sub_category_name') and sub_category_data[i].get('priority')!=adminobj1[j].get('trending_sub_categories_priority'):
+                            adminobjaa = TrendingSubCategories.objects.get(id=adminobj1[j].get('id'))
+                            adminobjaa.delete()
+
+                        if subcatobj[0].get('sub_category_name') == adminobj1[j].get('trending_sub_category_name') and sub_category_data[i].get('priority') == adminobj1[j].get('trending_sub_categories_priority'):
+                            adminobjaa = TrendingSubCategories.objects.get(id=adminobj1[j].get('id'))
+                            adminobjaa.delete()
+
+                        if subcatobj[0].get('sub_category_name') != adminobj1[j].get('trending_sub_category_name') and sub_category_data[i].get('priority') == adminobj1[j].get('trending_sub_categories_priority'):
+                            adminobjaa = TrendingSubCategories.objects.get(id=adminobj1[j].get('id'))
+                            adminobjaa.delete()
+                    adminselectedsibcategory = TrendingSubCategories.objects.create(trending_sub_category_name=subcatobj[0].get('sub_category_name'),
+                                                                                         trending_sub_category_id=subcatobj[0].get('sub_category_id'),
+                                                                                         admins=AdminRegister.objects.get(admin_id=admins),
+                                                                                         trending_sub_categories_priority=sub_category_data[i].get('priority'))
+            return Response({'status': 201, 'message': 'Admin Trending SubCategories are Created'}, status=201)
+        else:
+            return Response({'status': 401, 'message': 'Unauthorized'}, status=401)
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)
+
+
+@api_view(['post'])
+@permission_classes((AllowAny,))
+def fetch_admin_trending_categories(request):
+    key=request.data['key']
+    try:
+        if key=='vsinadmin':
+            trendingcategoryobj=TrendingCategories.objects.filter().values().order_by('id')
+            if len(trendingcategoryobj)>0:
+                return Response({'status':200,'message':'Admin Trending Categories List','data':trendingcategoryobj},status=200)
+            else:
+                return Response({'status': 204, 'message': 'Admin Trending Categories Not Present'}, status=204)
+        else:
+            return Response({'status': 401, 'message': 'Unauthorized'}, status=401)
+
+    except Exception as e:
+        return Response({'status':500,'error':str(e)},status=500)
+
+
+
+@api_view(['post'])
+@permission_classes((AllowAny,))
+def fetch_admin_selected_sub_categories(request):
+    key=request.data['key']
+    try:
+        if key=='vsinadmin':
+            selectedsubcategoryobj=AdminSelectedSubCategories.objects.filter().values().order_by('id')
+            if len(selectedsubcategoryobj)>0:
+                return Response({'status':200,'message':'Admin Selected SubCategories List','data':selectedsubcategoryobj},status=200)
+            else:
+                return Response({'status': 204, 'message': 'Admin Selected SubCategories Not Present'}, status=204)
+        else:
+            return Response({'status': 401, 'message': 'Unauthorized'}, status=401)
+
+    except Exception as e:
+        return Response({'status':500,'error':str(e)},status=500)
+
+
+
+@api_view(['post'])
+@permission_classes((AllowAny,))
+def fetch_admin_trending_sub_categories(request):
+    key=request.data['key']
+    try:
+        if key=='vsinadmin':
+            trendingsubcategoryobj=TrendingSubCategories.objects.filter().values().order_by('id')
+            if len(trendingsubcategoryobj)>0:
+                return Response({'status':200,'message':'Admin Trending SubCategories List','data':trendingsubcategoryobj},status=200)
+            else:
+                return Response({'status': 204, 'message': 'Admin Trending SubCategories Not Present'}, status=204)
+        else:
+            return Response({'status': 401, 'message': 'Unauthorized'}, status=401)
+
+    except Exception as e:
+        return Response({'status':500,'error':str(e)},status=500)

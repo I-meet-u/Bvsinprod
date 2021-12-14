@@ -2070,7 +2070,7 @@ def fetch_admin_selected_categories(request):
     catarray=[]
     try:
         if key=='vsinadmin':
-            adminselectedcategoryobj=AdminSelectedCategories.objects.filter().values().order_by('id')
+            adminselectedcategoryobj=AdminSelectedCategories.objects.filter().values().order_by('priority')
             if len(adminselectedcategoryobj)>0:
                 for i in range(0,len(adminselectedcategoryobj)):
                     catobj=CategoryMaster.objects.filter(category_name=adminselectedcategoryobj[i].get('category_name')).values()
@@ -2109,7 +2109,7 @@ def create_admin_selected_categories(request):
 
     try:
         if key=='vsinadmin':
-            adminobj = AdminSelectedCategories.objects.filter().values().order_by('id')
+            adminobj = AdminSelectedCategories.objects.filter().values().order_by('priority')
             for i in range(0,len(adminobj)):
                 selectedarray.append(adminobj[i].get('priority'))
                 selectedcat.append(adminobj[i].get('category_name'))
@@ -2159,7 +2159,7 @@ def create_admin_selected_trending_categories(request):
 
     try:
         if key=='vsinadmin':
-            adminobj = TrendingCategories.objects.filter().values().order_by('id')
+            adminobj = TrendingCategories.objects.filter().values().order_by('trending_priority')
             for i in range(0,len(adminobj)):
                 selectedarray.append(adminobj[i].get('trending_priority'))
                 selectedcat.append(adminobj[i].get('trending_category_name'))
@@ -2207,7 +2207,7 @@ def create_admin_selected_sub_categories(request):
 
     try:
         if key == 'vsinadmin':
-            adminobj = AdminSelectedSubCategories.objects.filter().values().order_by('id')
+            adminobj = AdminSelectedSubCategories.objects.filter().values().order_by('sub_categories_priority')
             for i in range(0, len(adminobj)):
                 selectedarray.append(adminobj[i].get('sub_categories_priority'))
                 selectedcat.append(adminobj[i].get('sub_category_name'))
@@ -2251,7 +2251,7 @@ def create_admin_trending_sub_categories(request):
 
     try:
         if key == 'vsinadmin':
-            adminobj = TrendingSubCategories.objects.filter().values().order_by('id')
+            adminobj = TrendingSubCategories.objects.filter().values().order_by('trending_sub_categories_priority')
             for i in range(0, len(adminobj)):
                 selectedarray.append(adminobj[i].get('trending_sub_category_name'))
                 selectedcat.append(adminobj[i].get('trending_sub_category_id'))
@@ -2290,7 +2290,7 @@ def fetch_admin_trending_categories(request):
     catarray=[]
     try:
         if key=='vsinadmin':
-            trendingcategoryobj=TrendingCategories.objects.filter().values().order_by('id')
+            trendingcategoryobj=TrendingCategories.objects.filter().values().order_by('trending_priority')
             if len(trendingcategoryobj)>0:
                 for i in range(0,len(trendingcategoryobj)):
                     catobj=CategoryMaster.objects.filter(category_name=trendingcategoryobj[i].get('trending_category_name')).values()
@@ -2323,7 +2323,7 @@ def fetch_admin_selected_sub_categories(request):
     subcatarray=[]
     try:
         if key=='vsinadmin':
-            selectedsubcategoryobj=AdminSelectedSubCategories.objects.filter().values().order_by('id')
+            selectedsubcategoryobj=AdminSelectedSubCategories.objects.filter().values().order_by('sub_categories_priority')
             if len(selectedsubcategoryobj)>0:
                 for i in range(0,len(selectedsubcategoryobj)):
                     subcatobj=SubCategoryMaster.objects.filter(sub_category_name=selectedsubcategoryobj[i].get('sub_category_name')).values()
@@ -2355,7 +2355,7 @@ def fetch_admin_trending_sub_categories(request):
     subcatarray = []
     try:
         if key=='vsinadmin':
-            trendingsubcategoryobj=TrendingSubCategories.objects.filter().values().order_by('id')
+            trendingsubcategoryobj=TrendingSubCategories.objects.filter().values().order_by('trending_sub_categories_priority')
             if len(trendingsubcategoryobj)>0:
                 for i in range(0,len(trendingsubcategoryobj)):
                     subcatobj=SubCategoryMaster.objects.filter(sub_category_name=trendingsubcategoryobj[i].get('trending_sub_category_name')).values()

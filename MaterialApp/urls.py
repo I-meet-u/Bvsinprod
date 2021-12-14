@@ -79,6 +79,7 @@ urlpatterns = [
     path('listing-leads-po-status-update/',views.listing_leads_po_status_update),
     path('main_cat_subcat_data/',views.main_cat_subcat_data),
     path('store_vendor_publish/',views.store_vendor_publish),
-    path('vendor_product_details_based_on_itemtype/',views.vendor_product_details_based_on_itemtype)
+    path('vendor_product_details_based_on_itemtype/',views.vendor_product_details_based_on_itemtype),
+    path('fetch-vendor-product-basic-details-by-ccode/',views.fetch_vendor_product_basic_details_by_ccode)
 
 ]

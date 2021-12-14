@@ -2861,7 +2861,7 @@ def fetch_vendor_product_basic_details_by_ccode(request):
     try:
         if key=='vsinadmin':
             basicobj=BasicCompanyDetails.objects.filter(company_code=data['company_code']).values()
-            vendorobj=VendorProduct_BasicDetails.objects.filter(updated_by_id=basicobj[0].get('company_code')).values().order_by('vendor_product_id')
+            vendorobj=VendorProduct_BasicDetails.objects.filter(updated_by_id=basicobj[0].get('updated_by_id')).values().order_by('vendor_product_id')
             if len(vendorobj)>0:
                 return Response({'status': 200, 'message': 'Vendor Product Basic Details List', 'data': vendorobj}, status=status.HTTP_200_OK)
             else:

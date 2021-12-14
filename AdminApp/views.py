@@ -2355,7 +2355,7 @@ def fetch_admin_trending_sub_categories(request):
     subcatarray = []
     try:
         if key=='vsinadmin':
-            trendingsubcategoryobj=TrendingSubCategories.objects.filter().values().order_by('trending_sub_categories_priority')
+            trendingsubcategoryobj=TrendingSubCategories.objects.filter().values().order_by('-trending_sub_categories_priority')
             if len(trendingsubcategoryobj)>0:
                 for i in range(0,len(trendingsubcategoryobj)):
                     subcatobj=SubCategoryMaster.objects.filter(sub_category_name=trendingsubcategoryobj[i].get('trending_sub_category_name')).values()

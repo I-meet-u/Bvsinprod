@@ -2279,6 +2279,50 @@ def create_admin_selected_trending_categories(request):
 
 
 
+# @api_view(['post'])
+# @permission_classes((AllowAny,))
+# def create_admin_selected_sub_categories(request):
+#     data=request.data
+#     key = data['key']
+#     sub_category_data=data['sub_category_data']
+#     admins=data['admins']
+#     selectedarray=[]
+#     selectedcat=[]
+#
+#     try:
+#         if key == 'vsinadmin':
+#             adminobj = AdminSelectedSubCategories.objects.filter().values().order_by('sub_categories_priority')
+#             for i in range(0, len(adminobj)):
+#                 selectedarray.append(adminobj[i].get('sub_categories_priority'))
+#                 selectedcat.append(adminobj[i].get('sub_category_name'))
+#
+#             for i in range(0, len(sub_category_data)):
+#                 subcatobj = SubCategoryMaster.objects.filter(sub_category_name=sub_category_data[i].get('subcatname')).values().order_by('sub_category_id')
+#                 if subcatobj:
+#                     adminobj1 = AdminSelectedSubCategories.objects.filter().values().order_by('id')
+#                     for j in range(0, len(adminobj1)):
+#                         if subcatobj[0].get('sub_category_name') == adminobj1[j].get('sub_category_name') and sub_category_data[i].get('priority')!=adminobj1[j].get('sub_categories_priority'):
+#                             adminobjaa = AdminSelectedSubCategories.objects.get(id=adminobj1[j].get('id'))
+#                             adminobjaa.delete()
+#
+#                         if subcatobj[0].get('sub_category_name') == adminobj1[j].get('sub_category_name') and sub_category_data[i].get('priority') == adminobj1[j].get('sub_categories_priority'):
+#                             adminobjaa = AdminSelectedSubCategories.objects.get(id=adminobj1[j].get('id'))
+#                             adminobjaa.delete()
+#
+#                         if subcatobj[0].get('sub_category_name') != adminobj1[j].get('sub_category_name') and sub_category_data[i].get('priority') == adminobj1[j].get('sub_categories_priority'):
+#                             adminobjaa = AdminSelectedSubCategories.objects.get(id=adminobj1[j].get('id'))
+#                             adminobjaa.delete()
+#                     adminselectedsibcategory = AdminSelectedSubCategories.objects.create(sub_category_name=subcatobj[0].get('sub_category_name'),
+#                                                                                          sub_category_id=subcatobj[0].get('sub_category_id'),
+#                                                                                          admins=AdminRegister.objects.get(admin_id=admins),
+#                                                                                          sub_categories_priority=sub_category_data[i].get('priority'))
+#             return Response({'status': 201, 'message': 'Admin Selected SubCategories are Created'}, status=201)
+#         else:
+#             return Response({'status': 401, 'message': 'Unauthorized'}, status=401)
+#     except Exception as e:
+#         return Response({'status': 500, 'error': str(e)}, status=500)
+
+
 @api_view(['post'])
 @permission_classes((AllowAny,))
 def create_admin_selected_sub_categories(request):
@@ -2286,41 +2330,37 @@ def create_admin_selected_sub_categories(request):
     key = data['key']
     sub_category_data=data['sub_category_data']
     admins=data['admins']
-    selectedarray=[]
-    selectedcat=[]
-
     try:
         if key == 'vsinadmin':
-            adminobj = AdminSelectedSubCategories.objects.filter().values().order_by('sub_categories_priority')
-            for i in range(0, len(adminobj)):
-                selectedarray.append(adminobj[i].get('sub_categories_priority'))
-                selectedcat.append(adminobj[i].get('sub_category_name'))
-
             for i in range(0, len(sub_category_data)):
-                subcatobj = SubCategoryMaster.objects.filter(sub_category_name=sub_category_data[i].get('subcatname')).values().order_by('sub_category_id')
-                if subcatobj:
-                    adminobj1 = AdminSelectedSubCategories.objects.filter().values().order_by('id')
-                    for j in range(0, len(adminobj1)):
-                        if subcatobj[0].get('sub_category_name') == adminobj1[j].get('sub_category_name') and sub_category_data[i].get('priority')!=adminobj1[j].get('sub_categories_priority'):
-                            adminobjaa = AdminSelectedSubCategories.objects.get(id=adminobj1[j].get('id'))
-                            adminobjaa.delete()
+                catobj = AdminSelectedSubCategories.objects.filter(sub_categories_priority=sub_category_data[i].get('priority')).values()
+                catobjname = AdminSelectedSubCategories.objects.filter(sub_category_name=sub_category_data[i].get('catname')).values()
+                if catobj:
+                    Adminobj = AdminSelectedSubCategories.objects.get(sub_categories_priority=catobj[0].get('sub_categories_priority'))
+                    Adminobj.sub_category_name = sub_category_data[i].get('catname')
+                    Adminobj.sub_category_id = sub_category_data[i].get('id')
+                    Adminobj.save()
+                else:
+                    print("not found")
+                    if catobjname:
+                        Adminobjprio = AdminSelectedSubCategories.objects.get(sub_category_name=catobjname[0].get('sub_category_name'))
+                        Adminobjprio.sub_categories_priority = sub_category_data[i].get('priority')
+                        Adminobjprio.sub_category_id = sub_category_data[i].get('id')
+                        Adminobjprio.save()
+                    else:
+                        adminselectedcategory = AdminSelectedSubCategories.objects.create(sub_category_name=sub_category_data[i].get('catname'),
+                                                                                        sub_category_id=sub_category_data[i].get('id'),
+                                                                                        admins=AdminRegister.objects.get(admin_id=admins),
+                                                                                        sub_categories_priority=sub_category_data[i].get('priority'))
 
-                        if subcatobj[0].get('sub_category_name') == adminobj1[j].get('sub_category_name') and sub_category_data[i].get('priority') == adminobj1[j].get('sub_categories_priority'):
-                            adminobjaa = AdminSelectedSubCategories.objects.get(id=adminobj1[j].get('id'))
-                            adminobjaa.delete()
-
-                        if subcatobj[0].get('sub_category_name') != adminobj1[j].get('sub_category_name') and sub_category_data[i].get('priority') == adminobj1[j].get('sub_categories_priority'):
-                            adminobjaa = AdminSelectedSubCategories.objects.get(id=adminobj1[j].get('id'))
-                            adminobjaa.delete()
-                    adminselectedsibcategory = AdminSelectedSubCategories.objects.create(sub_category_name=subcatobj[0].get('sub_category_name'),
-                                                                                         sub_category_id=subcatobj[0].get('sub_category_id'),
-                                                                                         admins=AdminRegister.objects.get(admin_id=admins),
-                                                                                         sub_categories_priority=sub_category_data[i].get('priority'))
-            return Response({'status': 201, 'message': 'Admin Selected SubCategories are Created'}, status=201)
+            return Response({'status': 201, 'message': 'Admin Trending Categories are Created'}, status=201)
         else:
             return Response({'status': 401, 'message': 'Unauthorized'}, status=401)
+
+
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)
+
 
 
 @api_view(['post'])

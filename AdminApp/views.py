@@ -2071,9 +2071,9 @@ def fetch_admin_selected_categories(request):
     rearay=[]
     try:
         if key=='vsinadmin':
-            adminselectedcategoryobj1=AdminSelectedCategories.objects.filter().values()
-            for i in range(0,len(adminselectedcategoryobj1)):
-                catarray.append(int(adminselectedcategoryobj1[i].get('priority')))
+            adminselectedcategoryobj=AdminSelectedCategories.objects.filter().values()
+            for i in range(0,len(adminselectedcategoryobj)):
+                catarray.append(int(adminselectedcategoryobj[i].get('priority')))
             print(catarray)
             print("sorted ",sorted(catarray))
             catarray=sorted(catarray)
@@ -2099,6 +2099,56 @@ def fetch_admin_selected_categories(request):
 
     except Exception as e:
         return Response({'status':500,'error':str(e)},status=500)
+#
+# @api_view(['post'])
+# @permission_classes((AllowAny,))
+# def create_admin_selected_categories(request):
+#     data=request.data
+#     key = data['key']
+#     category_name=data['category_name']
+#     admins=data['admins']
+#     selectedarray=[]
+#     selectedcat=[]
+#
+#     try:
+#         if key=='vsinadmin':
+#             adminobj = AdminSelectedCategories.objects.filter().values().order_by('priority')
+#             for i in range(0,len(adminobj)):
+#                 selectedarray.append(adminobj[i].get('priority'))
+#                 selectedcat.append(adminobj[i].get('category_name'))
+#
+#             for i in range(0,len(category_name)):
+#                 categoryobj=CategoryMaster.objects.filter(category_name=category_name[i].get('catname')).values().order_by('category_id')
+#                 if categoryobj:
+#                     adminobj1 = AdminSelectedCategories.objects.filter().values().order_by('id')
+#                     for j in range(0,len(adminobj1)):
+#                         if categoryobj[0].get('category_name')==adminobj1[j].get('category_name') and category_name[i].get('priority')!=adminobj1[j].get('priority'):
+#                             adminobjaa=AdminSelectedCategories.objects.get(id=adminobj1[j].get('id'))
+#                             adminobjaa.delete()
+#                         if categoryobj[0].get('category_name') == adminobj1[j].get('category_name') and category_name[
+#                             i].get('priority') == adminobj1[j].get('priority'):
+#                             adminobjaa = AdminSelectedCategories.objects.get(id=adminobj1[j].get('id'))
+#                             adminobjaa.delete()
+#
+#                         if categoryobj[0].get('category_name')!=adminobj1[i].get('category_name') and category_name[
+#                             i].get('priority') == adminobj1[j].get('priority'):
+#                             adminobjaa = AdminSelectedCategories.objects.get(id=adminobj1[j].get('id'))
+#                             adminobjaa.delete()
+#
+#
+#                     adminselectedcategory=AdminSelectedCategories.objects.create(category_name=categoryobj[0].get('category_name'),
+#                                                                                      category_id=categoryobj[0].get('category_id'),
+#                                                                                   admins=AdminRegister.objects.get(admin_id=admins),
+#                                                                                   priority=category_name[i].get('priority'))
+#
+#
+#             return Response({'status':201,'message':'Admin Selected Categories are Created'},status=201)
+#         else:
+#             return Response({'status': 401, 'message': 'Unauthorized' },status=401)
+#
+#
+#     except Exception as e:
+#         return Response({'status': 500, 'error': str(e)}, status=500)
 
 @api_view(['post'])
 @permission_classes((AllowAny,))
@@ -2107,41 +2157,29 @@ def create_admin_selected_categories(request):
     key = data['key']
     category_name=data['category_name']
     admins=data['admins']
-    selectedarray=[]
-    selectedcat=[]
-
     try:
         if key=='vsinadmin':
-            adminobj = AdminSelectedCategories.objects.filter().values().order_by('priority')
-            for i in range(0,len(adminobj)):
-                selectedarray.append(adminobj[i].get('priority'))
-                selectedcat.append(adminobj[i].get('category_name'))
-
             for i in range(0,len(category_name)):
-                categoryobj=CategoryMaster.objects.filter(category_name=category_name[i].get('catname')).values().order_by('category_id')
-                if categoryobj:
-                    adminobj1 = AdminSelectedCategories.objects.filter().values().order_by('id')
-                    for j in range(0,len(adminobj1)):
-                        if categoryobj[0].get('category_name')==adminobj1[j].get('category_name') and category_name[i].get('priority')!=adminobj1[j].get('priority'):
-                            adminobjaa=AdminSelectedCategories.objects.get(id=adminobj1[j].get('id'))
-                            adminobjaa.delete()
-                        if categoryobj[0].get('category_name') == adminobj1[j].get('category_name') and category_name[
-                            i].get('priority') == adminobj1[j].get('priority'):
-                            adminobjaa = AdminSelectedCategories.objects.get(id=adminobj1[j].get('id'))
-                            adminobjaa.delete()
-
-                        if categoryobj[0].get('category_name')!=adminobj1[i].get('category_name') and category_name[
-                            i].get('priority') == adminobj1[j].get('priority'):
-                            adminobjaa = AdminSelectedCategories.objects.get(id=adminobj1[j].get('id'))
-                            adminobjaa.delete()
-
-
-                    adminselectedcategory=AdminSelectedCategories.objects.create(category_name=categoryobj[0].get('category_name'),
-                                                                                     category_id=categoryobj[0].get('category_id'),
-                                                                                  admins=AdminRegister.objects.get(admin_id=admins),
-                                                                                  priority=category_name[i].get('priority'))
-
-
+                catobj=AdminSelectedCategories.objects.filter(priority=category_name[i].get('priority')).values()
+                catobjname = AdminSelectedCategories.objects.filter(category_name=category_name[i].get('catname')).values()
+                if catobj:
+                   Adminobj=AdminSelectedCategories.objects.get(priority=catobj[0].get('priority'))
+                   Adminobj.category_name=category_name[i].get('catname')
+                   Adminobj.category_id=category_name[i].get('id')
+                   Adminobj.save()
+                else:
+                    print("not found")
+                    if catobjname:
+                        Adminobjprio = AdminSelectedCategories.objects.get(category_name=catobjname[0].get('category_name'))
+                        Adminobjprio.priority=category_name[i].get('priority')
+                        Adminobjprio.category_id=category_name[i].get('id')
+                        Adminobjprio.save()
+                    else:
+                        adminselectedcategory = AdminSelectedCategories.objects.create(
+                            category_name=category_name[i].get('catname'),
+                            category_id=category_name[i].get('id'),
+                            admins=AdminRegister.objects.get(admin_id=admins),
+                            priority=category_name[i].get('priority'))
             return Response({'status':201,'message':'Admin Selected Categories are Created'},status=201)
         else:
             return Response({'status': 401, 'message': 'Unauthorized' },status=401)
@@ -2149,7 +2187,7 @@ def create_admin_selected_categories(request):
 
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)
-
+    
 @api_view(['post'])
 @permission_classes((AllowAny,))
 def create_admin_selected_trending_categories(request):

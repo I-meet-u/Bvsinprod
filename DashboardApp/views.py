@@ -1348,11 +1348,19 @@ class QuoteModelView(viewsets.ModelViewSet):
         budget=request.data.get('budget')
         user_id = request.data.get('user_id', None)
         company_code = request.data.get('company_code', None)
+        flag=request.data.get('flag',None)
         try:
             request.data['updated_by'] = user_id
             request.data['created_by'] = user_id
             basicobj=BasicCompanyDetails.objects.filter(company_code=company_code).values()
             regobj = SelfRegistration.objects.filter(id=basicobj[0].get('updated_by_id')).values()
+            usersbasic=BasicCompanyDetails.objects.filter(updated_by_id=user_id).values()
+            usersbillobj=BillingAddress.objects.filter(updated_by_id=usersbasic[0].get('updated_by_id')).values()
+
+            request.data['users_company_code']=usersbasic[0].get('company_code')
+            request.data['users_company_name'] = usersbasic[0].get('company_name')
+            request.data['users_city']=usersbillobj[0].get('bill_city')
+
 
             # Configure API key authorization: api-key
             configuration = sib_api_v3_sdk.Configuration()

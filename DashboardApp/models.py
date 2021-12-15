@@ -120,6 +120,11 @@ class QuoteModel(models.Model):
     created_by = models.BigIntegerField(null=True, blank=True)
     updated_by = models.ForeignKey(SelfRegistration, on_delete=models.CASCADE, null=True, blank=True)
     company_code=models.ForeignKey(BasicCompanyDetails,on_delete=models.CASCADE,null=True,blank=True)
+    users_company_code=models.CharField(max_length=100,null=True,blank=True)
+    users_company_name=models.CharField(max_length=200,null=True,blank=True)
+    flag=models.BooleanField(default=False)
+    users_city=models.CharField(max_length=250,null=True,blank=True)
+
 
     class Meta:
         db_table = "QuoteModel"

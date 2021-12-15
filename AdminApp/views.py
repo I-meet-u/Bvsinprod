@@ -2187,45 +2187,86 @@ def create_admin_selected_categories(request):
 
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)
-    
+
+# @api_view(['post'])
+# @permission_classes((AllowAny,))
+# def create_admin_selected_trending_categories(request):
+#     data=request.data
+#     key = data['key']
+#     category_name=data['category_name']
+#     admins=data['admins']
+#     selectedarray=[]
+#     selectedcat=[]
+#
+#     try:
+#         if key=='vsinadmin':
+#             adminobj = TrendingCategories.objects.filter().values().order_by('trending_priority')
+#             for i in range(0,len(adminobj)):
+#                 selectedarray.append(adminobj[i].get('trending_priority'))
+#                 selectedcat.append(adminobj[i].get('trending_category_name'))
+#
+#             for i in range(0,len(category_name)):
+#                 categoryobj=CategoryMaster.objects.filter(category_name=category_name[i].get('catname')).values().order_by('category_id')
+#                 if categoryobj:
+#                     adminobj1 = TrendingCategories.objects.filter().values().order_by('id')
+#                     for j in range(0,len(adminobj1)):
+#                         if categoryobj[0].get('category_name')==adminobj1[j].get('trending_category_name') and category_name[i].get('priority')!=adminobj1[j].get('trending_priority'):
+#                             adminobjaa=TrendingCategories.objects.get(id=adminobj1[j].get('id'))
+#                             adminobjaa.delete()
+#                         if categoryobj[0].get('category_name') == adminobj1[j].get('trending_category_name') and category_name[i].get('priority') == adminobj1[j].get('trending_priority'):
+#                             adminobjaa = TrendingCategories.objects.get(id=adminobj1[j].get('id'))
+#                             adminobjaa.delete()
+#
+#                         if categoryobj[0].get('category_name')!=adminobj1[j].get('trending_category_name') and category_name[i].get('priority') == adminobj1[j].get('trending_priority'):
+#                             adminobjaa = TrendingCategories.objects.get(id=adminobj1[j].get('id'))
+#                             adminobjaa.delete()
+#
+#
+#                     adminselectedcategory=TrendingCategories.objects.create(trending_category_name=categoryobj[0].get('category_name'),
+#                                                                                      trending_category_id=categoryobj[0].get('category_id'),
+#                                                                                   admins=AdminRegister.objects.get(admin_id=admins),
+#                                                                                   trending_priority=category_name[i].get('priority'))
+#
+#
+#             return Response({'status':201,'message':'Admin Trending Categories are Created'},status=201)
+#         else:
+#             return Response({'status': 401, 'message': 'Unauthorized' },status=401)
+#
+#
+#     except Exception as e:
+#         return Response({'status': 500, 'error': str(e)}, status=500)
+
+
 @api_view(['post'])
 @permission_classes((AllowAny,))
 def create_admin_selected_trending_categories(request):
+
     data=request.data
     key = data['key']
     category_name=data['category_name']
     admins=data['admins']
-    selectedarray=[]
-    selectedcat=[]
-
     try:
         if key=='vsinadmin':
-            adminobj = TrendingCategories.objects.filter().values().order_by('trending_priority')
-            for i in range(0,len(adminobj)):
-                selectedarray.append(adminobj[i].get('trending_priority'))
-                selectedcat.append(adminobj[i].get('trending_category_name'))
-
-            for i in range(0,len(category_name)):
-                categoryobj=CategoryMaster.objects.filter(category_name=category_name[i].get('catname')).values().order_by('category_id')
-                if categoryobj:
-                    adminobj1 = TrendingCategories.objects.filter().values().order_by('id')
-                    for j in range(0,len(adminobj1)):
-                        if categoryobj[0].get('category_name')==adminobj1[j].get('trending_category_name') and category_name[i].get('priority')!=adminobj1[j].get('trending_priority'):
-                            adminobjaa=TrendingCategories.objects.get(id=adminobj1[j].get('id'))
-                            adminobjaa.delete()
-                        if categoryobj[0].get('category_name') == adminobj1[j].get('trending_category_name') and category_name[i].get('priority') == adminobj1[j].get('trending_priority'):
-                            adminobjaa = TrendingCategories.objects.get(id=adminobj1[j].get('id'))
-                            adminobjaa.delete()
-
-                        if categoryobj[0].get('category_name')!=adminobj1[j].get('trending_category_name') and category_name[i].get('priority') == adminobj1[j].get('trending_priority'):
-                            adminobjaa = TrendingCategories.objects.get(id=adminobj1[j].get('id'))
-                            adminobjaa.delete()
-
-
-                    adminselectedcategory=TrendingCategories.objects.create(trending_category_name=categoryobj[0].get('category_name'),
-                                                                                     trending_category_id=categoryobj[0].get('category_id'),
-                                                                                  admins=AdminRegister.objects.get(admin_id=admins),
-                                                                                  trending_priority=category_name[i].get('priority'))
+            for i in range(0, len(category_name)):
+                catobj = TrendingCategories.objects.filter(trending_priority=category_name[i].get('priority')).values()
+                catobjname = TrendingCategories.objects.filter(trending_category_name=category_name[i].get('catname')).values()
+                if catobj:
+                    Adminobj = TrendingCategories.objects.get(trending_priority=catobj[0].get('trending_priority'))
+                    Adminobj.trending_category_name = category_name[i].get('catname')
+                    Adminobj.trending_category_id = category_name[i].get('id')
+                    Adminobj.save()
+                else:
+                    print("not found")
+                    if catobjname:
+                        Adminobjprio = TrendingCategories.objects.get(trending_category_name=catobjname[0].get('trending_category_name'))
+                        Adminobjprio.trending_priority = category_name[i].get('priority')
+                        Adminobjprio.trending_category_id = category_name[i].get('id')
+                        Adminobjprio.save()
+                    else:
+                        adminselectedcategory = TrendingCategories.objects.create(trending_category_name=category_name[i].get('catname'),
+                                                                                    trending_category_id=category_name[i].get('id'),
+                                                                                    admins=AdminRegister.objects.get(admin_id=admins),
+                                                                                    priority=category_name[i].get('priority'))
 
 
             return Response({'status':201,'message':'Admin Trending Categories are Created'},status=201)
@@ -2235,6 +2276,8 @@ def create_admin_selected_trending_categories(request):
 
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)
+
+
 
 @api_view(['post'])
 @permission_classes((AllowAny,))

@@ -1336,7 +1336,7 @@ def trail_vendor_data_based_on_userid(request):
         return Response({'status': 500, 'error': str(e)}, status=500)
 
 class QuoteModelView(viewsets.ModelViewSet):
-    # permission_classes = [permissions.AllowAny]
+    permission_classes = [permissions.AllowAny]
     queryset = QuoteModel.objects.all()
     serializer_class = QuoteModelSerializer
 

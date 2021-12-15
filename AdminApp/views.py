@@ -2334,10 +2334,10 @@ def create_admin_selected_sub_categories(request):
         if key == 'vsinadmin':
             for i in range(0, len(sub_category_data)):
                 catobj = AdminSelectedSubCategories.objects.filter(sub_categories_priority=sub_category_data[i].get('priority')).values()
-                catobjname = AdminSelectedSubCategories.objects.filter(sub_category_name=sub_category_data[i].get('catname')).values()
+                catobjname = AdminSelectedSubCategories.objects.filter(sub_category_name=sub_category_data[i].get('subcatname')).values()
                 if catobj:
                     Adminobj = AdminSelectedSubCategories.objects.get(sub_categories_priority=catobj[0].get('sub_categories_priority'))
-                    Adminobj.sub_category_name = sub_category_data[i].get('catname')
+                    Adminobj.sub_category_name = sub_category_data[i].get('subcatname')
                     Adminobj.sub_category_id = sub_category_data[i].get('id')
                     Adminobj.save()
                 else:
@@ -2348,7 +2348,7 @@ def create_admin_selected_sub_categories(request):
                         Adminobjprio.sub_category_id = sub_category_data[i].get('id')
                         Adminobjprio.save()
                     else:
-                        adminselectedcategory = AdminSelectedSubCategories.objects.create(sub_category_name=sub_category_data[i].get('catname'),
+                        adminselectedcategory = AdminSelectedSubCategories.objects.create(sub_category_name=sub_category_data[i].get('subcatname'),
                                                                                         sub_category_id=sub_category_data[i].get('id'),
                                                                                         admins=AdminRegister.objects.get(admin_id=admins),
                                                                                         sub_categories_priority=sub_category_data[i].get('priority'))
@@ -2416,10 +2416,10 @@ def create_admin_trending_sub_categories(request):
         if key == 'vsinadmin':
             for i in range(0, len(sub_category_data)):
                 catobj = TrendingSubCategories.objects.filter(trending_sub_categories_priority=sub_category_data[i].get('priority')).values()
-                catobjname = TrendingSubCategories.objects.filter(trending_sub_category_name=sub_category_data[i].get('catname')).values()
+                catobjname = TrendingSubCategories.objects.filter(trending_sub_category_name=sub_category_data[i].get('subcatname')).values()
                 if catobj:
                     Adminobj = TrendingSubCategories.objects.get(trending_sub_categories_priority=catobj[0].get('trending_sub_categories_priority'))
-                    Adminobj.trending_sub_category_name = sub_category_data[i].get('catname')
+                    Adminobj.trending_sub_category_name = sub_category_data[i].get('subcatname')
                     Adminobj.trending_sub_category_id = sub_category_data[i].get('id')
                     Adminobj.save()
                 else:
@@ -2430,7 +2430,7 @@ def create_admin_trending_sub_categories(request):
                         Adminobjprio.trending_sub_category_id = sub_category_data[i].get('id')
                         Adminobjprio.save()
                     else:
-                        adminselectedcategory = TrendingSubCategories.objects.create(trending_sub_category_name=sub_category_data[i].get('catname'),
+                        adminselectedcategory = TrendingSubCategories.objects.create(trending_sub_category_name=sub_category_data[i].get('subcatname'),
                                                                                         trending_sub_category_id=sub_category_data[i].get('id'),
                                                                                         admins=AdminRegister.objects.get(admin_id=admins),
                                                                                         trending_sub_categories_priority=sub_category_data[i].get('priority'))

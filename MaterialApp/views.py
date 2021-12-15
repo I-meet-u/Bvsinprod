@@ -12,7 +12,7 @@ from rest_framework.parsers import MultiPartParser
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 
-from MastersApp.models import CategoryMaster,MaincoreMaster
+from MastersApp.models import CategoryMaster, MaincoreMaster, SubCategoryMaster
 from RegistrationApp.models import SelfRegistration, IndustrialInfo, BillingAddress, BasicCompanyDetails
 from .models import *
 import sib_api_v3_sdk
@@ -2868,5 +2868,38 @@ def fetch_vendor_product_basic_details_by_ccode(request):
                 return Response({'status': 204, 'message': 'Not Present'}, status=status.HTTP_204_NO_CONTENT)
         else:
             return  Response({'status':401,'message':'UnAuthorized'},status=status.HTTP_401_UNAUTHORIZED)
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+@api_view(['post'])
+def get_vendor_product_details_based_on_ccode_distinct(request):
+    data=request.data
+    ccode=data['ccode']
+    resarray=[]
+    newval=[]
+    try:
+        vendorobj=VendorProduct_BasicDetails.objects.filter(company_code=ccode).distinct('core_sector','category','sub_category','company_code').values()
+        for i in range(0,len(vendorobj)):
+            maincoreobj=MaincoreMaster.objects.filter(maincore_name=vendorobj[i].get('core_sector')).values()
+            categoryobj = CategoryMaster.objects.filter(category_name=vendorobj[i].get('category')).values()
+            subcategoryobj = SubCategoryMaster.objects.filter(sub_category_name=vendorobj[i].get('sub_category')).values()
+            resarray.append({
+                'maincore':vendorobj[i].get('core_sector'),
+                'maincore_id':maincoreobj[0].get('maincore_id'),
+                'mainore_image':maincoreobj[0].get('maincore_image'),
+                'category': vendorobj[i].get('category'),
+                'category_id': categoryobj[0].get('category_id'),
+                'category_image': categoryobj[0].get('category_image'),
+                'sub_category': vendorobj[i].get('sub_category'),
+                'sub_category_id':subcategoryobj[0].get('sub_category_id'),
+                'sub_category_image': subcategoryobj[0].get('sub_category_image'),
+                'company_code':vendorobj[i].get('company_code')
+
+
+
+            })
+        return Response({'status': 200, 'message': 'Vendor Product Basic Details List', 'data': resarray},
+                        status=status.HTTP_200_OK)
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

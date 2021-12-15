@@ -1334,3 +1334,54 @@ def trail_vendor_data_based_on_userid(request):
         return Response({'status': 200, 'message': 'ok','trail_vendor_data':data3,}, status=200)
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)
+
+class QuoteModelView(viewsets.ModelViewSet):
+    # permission_classes = [permissions.AllowAny]
+    queryset = QuoteModel.objects.all()
+    serializer_class = QuoteModelSerializer
+
+    def create(self, request, *args, **kwargs):
+        post_requirements = request.data.get('post_requirements', None)
+        messages = request.data.get('messages', None)
+        quantity = request.data.get('quantity', None)
+        uom = request.data.get('uom', None)
+        budget=request.data.get('budget')
+        user_id = request.data.get('user_id', None)
+        company_code = request.data.get('company_code', None)
+        try:
+            request.data['updated_by'] = user_id
+            request.data['created_by'] = user_id
+            basicobj=BasicCompanyDetails.objects.filter(company_code=company_code).values()
+            regobj = SelfRegistration.objects.filter(id=basicobj[0].get('updated_by_id')).values()
+
+            # Configure API key authorization: api-key
+            configuration = sib_api_v3_sdk.Configuration()
+            configuration.api_key[
+                'api-key'] = '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'
+
+            # create an instance of the API class
+            configuration = sib_api_v3_sdk.Configuration()
+            configuration.api_key[
+                'api-key'] = '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'
+
+            api_instance = sib_api_v3_sdk.TransactionalEmailsApi(sib_api_v3_sdk.ApiClient(configuration))
+            subject = "Requesting For Quote"
+            text_content = "Dear , " + regobj[0].get('contact_person') + "\n\n" + "Your requested Quote Has Been Sent"+"\n\n" + "Thank You" +"\n\n" + "Note: Please Don't Share this email with anyone"
+            sender = {"name": "Admin", "email": "admin@vendorsin.com"}
+            # text_content = 'Hello '+regobj.contact_person+',''\n You are selected for bidding'
+            to = [{"email": regobj[0].get('username'), "name":regobj[0].get('contact_person') }]
+            reply_to = {"email": "admin@vendorsin.com", "name": "Admin"}
+            send_smtp_email = sib_api_v3_sdk.SendSmtpEmail(to=to, reply_to=reply_to, text_content=text_content,
+                                                           sender=sender, subject=subject)
+            try:
+                # Send a transactional email
+                api_response = api_instance.send_transac_email(send_smtp_email)
+                pprint(api_response)
+            except ApiException as e:
+                print("Exception when calling SMTPApi->send_transac_email: %s\n" % e)
+            return super().create(request, *args, **kwargs)
+
+
+        except Exception as e:
+            return Response({'status': 500, 'error': str(e)}, status=500)
+

@@ -109,3 +109,19 @@ class TrailVendors(models.Model):
         db_table = "TrailVendors"
 
 
+class QuoteModel(models.Model):
+    post_requirements=models.CharField(max_length=1000)
+    messages=models.TextField(null=True,blank=True)
+    quantity=models.CharField(max_length=50)
+    uom=models.CharField(max_length=100)
+    budget=models.CharField(max_length=200)
+    created_on = models.DateTimeField(auto_now_add=True)
+    updated_on = models.DateTimeField(auto_now=True)
+    created_by = models.BigIntegerField(null=True, blank=True)
+    updated_by = models.ForeignKey(SelfRegistration, on_delete=models.CASCADE, null=True, blank=True)
+    company_code=models.ForeignKey(BasicCompanyDetails,on_delete=models.CASCADE,null=True,blank=True)
+
+    class Meta:
+        db_table = "QuoteModel"
+
+

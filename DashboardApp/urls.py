@@ -10,6 +10,7 @@ router.register('business-request', views.BusinessRequestView)
 router.register('internal-vendor', views.InternalVendorView)
 router.register('internal-buyer', views.InternalBuyerView)
 router.register('TrailVendors', views.TrailVendorsView)
+router.register('quote-model', views.QuoteModelView)
 
 
 urlpatterns = [

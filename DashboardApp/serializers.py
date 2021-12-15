@@ -29,3 +29,8 @@ class TrailVendorsSerializer(serializers.ModelSerializer):
     class Meta:
         model=TrailVendors
         fields="__all__"
+
+class QuoteModelSerializer(serializers.ModelSerializer):
+    class Meta:
+        model=QuoteModel
+        fields="__all__"

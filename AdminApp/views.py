@@ -2266,7 +2266,7 @@ def create_admin_selected_trending_categories(request):
                         adminselectedcategory = TrendingCategories.objects.create(trending_category_name=category_name[i].get('catname'),
                                                                                     trending_category_id=category_name[i].get('id'),
                                                                                     admins=AdminRegister.objects.get(admin_id=admins),
-                                                                                    priority=category_name[i].get('priority'))
+                                                                                    trending_priority=category_name[i].get('priority'))
 
 
             return Response({'status':201,'message':'Admin Trending Categories are Created'},status=201)

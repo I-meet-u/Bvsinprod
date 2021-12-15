@@ -2248,7 +2248,7 @@ def create_admin_selected_trending_categories(request):
     try:
         if key=='vsinadmin':
             for i in range(0, len(category_name)):
-                catobj = TrendingCategories.objects.filter(trending_priority=category_name[i].get('trending_priority')).values()
+                catobj = TrendingCategories.objects.filter(trending_priority=category_name[i].get('priority')).values()
                 catobjname = TrendingCategories.objects.filter(trending_category_name=category_name[i].get('catname')).values()
                 if catobj:
                     Adminobj = TrendingCategories.objects.get(trending_priority=catobj[0].get('trending_priority'))

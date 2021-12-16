@@ -372,11 +372,8 @@ def average_rating(request):
         sum=0
         for rating in reviewobj:
             sum=sum+rating['rating']
-            print(sum,'totallllllllllllll')
-            print(rating['rating'])
             if len(reviewobj)>0:
                 average=sum/len(reviewobj)
-                print(average,'aaaaaaaaaaaaaaa')
             else:
                 average=0
 

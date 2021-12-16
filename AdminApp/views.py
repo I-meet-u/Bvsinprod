@@ -2566,7 +2566,7 @@ def delete_trending_category(request):
     trending_pk=data['trending_pk']
     try:
         if key=='vsinadmin':
-            trendingobj=TrendingCategories.objects.filter(id__in=trending_pk).values()
+            trendingobj=TrendingCategories.objects.filter(trending_category_id__in=trending_pk).values()
             print(len(trendingobj))
             if len(trendingobj)>0:
                 for i in range(0,len(trendingobj)):

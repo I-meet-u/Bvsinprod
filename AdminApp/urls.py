@@ -115,7 +115,10 @@ urlpatterns = [
     path('fetch-admin-trending-sub-categories/', views.fetch_admin_trending_sub_categories),
 
     #------------------------------delete-----------------------------------------------------
-    path('delete-trending-category/',views.delete_trending_category)
+    path('delete-trending-category/',views.delete_trending_category),
+    path('delete-admin-selected-category/',views.delete_admin_selected_category),
+    path('delete-admin-selected-sub-category/',views.delete_admin_selected_sub_category),
+    path('delete-trending-sub-category/',views.delete_trending_sub_category)
 
 
 ]

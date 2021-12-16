@@ -2585,3 +2585,87 @@ def delete_trending_category(request):
 
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)
+
+
+@api_view(['post'])
+@permission_classes((AllowAny,))
+def delete_admin_selected_category(request):
+    data = request.data
+    key = data['key']
+    admin_select_cat_id = data['admin_select_cat_id']
+    try:
+        if key == 'vsinadmin':
+            adminselectcatobj = AdminSelectedCategories.objects.filter(category_id__in=admin_select_cat_id).values()
+            print(len(adminselectcatobj))
+            if len(adminselectcatobj) > 0:
+                for i in range(0, len(adminselectcatobj)):
+                    print(adminselectcatobj[i].get('id'))
+                    adminselcetcatval = AdminSelectedCategories.objects.get(id=adminselectcatobj[i].get('id'))
+                    print(adminselcetcatval.id)
+                    if adminselcetcatval:
+                        adminselcetcatval.delete()
+                return Response({'status': 204, 'message': 'Admin Selected Categories are Deleted'}, status=204)
+            else:
+                return Response(
+                    {'status': 200, 'message': 'Admin Selected Categoires data are not present or already deleted'},
+                    status=200)
+        else:
+            return Response({'status': 401, 'message': 'Unauthorized'}, status=401)
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)
+
+
+@api_view(['post'])
+@permission_classes((AllowAny,))
+def delete_admin_selected_sub_category(request):
+    data=request.data
+    key=data['key']
+    admin_subcat_id=data['admin_subcat_id']
+    try:
+        if key=='vsinadmin':
+            adminsubcatobj=AdminSelectedSubCategories.objects.filter(sub_category_id__in=admin_subcat_id).values()
+            print(len(adminsubcatobj))
+            if len(adminsubcatobj)>0:
+                for i in range(0,len(adminsubcatobj)):
+                    print(adminsubcatobj[i].get('id'))
+                    adminsubcatval=AdminSelectedSubCategories.objects.get(id=adminsubcatobj[i].get('id'))
+                    print(adminsubcatval.id)
+                    if adminsubcatval:
+                        adminsubcatval.delete()
+                return  Response({'status':204,'message':'Admin Selected Sub Categories are Deleted'},status=204)
+            else:
+                return Response({'status':200,'message':'Admin Selected Sub Categoires data are not present or already deleted'},status=200)
+        else:
+            return Response({'status': 401, 'message': 'Unauthorized'}, status=401)
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)
+
+
+
+@api_view(['post'])
+@permission_classes((AllowAny,))
+def delete_trending_sub_category(request):
+    data=request.data
+    key=data['key']
+    trending_subcat_id=data['trending_subcat_id']
+    try:
+        if key=='vsinadmin':
+            trendingsubcatobj=TrendingSubCategories.objects.filter(trending_sub_category_id__in=trending_subcat_id).values()
+            print(len(trendingsubcatobj))
+            if len(trendingsubcatobj)>0:
+                for i in range(0,len(trendingsubcatobj)):
+                    print(trendingsubcatobj[i].get('id'))
+                    trendingsucatval=TrendingSubCategories.objects.get(id=trendingsubcatobj[i].get('id'))
+                    print(trendingsucatval.id)
+                    if trendingsucatval:
+                        trendingsucatval.delete()
+                return  Response({'status':204,'message':'Trending Sub Categories are Deleted'},status=204)
+            else:
+                return Response({'status':200,'message':'Trending Sub Categoires data are not present or already deleted'},status=200)
+        else:
+            return Response({'status': 401, 'message': 'Unauthorized'}, status=401)
+
+
+
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)

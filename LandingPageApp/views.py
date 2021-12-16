@@ -376,6 +376,7 @@ def average_rating(request):
                 average=sum/len(reviewobj)
             else:
                 average=0
+        showallreview=CompanyReviewAndRating.objects.filter(company_code=company_code).values().order_by('-id')
 
         user_array.append({'total_ratings':sum,
                            'average_ratings':average,
@@ -383,7 +384,7 @@ def average_rating(request):
                            'company_name':reviewobj[0].get('company_name')
                            })
 
-        return Response({'status': 200, 'message': 'Rating List', 'data': user_array}, status=200)
+        return Response({'status': 200, 'message': 'Rating List', 'data': user_array,'reviewlist':showallreview}, status=200)
 
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)

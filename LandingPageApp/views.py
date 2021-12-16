@@ -359,28 +359,37 @@ class CompanyReviewViewSet(viewsets.ModelViewSet):
         return super().create(request, *args, **kwargs)
 
 
-    # @action(detail=True,methods=['POST'])
-    # def rate_movie(self,request,pk=None):
-    #     if 'stars' in request.data:
-    #         reviews=CompanyReview.objects.get(id=pk)
-    #         stars=request.data['stars']
-    #         users=SelfRegistration.objects.get(id=request.data('user',None))
-    #
-    #         try:
-    #             ratingobj=CompanyRating.objects.get(user=users.id,company=reviews.id)
-    #             ratingobj.stars=stars
-    #             ratingobj.save()
-    #             serailizer=CompanyRatingSerializer(ratingobj,many=False)
-    #             response={'message':'Rating Updated','result':serailizer.data}
-    #             return Response(response,status=status.HTTP_200_OK)
-    #         except Exception as e:
-    #             return Response({'status': 500, 'error': str(e)}, status=500)
+@api_view(['post'])
+@permission_classes((AllowAny,))
+def average_rating(request):
+    data=request.data
+    # user_id=data['user_id']
+    company_code=data['company_code']
+    user_array=[]
+    average=0
+    try:
+        reviewobj=CompanyReviewAndRating.objects.filter(company_code=company_code).values()
+        sum=0
+        for rating in reviewobj:
+            sum=sum+rating['rating']
+            print(sum,'totallllllllllllll')
+            print(rating['rating'])
+            if len(reviewobj)>0:
+                average=sum/len(reviewobj)
+                print(average,'aaaaaaaaaaaaaaa')
+            else:
+                average=0
 
-# class CompanyRatingViewSet(viewsets.ModelViewSet):
-#     permission_classes = [permissions.AllowAny]
-#     queryset = CompanyRating.objects.all()
-#     serializer_class = CompanyRatingSerializer
+        user_array.append({'total_ratings':sum,
+                           'average_ratings':average,
+                           'company_code':reviewobj[0].get('company_code_id'),
+                           'company_name':reviewobj[0].get('company_name')
+                           })
 
+        return Response({'status': 200, 'message': 'Rating List', 'data': user_array}, status=200)
+
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)
 
 @api_view(['post'])
 @permission_classes((AllowAny,))

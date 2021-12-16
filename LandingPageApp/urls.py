@@ -34,6 +34,7 @@ urlpatterns = [
     path('maincore-by-id/',views.maincore_by_id),
     path('get-all-company-products-services/',views.get_all_company_products_services),
     path('get-approved-companies-list/', views.get_approved_companies_list),
-    path('get-all-vendor-product-details/', views.get_all_vendor_product_details)
+    path('get-all-vendor-product-details/', views.get_all_vendor_product_details),
+    path('average-rating/',views.average_rating)
 
 ]

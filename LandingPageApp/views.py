@@ -6,8 +6,8 @@ from rest_framework.decorators import api_view, permission_classes, action
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 # Create your views here.
-from LandingPageApp.models import CompanyReview, CompanyRating
-from LandingPageApp.serializers import CompanyReviewSerializer, CompanyRatingSerializer
+from LandingPageApp.models import CompanyReviewAndRating
+from LandingPageApp.serializers import CompanyReviewSerializer
 from MastersApp.models import MaincoreMaster, CategoryMaster, SubCategoryMaster
 from MaterialApp.models import VendorProduct_BasicDetails
 from RegistrationApp.models import SelfRegistration, BasicCompanyDetails, IndustrialHierarchy, BillingAddress, \
@@ -344,30 +344,42 @@ def maincore_by_id(request):
 
 class CompanyReviewViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.AllowAny]
-    queryset = CompanyReview.objects.all()
+    queryset = CompanyReviewAndRating.objects.all()
     serializer_class = CompanyReviewSerializer
 
-    @action(detail=True,methods=['POST'])
-    def rate_movie(self,request,pk=None):
-        if 'stars' in request.data:
-            reviews=CompanyReview.objects.get(id=pk)
-            stars=request.data['stars']
-            user=SelfRegistration.objects.get(id=request.data('user',None))
+    def create(self, request, *args, **kwargs):
+        user_id=request.data.get('user_id',None)
+        name=request.data.get('name',None)
+        company_code=request.data.get('company_code',None)
+        review=request.data.get('review',None),
+        rating=request.data.get('rating',None)
 
-            try:
-                ratingobj=CompanyRating.objects.get(user=user.id,movie=reviews.id)
-                ratingobj.stars=stars
-                ratingobj.save()
-                serailizer=CompanyRatingSerializer(ratingobj,many=False)
-                response={'message':'Rating Updated','result':serailizer.data}
-                return Response(response,status=status.HTTP_200_OK)
-            except Exception as e:
-                return Response({'status': 500, 'error': str(e)}, status=500)
+        basicobj=BasicCompanyDetails.objects.filter(company_code=company_code).values()
+        request.data['company_name']=basicobj[0].get('company_name')
+        return super().create(request, *args, **kwargs)
 
-class CompanyRatingViewSet(viewsets.ModelViewSet):
-    permission_classes = [permissions.AllowAny]
-    queryset = CompanyRating.objects.all()
-    serializer_class = CompanyRatingSerializer
+
+    # @action(detail=True,methods=['POST'])
+    # def rate_movie(self,request,pk=None):
+    #     if 'stars' in request.data:
+    #         reviews=CompanyReview.objects.get(id=pk)
+    #         stars=request.data['stars']
+    #         users=SelfRegistration.objects.get(id=request.data('user',None))
+    #
+    #         try:
+    #             ratingobj=CompanyRating.objects.get(user=users.id,company=reviews.id)
+    #             ratingobj.stars=stars
+    #             ratingobj.save()
+    #             serailizer=CompanyRatingSerializer(ratingobj,many=False)
+    #             response={'message':'Rating Updated','result':serailizer.data}
+    #             return Response(response,status=status.HTTP_200_OK)
+    #         except Exception as e:
+    #             return Response({'status': 500, 'error': str(e)}, status=500)
+
+# class CompanyRatingViewSet(viewsets.ModelViewSet):
+#     permission_classes = [permissions.AllowAny]
+#     queryset = CompanyRating.objects.all()
+#     serializer_class = CompanyRatingSerializer
 
 
 @api_view(['post'])

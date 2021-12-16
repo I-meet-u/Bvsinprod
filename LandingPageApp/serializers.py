@@ -1,12 +1,12 @@
 from rest_framework import  serializers
-from .models import CompanyReview,CompanyRating
+from .models import CompanyReviewAndRating
 
 class CompanyReviewSerializer(serializers.ModelSerializer):
     class Meta:
-        model=CompanyReview
-        fields=('id','company_name','company_review','no_of_ratings','avg_rating','user')
+        model=CompanyReviewAndRating
+        fields=('id','user_id','name','company_code','review','rating','company_name')
 
-class CompanyRatingSerializer(serializers.ModelSerializer):
-    class Meta:
-        model=CompanyRating
-        fields=('id','company','user','stars')
+# class CompanyRatingSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model=CompanyRating
+#         fields=('id','company','user','stars')

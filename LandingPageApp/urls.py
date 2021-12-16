@@ -8,8 +8,8 @@ from django.conf import settings
 
 router=routers.DefaultRouter()
 
-router.register('company-review', views.CompanyReviewViewSet)
-router.register('company-rating', views.CompanyRatingViewSet)
+router.register('company-review-rating', views.CompanyReviewViewSet)
+# router.register('company-rating', views.CompanyRatingViewSet)
 
 urlpatterns = [
     path('api/',include(router.urls)),

@@ -114,5 +114,8 @@ urlpatterns = [
     path('create-admin-trending-sub-categories/',views.create_admin_trending_sub_categories),
     path('fetch-admin-trending-sub-categories/', views.fetch_admin_trending_sub_categories),
 
+    #------------------------------delete-----------------------------------------------------
+    path('delete-trending-category/',views.delete_trending_category)
+
 
 ]

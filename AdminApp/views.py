@@ -2555,4 +2555,33 @@ def fetch_admin_trending_sub_categories(request):
             return Response({'status': 401, 'message': 'Unauthorized'}, status=401)
 
     except Exception as e:
-        return Response({'status':500,'error':str(e)},status=500)
+        return Response({'status': 500, 'error': str(e)}, status=500)
+
+
+@api_view(['post'])
+@permission_classes((AllowAny,))
+def delete_trending_category(request):
+    data=request.data
+    key=data['key']
+    trending_pk=data['trending_pk']
+    try:
+        if key=='vsinadmin':
+            trendingobj=TrendingCategories.objects.filter(id__in=trending_pk).values()
+            print(len(trendingobj))
+            if len(trendingobj)>0:
+                for i in range(0,len(trendingobj)):
+                    print(trendingobj[i].get('id'))
+                    trendingval=TrendingCategories.objects.get(id=trendingobj[i].get('id'))
+                    print(trendingval.id)
+                    if trendingval:
+                        trendingval.delete()
+                return  Response({'status':204,'message':'Trending Categories are Deleted'},status=204)
+            else:
+                return Response({'status':200,'message':'Trending Categoires data are not present or already deleted'},status=200)
+        else:
+            return Response({'status': 401, 'message': 'Unauthorized'}, status=401)
+
+
+
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)

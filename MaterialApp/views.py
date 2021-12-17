@@ -2933,3 +2933,58 @@ def get_vendor_product_details_difference_industry_category(request):
         return Response({'status': 500, 'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
+@api_view(['post'])
+@permission_classes((AllowAny,))
+def get_vendor_product_details_based_on_maincore(request):
+    data=request.data
+    key=data['key']
+    ccode=data['ccode']
+    maincore=data['maincore']
+    resarray=[]
+    newval=[]
+    try:
+        if key=="vsinadmin":
+            vendorobjmaincore=VendorProduct_BasicDetails.objects.filter(company_code=ccode,core_sector=maincore).values()
+
+        return Response({'status': 200, 'message': 'Vendor Product Basic Details List', 'maincore': vendorobjmaincore},
+                    status=status.HTTP_200_OK)
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+@api_view(['post'])
+@permission_classes((AllowAny,))
+def get_vendor_product_details_based_on_category(request):
+    data=request.data
+    key=data['key']
+    ccode=data['ccode']
+    category=data['category']
+    resarray=[]
+    newval=[]
+    try:
+        if key=="vsinadmin":
+            vendorobjcategory=VendorProduct_BasicDetails.objects.filter(company_code=ccode,category=category).values()
+
+        return Response({'status': 200, 'message': 'Vendor Product Basic Details List', 'category': vendorobjcategory},
+                    status=status.HTTP_200_OK)
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+@api_view(['post'])
+@permission_classes((AllowAny,))
+def get_vendor_product_details_based_on_subcategory(request):
+    data=request.data
+    key=data['key']
+    ccode=data['ccode']
+    sub_category=data['sub_category']
+    resarray=[]
+    newval=[]
+    try:
+        if key=="vsinadmin":
+            vendorobjcategory=VendorProduct_BasicDetails.objects.filter(company_code=ccode,sub_category=sub_category).values()
+
+        return Response({'status': 200, 'message': 'Vendor Product Basic Details List', 'category': vendorobjcategory},
+                    status=status.HTTP_200_OK)
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+

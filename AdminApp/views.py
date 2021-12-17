@@ -2150,6 +2150,45 @@ def fetch_admin_selected_categories(request):
 #     except Exception as e:
 #         return Response({'status': 500, 'error': str(e)}, status=500)
 
+# @api_view(['post'])
+# @permission_classes((AllowAny,))
+# def create_admin_selected_categories(request):
+#     data=request.data
+#     key = data['key']
+#     category_name=data['category_name']
+#     admins=data['admins']
+#     try:
+#         if key=='vsinadmin':
+#             for i in range(0,len(category_name)):
+#                 catobj=AdminSelectedCategories.objects.filter(priority=category_name[i].get('priority')).values()
+#                 catobjname = AdminSelectedCategories.objects.filter(category_name=category_name[i].get('catname')).values()
+#                 if catobj:
+#                    Adminobj=AdminSelectedCategories.objects.get(priority=catobj[0].get('priority'))
+#                    Adminobj.category_name=category_name[i].get('catname')
+#                    Adminobj.category_id=category_name[i].get('id')
+#                    Adminobj.save()
+#                 else:
+#                     print("not found")
+#                     if catobjname:
+#                         Adminobjprio = AdminSelectedCategories.objects.get(category_name=catobjname[0].get('category_name'))
+#                         Adminobjprio.priority=category_name[i].get('priority')
+#                         Adminobjprio.category_id=category_name[i].get('id')
+#                         Adminobjprio.save()
+#                     else:
+#                         adminselectedcategory = AdminSelectedCategories.objects.create(
+#                             category_name=category_name[i].get('catname'),
+#                             category_id=category_name[i].get('id'),
+#                             admins=AdminRegister.objects.get(admin_id=admins),
+#                             priority=category_name[i].get('priority'))
+#             return Response({'status':201,'message':'Admin Selected Categories are Created'},status=201)
+#         else:
+#             return Response({'status': 401, 'message': 'Unauthorized' },status=401)
+#
+#
+#     except Exception as e:
+#         return Response({'status': 500, 'error': str(e)}, status=500)
+
+
 @api_view(['post'])
 @permission_classes((AllowAny,))
 def create_admin_selected_categories(request):
@@ -2159,14 +2198,17 @@ def create_admin_selected_categories(request):
     admins=data['admins']
     try:
         if key=='vsinadmin':
-            for i in range(0,len(category_name)):
+            for i in range(0, len(category_name)):
                 catobj=AdminSelectedCategories.objects.filter(priority=category_name[i].get('priority')).values()
                 catobjname = AdminSelectedCategories.objects.filter(category_name=category_name[i].get('catname')).values()
+                if category_name[i].get('catname')==catobjname[0].get('category_name') and category_name[i].get('priority')==catobj[0].get('priority'):
+                    adminobj1 = AdminSelectedCategories.objects.get(id=catobjname[0].get('id'))
+                    adminobj1.delete()
                 if catobj:
-                   Adminobj=AdminSelectedCategories.objects.get(priority=catobj[0].get('priority'))
-                   Adminobj.category_name=category_name[i].get('catname')
-                   Adminobj.category_id=category_name[i].get('id')
-                   Adminobj.save()
+                    Adminobj=AdminSelectedCategories.objects.get(priority=catobj[0].get('priority'))
+                    Adminobj.category_name=category_name[i].get('catname')
+                    Adminobj.category_id=category_name[i].get('id')
+                    Adminobj.save()
                 else:
                     print("not found")
                     if catobjname:
@@ -2180,14 +2222,12 @@ def create_admin_selected_categories(request):
                             category_id=category_name[i].get('id'),
                             admins=AdminRegister.objects.get(admin_id=admins),
                             priority=category_name[i].get('priority'))
-            return Response({'status':201,'message':'Admin Selected Categories are Created'},status=201)
+                return Response({'status':201,'message':'Admin Selected Categories are Created'},status=201)
         else:
             return Response({'status': 401, 'message': 'Unauthorized' },status=401)
-
-
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)
-
+    
 # @api_view(['post'])
 # @permission_classes((AllowAny,))
 # def create_admin_selected_trending_categories(request):

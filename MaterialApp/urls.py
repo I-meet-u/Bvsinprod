@@ -81,6 +81,6 @@ urlpatterns = [
     path('store_vendor_publish/',views.store_vendor_publish),
     path('vendor_product_details_based_on_itemtype/',views.vendor_product_details_based_on_itemtype),
     path('fetch-vendor-product-basic-details-by-ccode/',views.fetch_vendor_product_basic_details_by_ccode),
-    path('get-vendor-product-details-based-on-ccode-distinct/',views.get_vendor_product_details_based_on_ccode_distinct)
-
+    path('get-vendor-product-details-based-on-ccode-distinct/',views.get_vendor_product_details_based_on_ccode_distinct),
+    path('get_vendor_product_details_difference_industry_category/',views.get_vendor_product_details_difference_industry_category)
 ]

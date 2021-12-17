@@ -2912,3 +2912,24 @@ def get_vendor_product_details_based_on_ccode_distinct(request):
             return Response({'status': 401, 'message': 'UnAuthorized'}, status=status.HTTP_401_UNAUTHORIZED)
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+@api_view(['post'])
+@permission_classes((AllowAny,))
+def get_vendor_product_details_difference_industry_category(request):
+    data=request.data
+    key=data['key']
+    ccode=data['ccode']
+    resarray=[]
+    newval=[]
+    try:
+        if key=="vsinadmin":
+            vendorobjmaincore=VendorProduct_BasicDetails.objects.filter(company_code=ccode).distinct('core_sector').values()
+            vendorobjcategory=VendorProduct_BasicDetails.objects.filter(company_code=ccode).distinct('category').values()
+            vendorobjsubcategory=VendorProduct_BasicDetails.objects.filter(company_code=ccode).distinct('sub_category').values()
+        return Response({'status': 200, 'message': 'Vendor Product Basic Details List', 'maincore': vendorobjmaincore,
+                        'category':vendorobjcategory,'Subcategory':vendorobjsubcategory},
+                    status=status.HTTP_200_OK)
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+

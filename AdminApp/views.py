@@ -2036,14 +2036,10 @@ def create_admin_selected_categories(request):
     try:
         if key == 'vsinadmin':
             for i in range(0, len(category_name)):
-                catobj = AdminSelectedCategories.objects.filter(priority=category_name[i].get('priority')).values()
                 catobjname = AdminSelectedCategories.objects.filter(
                     category_name=category_name[i].get('catname')).values()
-                for j in range(0, len(catobj)):
-                    catobj = AdminSelectedCategories.objects.get(priority=catobj[j].get('priority'))
-                    catobj.delete()
                 for k in range(0, len(catobjname)):
-                    catobjr = AdminSelectedCategories.objects.get(priority=catobjname[k].get('priority'))
+                    catobjr = AdminSelectedCategories.objects.get(category_name=catobjname[k].get('category_name'))
                     catobjr.delete()
                 adminselectedcategory = AdminSelectedCategories.objects.create(
                     category_name=category_name[i].get('catname'),
@@ -2067,12 +2063,8 @@ def create_admin_selected_trending_categories(request):
     try:
         if key == 'vsinadmin':
             for i in range(0, len(category_name)):
-                catobj = TrendingCategories.objects.filter(trending_priority=category_name[i].get('priority')).values()
                 catobjname = TrendingCategories.objects.filter(
                     trending_category_name=category_name[i].get('catname')).values()
-                for j in range(0, len(catobj)):
-                    catobj = TrendingCategories.objects.get(trending_priority=catobj[j].get('priority'))
-                    catobj.delete()
                 for k in range(0, len(catobjname)):
                     catobjr = TrendingCategories.objects.get(trending_priority=catobjname[k].get('priority'))
                     catobjr.delete()
@@ -2081,16 +2073,11 @@ def create_admin_selected_trending_categories(request):
                     trending_category_id=category_name[i].get('id'),
                     admins=AdminRegister.objects.get(admin_id=admins),
                     trending_priority=category_name[i].get('priority'))
-
             return Response({'status': 201, 'message': 'Trending Categories are Created'}, status=201)
         else:
             return Response({'status': 401, 'message': 'Unauthorized'}, status=401)
-
-
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)
-
-
 
 @api_view(['post'])
 @permission_classes((AllowAny,))
@@ -2102,13 +2089,8 @@ def create_admin_selected_sub_categories(request):
     try:
         if key == 'vsinadmin':
             for i in range(0, len(sub_category_data)):
-                catobj = AdminSelectedSubCategories.objects.filter(
-                    sub_categories_priority=sub_category_data[i].get('priority')).values()
                 catobjname = AdminSelectedSubCategories.objects.filter(
                     sub_category_name=sub_category_data[i].get('subcatname')).values()
-                for j in range(0, len(catobj)):
-                    catobj = AdminSelectedSubCategories.objects.get(priority=catobj[j].get('priority'))
-                    catobj.delete()
                 for k in range(0, len(catobjname)):
                     catobjr = AdminSelectedSubCategories.objects.get(priority=catobjname[k].get('priority'))
                     catobjr.delete()
@@ -2134,13 +2116,8 @@ def create_admin_trending_sub_categories(request):
     try:
         if key == 'vsinadmin':
             for i in range(0, len(sub_category_data)):
-                catobj = TrendingSubCategories.objects.filter(
-                    trending_sub_categories_priority=sub_category_data[i].get('priority')).values()
                 catobjname = TrendingSubCategories.objects.filter(
                     trending_sub_category_name=sub_category_data[i].get('subcatname')).values()
-                for j in range(0, len(catobj)):
-                    catobj = TrendingSubCategories.objects.get(priority=catobj[j].get('priority'))
-                    catobj.delete()
                 for k in range(0, len(catobjname)):
                     catobjr = TrendingSubCategories.objects.get(priority=catobjname[k].get('priority'))
                     catobjr.delete()

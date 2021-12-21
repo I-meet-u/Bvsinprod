@@ -88,5 +88,6 @@ urlpatterns = [
     path('vendor-buyer-list/',views.vendor_buyer_list),
     path('admin_reject/',views.admin_reject),
     path('update_setup_status/',views.update_setup_status),
-    path('update_setup_status_disable/',views.update_setup_status_disable)
+    path('update_setup_status_disable/',views.update_setup_status_disable),
+    path('getregistrationbyccode/',views.getregistrationbyccode)
 ]

@@ -1873,3 +1873,18 @@ def update_setup_status_disable(request):
 
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)
+
+
+@api_view(['post'])
+@permission_classes((AllowAny,))
+def getregistrationbyccode(request):
+    data = request.data
+    compcode = data['compcode']
+    try:
+        BasicCompanyDetailsobj=BasicCompanyDetails.objects.filter(company_code=compcode).values()
+        if BasicCompanyDetailsobj:
+            Regobj=SelfRegistration.objects.filter(id=BasicCompanyDetailsobj[0].get('updated_by_id')).values()
+
+            return Response({'status': 200, 'message': 'ok','regdata':Regobj}, status=200)
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)

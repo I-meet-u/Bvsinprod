@@ -2466,7 +2466,7 @@ def edit_admin_selected_categories(request):
     try:
         if key=='vsinadmin':
             for i in range(0,len(category_array)):
-                adminobj=AdminSelectedCategories.objects.filter(id=category_array[i].get('id'),admins=admin_id).values()
+                adminobj=AdminSelectedCategories.objects.filter(category_id=category_array[i].get('id'),admins=admin_id).values()
                 if len(adminobj)>0:
                     adminvalue = AdminSelectedCategories.objects.get(id=adminobj[0].get('id'))
                     if adminvalue.priority!=category_array[i].get('priority'):
@@ -2493,7 +2493,7 @@ def edit_admin_trending_categories(request):
     try:
         if key=='vsinadmin':
             for i in range(0,len(category_array)):
-                adminobj=TrendingCategories.objects.filter(id=category_array[i].get('id'),admins=admin_id).values()
+                adminobj=TrendingCategories.objects.filter(trending_category_id=category_array[i].get('id'),admins=admin_id).values()
                 if len(adminobj)>0:
                     adminvalue = TrendingCategories.objects.get(id=adminobj[0].get('id'))
                     if adminvalue.trending_priority!=category_array[i].get('priority'):
@@ -2519,7 +2519,7 @@ def edit_admin_sub_categories(request):
     try:
         if key == 'vsinadmin':
             for i in range(0, len(sub_category_array)):
-                adminsubobj = AdminSelectedSubCategories.objects.filter(id=sub_category_array[i].get('id'),
+                adminsubobj = AdminSelectedSubCategories.objects.filter(sub_category_id=sub_category_array[i].get('id'),
                                                                         admins=admin_id).values()
                 if len(adminsubobj) > 0:
                     adminsubvalue = AdminSelectedSubCategories.objects.get(id=adminsubobj[0].get('id'))
@@ -2546,7 +2546,7 @@ def edit_admin_trending_sub_categories(request):
     try:
         if key == 'vsinadmin':
             for i in range(0, len(sub_category_array)):
-                adminsubobj = TrendingSubCategories.objects.filter(id=sub_category_array[i].get('id'),
+                adminsubobj = TrendingSubCategories.objects.filter(trending_sub_category_id=sub_category_array[i].get('id'),
                                                                    admins=admin_id).values()
                 if len(adminsubobj) > 0:
                     adminsubvalue = TrendingSubCategories.objects.get(id=adminsubobj[0].get('id'))

@@ -4,7 +4,9 @@ import random
 from base64 import b64encode
 from datetime import datetime, date
 from itertools import chain
+from pprint import pprint
 
+import sib_api_v3_sdk
 from django.contrib.auth.hashers import make_password,check_password
 from django.core.exceptions import ObjectDoesNotExist
 from django.shortcuts import render
@@ -16,6 +18,7 @@ from rest_framework.exceptions import ValidationError
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from django.db.models import Q
+from sib_api_v3_sdk.rest import ApiException
 
 from MastersApp.models import CategoryMaster, SubCategoryMaster
 from .serializers import *
@@ -2556,6 +2559,56 @@ def edit_admin_trending_sub_categories(request):
             return Response({'status': 200, 'message': 'Trending Sub Categories Are Updated'}, status=200)
         else:
             return Response({'status': 401, 'message': 'Unauthorized'}, status=401)
+
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)
+
+@api_view(['post'])
+@permission_classes((AllowAny,))
+def contact_us_send_mail(request):
+    data=request.data
+    key=data['key']
+    name=data['name']
+    phone=data['phone']
+    email=data['email']
+    title=data['title']
+    message=data['message']
+    company_name=data['company_name']
+    try:
+        if key=='vsinadmin':
+            basicobj=BasicCompanyDetails.objects.filter(company_name=company_name).values().order_by('company_code')
+            if len(basicobj)>0:
+                regobj=SelfRegistration.objects.filter(id=basicobj[0].get('updated_by_id')).values()
+                # Configure API key authorization: api-key
+                configuration = sib_api_v3_sdk.Configuration()
+                configuration.api_key[
+                    'api-key'] = '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'
+
+                # create an instance of the API class
+                configuration = sib_api_v3_sdk.Configuration()
+                configuration.api_key[
+                    'api-key'] = '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'
+
+                api_instance = sib_api_v3_sdk.TransactionalEmailsApi(sib_api_v3_sdk.ApiClient(configuration))
+                subject = title
+                text_content = "Dear , " + company_name +"\n\n" +"Name : "+ name + "\n\n" +"Phone Number : "+ phone+"\n\n"+ 'Message : '+ message + "\n\n" + "Thank You" + "\n\n" + "Note: Please Don't Share this email with anyone"
+                sender = {"name": name, "email":email}
+                to = [{"email": regobj[0].get('username'), "name": regobj[0].get('contact_person')}]
+                send_smtp_email = sib_api_v3_sdk.SendSmtpEmail(to=to,text_content=text_content,
+                                                               sender=sender, subject=subject)
+                print(send_smtp_email)
+                try:
+                    # Send a transactional email
+                    api_response = api_instance.send_transac_email(send_smtp_email)
+                    pprint(api_response)
+                except ApiException as e:
+                    print("Exception when calling SMTPApi->send_transac_email: %s\n" % e)
+                return Response({'status': 200, 'message': 'Contact Us Mail Sent'}, status=200)
+            else:
+                return Response({'status': 204, 'message': 'Data not present for this particular company'}, status=204)
+        else:
+            return Response({'status': 401, 'message': 'Unauthorized'}, status=401)
+
 
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)

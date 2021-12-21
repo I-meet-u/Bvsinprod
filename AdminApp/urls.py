@@ -127,5 +127,7 @@ urlpatterns = [
     path('edit-admin-sub-categories/', views.edit_admin_sub_categories),
     path('edit-admin-trending-sub-categories/', views.edit_admin_trending_sub_categories),
 
+    path('contact-us-send-mail/',views.contact_us_send_mail)
+
 
 ]

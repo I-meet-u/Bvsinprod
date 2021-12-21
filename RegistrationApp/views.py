@@ -1880,11 +1880,15 @@ def update_setup_status_disable(request):
 def getregistrationbyccode(request):
     data = request.data
     compcode = data['compcode']
+    key=data['key']
     try:
-        BasicCompanyDetailsobj=BasicCompanyDetails.objects.filter(company_code=compcode).values()
-        if BasicCompanyDetailsobj:
-            Regobj=SelfRegistration.objects.filter(id=BasicCompanyDetailsobj[0].get('updated_by_id')).values()
+        if key=="vsinadmin":
+            BasicCompanyDetailsobj=BasicCompanyDetails.objects.filter(company_code=compcode).values()
+            if BasicCompanyDetailsobj:
+                Regobj=SelfRegistration.objects.filter(id=BasicCompanyDetailsobj[0].get('updated_by_id')).values()
 
-            return Response({'status': 200, 'message': 'ok','regdata':Regobj}, status=200)
+                return Response({'status': 200, 'message': 'ok','regdata':Regobj}, status=200)
+        else:
+            return Response({'status': 400, 'message': 'Bad Request'}, status=400)
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)

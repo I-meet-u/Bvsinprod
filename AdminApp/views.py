@@ -23,7 +23,7 @@ from sib_api_v3_sdk.rest import ApiException
 from MastersApp.models import CategoryMaster, SubCategoryMaster
 from .serializers import *
 from RegistrationApp.models import SelfRegistration, BasicCompanyDetails, IndustrialInfo, IndustrialHierarchy, \
-    BankDetails, LegalDocuments, Employee_CompanyDetails, Employee_IndustryInfo
+    BankDetails, LegalDocuments, Employee_CompanyDetails, Employee_IndustryInfo, BillingAddress
 from .models import *
 from AdminApp.serializers import AdminInviteSerializer, CreateUserSerializer, AdminRegisterSerializer, \
     CreateBuyerSerializer, OpenLeadsRfqSerializer, OpenLeadsItemsSerializer, \
@@ -2579,6 +2579,7 @@ def contact_us_send_mail(request):
             basicobj=BasicCompanyDetails.objects.filter(company_name=company_name).values().order_by('company_code')
             if len(basicobj)>0:
                 regobj=SelfRegistration.objects.filter(id=basicobj[0].get('updated_by_id')).values()
+                billobj=BillingAddress.objects.filter(company_code=basicobj[0].get('company_code')).values()
                 # Configure API key authorization: api-key
                 configuration = sib_api_v3_sdk.Configuration()
                 configuration.api_key[
@@ -2591,7 +2592,7 @@ def contact_us_send_mail(request):
 
                 api_instance = sib_api_v3_sdk.TransactionalEmailsApi(sib_api_v3_sdk.ApiClient(configuration))
                 subject = title
-                text_content = "Dear , " + company_name +"\n\n" +"Name : "+ name + "\n\n" +"Phone Number : "+ phone+"\n\n"+ 'Message : '+ message + "\n\n" + "Thank You" + "\n\n" + "Note: Please Don't Share this email with anyone"
+                text_content = "Dear , " + company_name +"\n\n" +"Name : "+ name + "\n\n" +"Phone Number : " + phone+"\n\n" +"City :" +billobj[0].get('bill_city') + "\n\n" + 'Message : '+ message + "\n\n" + "Regards , "+"\n\n" + name + "\n\n" + "Note: Please Don't Share this email with anyone"
                 sender = {"name": name, "email":email}
                 to = [{"email": regobj[0].get('username'), "name": regobj[0].get('contact_person')}]
                 send_smtp_email = sib_api_v3_sdk.SendSmtpEmail(to=to,text_content=text_content,

@@ -2186,7 +2186,7 @@ def fetch_admin_selected_categories(request):
             allselecteddata = AdminSelectedCategories.objects.filter().values()
             if len(allselecteddata)>0:
                 for i in range(0, len(allselecteddata)):
-                    catobj = CategoryMaster.objects.filter(category_name=allselecteddata[0].get('category_name')).values()
+                    catobj = CategoryMaster.objects.filter(category_name=allselecteddata[i].get('category_name')).values()
                     rearay.append({'category_name': allselecteddata[i].get('category_name'),
                                    'category_id': allselecteddata[i].get('category_id'),
                                    'admins': allselecteddata[i].get('admins'),
@@ -2217,7 +2217,7 @@ def fetch_admin_trending_categories(request):
             trendingcategoryobj=TrendingCategories.objects.filter().values()
             if len(trendingcategoryobj)>0:
                 for i in range(0, len(trendingcategoryobj)):
-                    catobj=CategoryMaster.objects.filter(category_name=trendingcategoryobj[0].get('trending_category_name')).values()
+                    catobj=CategoryMaster.objects.filter(category_name=trendingcategoryobj[i].get('trending_category_name')).values()
                     catarray.append({'trending_category_name':trendingcategoryobj[i].get('trending_category_name'),
                                      'trending_category_id':trendingcategoryobj[i].get('trending_category_id'),
                                      'admins':trendingcategoryobj[i].get('admins'),
@@ -2252,7 +2252,7 @@ def fetch_admin_trending_sub_categories(request):
             trendingsubcategoryobj = TrendingSubCategories.objects.filter().values()
             if len(trendingsubcategoryobj)>0:
                 for i in range(0, len(trendingsubcategoryobj)):
-                    subcatobj = SubCategoryMaster.objects.filter(sub_category_name=trendingsubcategoryobj[0].get('trending_sub_category_name')).values()
+                    subcatobj = SubCategoryMaster.objects.filter(sub_category_name=trendingsubcategoryobj[i].get('trending_sub_category_name')).values()
 
                     subcatarray.append(
                         {'trending_sub_category_name': trendingsubcategoryobj[i].get('trending_sub_category_name'),
@@ -2287,7 +2287,7 @@ def fetch_admin_selected_sub_categories(request):
             selectedsubcategoryobj=AdminSelectedSubCategories.objects.filter().values()
             if len(selectedsubcategoryobj)>0:
                 for i in range(0,len(selectedsubcategoryobj)):
-                    subcatobj=SubCategoryMaster.objects.filter(sub_category_name=selectedsubcategoryobj[0].get('sub_category_name')).values()
+                    subcatobj=SubCategoryMaster.objects.filter(sub_category_name=selectedsubcategoryobj[i].get('sub_category_name')).values()
                     subcatarray.append({'sub_category_name':selectedsubcategoryobj[i].get('sub_category_name'),
                                         'sub_category_id':selectedsubcategoryobj[i].get('sub_category_id'),
                                         'admins':selectedsubcategoryobj[i].get('admins'),
@@ -2297,7 +2297,6 @@ def fetch_admin_selected_sub_categories(request):
                                         'sub_category_code':subcatobj[0].get('sub_category_code'),
                                         'sub_category_status':subcatobj[0].get('status')
                                         })
-
                 return Response({'status':200,'message':'Admin Selected SubCategories List','data':subcatarray},status=200)
             else:
                 return Response({'status': 204, 'message': 'Admin Selected SubCategories Not Present'}, status=204)

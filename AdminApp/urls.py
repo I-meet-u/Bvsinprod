@@ -122,7 +122,8 @@ urlpatterns = [
 
 
     #-------------------------------------edit------------------------------------------
-    path('edit-admin-selected-categories/',views.edit_admin_selected_categories)
+    path('edit-admin-selected-categories/',views.edit_admin_selected_categories),
+    path('edit-admin-trending-categories/',views.edit_admin_trending_categories)
 
 
 ]

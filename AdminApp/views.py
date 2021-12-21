@@ -2466,11 +2466,9 @@ def edit_admin_selected_categories(request):
     try:
         if key=='vsinadmin':
             for i in range(0,len(category_array)):
-                print(category_array[i].get('id'))
                 adminobj=AdminSelectedCategories.objects.filter(id=category_array[i].get('id'),admins=admin_id).values()
                 if len(adminobj)>0:
                     adminvalue = AdminSelectedCategories.objects.get(id=adminobj[0].get('id'))
-                    print(adminvalue)
                     if adminvalue.priority!=category_array[i].get('priority'):
                         adminvalue.priority=category_array[i].get('priority')
                         adminvalue.save()
@@ -2481,3 +2479,32 @@ def edit_admin_selected_categories(request):
 
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)
+
+
+
+
+@api_view(['put'])
+@permission_classes((AllowAny,))
+def edit_admin_trending_categories(request):
+    data=request.data
+    key=data['key']
+    category_array=data['category_array']
+    admin_id=data['admin_id']
+    try:
+        if key=='vsinadmin':
+            for i in range(0,len(category_array)):
+                adminobj=TrendingCategories.objects.filter(id=category_array[i].get('id'),admins=admin_id).values()
+                if len(adminobj)>0:
+                    adminvalue = TrendingCategories.objects.get(id=adminobj[0].get('id'))
+                    if adminvalue.trending_priority!=category_array[i].get('priority'):
+                        adminvalue.trending_priority=category_array[i].get('priority')
+                        adminvalue.save()
+
+            return  Response({'status':200,'message':'Trending Categories Are Updated'},status=200)
+
+        else:
+            return Response({'status': 401, 'message': 'Unauthorized'}, status=401)
+
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)
+

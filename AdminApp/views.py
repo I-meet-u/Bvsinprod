@@ -2297,7 +2297,6 @@ def fetch_admin_selected_sub_categories(request):
                                         'sub_category_code':subcatobj[0].get('sub_category_code'),
                                         'sub_category_status':subcatobj[0].get('status')
                                         })
-
                 return Response({'status':200,'message':'Admin Selected SubCategories List','data':subcatarray},status=200)
             else:
                 return Response({'status': 204, 'message': 'Admin Selected SubCategories Not Present'}, status=204)

@@ -2508,3 +2508,54 @@ def edit_admin_trending_categories(request):
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)
 
+
+@api_view(['put'])
+@permission_classes((AllowAny,))
+def edit_admin_sub_categories(request):
+    data = request.data
+    key = data['key']
+    sub_category_array = data['sub_category_array']
+    admin_id = data['admin_id']
+    try:
+        if key == 'vsinadmin':
+            for i in range(0, len(sub_category_array)):
+                adminsubobj = AdminSelectedSubCategories.objects.filter(id=sub_category_array[i].get('id'),
+                                                                        admins=admin_id).values()
+                if len(adminsubobj) > 0:
+                    adminsubvalue = AdminSelectedSubCategories.objects.get(id=adminsubobj[0].get('id'))
+                    if adminsubvalue.sub_categories_priority != sub_category_array[i].get('priority'):
+                        adminsubvalue.sub_categories_priority = sub_category_array[i].get('priority')
+                        adminsubvalue.save()
+
+            return Response({'status': 200, 'message': 'Admin Sub Categories Are Updated'}, status=200)
+
+        else:
+            return Response({'status': 401, 'message': 'Unauthorized'}, status=401)
+
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)
+
+
+@api_view(['put'])
+@permission_classes((AllowAny,))
+def edit_admin_trending_sub_categories(request):
+    data = request.data
+    key = data['key']
+    sub_category_array = data['sub_category_array']
+    admin_id = data['admin_id']
+    try:
+        if key == 'vsinadmin':
+            for i in range(0, len(sub_category_array)):
+                adminsubobj = TrendingSubCategories.objects.filter(id=sub_category_array[i].get('id'),
+                                                                   admins=admin_id).values()
+                if len(adminsubobj) > 0:
+                    adminsubvalue = TrendingSubCategories.objects.get(id=adminsubobj[0].get('id'))
+                    if adminsubvalue.trending_sub_categories_priority != sub_category_array[i].get('priority'):
+                        adminsubvalue.trending_sub_categories_priority = sub_category_array[i].get('priority')
+                        adminsubvalue.save()
+            return Response({'status': 200, 'message': 'Trending Sub Categories Are Updated'}, status=200)
+        else:
+            return Response({'status': 401, 'message': 'Unauthorized'}, status=401)
+
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)

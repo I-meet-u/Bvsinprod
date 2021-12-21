@@ -2463,7 +2463,6 @@ def edit_admin_selected_categories(request):
     key=data['key']
     category_array=data['category_array']
     admin_id=data['admin_id']
-
     try:
         if key=='vsinadmin':
             for i in range(0,len(category_array)):

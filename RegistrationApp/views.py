@@ -1885,9 +1885,11 @@ def getregistrationbyccode(request):
         if key=="vsinadmin":
             BasicCompanyDetailsobj=BasicCompanyDetails.objects.filter(company_code=compcode).values()
             if BasicCompanyDetailsobj:
+                addrs=BillingAddress.objects.filter(company_code=compcode).values()
+
                 Regobj=SelfRegistration.objects.filter(id=BasicCompanyDetailsobj[0].get('updated_by_id')).values()
 
-                return Response({'status': 200, 'message': 'ok','regdata':Regobj}, status=200)
+                return Response({'status': 200, 'message': 'ok','regdata':Regobj,'addrs':addrs}, status=200)
         else:
             return Response({'status': 400, 'message': 'Bad Request'}, status=400)
     except Exception as e:

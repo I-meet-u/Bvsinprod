@@ -1395,21 +1395,26 @@ class QuoteModelView(viewsets.ModelViewSet):
             return Response({'status': 500, 'error': str(e)}, status=500)
 
 @api_view(['post'])
-# @permission_classes((AllowAny,))
+@permission_classes((AllowAny,))
 def count_internal_vendor_buyer(request):
     data=request.data
     countarray=[]
     try:
-        basicobj=BasicCompanyDetails.objects.filter(company_code=data['company_code']).values()
-        if len(basicobj)>0:
-            internalvendorobj=InternalVendor.objects.filter(updated_by_id=basicobj[0].get('updated_by_id')).values()
-            internalbuyerobj = InternalBuyer.objects.filter(updated_by_id=basicobj[0].get('updated_by_id')).values()
-            countarray.append({'internal_vendor_count':len(internalvendorobj),
-                               'internal_buyer_count':len(internalbuyerobj)
-                               })
-            return Response({'status': 200, 'message': 'Success', 'data':countarray},status=200)
+        if data['key']=='vsinadmin':
+            basicobj=BasicCompanyDetails.objects.filter(company_code=data['company_code']).values()
+            if len(basicobj)>0:
+                internalvendorobj=InternalVendor.objects.filter(updated_by_id=basicobj[0].get('updated_by_id')).values()
+                internalbuyerobj = InternalBuyer.objects.filter(updated_by_id=basicobj[0].get('updated_by_id')).values()
+                countarray.append({'internal_vendor_count':len(internalvendorobj),
+                                   'internal_buyer_count':len(internalbuyerobj)
+                                   })
+                return Response({'status': 200, 'message': 'Success', 'data':countarray},status=200)
+
+            else:
+                return Response({'status': 204, 'message': 'Data Not Present'},status=204)
         else:
-            return Response({'status': 204, 'message': 'Data Not Present'},status=204)
+            return Response({'status': 401, 'message': 'UnAuthorized',}, status=401)
+
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)
 

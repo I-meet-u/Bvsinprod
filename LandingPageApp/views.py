@@ -353,11 +353,11 @@ class CompanyReviewViewSet(viewsets.ModelViewSet):
         review = request.data.get('review', None),
         rating = request.data.get('rating', None)
         full_name = SelfRegistration.objects.filter(id=user_id).values()
-        name = full_name[0].get('first_name' + 'last_name')
+        name = full_name[0].get('contact_person')
         basicobj = BasicCompanyDetails.objects.filter(company_code=company_code).values()
         request.data['company_name'] = basicobj[0].get('company_name')
-        return super().create(request, name=name * args, **kwargs)
-
+        request.data['name'] = name
+        return super().create(request, *args, **kwargs)
     # def create(self, request, *args, **kwargs):
     #     user_id=request.data.get('user_id',None)
     #     name=request.data.get('name',None)

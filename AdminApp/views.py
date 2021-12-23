@@ -2188,17 +2188,18 @@ def fetch_admin_selected_categories(request):
             for i in range(0, len(allselecteddata)):
                 catarray.append(int(allselecteddata[i].get('priority')))
             print(catarray)
-            sorted(catarray)
+            values=sorted(catarray)
             print("sorted ", sorted(catarray))
             if len(allselecteddata)>0:
-                for i in range(0, len(allselecteddata)):
-                    catobj = CategoryMaster.objects.filter(category_name=allselecteddata[i].get('category_name')).values()
-                    rearay.append({'category_name': allselecteddata[i].get('category_name'),
-                                   'category_id': allselecteddata[i].get('category_id'),
-                                   'admins': allselecteddata[i].get('admins'),
-                                   'created_on': allselecteddata[i].get('created_on'),
-                                   'updated_on': allselecteddata[i].get('updated_on'),
-                                   'priority': allselecteddata[i].get('priority'),
+                for i in range(0, len(values)):
+                    allselecteddata = AdminSelectedCategories.objects.filter(priority=values[i]).values()
+                    catobj = CategoryMaster.objects.filter(category_name=allselecteddata[0].get('category_name')).values()
+                    rearay.append({'category_name': allselecteddata[0].get('category_name'),
+                                   'category_id': allselecteddata[0].get('category_id'),
+                                   'admins': allselecteddata[0].get('admins'),
+                                   'created_on': allselecteddata[0].get('created_on'),
+                                   'updated_on': allselecteddata[0].get('updated_on'),
+                                   'priority': allselecteddata[0].get('priority'),
                                    'category_code': catobj[0].get('category_code'),
                                    'category_status': catobj[0].get('status')
                                    })
@@ -2224,17 +2225,19 @@ def fetch_admin_trending_categories(request):
             for i in range(0, len(trendingcategoryobj)):
                 arrayval.append(int(trendingcategoryobj[i].get('trending_priority')))
             print(arrayval)
-            sorted(arrayval)
+            values=sorted(arrayval)
             print("sorted ", sorted(arrayval))
             if len(trendingcategoryobj)>0:
-                for i in range(0, len(trendingcategoryobj)):
-                    catobj=CategoryMaster.objects.filter(category_name=trendingcategoryobj[i].get('trending_category_name')).values()
-                    catarray.append({'trending_category_name':trendingcategoryobj[i].get('trending_category_name'),
-                                     'trending_category_id':trendingcategoryobj[i].get('trending_category_id'),
-                                     'admins':trendingcategoryobj[i].get('admins'),
-                                     'created_on':trendingcategoryobj[i].get('created_on'),
-                                     'updated_on':trendingcategoryobj[i].get('updated_on'),
-                                     'trending_priority':trendingcategoryobj[i].get('trending_priority'),
+                for i in range(0, len(values)):
+                    trendingcategoryobj=TrendingCategories.objects.filter(trending_priority=values[i]).values()
+
+                    catobj=CategoryMaster.objects.filter(category_name=trendingcategoryobj[0].get('trending_category_name')).values()
+                    catarray.append({'trending_category_name':trendingcategoryobj[0].get('trending_category_name'),
+                                     'trending_category_id':trendingcategoryobj[0].get('trending_category_id'),
+                                     'admins':trendingcategoryobj[0].get('admins'),
+                                     'created_on':trendingcategoryobj[0].get('created_on'),
+                                     'updated_on':trendingcategoryobj[0].get('updated_on'),
+                                     'trending_priority':trendingcategoryobj[0].get('trending_priority'),
                                      'category_code':catobj[0].get('category_code'),
                                      'category_status':catobj[0].get('status')
 
@@ -2265,19 +2268,21 @@ def fetch_admin_trending_sub_categories(request):
             for i in range(0, len(trendingsubcategoryobj)):
                 arrayval.append(int(trendingsubcategoryobj[i].get('trending_sub_categories_priority')))
             print(arrayval)
-            sorted(arrayval)
+            values=sorted(arrayval)
             print("sorted ", sorted(arrayval))
 
             if len(trendingsubcategoryobj)>0:
-                for i in range(0, len(trendingsubcategoryobj)):
-                    subcatobj = SubCategoryMaster.objects.filter(sub_category_name=trendingsubcategoryobj[i].get('trending_sub_category_name')).values()
+                for i in range(0, len(values)):
+                    trendingsubcategoryobj=TrendingSubCategories.objects.filter(trending_sub_categories_priority=values[i]).values()
+
+                    subcatobj = SubCategoryMaster.objects.filter(sub_category_name=trendingsubcategoryobj[0].get('trending_sub_category_name')).values()
 
                     subcatarray.append(
-                        {'trending_sub_category_name': trendingsubcategoryobj[i].get('trending_sub_category_name'),
-                         'trending_sub_category_id': trendingsubcategoryobj[i].get('trending_sub_category_id'),
-                         'admins': trendingsubcategoryobj[i].get('admins'),
-                         'created_on': trendingsubcategoryobj[i].get('created_on'),
-                         'updated_on': trendingsubcategoryobj[i].get('updated_on'),
+                        {'trending_sub_category_name': trendingsubcategoryobj[0].get('trending_sub_category_name'),
+                         'trending_sub_category_id': trendingsubcategoryobj[0].get('trending_sub_category_id'),
+                         'admins': trendingsubcategoryobj[0].get('admins'),
+                         'created_on': trendingsubcategoryobj[0].get('created_on'),
+                         'updated_on': trendingsubcategoryobj[0].get('updated_on'),
                          'trending_sub_categories_priority': trendingsubcategoryobj[i].get(
                              'trending_sub_categories_priority'),
                          'sub_category_code': subcatobj[0].get('sub_category_code'),
@@ -2306,19 +2311,20 @@ def fetch_admin_selected_sub_categories(request):
             for i in range(0, len(selectedsubcategoryobj)):
                 valarray.append(int(selectedsubcategoryobj[i].get('sub_categories_priority')))
             print(valarray)
-            sorted(valarray)
-            print("sorted ", sorted(valarray))
+            datas=sorted(valarray)
+            print("sorted ", datas)
             if len(selectedsubcategoryobj)>0:
 
 
-                for i in range(0,len(selectedsubcategoryobj)):
-                    subcatobj=SubCategoryMaster.objects.filter(sub_category_name=selectedsubcategoryobj[i].get('sub_category_name')).values()
-                    subcatarray.append({'sub_category_name':selectedsubcategoryobj[i].get('sub_category_name'),
-                                        'sub_category_id':selectedsubcategoryobj[i].get('sub_category_id'),
-                                        'admins':selectedsubcategoryobj[i].get('admins'),
-                                        'created_on':selectedsubcategoryobj[i].get('created_on'),
-                                        'updated_on':selectedsubcategoryobj[i].get('updated_on'),
-                                        'sub_categories_priority':selectedsubcategoryobj[i].get('sub_categories_priority'),
+                for i in range(0,len(datas)):
+                    selectedsubcategoryobj = AdminSelectedSubCategories.objects.filter(sub_categories_priority=datas[i]).values()
+                    subcatobj=SubCategoryMaster.objects.filter(sub_category_name=selectedsubcategoryobj[0].get('sub_category_name')).values()
+                    subcatarray.append({'sub_category_name':selectedsubcategoryobj[0].get('sub_category_name'),
+                                        'sub_category_id':selectedsubcategoryobj[0].get('sub_category_id'),
+                                        'admins':selectedsubcategoryobj[0].get('admins'),
+                                        'created_on':selectedsubcategoryobj[0].get('created_on'),
+                                        'updated_on':selectedsubcategoryobj[0].get('updated_on'),
+                                        'sub_categories_priority':selectedsubcategoryobj[0].get('sub_categories_priority'),
                                         'sub_category_code':subcatobj[0].get('sub_category_code'),
                                         'sub_category_status':subcatobj[0].get('status')
                                         })

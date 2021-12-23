@@ -2181,9 +2181,15 @@ def create_admin_trending_sub_categories(request):
 def fetch_admin_selected_categories(request):
     key = request.data['key']
     rearay = []
+    catarray=[]
     try:
         if key == 'vsinadmin':
             allselecteddata = AdminSelectedCategories.objects.filter().values()
+            for i in range(0, len(allselecteddata)):
+                catarray.append(int(allselecteddata[i].get('priority')))
+            print(catarray)
+            sorted(catarray)
+            print("sorted ", sorted(catarray))
             if len(allselecteddata)>0:
                 for i in range(0, len(allselecteddata)):
                     catobj = CategoryMaster.objects.filter(category_name=allselecteddata[i].get('category_name')).values()

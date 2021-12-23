@@ -2221,6 +2221,11 @@ def fetch_admin_trending_categories(request):
     try:
         if key=='vsinadmin':
             trendingcategoryobj=TrendingCategories.objects.filter().values()
+            for i in range(0, len(trendingcategoryobj)):
+                arrayval.append(int(trendingcategoryobj[i].get('trending_priority')))
+            print(arrayval)
+            sorted(arrayval)
+            print("sorted ", sorted(arrayval))
             if len(trendingcategoryobj)>0:
                 for i in range(0, len(trendingcategoryobj)):
                     catobj=CategoryMaster.objects.filter(category_name=trendingcategoryobj[i].get('trending_category_name')).values()
@@ -2253,9 +2258,16 @@ def fetch_admin_trending_categories(request):
 def fetch_admin_trending_sub_categories(request):
     key = request.data['key']
     subcatarray = []
+    arrayval=[]
     try:
         if key == 'vsinadmin':
             trendingsubcategoryobj = TrendingSubCategories.objects.filter().values()
+            for i in range(0, len(trendingsubcategoryobj)):
+                arrayval.append(int(trendingsubcategoryobj[i].get('trending_sub_categories_priority')))
+            print(arrayval)
+            sorted(arrayval)
+            print("sorted ", sorted(arrayval))
+
             if len(trendingsubcategoryobj)>0:
                 for i in range(0, len(trendingsubcategoryobj)):
                     subcatobj = SubCategoryMaster.objects.filter(sub_category_name=trendingsubcategoryobj[i].get('trending_sub_category_name')).values()
@@ -2291,7 +2303,14 @@ def fetch_admin_selected_sub_categories(request):
     try:
         if key=='vsinadmin':
             selectedsubcategoryobj=AdminSelectedSubCategories.objects.filter().values()
+            for i in range(0, len(selectedsubcategoryobj)):
+                valarray.append(int(selectedsubcategoryobj[i].get('sub_categories_priority')))
+            print(valarray)
+            sorted(valarray)
+            print("sorted ", sorted(valarray))
             if len(selectedsubcategoryobj)>0:
+
+
                 for i in range(0,len(selectedsubcategoryobj)):
                     subcatobj=SubCategoryMaster.objects.filter(sub_category_name=selectedsubcategoryobj[i].get('sub_category_name')).values()
                     subcatarray.append({'sub_category_name':selectedsubcategoryobj[i].get('sub_category_name'),

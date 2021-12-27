@@ -2295,6 +2295,44 @@ def fetch_admin_trending_sub_categories(request):
         return Response({'status': 500, 'error': str(e)}, status=500)
 
 
+# @api_view(['post'])
+# @permission_classes((AllowAny,))
+# def fetch_admin_selected_sub_categories(request):
+#     key=request.data['key']
+#     subcatarray=[]
+#     valarray=[]
+#     try:
+#         if key=='vsinadmin':
+#             selectedsubcategoryobj=AdminSelectedSubCategories.objects.filter().values()
+#             for i in range(0, len(selectedsubcategoryobj)):
+#                 valarray.append(int(selectedsubcategoryobj[i].get('sub_categories_priority')))
+#             print(valarray)
+#             datas=sorted(valarray)
+#             print("sorted ", datas)
+#             if len(selectedsubcategoryobj)>0:
+#
+#
+#                 for i in range(0,len(datas)):
+#                     selectedsubcategoryobj = AdminSelectedSubCategories.objects.filter(sub_categories_priority=datas[i]).values()
+#                     subcatobj=SubCategoryMaster.objects.filter(sub_category_name=selectedsubcategoryobj[0].get('sub_category_name')).values()
+#                     subcatarray.append({'sub_category_name':selectedsubcategoryobj[0].get('sub_category_name'),
+#                                         'sub_category_id':selectedsubcategoryobj[0].get('sub_category_id'),
+#                                         'admins':selectedsubcategoryobj[0].get('admins'),
+#                                         'created_on':selectedsubcategoryobj[0].get('created_on'),
+#                                         'updated_on':selectedsubcategoryobj[0].get('updated_on'),
+#                                         'sub_categories_priority':selectedsubcategoryobj[0].get('sub_categories_priority'),
+#                                         'sub_category_code':subcatobj[0].get('sub_category_code'),
+#                                         'sub_category_status':subcatobj[0].get('status')
+#                                         })
+#                 return Response({'status':200,'message':'Admin Selected SubCategories List','data':subcatarray},status=200)
+#             else:
+#                 return Response({'status': 204, 'message': 'Admin Selected SubCategories Not Present'}, status=204)
+#         else:
+#             return Response({'status': 401, 'message': 'Unauthorized'}, status=401)
+#
+#     except Exception as e:
+#         return Response({'status':500,'error':str(e)},status=500)
+
 @api_view(['post'])
 @permission_classes((AllowAny,))
 def fetch_admin_selected_sub_categories(request):
@@ -2303,24 +2341,42 @@ def fetch_admin_selected_sub_categories(request):
     valarray=[]
     try:
         if key=='vsinadmin':
-            selectedsubcategoryobj=AdminSelectedSubCategories.objects.filter().values()
+            selectedsubcategoryobj1 = AdminSelectedSubCategories.objects.filter(sub_categories_priority='0').values()
+            selectedsubcategoryobj=AdminSelectedSubCategories.objects.filter(~Q(sub_categories_priority='0')).values()
             for i in range(0, len(selectedsubcategoryobj)):
                 valarray.append(int(selectedsubcategoryobj[i].get('sub_categories_priority')))
             print(valarray)
             datas=sorted(valarray)
             print("sorted ", datas)
+
+            if selectedsubcategoryobj1:
+                for j in range(0, len(selectedsubcategoryobj1)):
+                    subcatobj = SubCategoryMaster.objects.filter(
+                        sub_category_name=selectedsubcategoryobj1[j].get('sub_category_name')).values()
+                    subcatarray.append({'sub_category_name': selectedsubcategoryobj1[j].get('sub_category_name'),
+                                        'sub_category_id': selectedsubcategoryobj1[j].get('sub_category_id'),
+                                        'admins': selectedsubcategoryobj1[j].get('admins'),
+                                        'created_on': selectedsubcategoryobj1[j].get('created_on'),
+                                        'updated_on': selectedsubcategoryobj1[j].get('updated_on'),
+                                        'sub_categories_priority': selectedsubcategoryobj1[j].get(
+                                            'sub_categories_priority'),
+                                        'sub_category_code': subcatobj[0].get('sub_category_code'),
+                                        'sub_category_status': subcatobj[0].get('status')
+                                        })
+
             if len(selectedsubcategoryobj)>0:
-
-
                 for i in range(0,len(datas)):
-                    selectedsubcategoryobj = AdminSelectedSubCategories.objects.filter(sub_categories_priority=datas[i]).values()
-                    subcatobj=SubCategoryMaster.objects.filter(sub_category_name=selectedsubcategoryobj[0].get('sub_category_name')).values()
-                    subcatarray.append({'sub_category_name':selectedsubcategoryobj[0].get('sub_category_name'),
-                                        'sub_category_id':selectedsubcategoryobj[0].get('sub_category_id'),
-                                        'admins':selectedsubcategoryobj[0].get('admins'),
-                                        'created_on':selectedsubcategoryobj[0].get('created_on'),
-                                        'updated_on':selectedsubcategoryobj[0].get('updated_on'),
-                                        'sub_categories_priority':selectedsubcategoryobj[0].get('sub_categories_priority'),
+                    selectedsubcategoryobj2 = AdminSelectedSubCategories.objects.filter(sub_categories_priority=datas[i]).values()
+
+
+                    for j in range(0,len(selectedsubcategoryobj2)):
+                        subcatobj=SubCategoryMaster.objects.filter(sub_category_name=selectedsubcategoryobj2[j].get('sub_category_name')).values()
+                        subcatarray.append({'sub_category_name':selectedsubcategoryobj2[j].get('sub_category_name'),
+                                        'sub_category_id':selectedsubcategoryobj2[j].get('sub_category_id'),
+                                        'admins':selectedsubcategoryobj2[j].get('admins'),
+                                        'created_on':selectedsubcategoryobj2[j].get('created_on'),
+                                        'updated_on':selectedsubcategoryobj2[j].get('updated_on'),
+                                        'sub_categories_priority':selectedsubcategoryobj2[j].get('sub_categories_priority'),
                                         'sub_category_code':subcatobj[0].get('sub_category_code'),
                                         'sub_category_status':subcatobj[0].get('status')
                                         })
@@ -2332,8 +2388,6 @@ def fetch_admin_selected_sub_categories(request):
 
     except Exception as e:
         return Response({'status':500,'error':str(e)},status=500)
-
-
 #
 # @api_view(['post'])
 # @permission_classes((AllowAny,))

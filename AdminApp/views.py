@@ -2176,123 +2176,123 @@ def create_admin_trending_sub_categories(request):
 #         return Response({'status':500,'error':str(e)},status=500)
 #
 
-@api_view(['post'])
-@permission_classes((AllowAny,))
-def fetch_admin_selected_categories(request):
-    key = request.data['key']
-    rearay = []
-    catarray=[]
-    try:
-        if key == 'vsinadmin':
-            allselecteddata = AdminSelectedCategories.objects.filter().values()
-            for i in range(0, len(allselecteddata)):
-                catarray.append(int(allselecteddata[i].get('priority')))
-            print(catarray)
-            values=sorted(catarray)
-            print("sorted ", sorted(catarray))
-            if len(allselecteddata)>0:
-                for i in range(0, len(values)):
-                    allselecteddata = AdminSelectedCategories.objects.filter(priority=values[i]).values()
-                    catobj = CategoryMaster.objects.filter(category_name=allselecteddata[0].get('category_name')).values()
-                    rearay.append({'category_name': allselecteddata[0].get('category_name'),
-                                   'category_id': allselecteddata[0].get('category_id'),
-                                   'admins': allselecteddata[0].get('admins'),
-                                   'created_on': allselecteddata[0].get('created_on'),
-                                   'updated_on': allselecteddata[0].get('updated_on'),
-                                   'priority': allselecteddata[0].get('priority'),
-                                   'category_code': catobj[0].get('category_code'),
-                                   'category_status': catobj[0].get('status')
-                                   })
-                return Response({'status': 200, 'message': 'Admin Selected Categories List', 'data': rearay}, status=200)
-            else:
-                return Response({'status': 204, 'message': 'Admin Selected Categories Not Present'}, status=204)
-
-        else:
-            return Response({'status': 401, 'message': 'Unauthorized'}, status=401)
-    except Exception as e:
-        return Response({'status': 500, 'error': str(e)}, status=500)
-
-
-@api_view(['post'])
-@permission_classes((AllowAny,))
-def fetch_admin_trending_categories(request):
-    key=request.data['key']
-    catarray=[]
-    arrayval=[]
-    try:
-        if key=='vsinadmin':
-            trendingcategoryobj=TrendingCategories.objects.filter().values()
-            for i in range(0, len(trendingcategoryobj)):
-                arrayval.append(int(trendingcategoryobj[i].get('trending_priority')))
-            print(arrayval)
-            values=sorted(arrayval)
-            print("sorted ", sorted(arrayval))
-            if len(trendingcategoryobj)>0:
-                for i in range(0, len(values)):
-                    trendingcategoryobj=TrendingCategories.objects.filter(trending_priority=values[i]).values()
-
-                    catobj=CategoryMaster.objects.filter(category_name=trendingcategoryobj[0].get('trending_category_name')).values()
-                    catarray.append({'trending_category_name':trendingcategoryobj[0].get('trending_category_name'),
-                                     'trending_category_id':trendingcategoryobj[0].get('trending_category_id'),
-                                     'admins':trendingcategoryobj[0].get('admins'),
-                                     'created_on':trendingcategoryobj[0].get('created_on'),
-                                     'updated_on':trendingcategoryobj[0].get('updated_on'),
-                                     'trending_priority':trendingcategoryobj[0].get('trending_priority'),
-                                     'category_code':catobj[0].get('category_code'),
-                                     'category_status':catobj[0].get('status')
-
-
-                                     })
-                return Response({'status':200,'message':'Admin Trending Categories List','data':catarray},status=200)
-            else:
-                return Response({'status': 204, 'message': 'Admin Trending Categories Not Present'}, status=204)
-        else:
-            return Response({'status': 401, 'message': 'Unauthorized'}, status=401)
-
-    except Exception as e:
-        return Response({'status':500,'error':str(e)},status=500)
-
-
+# @api_view(['post'])
+# @permission_classes((AllowAny,))
+# def fetch_admin_selected_categories(request):
+#     key = request.data['key']
+#     rearay = []
+#     catarray=[]
+#     try:
+#         if key == 'vsinadmin':
+#             allselecteddata = AdminSelectedCategories.objects.filter().values()
+#             for i in range(0, len(allselecteddata)):
+#                 catarray.append(int(allselecteddata[i].get('priority')))
+#             print(catarray)
+#             values=sorted(catarray)
+#             print("sorted ", sorted(catarray))
+#             if len(allselecteddata)>0:
+#                 for i in range(0, len(values)):
+#                     allselecteddata = AdminSelectedCategories.objects.filter(priority=values[i]).values()
+#                     catobj = CategoryMaster.objects.filter(category_name=allselecteddata[0].get('category_name')).values()
+#                     rearay.append({'category_name': allselecteddata[0].get('category_name'),
+#                                    'category_id': allselecteddata[0].get('category_id'),
+#                                    'admins': allselecteddata[0].get('admins'),
+#                                    'created_on': allselecteddata[0].get('created_on'),
+#                                    'updated_on': allselecteddata[0].get('updated_on'),
+#                                    'priority': allselecteddata[0].get('priority'),
+#                                    'category_code': catobj[0].get('category_code'),
+#                                    'category_status': catobj[0].get('status')
+#                                    })
+#                 return Response({'status': 200, 'message': 'Admin Selected Categories List', 'data': rearay}, status=200)
+#             else:
+#                 return Response({'status': 204, 'message': 'Admin Selected Categories Not Present'}, status=204)
+#
+#         else:
+#             return Response({'status': 401, 'message': 'Unauthorized'}, status=401)
+#     except Exception as e:
+#         return Response({'status': 500, 'error': str(e)}, status=500)
+#
+#
+# @api_view(['post'])
+# @permission_classes((AllowAny,))
+# def fetch_admin_trending_categories(request):
+#     key=request.data['key']
+#     catarray=[]
+#     arrayval=[]
+#     try:
+#         if key=='vsinadmin':
+#             trendingcategoryobj=TrendingCategories.objects.filter().values()
+#             for i in range(0, len(trendingcategoryobj)):
+#                 arrayval.append(int(trendingcategoryobj[i].get('trending_priority')))
+#             print(arrayval)
+#             values=sorted(arrayval)
+#             print("sorted ", sorted(arrayval))
+#             if len(trendingcategoryobj)>0:
+#                 for i in range(0, len(values)):
+#                     trendingcategoryobj=TrendingCategories.objects.filter(trending_priority=values[i]).values()
+#
+#                     catobj=CategoryMaster.objects.filter(category_name=trendingcategoryobj[0].get('trending_category_name')).values()
+#                     catarray.append({'trending_category_name':trendingcategoryobj[0].get('trending_category_name'),
+#                                      'trending_category_id':trendingcategoryobj[0].get('trending_category_id'),
+#                                      'admins':trendingcategoryobj[0].get('admins'),
+#                                      'created_on':trendingcategoryobj[0].get('created_on'),
+#                                      'updated_on':trendingcategoryobj[0].get('updated_on'),
+#                                      'trending_priority':trendingcategoryobj[0].get('trending_priority'),
+#                                      'category_code':catobj[0].get('category_code'),
+#                                      'category_status':catobj[0].get('status')
+#
+#
+#                                      })
+#                 return Response({'status':200,'message':'Admin Trending Categories List','data':catarray},status=200)
+#             else:
+#                 return Response({'status': 204, 'message': 'Admin Trending Categories Not Present'}, status=204)
+#         else:
+#             return Response({'status': 401, 'message': 'Unauthorized'}, status=401)
+#
+#     except Exception as e:
+#         return Response({'status':500,'error':str(e)},status=500)
 
 
 
-@api_view(['post'])
-@permission_classes((AllowAny,))
-def fetch_admin_trending_sub_categories(request):
-    key = request.data['key']
-    subcatarray = []
-    arrayval=[]
-    try:
-        if key == 'vsinadmin':
-            trendingsubcategoryobj = TrendingSubCategories.objects.filter().values()
-            for i in range(0, len(trendingsubcategoryobj)):
-                arrayval.append(int(trendingsubcategoryobj[i].get('trending_sub_categories_priority')))
-            print(arrayval)
-            values=sorted(arrayval)
-            print("sorted ", sorted(arrayval))
 
-            if len(trendingsubcategoryobj)>0:
-                for i in range(0, len(values)):
-                    trendingsubcategoryobj2=TrendingSubCategories.objects.filter(trending_sub_categories_priority=values[i]).values()
-                    subcatobj = SubCategoryMaster.objects.filter(sub_category_name=trendingsubcategoryobj2[0].get('trending_sub_category_name')).values()
-                    subcatarray.append({'trending_sub_category_name': trendingsubcategoryobj2[i].get('trending_sub_category_name'),
-                         'trending_sub_category_id': trendingsubcategoryobj2[i].get('trending_sub_category_id'),
-                         'admins': trendingsubcategoryobj2[i].get('admins'),
-                         'created_on': trendingsubcategoryobj2[i].get('created_on'),
-                         'updated_on': trendingsubcategoryobj2[i].get('updated_on'),
-                         'trending_sub_categories_priority': trendingsubcategoryobj2[i].get('trending_sub_categories_priority'),
-                         'sub_category_code': subcatobj[0].get('sub_category_code'),
-                         'sub_category_status': subcatobj[0].get('status')
-                         })
-                return Response({'status': 200, 'message': 'Admin Trending SubCategories List', 'data': subcatarray},
-                                status=200)
-            else:
-                return Response({'status': 204, 'message': 'Admin Trending SubCategories Not Present'}, status=204)
 
-        else:
-            return Response({'status': 401, 'message': 'Unauthorized'}, status=401)
-    except Exception as e:
-        return Response({'status': 500, 'error': str(e)}, status=500)
+# @api_view(['post'])
+# @permission_classes((AllowAny,))
+# def fetch_admin_trending_sub_categories(request):
+#     key = request.data['key']
+#     subcatarray = []
+#     arrayval=[]
+#     try:
+#         if key == 'vsinadmin':
+#             trendingsubcategoryobj = TrendingSubCategories.objects.filter().values()
+#             for i in range(0, len(trendingsubcategoryobj)):
+#                 arrayval.append(int(trendingsubcategoryobj[i].get('trending_sub_categories_priority')))
+#             print(arrayval)
+#             values=sorted(arrayval)
+#             print("sorted ", sorted(arrayval))
+#
+#             if len(trendingsubcategoryobj)>0:
+#                 for i in range(0, len(values)):
+#                     trendingsubcategoryobj2=TrendingSubCategories.objects.filter(trending_sub_categories_priority=values[i]).values()
+#                     subcatobj = SubCategoryMaster.objects.filter(sub_category_name=trendingsubcategoryobj2[0].get('trending_sub_category_name')).values()
+#                     subcatarray.append({'trending_sub_category_name': trendingsubcategoryobj2[i].get('trending_sub_category_name'),
+#                          'trending_sub_category_id': trendingsubcategoryobj2[i].get('trending_sub_category_id'),
+#                          'admins': trendingsubcategoryobj2[i].get('admins'),
+#                          'created_on': trendingsubcategoryobj2[i].get('created_on'),
+#                          'updated_on': trendingsubcategoryobj2[i].get('updated_on'),
+#                          'trending_sub_categories_priority': trendingsubcategoryobj2[i].get('trending_sub_categories_priority'),
+#                          'sub_category_code': subcatobj[0].get('sub_category_code'),
+#                          'sub_category_status': subcatobj[0].get('status')
+#                          })
+#                 return Response({'status': 200, 'message': 'Admin Trending SubCategories List', 'data': subcatarray},
+#                                 status=200)
+#             else:
+#                 return Response({'status': 204, 'message': 'Admin Trending SubCategories Not Present'}, status=204)
+#
+#         else:
+#             return Response({'status': 401, 'message': 'Unauthorized'}, status=401)
+#     except Exception as e:
+#         return Response({'status': 500, 'error': str(e)}, status=500)
 
 
 # @api_view(['post'])
@@ -2424,6 +2424,166 @@ def fetch_admin_selected_sub_categories(request):
 #
 #     except Exception as e:
 #         return Response({'status': 500, 'error': str(e)}, status=500)
+
+
+
+
+@api_view(['post'])
+@permission_classes((AllowAny,))
+def fetch_admin_selected_categories(request):
+    key = request.data['key']
+    rearay = []
+    catarray=[]
+    try:
+        if key == 'vsinadmin':
+            selectedcategoryobj1 = AdminSelectedCategories.objects.filter(priority='0').values()
+            selectedcategoryobj=AdminSelectedCategories.objects.filter(~Q(priority='0')).values()
+            for i in range(0, len(selectedcategoryobj)):
+                catarray.append(int(selectedcategoryobj[i].get('priority')))
+            print(catarray)
+            datas=sorted(catarray)
+            print("sorted ",datas )
+            if selectedcategoryobj1:
+                for j in range(0, len(selectedcategoryobj1)):
+                    catobj = CategoryMaster.objects.filter(category_name=selectedcategoryobj1[j].get('category_name')).values()
+                    rearay.append({'category_name': selectedcategoryobj1[j].get('category_name'),
+                                           'category_id': selectedcategoryobj1[j].get('category_id'),
+                                           'admins': selectedcategoryobj1[j].get('admins'),
+                                           'created_on': selectedcategoryobj1[j].get('created_on'),
+                                           'updated_on': selectedcategoryobj1[j].get('updated_on'),
+                                           'priority': selectedcategoryobj1[j].get('priority'),
+                                           'category_code': catobj[0].get('category_code'),
+                                           'category_status': catobj[0].get('status')
+                                           })
+
+            if len(selectedcategoryobj)>0:
+                for i in range(0, len(datas)):
+                    selectedcategoryobj2 = AdminSelectedCategories.objects.filter(priority=datas[i]).values()
+                    for j in range(0, len(selectedcategoryobj2)):
+                        catobj = CategoryMaster.objects.filter(category_name=selectedcategoryobj2[j].get('category_name')).values()
+                        rearay.append({'category_name': selectedcategoryobj2[j].get('category_name'),
+                                   'category_id': selectedcategoryobj2[j].get('category_id'),
+                                   'admins': selectedcategoryobj2[j].get('admins'),
+                                   'created_on': selectedcategoryobj2[j].get('created_on'),
+                                   'updated_on': selectedcategoryobj2[j].get('updated_on'),
+                                   'priority': selectedcategoryobj2[j].get('priority'),
+                                   'category_code': catobj[0].get('category_code'),
+                                   'category_status': catobj[0].get('status')
+                                   })
+                return Response({'status': 200, 'message': 'Admin Selected Categories List', 'data': rearay}, status=200)
+            else:
+                return Response({'status': 204, 'message': 'Admin Selected Categories Not Present'}, status=204)
+
+        else:
+            return Response({'status': 401, 'message': 'Unauthorized'}, status=401)
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)
+
+
+
+@api_view(['post'])
+@permission_classes((AllowAny,))
+def fetch_admin_trending_categories(request):
+    key=request.data['key']
+    catarray=[]
+    arrayval=[]
+    try:
+        if key=='vsinadmin':
+            trendingcategoryobj1=TrendingCategories.objects.filter(trending_priority='0').values()
+            trendingcategoryobj=TrendingCategories.objects.filter(~Q(trending_priority='0')).values()
+            for i in range(0, len(trendingcategoryobj)):
+                arrayval.append(int(trendingcategoryobj[i].get('trending_priority')))
+            print(arrayval)
+            datas=sorted(arrayval)
+            print("sorted ", sorted(arrayval))
+            if trendingcategoryobj1:
+                for j in range(0, len(trendingcategoryobj1)):
+                    catobj = CategoryMaster.objects.filter(category_name=trendingcategoryobj1[j].get('trending_category_name')).values()
+                    catarray.append({'trending_category_name': trendingcategoryobj1[j].get('trending_category_name'),
+                                             'trending_category_id':trendingcategoryobj1[j].get('trending_category_id'),
+                                             'admins':trendingcategoryobj1[j].get('admins'),
+                                             'created_on':trendingcategoryobj1[j].get('created_on'),
+                                             'updated_on':trendingcategoryobj1[j].get('updated_on'),
+                                             'trending_priority':trendingcategoryobj1[j].get('trending_priority'),
+                                             'category_code':catobj[0].get('category_code'),
+                                             'category_status':catobj[0].get('status')
+                                             })
+                if len(trendingcategoryobj) > 0:
+                    for i in range(0, len(datas)):
+                        trendingcategoryobj2 = TrendingCategories.objects.filter(trending_priority=datas[i]).values()
+                        for j in range(0, len(trendingcategoryobj2)):
+                            catobj=CategoryMaster.objects.filter(category_name=trendingcategoryobj2[j].get('trending_category_name')).values()
+                            catarray.append({'trending_category_name':trendingcategoryobj2[j].get('trending_category_name'),
+                                     'trending_category_id':trendingcategoryobj2[j].get('trending_category_id'),
+                                     'admins':trendingcategoryobj2[j].get('admins'),
+                                     'created_on':trendingcategoryobj2[j].get('created_on'),
+                                     'updated_on':trendingcategoryobj2[j].get('updated_on'),
+                                     'trending_priority':trendingcategoryobj2[j].get('trending_priority'),
+                                     'category_code':catobj[0].get('category_code'),
+                                     'category_status':catobj[0].get('status')
+                                     })
+                return Response({'status':200,'message':'Admin Trending Categories List','data':catarray},status=200)
+            else:
+                return Response({'status': 204, 'message': 'Admin Trending Categories Not Present'}, status=204)
+        else:
+            return Response({'status': 401, 'message': 'Unauthorized'}, status=401)
+
+    except Exception as e:
+        return Response({'status':500,'error':str(e)},status=500)
+
+
+
+@api_view(['post'])
+@permission_classes((AllowAny,))
+def fetch_admin_trending_sub_categories(request):
+    key = request.data['key']
+    subcatarray = []
+    valarray=[]
+    try:
+        if key == 'vsinadmin':
+            trendingsubcategoryobj1 =TrendingSubCategories.objects.filter(trending_sub_categories_priority='0').values()
+            trendingsubcategoryobj=TrendingSubCategories.objects.filter(~Q(trending_sub_categories_priority='0')).values()
+            for i in range(0, len(trendingsubcategoryobj)):
+                valarray.append(int(trendingsubcategoryobj[i].get('trending_sub_categories_priority')))
+            print(valarray)
+            datas=sorted(valarray)
+            print("sorted ", sorted(valarray))
+            if trendingsubcategoryobj1:
+                for j in range(0, len(trendingsubcategoryobj1)):
+                    subcatobj = SubCategoryMaster.objects.filter(sub_category_name=trendingsubcategoryobj1[j].get('trending_sub_category_name')).values()
+                    subcatarray.append({'trending_sub_category_name': trendingsubcategoryobj1[j].get('trending_sub_category_name'),
+                         'trending_sub_category_id': trendingsubcategoryobj1[j].get('trending_sub_category_id'),
+                         'admins': trendingsubcategoryobj1[j].get('admins'),
+                         'created_on': trendingsubcategoryobj1[j].get('created_on'),
+                         'updated_on': trendingsubcategoryobj1[j].get('updated_on'),
+                         'trending_sub_categories_priority': trendingsubcategoryobj1[j].get('trending_sub_categories_priority'),
+                         'sub_category_code': subcatobj[0].get('sub_category_code'),
+                         'sub_category_status': subcatobj[0].get('status')
+                         })
+                if len(trendingsubcategoryobj) > 0:
+                    for i in range(0, len(datas)):
+                        trendingsubcategoryobj2 = TrendingSubCategories.objects.filter(trending_sub_categories_priority=datas[i]).values()
+                        for j in range(0, len(trendingsubcategoryobj2)):
+                            subcatobj = SubCategoryMaster.objects.filter(sub_category_name=trendingsubcategoryobj2[j].get('trending_sub_category_name')).values()
+                            subcatarray.append({'trending_sub_category_name': trendingsubcategoryobj2[0].get('trending_sub_category_name'),
+                                                'trending_sub_category_id': trendingsubcategoryobj2[0].get('trending_sub_category_id'),
+                                                'admins': trendingsubcategoryobj2[0].get('admins'),
+                                                'created_on': trendingsubcategoryobj2[0].get('created_on'),
+                                                'updated_on': trendingsubcategoryobj2[0].get('updated_on'),
+                                                'trending_sub_categories_priority': trendingsubcategoryobj2[0].get('trending_sub_categories_priority'),
+                                                'sub_category_code': subcatobj[0].get('sub_category_code'),
+                                                'sub_category_status': subcatobj[0].get('status')
+                                                })
+                    return Response({'status': 200, 'message': 'Trending SubCategories List', 'data': subcatarray},
+                                status=200)
+                else:
+                    return Response({'status': 204, 'message': 'Trending SubCategories Not Present'}, status=204)
+        else:
+            return Response({'status': 401, 'message': 'Unauthorized'}, status=401)
+
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)
+
 
 
 @api_view(['post'])

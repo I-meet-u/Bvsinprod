@@ -2565,11 +2565,11 @@ def fetch_admin_trending_sub_categories(request):
                         trendingsubcategoryobj2 = TrendingSubCategories.objects.filter(trending_sub_categories_priority=datas[i]).values()
                         for j in range(0, len(trendingsubcategoryobj2)):
                             subcatobj = SubCategoryMaster.objects.filter(sub_category_name=trendingsubcategoryobj2[j].get('trending_sub_category_name')).values()
-                            subcatarray.append({'trending_sub_category_name': trendingsubcategoryobj2[0].get('trending_sub_category_name'),
-                                                'trending_sub_category_id': trendingsubcategoryobj2[0].get('trending_sub_category_id'),
-                                                'admins': trendingsubcategoryobj2[0].get('admins'),
-                                                'created_on': trendingsubcategoryobj2[0].get('created_on'),
-                                                'updated_on': trendingsubcategoryobj2[0].get('updated_on'),
+                            subcatarray.append({'trending_sub_category_name': trendingsubcategoryobj2[j].get('trending_sub_category_name'),
+                                                'trending_sub_category_id': trendingsubcategoryobj2[j].get('trending_sub_category_id'),
+                                                'admins': trendingsubcategoryobj2[j].get('admins'),
+                                                'created_on': trendingsubcategoryobj2[j].get('created_on'),
+                                                'updated_on': trendingsubcategoryobj2[j].get('updated_on'),
                                                 'trending_sub_categories_priority': trendingsubcategoryobj2[0].get('trending_sub_categories_priority'),
                                                 'sub_category_code': subcatobj[0].get('sub_category_code'),
                                                 'sub_category_status': subcatobj[0].get('status')

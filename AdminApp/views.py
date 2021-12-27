@@ -2067,7 +2067,7 @@ def create_admin_selected_trending_categories(request):
             for i in range(0, len(category_name)):
                 catobjname = TrendingCategories.objects.filter(trending_category_name=category_name[i].get('catname')).values()
                 for k in range(0, len(catobjname)):
-                    catobjr = TrendingCategories.objects.get(trending_priority=catobjname[k].get('trending_category_name'))
+                    catobjr = TrendingCategories.objects.get(trending_category_name=catobjname[k].get('trending_category_name'))
                     catobjr.delete()
                 adminselectedcategory = TrendingCategories.objects.create(
                     trending_category_name=category_name[i].get('catname'),
@@ -2090,10 +2090,9 @@ def create_admin_selected_sub_categories(request):
     try:
         if key == 'vsinadmin':
             for i in range(0, len(sub_category_data)):
-                catobjname = AdminSelectedSubCategories.objects.filter(
-                    sub_category_name=sub_category_data[i].get('subcatname')).values()
+                catobjname = AdminSelectedSubCategories.objects.filter(sub_category_name=sub_category_data[i].get('subcatname')).values()
                 for k in range(0, len(catobjname)):
-                    catobjr = AdminSelectedSubCategories.objects.get(priority=catobjname[k].get('sub_category_name'))
+                    catobjr = AdminSelectedSubCategories.objects.get(sub_category_name=catobjname[k].get('sub_category_name'))
                     catobjr.delete()
                 adminselectedsubcategory = AdminSelectedSubCategories.objects.create(
                     sub_category_name=sub_category_data[i].get('subcatname'),
@@ -2119,7 +2118,7 @@ def create_admin_trending_sub_categories(request):
             for i in range(0, len(sub_category_data)):
                 catobjname = TrendingSubCategories.objects.filter(trending_sub_category_name=sub_category_data[i].get('subcatname')).values()
                 for k in range(0, len(catobjname)):
-                    catobjr = TrendingSubCategories.objects.get(priority=catobjname[k].get('trending_sub_category_name'))
+                    catobjr = TrendingSubCategories.objects.get(trending_sub_category_name=catobjname[k].get('trending_sub_category_name'))
                     catobjr.delete()
                 adminselectedcategory = TrendingSubCategories.objects.create(
                     trending_sub_category_name=sub_category_data[i].get('subcatname'),

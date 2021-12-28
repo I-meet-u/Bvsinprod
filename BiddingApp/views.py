@@ -4920,8 +4920,23 @@ def getparticularcommonrfqdetailsinlandingpage(request):
             if BuyerProductBiddingobj:
                 rfqpublishedcompany = BasicCompanyDetails.objects.filter(updated_by=BuyerProductBiddingobj[0].get('updated_by_id')).values('company_name')
                 BiddingBuyerProductDetailsobj=BiddingBuyerProductDetails.objects.filter(buyer_rfq_number=BuyerProductBiddingobj[0].get('product_rfq_number')).values()
+                for i in range(0,len(BiddingBuyerProductDetailsobj)):
+                    doc1=BuyerProductDetails.objects.filter(buyer_item_code=BiddingBuyerProductDetailsobj[0].get('buyer_item_code')).values('buyer_document')
+                    if doc1:
+                        if doc1[0].get('buyer_document'):
+                            document1=doc1[0].get('buyer_document')
+                        else:
+                            document1=""
+                        if doc1[0].get('buyer_document_1'):
+                            document2=doc1[0].get('buyer_document_1')
+                        else:
+                            document2=""
+                        if doc1[0].get('buyer_document_2'):
+                            document3=doc1[0].get('buyer_document_2')
+                        else:
+                            document3=""
                 RfqTermsDescriptionobj=RfqTermsDescription.objects.filter(rfq_number=BuyerProductBiddingobj[0].get('product_rfq_number')).values()
-                return Response({'status': 200, 'message': 'Bidding Leads', 'Biddata': BuyerProductBiddingobj,'rfqproductdata':BiddingBuyerProductDetailsobj,'Bidterm':RfqTermsDescriptionobj,'compname':rfqpublishedcompany[0].get('company_name')}, status=200)
+                return Response({'status': 200, 'message': 'Bidding Leads', 'Biddata': BuyerProductBiddingobj,'rfqproductdata':BiddingBuyerProductDetailsobj,'Bidterm':RfqTermsDescriptionobj,'compname':rfqpublishedcompany[0].get('company_name'),'document1':document1,'document2':document2,'document3':document3}, status=200)
             else:
                 return Response({'status': 202, 'message': 'Bid not exist'}, status=202)
         else:

@@ -4918,9 +4918,10 @@ def getparticularcommonrfqdetailsinlandingpage(request):
         if data['key']=="vsinadmin":
             BuyerProductBiddingobj=BuyerProductBidding.objects.filter(product_bidding_id=data['id']).values()
             if BuyerProductBiddingobj:
+                rfqpublishedcompany = BasicCompanyDetails.objects.filter(updated_by=BuyerProductBiddingobj[0].get('updated_by_id')).values('company_name')
                 BiddingBuyerProductDetailsobj=BiddingBuyerProductDetails.objects.filter(buyer_rfq_number=BuyerProductBiddingobj[0].get('product_rfq_number')).values()
                 RfqTermsDescriptionobj=RfqTermsDescription.objects.filter(rfq_number=BuyerProductBiddingobj[0].get('product_rfq_number')).values()
-                return Response({'status': 200, 'message': 'Bidding Leads', 'Biddata': BuyerProductBiddingobj,'rfqproductdata':BiddingBuyerProductDetailsobj,'Bidterm':RfqTermsDescriptionobj}, status=200)
+                return Response({'status': 200, 'message': 'Bidding Leads', 'Biddata': BuyerProductBiddingobj,'rfqproductdata':BiddingBuyerProductDetailsobj,'Bidterm':RfqTermsDescriptionobj,'compname':rfqpublishedcompany[0].get('company_name')}, status=200)
             else:
                 return Response({'status': 202, 'message': 'Bid not exist'}, status=202)
         else:

@@ -4909,3 +4909,24 @@ def bidding_open_leads_all_true(request):
     except Exception as e:
         return Response({'status': 500, 'message': str(e)}, status=500)
 
+@api_view(['post'])
+@permission_classes((AllowAny,))
+def getparticularcommonrfqdetailsinlandingpage(request):
+    data=request.data
+    listarray=[]
+    try:
+        if data['key']=="vsinadmin":
+            BuyerProductBiddingobj=BuyerProductBidding.objects.filter(product_bidding_id=data['id']).values()
+            if BuyerProductBiddingobj:
+                BiddingBuyerProductDetailsobj=BiddingBuyerProductDetails.objects.filter(buyer_rfq_number=BuyerProductBiddingobj[0].get('product_rfq_number')).values()
+                RfqTermsDescriptionobj=RfqTermsDescription.objects.filter(rfq_number=BuyerProductBiddingobj[0].get('product_rfq_number')).values()
+                return Response({'status': 200, 'message': 'Bidding Leads', 'Biddata': BuyerProductBiddingobj,'rfqproductdata':BiddingBuyerProductDetailsobj,'Bidterm':RfqTermsDescriptionobj}, status=200)
+            else:
+                return Response({'status': 202, 'message': 'Bid not exist'}, status=202)
+        else:
+            return Response({'status': 400, 'message': 'bad request'}, status=400)
+    except Exception as e:
+        return Response({'status': 500, 'message': str(e)}, status=500)
+
+
+

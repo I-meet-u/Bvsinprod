@@ -120,7 +120,8 @@ urlpatterns = [
     path('bidding-list-leads/',views.bidding_list_leads),
     path('get-all-bidding-leads/',views.get_all_bidding_leads),
     path('get-all-bidding-by-id/',views.get_all_bidding_by_id),
-    path('bidding-open-leads-all-true/',views.bidding_open_leads_all_true)
+    path('bidding-open-leads-all-true/',views.bidding_open_leads_all_true),
+    path('getparticularcommonrfqdetailsinlandingpage/',views.getparticularcommonrfqdetailsinlandingpage)
 
 
 

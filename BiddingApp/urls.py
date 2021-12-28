@@ -118,7 +118,9 @@ urlpatterns = [
     path('terms-master-description-settings/',views.terms_master_description_settings),
     path('terms-master-settings/', views.terms_master_settings),
     path('bidding-list-leads/',views.bidding_list_leads),
-    path('get-all-bidding-leads/',views.get_all_bidding_leads)
+    path('get-all-bidding-leads/',views.get_all_bidding_leads),
+    path('get-all-bidding-by-id/',views.get_all_bidding_by_id),
+    path('bidding-open-leads-all-true/',views.bidding_open_leads_all_true)
 
 
 

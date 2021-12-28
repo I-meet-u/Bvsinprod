@@ -4749,3 +4749,66 @@ def terms_master_settings(request):
 #         return Response({'status': 201, 'message': 'Terms Created'}, status=201)
 #     except Exception as e:
 #         return Response({'status': 500, 'error': str(e)}, status=500)
+
+
+@api_view(['post'])
+def bidding_list_leads(request):
+    data = request.data
+    vendorbiddingarray = []
+    userid = data['userid']
+    listarray = []
+    try:
+        vendorbidobj = VendorProductBidding.objects.filter(updated_by_id=userid).values().order_by('vendor_product_bidding_id')
+        for i in range(0, len(vendorbidobj)):
+            vendorbiddingarray.append(vendorbidobj[i].get('vendor_product_bidding_id'))
+        print(vendorbiddingarray)
+        for i in range(0,len(vendorbidobj)):
+            bidobj = BuyerProductBidding.objects.filter(product_bidding_id=vendorbiddingarray[i], get_vendors='False').values()
+            if bidobj:
+                basicval = BasicCompanyDetails.objects.filter(updated_by_id=bidobj[0].get('updated_by_id')).values()
+                billingobj = BillingAddress.objects.filter(company_code_id=basicval[0].get('company_code'),
+                                                           updated_by_id=basicval[0].get('updated_by_id')).values()
+                listarray.append({'product_bidding_id': bidobj[0].get('product_bidding_id'),
+                                  'company_code': basicval[0].get('company_code'),
+                                  'company_name': basicval[0].get('company_name'),
+                                  'product_rfq_number': bidobj[0].get('product_rfq_number'),
+                                  'user_rfq_number': bidobj[0].get('user_rfq_number'),
+                                  'product_rfq_type': bidobj[0].get('product_rfq_type'),
+                                  'product_rfq_status': bidobj[0].get('product_rfq_status'),
+                                  'product_publish_date': bidobj[0].get('product_publish_date'),
+                                  'product_deadline_date': bidobj[0].get('product_deadline_date'),
+                                  'bill_city': billingobj[0].get('bill_city'),
+                                  'updated_by': bidobj[0].get('updated_by_id'),
+                                  'product_delivery_date': bidobj[0].get('product_delivery_date'),
+                                  'product_rfq_currency':bidobj[0].get('product_rfq_currency'),
+                                  'product_rfq_category':bidobj[0].get('product_rfq_category'),
+                                  'product_department':bidobj[0].get('product_department'),
+                                  'product_bill_address':bidobj[0].get('product_bill_address'),
+                                  'product_ship_address':bidobj[0].get('product_ship_address'),
+                                  'product_rfq_title':bidobj[0].get('product_rfq_title'),
+                                  'contact_name':bidobj[0].get('contact_name'),
+                                  'phone_number':bidobj[0].get('phone_number'),
+                                  'email_id':bidobj[0].get('email_id'),
+                                  'vendor_product_bidding_id': vendorbidobj[i].get('vendor_product_bidding_id')
+                                  })
+
+        return Response({'status': 200, 'message': 'Bidding Leads List', 'data': listarray}, status=200)
+    except Exception as e:
+        return Response({'status': 500, 'message': str(e)}, status=500)
+
+
+@api_view(['post'])
+@permission_classes((AllowAny,))
+def get_all_bidding_leads(request):
+    get_vendors=request.data['get_vendors']
+    try:
+        if get_vendors=='True':
+            bidobj =BuyerProductBidding.objects.filter(get_vendors=get_vendors).values().order_by('-product_bidding_id')
+            if len(bidobj)>-0:
+                return Response({'status': 200, 'message': 'ok', 'data': bidobj}, status=200)
+            else:
+                return Response({'status': 204, 'message': 'Not Present'}, status=204)
+        else:
+            return Response({'status': 202, 'message': 'Matching data does not exist'}, status=202)
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)

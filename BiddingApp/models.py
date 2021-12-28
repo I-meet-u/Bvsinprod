@@ -33,7 +33,7 @@ class BuyerProductBidding(models.Model):
     contact_name=models.CharField(max_length=200,null=True,blank=True)
     phone_number=models.CharField(max_length=100,null=True,blank=True)
     email_id=models.CharField(max_length=200,null=True,blank=True)
-
+    get_vendors = models.CharField(max_length=100, null=True, blank=True, default='False')
     history=HistoricalRecords()
 
     class Meta:
@@ -142,6 +142,7 @@ class VendorProductBidding(models.Model):
     created_by = models.BigIntegerField()
     updated_by = models.ForeignKey(SelfRegistration, on_delete=models.CASCADE)
     vendor_code=models.CharField(max_length=100,null=True,blank=True)
+    get_vendors = models.CharField(max_length=100, null=True, blank=True, default='False')
     history=HistoricalRecords()
 
     class Meta:

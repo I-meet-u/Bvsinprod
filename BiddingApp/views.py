@@ -4776,13 +4776,18 @@ def get_all_bidding_leads(request):
 @permission_classes((AllowAny,))
 def get_all_bidding_by_id(request):
     data = request.data
+    key=data['key']
     product_bidding_id = data['product_bidding_id']
     try:
-        bidobj =BuyerProductBidding.objects.filter(product_bidding_id=product_bidding_id).values()
-        if len(bidobj)>0:
-            return Response({'status': 200, 'message': 'ok', 'data': bidobj}, status=200)
+        if key=="vsinaadmin":
+            bidobj =BuyerProductBidding.objects.filter(product_bidding_id=product_bidding_id).values()
+            if len(bidobj)>0:
+                return Response({'status': 200, 'message': 'ok', 'data': bidobj}, status=200)
+            else:
+                return Response({'status': 204, 'message': 'Not Present'}, status=204)
         else:
-            return Response({'status': 204, 'message': 'Not Present'}, status=204)
+            return Response({'status': 401, 'message': 'UnAuthorized'}, status=401)
+
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)
 

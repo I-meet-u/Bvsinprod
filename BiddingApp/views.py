@@ -4853,7 +4853,7 @@ def bidding_open_leads_all_true(request):
                 basicval = BasicCompanyDetails.objects.filter(updated_by_id=bidobj[0].get('updated_by_id')).values()
                 billingobj = BillingAddress.objects.filter(company_code_id=basicval[0].get('company_code'),
                                                            updated_by_id=basicval[0].get('updated_by_id')).values()
-                listarray.append({'id': bidobj[0].get('id'),
+                listarray.append({'id': bidobj[0].get('product_bidding_id'),
                                   'company_code': basicval[0].get('company_code'),
                                   'company_name': basicval[0].get('company_name'),
                                   'product_rfq_number': bidobj[0].get('product_rfq_number'),

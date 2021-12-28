@@ -4757,12 +4757,32 @@ def terms_master_settings(request):
 def get_all_bidding_leads(request):
     key=request.data['key']
     get_vendors=request.data['get_vendors']
+    resarray=[]
+    materialquantity=0
     try:
         if key == "vsinadmin":
             if get_vendors=='True':
                 bidobj =BuyerProductBidding.objects.filter(get_vendors=get_vendors).values().order_by('-product_bidding_id')
                 if len(bidobj)>0:
-                    return Response({'status': 200, 'message': 'ok', 'data': bidobj}, status=200)
+                    for i in range(0,len(bidobj)):
+                        BiddingBuyerProductDetailsobj=BiddingBuyerProductDetails.objects.filter(buyer_rfq_number=bidobj[0].get('user_rfq_number')).values()
+                        for j in range(0,len(BiddingBuyerProductDetailsobj)):
+                            materialquantity=materialquantity+int(BiddingBuyerProductDetailsobj[j].get('buyer_quantity'))
+
+                        resarray.append({'product_bidding_id':bidobj[0].get('product_bidding_id'),
+                                          'product_rfq_number':bidobj[0].get('product_rfq_number'),
+                                          'user_rfq_number':bidobj[0].get('user_rfq_number'),
+                                          'product_rfq_type':bidobj[0].get('product_rfq_type'),
+                                          'product_publish_date':bidobj[0].get('product_publish_date'),
+                                          'product_deadline_date':bidobj[0].get('product_deadline_date'),
+                                          'product_delivery_date':bidobj[0].get('product_delivery_date'),
+                                          'product_bill_address':bidobj[0].get('product_bill_address'),
+                                          'product_ship_address':bidobj[0].get('product_ship_address'),
+                                          'product_rfq_title':bidobj[0].get('product_rfq_title'),
+                                          'productcount':len(BiddingBuyerProductDetailsobj),
+                                          'quantitycount':materialquantity})
+                        materialquantity=0
+                    return Response({'status': 200, 'message': 'ok', 'data': resarray}, status=200)
                 else:
                     return Response({'status': 204, 'message': 'Not Present'}, status=204)
             else:
@@ -4771,7 +4791,6 @@ def get_all_bidding_leads(request):
             return Response({'status': 401, 'message': 'UnAuthorized'}, status=401)
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)
-
 
 
 

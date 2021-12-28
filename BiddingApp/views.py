@@ -4755,7 +4755,7 @@ def terms_master_settings(request):
 @api_view(['post'])
 @permission_classes((AllowAny,))
 def get_all_bidding_leads(request):
-    key=data['key']
+    key=request.data['key']
     get_vendors=request.data['get_vendors']
     try:
         if key == "vsinaadmin":

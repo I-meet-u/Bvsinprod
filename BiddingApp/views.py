@@ -4841,7 +4841,7 @@ def bidding_open_leads_all_true(request):
     userid = data['userid']
     listarray = []
     try:
-        bidpublish = VendorProductBidding.objects.filter(updated_by_id=userid).values().order_by('id')
+        bidpublish = VendorProductBidding.objects.filter(updated_by_id=userid).values().order_by('vendor_product_bidding_id')
         for i in range(0, len(bidpublish)):
             bidarray.append(bidpublish[i].get('vendor_product_rfq_number'))
         print(bidarray)

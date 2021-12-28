@@ -4802,7 +4802,7 @@ def get_all_bidding_by_id(request):
     key=data['key']
     product_bidding_id = data['product_bidding_id']
     try:
-        if key=="vsinaadmin":
+        if key=="vsinadmin":
             bidobj =BuyerProductBidding.objects.filter(product_bidding_id=product_bidding_id).values()
             if len(bidobj)>0:
                 return Response({'status': 200, 'message': 'ok', 'data': bidobj}, status=200)

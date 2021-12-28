@@ -4758,7 +4758,7 @@ def get_all_bidding_leads(request):
     key=request.data['key']
     get_vendors=request.data['get_vendors']
     try:
-        if key == "vsinaadmin":
+        if key == "vsinadmin":
             if get_vendors=='True':
                 bidobj =BuyerProductBidding.objects.filter(get_vendors=get_vendors).values().order_by('-product_bidding_id')
                 if len(bidobj)>0:

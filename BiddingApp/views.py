@@ -3792,6 +3792,146 @@ def createbuyerbidding(request):
         return Response({'status': 500, 'error': str(e)}, status=500)
 
 
+@api_view(['post'])
+@permission_classes((AllowAny,))
+def createbuyerbiddinggetvendors(request):
+    data=request.data
+    rfq=data['rfq']
+    rfqtype=data['rfqtype']
+    pdate=data['pdate']
+    deadlinedate=data['deadlinedate']
+    delidate=data['delidate']
+    dept=data['dept']
+    currency=data['currency']
+    category=data['category']
+    billto=data['billto']
+    shipto=data['shipto']
+    rfqtitle=data['rfqtitle']
+    # productdetails=data['productdetails']
+    termsdetails=data['termdetails']
+    userid=data['userid']
+    productdetails=data['pdetails']
+    terms=data["terms"]
+    contact_name=data['contact_name']
+    phone_number=data['phone_number']
+    email_id=data['email_id']
+
+    try:
+        rfqobjcode=RfqCodeSettings.objects.filter(updated_by=userid).values()
+        if RfqCodeSettings:
+            BuyerProductBiddingobj=BuyerProductBidding.objects.filter(updated_by=userid).values().order_by('-user_rfq_number')
+            if BuyerProductBiddingobj:
+                print("----+----",BuyerProductBiddingobj[0].get('user_rfq_number'))
+
+                BuyerProductBiddingobj = BuyerProductBidding.objects.create(product_rfq_number=rfq, user_rfq_number=rfq,
+                                                                            user_bidding_numeric=int(
+                                                                                BuyerProductBiddingobj[0].get('user_bidding_numeric')) + 1,
+                                                                            product_rfq_type=rfqtype,
+                                                                            product_publish_date=pdate,
+                                                                            product_deadline_date=deadlinedate,
+                                                                            product_delivery_date=delidate,
+                                                                            product_rfq_currency=currency,
+                                                                            product_rfq_category=category,
+                                                                            product_department=dept,
+                                                                            product_bill_address=billto,
+                                                                            product_ship_address=shipto,
+                                                                            product_rfq_title=rfqtitle,
+                                                                            created_by=userid,
+                                                                            updated_by=SelfRegistration.objects.get(
+                                                                                id=userid),
+                                                                            contact_name=contact_name,
+                                                                            phone_number=phone_number,
+                                                                            email_id=email_id,
+                                                                            get_vendors="True",
+                                                                            maincore=data['maincore'],
+                                                                            category=data['category'],
+                                                                            subcategory=data['subcategory']
+                                                                            )
+
+                for i in range(0, len(productdetails)):
+                    print(productdetails[i].get('buyer_item_type'))
+                    print(productdetails[i].get('buyer_quantity'))
+                    BiddingBuyerProductDetails.objects.create(buyer_item_type=productdetails[i].get('buyer_item_type'),
+                                                              buyer_item_code=productdetails[i].get('itemcode'),
+                                                              buyer_item_name=productdetails[i].get('itemname'),
+                                                              buyer_item_description=productdetails[i].get('itemdes'),
+                                                              buyer_uom=productdetails[i].get('uom'),
+                                                              buyer_category=productdetails[i].get('cate'),
+                                                              buyer_quantity=productdetails[i].get('buyer_quantity'),
+                                                              buyer_rfq_number=rfq,
+                                                              updated_by=SelfRegistration.objects.get(id=userid),
+                                                              created_by=userid)
+
+                for i in range(0, len(terms)):
+                    for keys in terms[i]:
+                        RfqTermsDescription.objects.create(rfq_number=rfq,
+                                                           terms=keys,
+                                                           description=terms[i][keys],
+                                                           created_by=userid,
+                                                           updated_by=SelfRegistration.objects.get(id=userid),
+                                                           product_biddings=BuyerProductBidding.objects.get(
+                                                               product_bidding_id=BuyerProductBiddingobj.product_bidding_id),
+                                                           rfq_type=rfqtype)
+
+            else:
+                print("-----",rfqobjcode)
+
+                BuyerProductBiddingobj = BuyerProductBidding.objects.create(product_rfq_number=rfq, user_rfq_number=rfq,
+                                                                          user_bidding_numeric=int(rfqobjcode[0].get('numeric'))+1,
+                                                                          product_rfq_type=rfqtype,
+                                                                          product_publish_date=pdate,
+                                                                          product_deadline_date=deadlinedate,
+                                                                          product_delivery_date=delidate,
+                                                                          product_rfq_currency=currency,
+                                                                          product_rfq_category=category,
+                                                                          product_department=dept,
+                                                                          product_bill_address=billto,
+                                                                          product_ship_address=shipto,
+                                                                          product_rfq_title=rfqtitle,
+                                                                          created_by=userid,
+                                                                          updated_by=SelfRegistration.objects.get(id=userid),
+                                                                          contact_name=contact_name,
+                                                                          phone_number=phone_number,
+                                                                          email_id=email_id
+                                                                      )
+
+                for i in range(0, len(productdetails)):
+                    print(productdetails[i].get('buyer_item_type'))
+                    print(productdetails[i].get('buyer_quantity'))
+                    BiddingBuyerProductDetails.objects.create(buyer_item_type=productdetails[i].get('buyer_item_type'),
+                                                          buyer_item_code=productdetails[i].get('itemcode'),
+                                                          buyer_item_name=productdetails[i].get('itemname'),
+                                                          buyer_item_description=productdetails[i].get('itemdes'),
+                                                          buyer_uom=productdetails[i].get('uom'),
+                                                          buyer_category=productdetails[i].get('cate'),
+                                                          buyer_quantity=productdetails[i].get('buyer_quantity'),
+                                                          buyer_rfq_number=rfq,
+                                                          updated_by=SelfRegistration.objects.get(id=userid),
+                                                          created_by=userid)
+
+                for i in range(0, len(terms)):
+                    for keys in terms[i]:
+                        RfqTermsDescription.objects.create(rfq_number=rfq,
+                                                       terms=keys,
+                                                       description=terms[i][keys],
+                                                       created_by=userid,
+                                                       updated_by=SelfRegistration.objects.get(id=userid),
+                                                       product_biddings=BuyerProductBidding.objects.get(product_bidding_id=BuyerProductBiddingobj.product_bidding_id),
+                                                       rfq_type=rfqtype)
+
+
+
+
+
+
+            return Response({'status': 200, 'message': 'Buyer  Bidding created'}, status=200)
+
+
+        else:
+            return Response({'status': 200,'MSG':'RFQ code not present'}, status=200)
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)
+
 
 @api_view(['post'])
 def termsanddescriptionpriceanalysis(request):

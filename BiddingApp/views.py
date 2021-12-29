@@ -3844,7 +3844,7 @@ def createbuyerbiddinggetvendors(request):
                                                                             email_id=email_id,
                                                                             get_vendors="True",
                                                                             maincore=data['maincore'],
-                                                                            category=data['category'],
+                                                                            category=data['categorydb'],
                                                                             subcategory=data['subcategory']
                                                                             )
 

@@ -34,7 +34,11 @@ class BuyerProductBidding(models.Model):
     phone_number=models.CharField(max_length=100,null=True,blank=True)
     email_id=models.CharField(max_length=200,null=True,blank=True)
     get_vendors = models.CharField(max_length=100, null=True, blank=True, default='False')
+    maincore=models.CharField(max_length=200,null=True,blank=True)
+    category=models.CharField(max_length=200,null=True,blank=True)
+    subcategory=models.CharField(max_length=200,null=True,blank=True)
     history=HistoricalRecords()
+
 
     class Meta:
         db_table='BuyerProductBidding'
@@ -106,7 +110,6 @@ class SelectVendorsForBiddingProduct(models.Model):
     rfq_type=models.CharField(max_length=100,null=True,blank=True)
     updated_by = models.ForeignKey(SelfRegistration, on_delete=models.CASCADE)
     from_registration = models.CharField(max_length=100, null=True, blank=True, default='False')
-
     class Meta:
         db_table = "SelectVendorsForBiddingProduct"
 
@@ -251,7 +254,6 @@ class ServiceAwards(models.Model):
     class Meta:
         db_table = "ServiceAwards"
 
-
 class MachinaryAwards(models.Model):
     machinary_rfq_number = models.CharField(max_length=50)
     machinary_company_code =models.CharField(max_length=100,null=True,blank=True)
@@ -276,9 +278,9 @@ class MachinaryAwards(models.Model):
     machinary_po_status=models.CharField(max_length=100,default='Pending',blank=True,null=True)
     rfq_type = models.CharField(max_length=100, null=True, blank=True)
     history = HistoricalRecords()
-
     class Meta:
         db_table = "MachinaryAwards"
+
 # ------------------------------------------------------------SERVICE BIDDING--------------------------------------------------------------------------------------------
 
 
@@ -544,3 +546,108 @@ class SourceAwards(models.Model):
 
     class Meta:
         db_table="SourceAwards"
+
+# open bid model vendor published
+
+# vendor published Open RFQ Model
+class VendorProductBiddingOpenCommonBid(models.Model):
+    vendor_product_bidding_id=models.BigAutoField(primary_key=True)
+    vendor_product_rfq_number=models.CharField(max_length=40,null=True,blank=True)
+    vendor_user_rfq_number=models.CharField(max_length=50,null=True,blank=True)
+    vendor_product_rfq_type=models.CharField(max_length=400)
+    vendor_product_rfq_status=models.CharField(max_length=50,default='Pending')
+    vendor_product_publish_date=models.CharField(max_length=100)
+    vendor_product_deadline_date=models.CharField(max_length=100)
+    vendor_product_delivery_date = models.CharField(max_length=100,null=True,blank=True)
+    vendor_product_rfq_currency = models.CharField(max_length=100,null=True,blank=True)
+    vendor_product_rfq_category = models.CharField(max_length=100, null=True, blank=True)
+    vendor_product_department=models.CharField(max_length=300,null=True,blank=True)
+    vendor_product_bill_address=models.TextField()
+    vendor_product_ship_address=models.TextField()
+    vendor_product_rfq_title = models.CharField(max_length=600)
+    created_on = models.DateTimeField(auto_now_add=True)
+    updated_on = models.DateTimeField(auto_now=True)
+    created_by = models.BigIntegerField()
+    updated_by = models.ForeignKey(SelfRegistration, on_delete=models.CASCADE)
+    vendor_code=models.CharField(max_length=100,null=True,blank=True)
+    get_vendors = models.CharField(max_length=100, null=True, blank=True, default='False')
+    maincore = models.CharField(max_length=200, null=True, blank=True)
+    category = models.CharField(max_length=200, null=True, blank=True)
+    subcategory = models.CharField(max_length=200, null=True, blank=True)
+    history=HistoricalRecords()
+
+    class Meta:
+        db_table='VendorProductBiddingOpenCommonBid'
+
+# vendor published Open RFQ Model products
+class VendorBiddingBuyerProductDetailsOpenCommonBid(models.Model):
+    vendor_item_type = models.CharField(max_length=100, null=True, blank=True)
+    vendor_item_code= models.CharField(max_length=100,null=True,blank=True)
+    vendor_item_name = models.CharField(max_length=100)
+    vendor_item_description = models.TextField(null=True,blank=True)
+    vendor_uom = models.CharField(max_length=100, null=True,blank=True)
+    vendor_category = models.CharField(max_length=500,null=True,blank=True)
+    buyer_quantity = models.CharField(max_length=100,null=True,blank=True)
+    vendor_quantity = models.CharField(max_length=100,null=True,blank=True)
+    vendor_rate = models.CharField(max_length=100,null=True,blank=True)
+    vendor_tax = models.CharField(max_length=100,null=True,blank=True)
+    vendor_discount = models.CharField(max_length=100,null=True,blank=True)
+    vendor_final_amount = models.CharField(max_length=80,null=True,blank=True)
+    vendor_total_amount= models.CharField(max_length=80,null=True,blank=True)
+    vendor_document=models.FileField(upload_to='BuyerProductFiles',null=True,blank=True)
+    created_on = models.DateTimeField(auto_now_add=True,null=True,blank=True)
+    updated_on = models.DateTimeField(auto_now=True)
+    created_by = models.BigIntegerField(null=True,blank=True)
+    vendor_rfq_number=models.CharField(max_length=100,null=True,blank=True)
+    vendor_code=models.CharField(max_length=200,null=True,blank=True)
+    updated_by = models.ForeignKey(SelfRegistration, on_delete=models.CASCADE)
+    history = HistoricalRecords()
+
+    class Meta:
+        db_table='VendorBiddingBuyerProductDetailsOpenCommonBid'
+
+#vendor published Open RFQ Model Terms
+class VendorRfqTermsDescriptionOpenCommonBid(models.Model):
+    vendor_rfq_number=models.CharField(max_length=200)
+    vendor_terms=models.CharField(max_length=500,null=True,blank=True)
+    vendor_description=models.TextField(null=True,blank=True)
+    vendor_response=models.TextField(null=True,blank=True)
+    created_on = models.DateTimeField(auto_now_add=True)
+    updated_on = models.DateTimeField(auto_now=True)
+    created_by = models.BigIntegerField()
+    updated_by = models.ForeignKey(SelfRegistration, on_delete=models.CASCADE)
+    vendor_product_biddings=models.ForeignKey(VendorProductBidding, on_delete=models.CASCADE,null=True,blank=True)
+    rfq_type = models.CharField(max_length=100, null=True, blank=True)
+    history = HistoricalRecords()
+
+    class Meta:
+        db_table = "VendorRfqTermsDescriptionOpenCommonBid"
+
+#vendor published open RFQ Awarded by buyer
+class AwardsOpenCommonBid(models.Model):
+    rfq_number = models.CharField(max_length=50)
+    company_code =models.CharField(max_length=100,null=True,blank=True)
+    company_name=models.CharField(max_length=200,null=True,blank=True)
+    buyer_bid_quantity = models.CharField(max_length=100, null=True, blank=True)
+    vendor_bid_quantity = models.CharField(max_length=100, null=True, blank=True)
+    totalamount=models.CharField(max_length=200, null=True, blank=True)
+    rfq_title = models.CharField(max_length=100, null=True, blank=True)
+    rfq_status = models.CharField(max_length=100, null=True, default="Pending", blank=True)
+    product_code=ArrayField(models.CharField(max_length=200),null=True,blank=True)
+    product_name = ArrayField(models.CharField(max_length=200),null=True,blank=True)
+    daterange = models.DateField(null=True,blank=True)
+    product_description = ArrayField(models.CharField(max_length=200),null=True,blank=True)
+    awarded_date = models.DateField(auto_now=True, null=True, blank=True)
+    publish_date=models.CharField(max_length=100,null=True, blank=True)
+    deadline_date=models.CharField(max_length=100,null=True, blank=True)
+    awardstatus=models.CharField(max_length=100,null=True,blank=True,default='Pending')
+    created_on = models.DateTimeField(auto_now_add=True)
+    updated_on = models.DateTimeField(auto_now=True)
+    created_by = models.BigIntegerField(null=True,blank=True)
+    updated_by = models.ForeignKey(SelfRegistration, on_delete=models.CASCADE)
+    postatus=models.CharField(max_length=100,default='Pending',blank=True,null=True)
+    rfq_type=models.CharField(max_length=100,null=True,blank=True)
+    history = HistoricalRecords()
+
+    class Meta:
+        db_table = "AwardsOpenCommonBid"

@@ -133,3 +133,22 @@ class SourceAwardsSerializer(serializers.ModelSerializer):
     class Meta:
         model=SourceAwards
         fields='__all__'
+
+#serialzer to add vendor response normal rfq data
+class VendorProductBiddingOpenCommonBidSerializer(serializers.ModelSerializer):
+    class Meta:
+        model=VendorProductBiddingOpenCommonBid
+        fields='__all__'
+
+#serialzer to add vendor response normal rfq product data
+class VendorProductBiddingOpenCommonBidproductdetailsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model=VendorBiddingBuyerProductDetailsOpenCommonBid
+        fields='__all__'
+
+#serialzer to add vendor response normal rfq termsdata
+class VendorProductBiddingOpenCommonBidproductdetailsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model=VendorRfqTermsDescriptionOpenCommonBid
+        fields='__all__'
+

@@ -5037,7 +5037,10 @@ def getpublishedcommonrfqbid(request):
     try:
         data=request.data
         VendorProductBiddingOpenCommonBidobj=VendorProductBiddingOpenCommonBid.objects.filter(updated_by=data['userid']).values()
-        return Response({'status': 200, 'message': 'Bidding Leads', 'data': VendorProductBiddingOpenCommonBidobj}, status=200)
+        if VendorProductBiddingOpenCommonBidobj:
+            return Response({'status': 200, 'message': 'Bidding Leads', 'data': VendorProductBiddingOpenCommonBidobj}, status=200)
+        else:
+            return Response({'status': 202, 'message': 'Not Exist'}, status=202)
     except Exception as e:
         return Response({'status': 500, 'message': str(e)}, status=500)
 

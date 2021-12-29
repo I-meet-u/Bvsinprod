@@ -616,7 +616,8 @@ class VendorRfqTermsDescriptionOpenCommonBid(models.Model):
     updated_on = models.DateTimeField(auto_now=True)
     created_by = models.BigIntegerField()
     updated_by = models.ForeignKey(SelfRegistration, on_delete=models.CASCADE)
-    vendor_product_biddings=models.ForeignKey(VendorProductBiddingOpenCommonBid, on_delete=models.CASCADE,null=True,blank=True)
+    # vendor_product_biddings=models.ForeignKey(VendorProductBiddingOpenCommonBid, on_delete=models.CASCADE,null=True,blank=True)
+    vendor_product_rfq_bid_by_pk_id=models.ForeignKey(VendorProductBiddingOpenCommonBid, on_delete=models.CASCADE,null=True,blank=True)
     rfq_type = models.CharField(max_length=100, null=True, blank=True)
     history = HistoricalRecords()
 

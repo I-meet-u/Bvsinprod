@@ -751,7 +751,7 @@ class VendorRfqTermsDescriptionOpenCommonBidView(viewsets.ModelViewSet):
                                                              vendor_description=dictsqueries[i][keys][0],
                                                              vendor_response=dictsqueries[i][keys][1],
                                                              vendor_product_biddings=VendorProductBidding.objects.get(
-                                                             vendor_product_bidding_id=int(VendorProductBiddingOpenCommonBid.objects.get(vendor_product_bidding_id=vendor_product_biddings))),
+                                                             vendor_product_rfq_bid_by_pk_id=vendor_product_biddings),
                                                              updated_by=SelfRegistration.objects.get(id=updated_by),
                                                              rfq_type=rfq_type,
                                                              created_by=updated_by)

@@ -147,7 +147,7 @@ class VendorProductBiddingOpenCommonBidproductdetailsSerializer(serializers.Mode
         fields='__all__'
 
 #serialzer to add vendor response normal rfq termsdata
-class VendorProductBiddingOpenCommonBidproductdetailsSerializer(serializers.ModelSerializer):
+class VendorProductBiddingOpenCommonBidtermsSerializer(serializers.ModelSerializer):
     class Meta:
         model=VendorRfqTermsDescriptionOpenCommonBid
         fields='__all__'

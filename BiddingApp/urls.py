@@ -3,7 +3,6 @@ from rest_framework import  routers
 from . import  views
 
 router=routers.DefaultRouter()
-
 router.register('buyer-product-bidding',views.BuyerProductBiddingView)
 router.register('buyer-bidding-product-details',views.BiddingBuyerProductDetailsView)
 router.register('rfq-code-settings',views.RfqCodeSettingsView)
@@ -13,10 +12,8 @@ router.register('bidding-term-master-settings',views.BiddingTermMasterSettingsVi
 router.register('vendor-product-bidding',views.VendorProductBiddingView)
 router.register('vendor-bidding-product-details',views.VendorBiddingBuyerProductDetailsView)
 router.register('vendor-rfq-terms-description',views.VendorRfqTermsDescriptionView)
-
 router.register('buyer-bidding-service-details',views.BiddingBuyerServiceDetailsView)
 router.register('buyer-bidding-machinary-details',views.BiddingBuyerMachinaryDetailsView)
-
 router.register('vendor-bidding-service-details',views.VendorBiddingBuyerServiceDetailsView)
 router.register('vendor-bidding-machinary-details',views.VendorBiddingBuyerMachinaryDetailsView)
 router.register('product-award',views.AwardViewSet)
@@ -26,6 +23,15 @@ router.register('purchase-order',views.PurchaseOrderViewSet)
 router.register('source-list-create-items',views.SourceList_CreateItemViewSet)
 router.register('source-publish',views.SourcePublishViewSet)
 router.register('source-awards',views.SourceAwardsViewSet)
+
+#common open rfq leads vendor publish
+router.register('VendorProductBiddingOpenCommonBidView',views.VendorProductBiddingOpenCommonBidView)
+# common open RFQ Leads vendor publish prroduct details
+router.register('VendorBiddingBuyerProductDetailsOpenCommonBidView',views.VendorBiddingBuyerProductDetailsOpenCommonBidView)
+# common open RFQ Leads vendor publish terms
+router.register('VendorRfqTermsDescriptionOpenCommonBidView',views.VendorRfqTermsDescriptionOpenCommonBidView)
+
+
 
 urlpatterns = [
     path('bidding-router-urls/',include(router.urls)),

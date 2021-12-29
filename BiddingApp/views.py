@@ -614,6 +614,10 @@ class VendorProductBiddingView(viewsets.ModelViewSet):
     queryset = VendorProductBidding.objects.all()
     serializer_class = VendorProductBiddingSerializer
 
+# Common open RFQ bid vendor Response model
+class VendorProductBiddingOpenCommonBidView(viewsets.ModelViewSet):
+    queryset = VendorProductBiddingOpenCommonBid.objects.all()
+    serializer_class = VendorRfqTermsDescriptionOpenCommonBid
 
 class VendorBiddingBuyerProductDetailsView(viewsets.ModelViewSet):
     # permission_classes = [permissions.AllowAny]
@@ -670,6 +674,91 @@ class VendorBiddingBuyerProductDetailsView(viewsets.ModelViewSet):
         raise ValidationError(
             {'message': 'Vendor Bidding Product details of particular user id is not exist', 'status': 204})
 
+
+# common open RFQ Bid vendor product model
+class VendorBiddingBuyerProductDetailsOpenCommonBidView(viewsets.ModelViewSet):
+    queryset = VendorBiddingBuyerProductDetailsOpenCommonBid.objects.all()
+    serializer_class = VendorProductBiddingOpenCommonBidproductdetailsSerializer
+    ordering_fields = ['id']
+    ordering = ['id']
+
+    def create(self, request, *args, **kwargs):
+        vendorproductdetails = request.data['vendorproductdetails']
+        vendor_rfq_number = request.data.get('vendor_rfq_number', None)
+        userid = request.data.get('userid', None)
+        try:
+            for i in range(0, len(vendorproductdetails)):
+                VendorBiddingBuyerProductDetailsOpenCommonBid.objects.create(vendor_rfq_number=vendor_rfq_number,
+                                                                vendor_item_code=vendorproductdetails[i].get(
+                                                                    'vendor_item_code'),
+                                                                vendor_item_name=vendorproductdetails[i].get(
+                                                                    'vendor_item_name'),
+                                                                vendor_item_description=vendorproductdetails[i].get(
+                                                                    'vendor_item_description'),
+                                                                vendor_uom=vendorproductdetails[i].get('vendor_uom'),
+                                                                vendor_category=vendorproductdetails[i].get(
+                                                                    'vendor_category'),
+                                                                vendor_quantity=vendorproductdetails[i].get(
+                                                                    'vendor_quantity'),
+                                                                buyer_quantity=vendorproductdetails[i].get(
+                                                                    'buyer_quantity'),
+                                                                vendor_rate=vendorproductdetails[i].get('vendor_rate'),
+                                                                vendor_tax=vendorproductdetails[i].get('vendor_tax'),
+                                                                vendor_discount=vendorproductdetails[i].get(
+                                                                    'vendor_discount'),
+                                                                vendor_final_amount=vendorproductdetails[i].get(
+                                                                    'vendor_final_amount'),
+                                                                vendor_total_amount=vendorproductdetails[i].get(
+                                                                    'vendor_total_amount'),
+                                                                vendor_document=vendorproductdetails[i].get(
+                                                                    'vendor_document'),
+                                                                vendor_item_type=vendorproductdetails[i].get('vendor_item_type'),
+                                                                vendor_code=vendorproductdetails[i].get('vendor_code'),
+                                                                # auto_rfq_number=vendorobj.vendor_product_rfq_number,
+                                                                # from_registration=from_registration,
+                                                                updated_by=SelfRegistration.objects.get(id=userid),
+                                                                created_by=userid)
+            return Response({'status': 201, 'message': 'Vendor Bidding Buyer Product Details are Created'}, status=201)
+        except Exception as e:
+            return Response({'status': 500, 'error': str(e)}, status=500)
+
+    def get_queryset(self):
+        vendorproductdetailsobj = VendorBiddingBuyerProductDetailsOpenCommonBid.objects.filter(
+            updated_by=self.request.GET.get('updated_by')).order_by('id')
+        if vendorproductdetailsobj:
+            return vendorproductdetailsobj
+        raise ValidationError(
+            {'message': 'Vendor Bidding Product details of particular user id is not exist', 'status': 204})
+
+# common open RFQ Bid vendor terms and desc
+class VendorRfqTermsDescriptionOpenCommonBidView(viewsets.ModelViewSet):
+    queryset = VendorRfqTermsDescriptionOpenCommonBid.objects.all()
+    serializer_class = VendorProductBiddingOpenCommonBidtermsSerializer
+
+
+    def create(self, request, *args, **kwargs):
+        vendor_rfq_number = request.data['vendor_rfq_number']
+        dictsqueries = request.data['dictsqueries']
+        vendor_product_biddings = request.data.get('vendor_product_biddings', None)
+        updated_by = request.data.get('updated_by', None)
+        rfq_type=request.data.get('rfq_type', None)
+        try:
+            for i in range(0, len(dictsqueries)):
+
+                for keys in dictsqueries[i]:
+                    VendorRfqTermsDescriptionOpenCommonBid.objects.create(vendor_rfq_number=vendor_rfq_number,
+                                                             vendor_terms=keys,
+                                                             vendor_description=dictsqueries[i][keys][0],
+                                                             vendor_response=dictsqueries[i][keys][1],
+                                                             vendor_product_biddings=VendorProductBidding.objects.get(
+                                                             vendor_product_bidding_id=vendor_product_biddings),
+                                                             updated_by=SelfRegistration.objects.get(id=updated_by),
+                                                             rfq_type=rfq_type,
+                                                             created_by=updated_by)
+
+            return Response({'status': 201, 'message': 'Vendor Terms and Descriptions are created'}, status=201)
+        except Exception as e:
+            return Response({'status': 500, 'message': str(e)}, status=500)
 
 
 class VendorBiddingBuyerServiceDetailsView(viewsets.ModelViewSet):

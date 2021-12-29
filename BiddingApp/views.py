@@ -617,7 +617,7 @@ class VendorProductBiddingView(viewsets.ModelViewSet):
 # Common open RFQ bid vendor Response model
 class VendorProductBiddingOpenCommonBidView(viewsets.ModelViewSet):
     queryset = VendorProductBiddingOpenCommonBid.objects.all()
-    serializer_class = VendorRfqTermsDescriptionOpenCommonBid
+    serializer_class = VendorProductBiddingOpenCommonBidSerializer
 
 class VendorBiddingBuyerProductDetailsView(viewsets.ModelViewSet):
     # permission_classes = [permissions.AllowAny]

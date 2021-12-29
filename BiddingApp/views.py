@@ -5032,13 +5032,31 @@ def getparticularcommonrfqdetailsinlandingpage(request):
     except Exception as e:
         return Response({'status': 500, 'message': str(e)}, status=500)
 
+#Common RFQ Published List Api
 @api_view(['post'])
 def getpublishedcommonrfqbid(request):
     try:
         data=request.data
+        resdata=[]
+        i=0;
         VendorProductBiddingOpenCommonBidobj=VendorProductBiddingOpenCommonBid.objects.filter(updated_by=data['userid']).values()
         if VendorProductBiddingOpenCommonBidobj:
-            return Response({'status': 200, 'message': 'Bidding Leads', 'data': VendorProductBiddingOpenCommonBidobj}, status=200)
+            print(VendorProductBiddingOpenCommonBidobj)
+            while i<len(VendorProductBiddingOpenCommonBidobj):
+                BuyerProductBiddingobj=BuyerProductBidding.objects.filter(product_rfq_number=VendorProductBiddingOpenCommonBidobj[i].get('vendor_product_rfq_number')).values()
+                basiccompaniinfo=BasicCompanyDetails.objects.filter(updated_by=BuyerProductBiddingobj[0].get('updated_by_id')).values()
+                resdata.append({'company_name':basiccompaniinfo[0].get('company_name'),
+                                'vendor_code':basiccompaniinfo[0].get('company_code'),
+                                'user_rfq_number':VendorProductBiddingOpenCommonBidobj[i].get('vendor_product_rfq_number'),
+                                'product_rfq_title':VendorProductBiddingOpenCommonBidobj[i].get('vendor_product_rfq_title'),
+                                'vendor_status':VendorProductBiddingOpenCommonBidobj[i].get('vendor_product_rfq_status'),
+                                'product_publish_date':VendorProductBiddingOpenCommonBidobj[i].get('vendor_product_publish_date'),
+                                'product_deadline_date':VendorProductBiddingOpenCommonBidobj[i].get('vendor_product_deadline_date'),
+                                'product_rfq_type':VendorProductBiddingOpenCommonBidobj[i].get('vendor_product_rfq_type'),
+                                'publishedID':VendorProductBiddingOpenCommonBidobj[i].get('vendor_product_bidding_id')})
+
+                i=i+1
+            return Response({'status': 200, 'message': 'Bidding Leads', 'data': resdata}, status=200)
         else:
             return Response({'status': 202, 'message': 'Not Exist'}, status=202)
     except Exception as e:

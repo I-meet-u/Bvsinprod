@@ -5007,6 +5007,9 @@ def get_all_bidding_leads(request):
                                           'product_bill_address':bidobj[0].get('product_bill_address'),
                                           'product_ship_address':bidobj[0].get('product_ship_address'),
                                           'product_rfq_title':bidobj[0].get('product_rfq_title'),
+                                          'Maincore':bidobj[0].get('maincore'),
+                                          'Category':bidobj[0].get('category'),
+                                          'subcategory':bidobj[0].get('subcategory'),
                                           'productcount':len(BiddingBuyerProductDetailsobj),
                                           'quantitycount':materialquantity})
                         materialquantity=0

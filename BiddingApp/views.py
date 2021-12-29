@@ -5032,5 +5032,13 @@ def getparticularcommonrfqdetailsinlandingpage(request):
     except Exception as e:
         return Response({'status': 500, 'message': str(e)}, status=500)
 
+@api_view(['post'])
+def getpublishedcommonrfqbid(request):
+    try:
+        data=request.data
+        VendorProductBiddingOpenCommonBidobj=VendorProductBiddingOpenCommonBid.objects.filter(updated_by=data['userid']).values()
+        return Response({'status': 200, 'message': 'Bidding Leads', 'data': VendorProductBiddingOpenCommonBidobj}, status=200)
+    except Exception as e:
+        return Response({'status': 500, 'message': str(e)}, status=500)
 
 

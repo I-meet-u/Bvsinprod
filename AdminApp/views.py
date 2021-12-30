@@ -2437,34 +2437,34 @@ def fetch_admin_selected_categories(request):
             print(catarray)
             datas=sorted(catarray)
             print("sorted ",datas )
-            if selectedcategoryobj1:
-                for j in range(0, len(selectedcategoryobj1)):
-                    catobj = CategoryMaster.objects.filter(category_name=selectedcategoryobj1[j].get('category_name')).values()
-                    rearay.append({'category_name': selectedcategoryobj1[j].get('category_name'),
-                                           'category_id': selectedcategoryobj1[j].get('category_id'),
-                                           'admins': selectedcategoryobj1[j].get('admins'),
-                                           'created_on': selectedcategoryobj1[j].get('created_on'),
-                                           'updated_on': selectedcategoryobj1[j].get('updated_on'),
-                                           'priority': selectedcategoryobj1[j].get('priority'),
-                                           'category_code': catobj[0].get('category_code'),
-                                           'category_status': catobj[0].get('status')
-                                           })
+
+            for j in range(0, len(selectedcategoryobj1)):
+                catobj = CategoryMaster.objects.filter(category_name=selectedcategoryobj1[j].get('category_name')).values()
+                rearay.append({'category_name': selectedcategoryobj1[j].get('category_name'),
+                                       'category_id': selectedcategoryobj1[j].get('category_id'),
+                                       'admins': selectedcategoryobj1[j].get('admins'),
+                                       'created_on': selectedcategoryobj1[j].get('created_on'),
+                                       'updated_on': selectedcategoryobj1[j].get('updated_on'),
+                                       'priority': selectedcategoryobj1[j].get('priority'),
+                                       'category_code': catobj[0].get('category_code'),
+                                       'category_status': catobj[0].get('status')
+                                       })
 
 
-                for i in range(0, len(datas)):
-                    selectedcategoryobj2 = AdminSelectedCategories.objects.filter(priority=datas[i]).values()
-                    for j in range(0, len(selectedcategoryobj2)):
-                        catobj = CategoryMaster.objects.filter(category_name=selectedcategoryobj2[j].get('category_name')).values()
-                        rearay.append({'category_name': selectedcategoryobj2[j].get('category_name'),
-                                   'category_id': selectedcategoryobj2[j].get('category_id'),
-                                   'admins': selectedcategoryobj2[j].get('admins'),
-                                   'created_on': selectedcategoryobj2[j].get('created_on'),
-                                   'updated_on': selectedcategoryobj2[j].get('updated_on'),
-                                   'priority': selectedcategoryobj2[j].get('priority'),
-                                   'category_code': catobj[0].get('category_code'),
-                                   'category_status': catobj[0].get('status')
-                                   })
-                return Response({'status': 200, 'message': 'Admin Selected Categories List', 'data': rearay}, status=200)
+            for i in range(0, len(datas)):
+                selectedcategoryobj2 = AdminSelectedCategories.objects.filter(priority=datas[i]).values()
+                for j in range(0, len(selectedcategoryobj2)):
+                    catobj = CategoryMaster.objects.filter(category_name=selectedcategoryobj2[j].get('category_name')).values()
+                    rearay.append({'category_name': selectedcategoryobj2[j].get('category_name'),
+                               'category_id': selectedcategoryobj2[j].get('category_id'),
+                               'admins': selectedcategoryobj2[j].get('admins'),
+                               'created_on': selectedcategoryobj2[j].get('created_on'),
+                               'updated_on': selectedcategoryobj2[j].get('updated_on'),
+                               'priority': selectedcategoryobj2[j].get('priority'),
+                               'category_code': catobj[0].get('category_code'),
+                               'category_status': catobj[0].get('status')
+                               })
+            return Response({'status': 200, 'message': 'Admin Selected Categories List', 'data': rearay}, status=200)
         else:
             return Response({'status': 401, 'message': 'Unauthorized'}, status=401)
     except Exception as e:
@@ -2487,32 +2487,32 @@ def fetch_admin_trending_categories(request):
             print(arrayval)
             datas=sorted(arrayval)
             print("sorted ", sorted(arrayval))
-            if trendingcategoryobj1:
-                for j in range(0, len(trendingcategoryobj1)):
-                    catobj = CategoryMaster.objects.filter(category_name=trendingcategoryobj1[j].get('trending_category_name')).values()
-                    catarray.append({'trending_category_name': trendingcategoryobj1[j].get('trending_category_name'),
-                                             'trending_category_id':trendingcategoryobj1[j].get('trending_category_id'),
-                                             'admins':trendingcategoryobj1[j].get('admins'),
-                                             'created_on':trendingcategoryobj1[j].get('created_on'),
-                                             'updated_on':trendingcategoryobj1[j].get('updated_on'),
-                                             'trending_priority':trendingcategoryobj1[j].get('trending_priority'),
-                                             'category_code':catobj[0].get('category_code'),
-                                             'category_status':catobj[0].get('status')
-                                             })
 
-                    for i in range(0, len(datas)):
-                        trendingcategoryobj2 = TrendingCategories.objects.filter(trending_priority=datas[i]).values()
-                        for j in range(0, len(trendingcategoryobj2)):
-                            catobj=CategoryMaster.objects.filter(category_name=trendingcategoryobj2[j].get('trending_category_name')).values()
-                            catarray.append({'trending_category_name':trendingcategoryobj2[j].get('trending_category_name'),
-                                     'trending_category_id':trendingcategoryobj2[j].get('trending_category_id'),
-                                     'admins':trendingcategoryobj2[j].get('admins'),
-                                     'created_on':trendingcategoryobj2[j].get('created_on'),
-                                     'updated_on':trendingcategoryobj2[j].get('updated_on'),
-                                     'trending_priority':trendingcategoryobj2[j].get('trending_priority'),
-                                     'category_code':catobj[0].get('category_code'),
-                                     'category_status':catobj[0].get('status')
-                                     })
+            for j in range(0, len(trendingcategoryobj1)):
+                catobj = CategoryMaster.objects.filter(category_name=trendingcategoryobj1[j].get('trending_category_name')).values()
+                catarray.append({'trending_category_name': trendingcategoryobj1[j].get('trending_category_name'),
+                                         'trending_category_id':trendingcategoryobj1[j].get('trending_category_id'),
+                                         'admins':trendingcategoryobj1[j].get('admins'),
+                                         'created_on':trendingcategoryobj1[j].get('created_on'),
+                                         'updated_on':trendingcategoryobj1[j].get('updated_on'),
+                                         'trending_priority':trendingcategoryobj1[j].get('trending_priority'),
+                                         'category_code':catobj[0].get('category_code'),
+                                         'category_status':catobj[0].get('status')
+                                         })
+
+                for i in range(0, len(datas)):
+                    trendingcategoryobj2 = TrendingCategories.objects.filter(trending_priority=datas[i]).values()
+                    for j in range(0, len(trendingcategoryobj2)):
+                        catobj=CategoryMaster.objects.filter(category_name=trendingcategoryobj2[j].get('trending_category_name')).values()
+                        catarray.append({'trending_category_name':trendingcategoryobj2[j].get('trending_category_name'),
+                                 'trending_category_id':trendingcategoryobj2[j].get('trending_category_id'),
+                                 'admins':trendingcategoryobj2[j].get('admins'),
+                                 'created_on':trendingcategoryobj2[j].get('created_on'),
+                                 'updated_on':trendingcategoryobj2[j].get('updated_on'),
+                                 'trending_priority':trendingcategoryobj2[j].get('trending_priority'),
+                                 'category_code':catobj[0].get('category_code'),
+                                 'category_status':catobj[0].get('status')
+                                 })
                 return Response({'status':200,'message':'Admin Trending Categories List','data':catarray},status=200)
         else:
             return Response({'status': 401, 'message': 'Unauthorized'}, status=401)

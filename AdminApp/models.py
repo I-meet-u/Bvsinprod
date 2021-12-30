@@ -473,7 +473,6 @@ class BrandCompanyDetails(models.Model):
      class Meta:
          db_table = "BrandCompanyDetails"
 
-
 class BasicSellerOrDistributerDetails(models.Model):
     # Basic Seller Or Distributer Details model fields
     company_name = models.TextField(max_length=500)

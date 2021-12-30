@@ -427,3 +427,108 @@ class TrendingSubCategories(models.Model):
 
     class Meta:
         db_table="TrendingSubCategories"
+
+
+class BrandRegistration(models.Model):
+    # Brand Registration  Details model fields
+    brand_name= models.TextField(max_length=500)
+    trade_mark_certified=models.CharField(max_length=100)
+    brand_code=models.CharField(max_length=100)
+    maincore=models.CharField(max_length=100)
+    category=models.CharField(max_length=200)
+    sub_category=models.CharField(max_length=200)
+    brand_registered_tm=models.CharField(max_length=100)
+    registration_date=models.CharField(max_length=100)
+    tm_certificate_no=models.CharField(max_length=150)
+    oem_country_of_origin=models.CharField(max_length=200)
+    copy_right_status=models.CharField(max_length=100)
+    brand_patented=models.CharField(max_length=100)
+    created_on = models.DateTimeField(auto_now_add=True)
+    updated_on = models.DateTimeField(auto_now=True)
+    created_by = models.BigIntegerField()
+    # updated_by = models.ForeignKey(SelfRegistration, on_delete=models.CASCADE,null=True,blank=True)
+    admins = models.ForeignKey(AdminRegister, on_delete=models.CASCADE, null=True, blank=True)
+
+    class Meta:
+        db_table="BrandRegistration"
+
+
+
+class BrandCompanyDetails(models.Model):
+    # Brand Company Details model fields
+     company_name= models.TextField(max_length=500)
+     address=models.TextField(max_length=500)
+     country = models.CharField(max_length=200)
+     state = models.CharField(max_length=200)
+     city = models.CharField(max_length=200)
+     pincode = models.BigIntegerField()
+     landmark = models.CharField(max_length=50, blank=True,null=True)
+     location = models.CharField(max_length=200, blank=True,null=True)
+     created_on = models.DateTimeField(auto_now_add=True)
+     updated_on = models.DateTimeField(auto_now=True)
+     created_by = models.BigIntegerField()
+     updated_by = models.ForeignKey(SelfRegistration, on_delete=models.CASCADE,null=True,blank=True)
+     admins = models.ForeignKey(AdminRegister, on_delete=models.CASCADE, null=True, blank=True)
+
+     class Meta:
+         db_table = "BrandCompanyDetails"
+
+class BasicSellerOrDistributerDetails(models.Model):
+    # Basic Seller Or Distributer Details model fields
+    company_name = models.TextField(max_length=500)
+    address = models.TextField(max_length=500)
+    country = models.CharField(max_length=200)
+    state = models.CharField(max_length=200)
+    city = models.CharField(max_length=200)
+    pincode = models.BigIntegerField()
+    landmark = models.CharField(max_length=50, blank=True, null=True)
+    location = models.CharField(max_length=200, blank=True, null=True)
+    created_on = models.DateTimeField(auto_now_add=True)
+    updated_on = models.DateTimeField(auto_now=True)
+    created_by = models.BigIntegerField()
+    # updated_by = models.ForeignKey(SelfRegistration, on_delete=models.CASCADE, null=True, blank=True)
+    admins = models.ForeignKey(AdminRegister, on_delete=models.CASCADE, null=True, blank=True)
+
+    class Meta:
+        db_table = "BasicSellerOrDistributerDetails"
+
+class BrandCompanyCommunicationDetails(models.Model):
+    # Brand Company Communication Details model fields
+    contact_name = models.TextField(max_length=500)
+    country = models.CharField(max_length=200)
+    region = models.CharField(max_length=200)
+    designation = models.CharField(max_length=200)
+    email = models.CharField(max_length=60)
+    department = models.CharField(max_length=50, blank=True,null=True)
+    telephone = models.IntegerField(blank=True,null=True)
+    mobile_number= models.IntegerField(blank=True,null=True)
+    created_on = models.DateTimeField(auto_now_add=True)
+    updated_on = models.DateTimeField(auto_now=True)
+    created_by = models.BigIntegerField()
+    brand_cmp_details = models.ForeignKey(BrandCompanyDetails, on_delete=models.CASCADE, null=True, blank=True)
+    # updated_by = models.ForeignKey(SelfRegistration, on_delete=models.CASCADE, null=True, blank=True)
+    admins = models.ForeignKey(AdminRegister, on_delete=models.CASCADE, null=True, blank=True)
+
+    class Meta:
+        db_table = "BrandCompanyCommunicationDetails"
+
+
+class SellerOrDistributerCommunicationDetails(models.Model):
+    # Basic Seller Or Distributer Communication Details model fields
+    contact_name = models.TextField(max_length=500)
+    country = models.CharField(max_length=200)
+    region = models.CharField(max_length=200)
+    designation = models.CharField(max_length=200)
+    email = models.CharField(max_length=60)
+    department = models.CharField(max_length=50, blank=True,null=True)
+    telephone = models.IntegerField(blank=True,null=True)
+    mobile_number = models.IntegerField(blank=True,null=True)
+    created_on = models.DateTimeField(auto_now_add=True)
+    updated_on = models.DateTimeField(auto_now=True)
+    created_by = models.BigIntegerField()
+    seller_distributer_details = models.ForeignKey(BrandCompanyCommunicationDetails, on_delete=models.CASCADE, null=True, blank=True)
+    updated_by = models.ForeignKey(SelfRegistration, on_delete=models.CASCADE, null=True, blank=True)
+    admins = models.ForeignKey(AdminRegister, on_delete=models.CASCADE, null=True, blank=True)
+
+    class Meta:
+        db_table = "SellerOrDistributerCommunicationDetails"

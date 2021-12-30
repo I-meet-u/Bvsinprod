@@ -152,3 +152,34 @@ class OpenLeadsAwardsSerializer(serializers.ModelSerializer):
     class Meta:
         model=OpenLeadsAwards
         fields = '__all__'
+
+
+class BrandRegistrationSerializer(serializers.ModelSerializer):
+    # Brand Registraion Details Serializer
+    class Meta:
+        model=BrandRegistration
+        fields='__all__'
+
+class BrandCompanyDetailsSerializer(serializers.ModelSerializer):
+    # Brand Company Details Serializer
+    class Meta:
+        model=BrandCompanyDetails
+        fields='__all__'
+
+class BasicSellerOrDistributerDetailsSerializer(serializers.ModelSerializer):
+    # Basic Seller Or Distributer Details Serializer
+    class Meta:
+        model=BasicSellerOrDistributerDetails
+        fields='__all__'
+
+class BrandCompanyCommunicationDetailsSerializer(serializers.ModelSerializer):
+    # Brand Company Communication Details Serializer
+    class Meta:
+        model=BrandCompanyCommunicationDetails
+        fields='__all__'
+
+class SellerOrDistributerCommunicationDetailsSerializer(serializers.ModelSerializer):
+    # Seller Or Distributer  Communication Details Serializer
+    class Meta:
+        model=SellerOrDistributerCommunicationDetails
+        fields='__all__'

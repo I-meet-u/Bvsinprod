@@ -2360,7 +2360,7 @@ def fetch_admin_selected_sub_categories(request):
                                         'sub_category_status': subcatobj[0].get('status')
                                         })
 
-            if len(selectedsubcategoryobj)>0:
+
                 for i in range(0,len(datas)):
                     selectedsubcategoryobj2 = AdminSelectedSubCategories.objects.filter(sub_categories_priority=datas[i]).values()
 
@@ -2377,8 +2377,6 @@ def fetch_admin_selected_sub_categories(request):
                                         'sub_category_status':subcatobj[0].get('status')
                                         })
                 return Response({'status':200,'message':'Admin Selected SubCategories List','data':subcatarray},status=200)
-            else:
-                return Response({'status': 204, 'message': 'Admin Selected SubCategories Not Present'}, status=204)
         else:
             return Response({'status': 401, 'message': 'Unauthorized'}, status=401)
 
@@ -2556,7 +2554,7 @@ def fetch_admin_trending_sub_categories(request):
                          'sub_category_code': subcatobj[0].get('sub_category_code'),
                          'sub_category_status': subcatobj[0].get('status')
                          })
-                if len(trendingsubcategoryobj) > 0:
+
                     for i in range(0, len(datas)):
                         trendingsubcategoryobj2 = TrendingSubCategories.objects.filter(trending_sub_categories_priority=datas[i]).values()
                         for j in range(0, len(trendingsubcategoryobj2)):
@@ -2572,8 +2570,6 @@ def fetch_admin_trending_sub_categories(request):
                                                 })
                     return Response({'status': 200, 'message': 'Trending SubCategories List', 'data': subcatarray},
                                 status=200)
-                else:
-                    return Response({'status': 204, 'message': 'Trending SubCategories Not Present'}, status=204)
         else:
             return Response({'status': 401, 'message': 'Unauthorized'}, status=401)
 

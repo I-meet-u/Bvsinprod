@@ -183,3 +183,9 @@ class SellerOrDistributerCommunicationDetailsSerializer(serializers.ModelSeriali
     class Meta:
         model=SellerOrDistributerCommunicationDetails
         fields='__all__'
+
+class BrandLegalDocumentsSerializer(serializers.ModelSerializer):
+    # brand Or legal documents Serializer
+    class Meta:
+        model=BrandLegalDocuments
+        fields='__all__'

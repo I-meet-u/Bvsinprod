@@ -60,6 +60,14 @@ router.register('open-leads-vendor-publish-rfq', views.OpenLeadsVendorPublishRfq
 router.register('open-leads-vendor-publish-items', views.OpenLeadsVendorPublishItemsViewSet)
 router.register('open-leads-vendor-publish-terms',views.OpenLeadsVendorPublishTermsDescriptionViewSet)
 router.register('open-leads-awards',views.OpenLeadsAwardsViewSet)
+
+# brand registration urls
+router.register('brand-registration', views.BrandRegistrationView)
+router.register('brand-company-details', views.BrandCompanyDetailsView)
+router.register('basic-seller-distributor-details',views.BasicSellerOrDistributerDetailsView)
+router.register('brand-company-communication-details',views.BrandCompanyCommunicationDetailsView)
+router.register('seller-distributor-communication-details',views.SellerOrDistributerCommunicationDetailsView)
+router.register('brand-legal-documents',views.BrandLegalDocumentsViewSet)
 urlpatterns = [
     path('admin-router-urls/',include(router.urls)),
     path('admin-login/',views.admin_login),

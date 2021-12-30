@@ -2849,3 +2849,41 @@ def contact_us_send_mail(request):
 
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)
+
+class BrandRegistrationView(viewsets.ModelViewSet):
+    # Brand Registration information
+    queryset = BrandRegistration.objects.all()
+    serializer_class = BrandRegistrationSerializer
+    permission_classes = (AllowAny,)
+
+
+class BrandCompanyDetailsView(viewsets.ModelViewSet):
+    # Brand Company Details
+    queryset = BrandCompanyDetails.objects.all()
+    serializer_class = BrandCompanyDetailsSerializer
+    permission_classes = (AllowAny,)
+
+class BasicSellerOrDistributerDetailsView(viewsets.ModelViewSet):
+    # Basic Seller Or Distributer Details
+    queryset = BasicSellerOrDistributerDetails.objects.all()
+    serializer_class = BasicSellerOrDistributerDetailsSerializer
+    permission_classes = (AllowAny,)
+
+class BrandCompanyCommunicationDetailsView(viewsets.ModelViewSet):
+    # Brand Company Communication Details
+    queryset = BrandCompanyCommunicationDetails.objects.all()
+    serializer_class = BrandCompanyCommunicationDetailsSerializer
+    permission_classes = (AllowAny,)
+
+class SellerOrDistributerCommunicationDetailsView(viewsets.ModelViewSet):
+    # SellerOrDistributerCommunicationDetails
+    queryset = SellerOrDistributerCommunicationDetails.objects.all()
+    serializer_class = SellerOrDistributerCommunicationDetailsSerializer
+    permission_classes = (AllowAny,)
+
+
+class BrandLegalDocumentsViewSet(viewsets.ModelViewSet):
+    # brand legal documents viewsets
+    queryset = BrandLegalDocuments.objects.all()
+    serializer_class = BrandLegalDocumentsSerializer
+    permission_classes = (AllowAny,)

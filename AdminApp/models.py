@@ -530,3 +530,15 @@ class SellerOrDistributerCommunicationDetails(models.Model):
 
     class Meta:
         db_table = "SellerOrDistributerCommunicationDetails"
+
+
+class BrandLegalDocuments(models.Model):
+    legal_docs=models.FileField(upload_to='BrandFiles')
+    description=models.TextField(null=True,blank=True)
+    created_on = models.DateTimeField(auto_now_add=True)
+    updated_on = models.DateTimeField(auto_now=True)
+    brand = models.ForeignKey(BrandRegistration, on_delete=models.CASCADE, null=True, blank=True)
+    admins = models.ForeignKey(AdminRegister, on_delete=models.CASCADE, null=True, blank=True)
+
+    class Meta:
+        db_table = "BrandLegalDocuments"

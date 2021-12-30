@@ -446,7 +446,6 @@ class BrandRegistration(models.Model):
     created_on = models.DateTimeField(auto_now_add=True)
     updated_on = models.DateTimeField(auto_now=True)
     created_by = models.BigIntegerField()
-    # updated_by = models.ForeignKey(SelfRegistration, on_delete=models.CASCADE,null=True,blank=True)
     admins = models.ForeignKey(AdminRegister, on_delete=models.CASCADE, null=True, blank=True)
 
     class Meta:
@@ -467,9 +466,8 @@ class BrandCompanyDetails(models.Model):
      created_on = models.DateTimeField(auto_now_add=True)
      updated_on = models.DateTimeField(auto_now=True)
      created_by = models.BigIntegerField()
-     updated_by = models.ForeignKey(SelfRegistration, on_delete=models.CASCADE,null=True,blank=True)
+     brand = models.ForeignKey(BrandRegistration, on_delete=models.CASCADE,null=True,blank=True)
      admins = models.ForeignKey(AdminRegister, on_delete=models.CASCADE, null=True, blank=True)
-
      class Meta:
          db_table = "BrandCompanyDetails"
 
@@ -486,7 +484,7 @@ class BasicSellerOrDistributerDetails(models.Model):
     created_on = models.DateTimeField(auto_now_add=True)
     updated_on = models.DateTimeField(auto_now=True)
     created_by = models.BigIntegerField()
-    # updated_by = models.ForeignKey(SelfRegistration, on_delete=models.CASCADE, null=True, blank=True)
+    brand = models.ForeignKey(BrandRegistration, on_delete=models.CASCADE, null=True, blank=True)
     admins = models.ForeignKey(AdminRegister, on_delete=models.CASCADE, null=True, blank=True)
 
     class Meta:
@@ -506,7 +504,7 @@ class BrandCompanyCommunicationDetails(models.Model):
     updated_on = models.DateTimeField(auto_now=True)
     created_by = models.BigIntegerField()
     brand_cmp_details = models.ForeignKey(BrandCompanyDetails, on_delete=models.CASCADE, null=True, blank=True)
-    # updated_by = models.ForeignKey(SelfRegistration, on_delete=models.CASCADE, null=True, blank=True)
+    brand = models.ForeignKey(BrandRegistration, on_delete=models.CASCADE, null=True, blank=True)
     admins = models.ForeignKey(AdminRegister, on_delete=models.CASCADE, null=True, blank=True)
 
     class Meta:
@@ -527,7 +525,7 @@ class SellerOrDistributerCommunicationDetails(models.Model):
     updated_on = models.DateTimeField(auto_now=True)
     created_by = models.BigIntegerField()
     seller_distributer_details = models.ForeignKey(BrandCompanyCommunicationDetails, on_delete=models.CASCADE, null=True, blank=True)
-    updated_by = models.ForeignKey(SelfRegistration, on_delete=models.CASCADE, null=True, blank=True)
+    brand = models.ForeignKey(BrandRegistration, on_delete=models.CASCADE,null=True,blank=True)
     admins = models.ForeignKey(AdminRegister, on_delete=models.CASCADE, null=True, blank=True)
 
     class Meta:

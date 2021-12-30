@@ -2450,7 +2450,7 @@ def fetch_admin_selected_categories(request):
                                            'category_status': catobj[0].get('status')
                                            })
 
-            if len(selectedcategoryobj)>0:
+
                 for i in range(0, len(datas)):
                     selectedcategoryobj2 = AdminSelectedCategories.objects.filter(priority=datas[i]).values()
                     for j in range(0, len(selectedcategoryobj2)):
@@ -2465,9 +2465,6 @@ def fetch_admin_selected_categories(request):
                                    'category_status': catobj[0].get('status')
                                    })
                 return Response({'status': 200, 'message': 'Admin Selected Categories List', 'data': rearay}, status=200)
-            else:
-                return Response({'status': 204, 'message': 'Admin Selected Categories Not Present'}, status=204)
-
         else:
             return Response({'status': 401, 'message': 'Unauthorized'}, status=401)
     except Exception as e:
@@ -2502,7 +2499,7 @@ def fetch_admin_trending_categories(request):
                                              'category_code':catobj[0].get('category_code'),
                                              'category_status':catobj[0].get('status')
                                              })
-                if len(trendingcategoryobj) > 0:
+
                     for i in range(0, len(datas)):
                         trendingcategoryobj2 = TrendingCategories.objects.filter(trending_priority=datas[i]).values()
                         for j in range(0, len(trendingcategoryobj2)):
@@ -2517,8 +2514,6 @@ def fetch_admin_trending_categories(request):
                                      'category_status':catobj[0].get('status')
                                      })
                 return Response({'status':200,'message':'Admin Trending Categories List','data':catarray},status=200)
-            else:
-                return Response({'status': 204, 'message': 'Admin Trending Categories Not Present'}, status=204)
         else:
             return Response({'status': 401, 'message': 'Unauthorized'}, status=401)
 

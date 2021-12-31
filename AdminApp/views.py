@@ -2476,56 +2476,11 @@ def fetch_admin_selected_categories(request):
                                        'category_code': data[0].get('category_code'),
                                        'category_status': data[0].get('status')
                     })
-            return Response({'status': 200, 'message': 'Admin Selected Categories List', 'data': rearay}, status=200)
+            return Response({'status': 200, 'message': 'Admin Selected Categories List', 'data':catarray}, status=200)
         else:
            return Response({'status': 401, 'message': 'Unauthorized'}, status=401)
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)
-
-    #         selectedcategoryobj1 = AdminSelectedCategories.objects.filter(priority='0').values()
-    #         selectedcategoryobj=AdminSelectedCategories.objects.filter(~Q(priority='0')).values()
-    #         for i in range(0, len(selectedcategoryobj)):
-    #             catarray.append(int(selectedcategoryobj[i].get('priority')))
-    #         print(catarray)
-    #         datas=sorted(catarray)
-    #         print("sorted ",datas )
-    #
-    #         for j in range(0, len(selectedcategoryobj1)):
-    #             catobj = CategoryMaster.objects.filter(category_id=selectedcategoryobj1[j].get('category_id')).values()
-    #             rearay.append({'category_name': selectedcategoryobj1[j].get('category_name'),
-    #                                    'category_id': selectedcategoryobj1[j].get('category_id'),
-    #                                    'admins': selectedcategoryobj1[j].get('admins'),
-    #                                    'created_on': selectedcategoryobj1[j].get('created_on'),
-    #                                    'updated_on': selectedcategoryobj1[j].get('updated_on'),
-    #                                    'priority': selectedcategoryobj1[j].get('priority'),
-    #                                    'category_code': catobj[0].get('category_code'),
-    #                                    'category_status': catobj[0].get('status')
-    #                                    })
-    #
-    #
-    #         for i in range(0, len(datas)):
-    #             selectedcategoryobj2 = AdminSelectedCategories.objects.filter(priority=datas[i]).values()
-    #             for j in range(0, len(selectedcategoryobj2)):
-    #                 catobj = CategoryMaster.objects.filter(
-    #                     category_id=selectedcategoryobj2[j].get('category_id')).values()
-    #
-    #                 # catobj = CategoryMaster.objects.filter(category_name=selectedcategoryobj2[j].get('category_name')).values()
-    #                 rearay.append({'category_name': selectedcategoryobj2[j].get('category_name'),
-    #                            'category_id': selectedcategoryobj2[j].get('category_id'),
-    #                            'admins': selectedcategoryobj2[j].get('admins'),
-    #                            'created_on': selectedcategoryobj2[j].get('created_on'),
-    #                            'updated_on': selectedcategoryobj2[j].get('updated_on'),
-    #                            'priority': selectedcategoryobj2[j].get('priority'),
-    #                            'category_code': catobj[0].get('category_code'),
-    #                            'category_status': catobj[0].get('status')
-    #                            })
-    #         return Response({'status': 200, 'message': 'Admin Selected Categories List', 'data': rearay}, status=200)
-    #     else:
-    #         return Response({'status': 401, 'message': 'Unauthorized'}, status=401)
-    # except Exception as e:
-    #     return Response({'status': 500, 'error': str(e)}, status=500)
-    #
-    #
 
 @api_view(['post'])
 @permission_classes((AllowAny,))

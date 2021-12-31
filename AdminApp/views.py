@@ -2348,7 +2348,7 @@ def fetch_admin_selected_sub_categories(request):
             if selectedsubcategoryobj1:
                 for j in range(0, len(selectedsubcategoryobj1)):
                     subcatobj = SubCategoryMaster.objects.filter(
-                        sub_category_name=selectedsubcategoryobj1[j].get('sub_category_name')).values()
+                        sub_category_id=selectedsubcategoryobj1[j].get('sub_category_id')).values()
                     subcatarray.append({'sub_category_name': selectedsubcategoryobj1[j].get('sub_category_name'),
                                         'sub_category_id': selectedsubcategoryobj1[j].get('sub_category_id'),
                                         'admins': selectedsubcategoryobj1[j].get('admins'),
@@ -2366,7 +2366,9 @@ def fetch_admin_selected_sub_categories(request):
 
 
                     for j in range(0,len(selectedsubcategoryobj2)):
-                        subcatobj=SubCategoryMaster.objects.filter(sub_category_name=selectedsubcategoryobj2[j].get('sub_category_name')).values()
+                        subcatobj = SubCategoryMaster.objects.filter(
+                            sub_category_id=selectedsubcategoryobj1[j].get('sub_category_id')).values()
+                        # subcatobj=SubCategoryMaster.objects.filter(sub_category_name=selectedsubcategoryobj2[j].get('sub_category_name')).values()
                         subcatarray.append({'sub_category_name':selectedsubcategoryobj2[j].get('sub_category_name'),
                                         'sub_category_id':selectedsubcategoryobj2[j].get('sub_category_id'),
                                         'admins':selectedsubcategoryobj2[j].get('admins'),
@@ -2439,7 +2441,7 @@ def fetch_admin_selected_categories(request):
             print("sorted ",datas )
 
             for j in range(0, len(selectedcategoryobj1)):
-                catobj = CategoryMaster.objects.filter(category_name=selectedcategoryobj1[j].get('category_name')).values()
+                catobj = CategoryMaster.objects.filter(category_id=selectedcategoryobj1[j].get('category_id')).values()
                 rearay.append({'category_name': selectedcategoryobj1[j].get('category_name'),
                                        'category_id': selectedcategoryobj1[j].get('category_id'),
                                        'admins': selectedcategoryobj1[j].get('admins'),
@@ -2454,7 +2456,10 @@ def fetch_admin_selected_categories(request):
             for i in range(0, len(datas)):
                 selectedcategoryobj2 = AdminSelectedCategories.objects.filter(priority=datas[i]).values()
                 for j in range(0, len(selectedcategoryobj2)):
-                    catobj = CategoryMaster.objects.filter(category_name=selectedcategoryobj2[j].get('category_name')).values()
+                    catobj = CategoryMaster.objects.filter(
+                        category_id=selectedcategoryobj2[j].get('category_id')).values()
+
+                    # catobj = CategoryMaster.objects.filter(category_name=selectedcategoryobj2[j].get('category_name')).values()
                     rearay.append({'category_name': selectedcategoryobj2[j].get('category_name'),
                                'category_id': selectedcategoryobj2[j].get('category_id'),
                                'admins': selectedcategoryobj2[j].get('admins'),
@@ -2489,7 +2494,7 @@ def fetch_admin_trending_categories(request):
             print("sorted ", sorted(arrayval))
 
             for j in range(0, len(trendingcategoryobj1)):
-                catobj = CategoryMaster.objects.filter(category_name=trendingcategoryobj1[j].get('trending_category_name')).values()
+                catobj = CategoryMaster.objects.filter(category_id=trendingcategoryobj1[j].get('trending_category_id')).values()
                 catarray.append({'trending_category_name': trendingcategoryobj1[j].get('trending_category_name'),
                                          'trending_category_id':trendingcategoryobj1[j].get('trending_category_id'),
                                          'admins':trendingcategoryobj1[j].get('admins'),
@@ -2503,7 +2508,10 @@ def fetch_admin_trending_categories(request):
                 for i in range(0, len(datas)):
                     trendingcategoryobj2 = TrendingCategories.objects.filter(trending_priority=datas[i]).values()
                     for j in range(0, len(trendingcategoryobj2)):
-                        catobj=CategoryMaster.objects.filter(category_name=trendingcategoryobj2[j].get('trending_category_name')).values()
+                        catobj = CategoryMaster.objects.filter(
+                            category_id=trendingcategoryobj1[j].get('trending_category_id')).values()
+
+                        # catobj=CategoryMaster.objects.filter(category_name=trendingcategoryobj2[j].get('trending_category_name')).values()
                         catarray.append({'trending_category_name':trendingcategoryobj2[j].get('trending_category_name'),
                                  'trending_category_id':trendingcategoryobj2[j].get('trending_category_id'),
                                  'admins':trendingcategoryobj2[j].get('admins'),
@@ -2539,7 +2547,9 @@ def fetch_admin_trending_sub_categories(request):
             print("sorted ", sorted(valarray))
             if trendingsubcategoryobj1:
                 for j in range(0, len(trendingsubcategoryobj1)):
-                    subcatobj = SubCategoryMaster.objects.filter(sub_category_name=trendingsubcategoryobj1[j].get('trending_sub_category_name')).values()
+                    print(trendingsubcategoryobj1[j].get('trending_sub_category_id'))
+                    subcatobj = SubCategoryMaster.objects.filter(sub_category_id=trendingsubcategoryobj1[j].get('trending_sub_category_id')).values()
+                    print(len(subcatobj))
                     subcatarray.append({'trending_sub_category_name': trendingsubcategoryobj1[j].get('trending_sub_category_name'),
                          'trending_sub_category_id': trendingsubcategoryobj1[j].get('trending_sub_category_id'),
                          'admins': trendingsubcategoryobj1[j].get('admins'),
@@ -2553,7 +2563,10 @@ def fetch_admin_trending_sub_categories(request):
                     for i in range(0, len(datas)):
                         trendingsubcategoryobj2 = TrendingSubCategories.objects.filter(trending_sub_categories_priority=datas[i]).values()
                         for j in range(0, len(trendingsubcategoryobj2)):
-                            subcatobj = SubCategoryMaster.objects.filter(sub_category_name=trendingsubcategoryobj2[j].get('trending_sub_category_name')).values()
+                            subcatobj = SubCategoryMaster.objects.filter(
+                                sub_category_id=trendingsubcategoryobj1[j].get('trending_sub_category_id')).values()
+
+                            # subcatobj = SubCategoryMaster.objects.filter(sub_category_name=trendingsubcategoryobj2[j].get('trending_sub_category_name')).values()
                             subcatarray.append({'trending_sub_category_name': trendingsubcategoryobj2[j].get('trending_sub_category_name'),
                                                 'trending_sub_category_id': trendingsubcategoryobj2[j].get('trending_sub_category_id'),
                                                 'admins': trendingsubcategoryobj2[j].get('admins'),
@@ -2563,8 +2576,8 @@ def fetch_admin_trending_sub_categories(request):
                                                 'sub_category_code': subcatobj[0].get('sub_category_code'),
                                                 'sub_category_status': subcatobj[0].get('status')
                                                 })
-                    return Response({'status': 200, 'message': 'Trending SubCategories List', 'data': subcatarray},
-                                status=200)
+                return Response({'status': 200, 'message': 'Trending SubCategories List', 'data': subcatarray},
+                            status=200)
         else:
             return Response({'status': 401, 'message': 'Unauthorized'}, status=401)
 

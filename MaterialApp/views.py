@@ -3010,10 +3010,10 @@ def get_vendor_product_details_based_on_main_id_cat_id_subcat_name(request):
                                                   'product_description': vendorprodata4[0].get('item_description'),
                                                   'unit_price': vendorprodata4[0].get('unit_price'),
                                                   'selling_price': vendorprodata4[0].get('final_selling_price'),
-                                                  'user_id': vendorprodata4[0].get('updated_by')
+                                                  'user_id': vendorprodata4[0].get('updated_by_id')
 
                                                   })
-            return Response({'status': 200, 'message':'ok','Vendor Product Basic Details List':product_array},status=status.HTTP_200_OK)
+            return Response({'status': 200, 'message':'ok','data':product_array},status=status.HTTP_200_OK)
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 

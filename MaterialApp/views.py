@@ -3006,19 +3006,28 @@ def get_vendor_product_details_based_on_main_id_cat_id_subcat_name(request):
                 if vendorprodata2:
                     if vendorprodata3:
                         vendorprodata4=VendorProduct_BasicDetails.objects.filter(core_sector=vendorprodata1[0].get('maincore_name'),category=vendorprodata2[0].get('category_name'),sub_category=vendorprodata3[0].get('sub_category_name')).values()
+                        if len(vendorprodata4)>0:
+                            return Response({'status': 200, 'message': 'ok', 'data': vendorprodata4},
+                                            status=status.HTTP_200_OK)
+                        else:
+                            return Response({'status': 204, 'message': 'ok', 'data': 'Vendor Product Details Not Present'},
+                                            status=status.HTTP_204_NO_CONTENT)
 
-                        product_array.append({'product_name': vendorprodata4[0].get('item_name'),
-                                              'product_description': vendorprodata4[0].get('item_description'),
-                                              'unit_price': vendorprodata4[0].get('unit_price'),
-                                              'selling_price': vendorprodata4[0].get('final_selling_price'),
-                                              'user_id': vendorprodata4[0].get('updated_by_id'),
-                                              'add_image1': vendorprodata4[0].get('add_image1'),
-                                              'add_image2': vendorprodata4[0].get('add_image2'),
-                                              'add_image3': vendorprodata4[0].get('add_image3'),
-                                              'add_image4': vendorprodata4[0].get('add_image4')
+                        # product_array.append({'product_name': vendorprodata4[0].get('item_name'),
+                        #                       'product_description': vendorprodata4[0].get('item_description'),
+                        #                       'unit_price': vendorprodata4[0].get('unit_price'),
+                        #                       'selling_price': vendorprodata4[0].get('final_selling_price'),
+                        #                       'user_id': vendorprodata4[0].get('updated_by_id'),
+                        #                       'add_image1': vendorprodata4[0].get('add_image1'),
+                        #                       'add_image2': vendorprodata4[0].get('add_image2'),
+                        #                       'add_image3': vendorprodata4[0].get('add_image3'),
+                        #                       'add_image4': vendorprodata4[0].get('add_image4')
+                        #
+                        #                       })
+        else:
+            return Response({'status': 401, 'message':'UnAuthorized'},
+                            status=status.HTTP_401_UNAUTHORIZED)
 
-                                              })
-            return Response({'status': 200, 'message':'ok','data':product_array},status=status.HTTP_200_OK)
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 

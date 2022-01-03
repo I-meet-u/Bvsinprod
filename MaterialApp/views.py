@@ -3010,7 +3010,13 @@ def get_vendor_product_details_based_on_main_id_cat_id_subcat_name(request):
                                                   'product_description': vendorprodata4[0].get('item_description'),
                                                   'unit_price': vendorprodata4[0].get('unit_price'),
                                                   'selling_price': vendorprodata4[0].get('final_selling_price'),
-                                                  'user_id': vendorprodata4[0].get('updated_by_id')
+                                                  'user_id': vendorprodata4[0].get('updated_by_id'),
+                                                  'add_image1':vendorprodata4[0].get('add_image1'),
+                                                  'add_image2':vendorprodata4[0].get('add_image2'),
+                                                  'add_image3':vendorprodata4[0].get('add_image3'),
+                                                  'add_image4':vendorprodata4[0].get('add_image4')
+
+
 
                                                   })
             return Response({'status': 200, 'message':'ok','data':product_array},status=status.HTTP_200_OK)

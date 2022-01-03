@@ -3005,12 +3005,7 @@ def get_vendor_product_details_based_on_main_id_cat_id_subcat_name(request):
             if vendorprodata1:
                 if vendorprodata2:
                     if vendorprodata3:
-                        print(vendorprodata1[0].get('maincore_name'))
-                        print(vendorprodata2[0].get('category_name'))
-                        print(vendorprodata3[0].get('sub_category_name'))
-
                         vendorprodata4=VendorProduct_BasicDetails.objects.filter(core_sector=vendorprodata1[0].get('maincore_name'),category=vendorprodata2[0].get('category_name'),sub_category=vendorprodata3[0].get('sub_category_name')).values()
-                        print(len(vendorprodata4))
 
                         product_array.append({'product_name': vendorprodata4[0].get('item_name'),
                                               'product_description': vendorprodata4[0].get('item_description'),

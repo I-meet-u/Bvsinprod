@@ -2988,3 +2988,33 @@ def get_vendor_product_details_based_on_subcategory(request):
         return Response({'status': 500, 'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
+@api_view(['post'])
+@permission_classes((AllowAny,))
+def get_vendor_product_details_based_on_main_id_cat_id_subcat_name(request):
+    data=request.data
+    key=data['key']
+    main_core_id=data['main_core_id']
+    cat_id=data['cat_id']
+    sub_cat_name=data['sub_cat_name']
+    product_array=[]
+    try:
+        if key == "vsinadmin":
+            vendorprodata1=MaincoreMaster.objects.filter(maincore_id=main_core_id).values()
+            vendorprodata2 = CategoryMaster.objects.filter(category_id=cat_id).values()
+            vendorprodata3 = SubCategoryMaster.objects.filter(sub_category_name=sub_cat_name).values()
+            if vendorprodata1:
+                    if vendorprodata2:
+                        if vendorprodata3:
+                            vendorprodata4=VendorProduct_BasicDetails.objects.filter(core_sector=vendorprodata1[0].get('maincore_name')).values()
+                            product_array.append({'product_name': vendorprodata4[0].get('item_name'),
+                                                  'product_description': vendorprodata4[0].get('item_description'),
+                                                  'unit_price': vendorprodata4[0].get('unit_price'),
+                                                  'selling_price': vendorprodata4[0].get('final_selling_price'),
+                                                  'user_id': vendorprodata4[0].get('updated_by')
+
+                                                  })
+            return Response({'status': 200, 'message':'ok','Vendor Product Basic Details List':product_array},status=status.HTTP_200_OK)
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+

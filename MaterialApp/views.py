@@ -3003,22 +3003,26 @@ def get_vendor_product_details_based_on_main_id_cat_id_subcat_name(request):
             vendorprodata2 = CategoryMaster.objects.filter(category_id=cat_id).values()
             vendorprodata3 = SubCategoryMaster.objects.filter(sub_category_name=sub_cat_name).values()
             if vendorprodata1:
-                    if vendorprodata2:
-                        if vendorprodata3:
-                            vendorprodata4=VendorProduct_BasicDetails.objects.filter(core_sector=vendorprodata1[0].get('maincore_name')).values()
-                            product_array.append({'product_name': vendorprodata4[0].get('item_name'),
-                                                  'product_description': vendorprodata4[0].get('item_description'),
-                                                  'unit_price': vendorprodata4[0].get('unit_price'),
-                                                  'selling_price': vendorprodata4[0].get('final_selling_price'),
-                                                  'user_id': vendorprodata4[0].get('updated_by_id'),
-                                                  'add_image1':vendorprodata4[0].get('add_image1'),
-                                                  'add_image2':vendorprodata4[0].get('add_image2'),
-                                                  'add_image3':vendorprodata4[0].get('add_image3'),
-                                                  'add_image4':vendorprodata4[0].get('add_image4')
+                if vendorprodata2:
+                    if vendorprodata3:
+                        print(vendorprodata1[0].get('maincore_name'))
+                        print(vendorprodata2[0].get('category_name'))
+                        print(vendorprodata3[0].get('sub_category_name'))
 
+                        vendorprodata4=VendorProduct_BasicDetails.objects.filter(core_sector=vendorprodata1[0].get('maincore_name'),category=vendorprodata2[0].get('category_name'),sub_category=vendorprodata3[0].get('sub_category_name')).values()
+                        print(len(vendorprodata4))
 
+                        product_array.append({'product_name': vendorprodata4[0].get('item_name'),
+                                              'product_description': vendorprodata4[0].get('item_description'),
+                                              'unit_price': vendorprodata4[0].get('unit_price'),
+                                              'selling_price': vendorprodata4[0].get('final_selling_price'),
+                                              'user_id': vendorprodata4[0].get('updated_by_id'),
+                                              'add_image1': vendorprodata4[0].get('add_image1'),
+                                              'add_image2': vendorprodata4[0].get('add_image2'),
+                                              'add_image3': vendorprodata4[0].get('add_image3'),
+                                              'add_image4': vendorprodata4[0].get('add_image4')
 
-                                                  })
+                                              })
             return Response({'status': 200, 'message':'ok','data':product_array},status=status.HTTP_200_OK)
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

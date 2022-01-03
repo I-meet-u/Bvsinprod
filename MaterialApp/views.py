@@ -2996,7 +2996,6 @@ def get_vendor_product_details_based_on_main_id_cat_id_subcat_name(request):
     main_core_id=data['main_core_id']
     cat_id=data['cat_id']
     sub_cat_name=data['sub_cat_name']
-    product_array=[]
     try:
         if key == "vsinadmin":
             vendorprodata1=MaincoreMaster.objects.filter(maincore_id=main_core_id).values()

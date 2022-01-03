@@ -46,6 +46,7 @@ class VendorProduct_BasicDetails(models.Model):
     updated_on = models.DateTimeField(auto_now=True)
     created_by = models.BigIntegerField()
     updated_by = models.ForeignKey(SelfRegistration, on_delete=models.CASCADE)
+    admin_create = models.CharField(default=False,max_length=100)
     company_code=models.CharField(max_length=100,null=True,blank=True)
     history = HistoricalRecords()
 
@@ -70,6 +71,7 @@ class VendorProduct_GeneralDetails(models.Model):
     created_by = models.BigIntegerField()
     updated_by = models.ForeignKey(SelfRegistration, on_delete=models.CASCADE)
     vendor_products=models.ForeignKey(VendorProduct_BasicDetails,on_delete=models.CASCADE,null=True,blank=True)
+    admin_create = models.CharField(default=False, max_length=100)
     history = HistoricalRecords()
 
     class Meta:
@@ -84,6 +86,7 @@ class VendorProduct_TechnicalSpecifications(models.Model):
     created_by = models.BigIntegerField()
     updated_by = models.ForeignKey(SelfRegistration, on_delete=models.CASCADE)
     vendor_products=models.ForeignKey(VendorProduct_BasicDetails,on_delete=models.CASCADE,null=True,blank=True)
+    admin_create = models.CharField(default=False, max_length=100)
     history = HistoricalRecords()
 
 
@@ -98,6 +101,7 @@ class VendorProduct_ProductFeatures(models.Model):
     created_by = models.BigIntegerField()
     updated_by = models.ForeignKey(SelfRegistration, on_delete=models.CASCADE)
     vendor_products=models.ForeignKey(VendorProduct_BasicDetails,on_delete=models.CASCADE,null=True,blank=True)
+    admin_create = models.CharField(default=False, max_length=100)
     history = HistoricalRecords()
 
 
@@ -117,6 +121,7 @@ class VendorProduct_Documents(models.Model):
     created_by = models.BigIntegerField()
     updated_by = models.ForeignKey(SelfRegistration, on_delete=models.CASCADE)
     vendor_products=models.ForeignKey(VendorProduct_BasicDetails,on_delete=models.CASCADE,null=True,blank=True)
+    admin_create = models.CharField(default=False,max_length=100)
     history = HistoricalRecords()
 
     class Meta:

@@ -24,6 +24,10 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 
+import sib_api_v3_sdk
+from sib_api_v3_sdk.rest import ApiException
+
+
 from .models import SelfRegistration, SelfRegistration_Sample, BasicCompanyDetails, BillingAddress, ShippingAddress, \
     IndustrialInfo, IndustrialHierarchy, BankDetails, LegalDocuments, BasicCompanyDetails_Others, BillingAddress_Others, \
     ShippingAddress_Others, Employee_CompanyDetails, Employee_IndustryInfo, ContactDetails, \
@@ -1894,3 +1898,47 @@ def getregistrationbyccode(request):
             return Response({'status': 400, 'message': 'Bad Request'}, status=400)
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)
+
+
+@api_view(['post'])
+@permission_classes((AllowAny,))
+def postenquery(request):
+    try:
+        data=request.data
+        userid=data['userid']
+        compcode=data['compcode']
+        productname=data['productname']
+        productdesc=data['productdesc']
+        quantity=data['quantity']
+        ordervalue=data['ordervalue']
+        email=data['email']
+        phone=data['phone']
+        basicobj=BasicCompanyDetails.objects.filter(company_code=compcode).values()
+        regobj=SelfRegistration.objects.filter(id=basicobj[0].get('updated_by_id')).values()
+        # Configure API key authorization: api-key
+        configuration = sib_api_v3_sdk.Configuration()
+        configuration.api_key[
+            'api-key'] = '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'
+
+        # create an instance of the API class
+        configuration = sib_api_v3_sdk.Configuration()
+        configuration.api_key[
+            'api-key'] = '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'
+
+        api_instance = sib_api_v3_sdk.TransactionalEmailsApi(sib_api_v3_sdk.ApiClient(configuration))
+        subject = "Enquiry from Vendorsin"
+        text_content = "Dear , " + regobj[0].get(
+            'contact_person') + "\n\n" + "Your have following material Enquiry" + "\n"+\
+                       "Product Name :"+ productname +"\n"+"Product Description :"+ productdesc+"\n"+"Quantity :"+quantity+"\n"+"Order value :"+ordervalue+"\n"+"Sender Email :"+email+"\n"+"Sender Phone Number :"+phone+"\n\n" + "Thank You" + "\n\n" + "Note: Please Don't Share this email with anyone"
+        sender = {"name": "Admin", "email": "admin@vendorsin.com"}
+        # text_content = 'Hello '+regobj.contact_person+',''\n You are selected for bidding'
+        to = [{"email": regobj[0].get('username'), "name": regobj[0].get('contact_person')}]
+        reply_to = {"email": "admin@vendorsin.com", "name": "Admin"}
+        send_smtp_email = sib_api_v3_sdk.SendSmtpEmail(to=to, reply_to=reply_to, text_content=text_content,
+                                                       sender=sender, subject=subject)
+
+        api_response = api_instance.send_transac_email(send_smtp_email)
+        return Response({'status': 200, 'message': 'ok'}, status=200)
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)
+

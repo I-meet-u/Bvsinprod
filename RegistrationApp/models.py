@@ -27,6 +27,7 @@ class SelfRegistration(AbstractUser):
     setupstatus=models.CharField(max_length=50, default='Pending')
     setupdate = models.CharField(max_length=100,null=True, blank=True)
     subscriptionflag= models.BooleanField(default=False)
+    admin_create=models.BooleanField(default=False)
 
     # registration_status = models.CharField(max_length=80, default='Not Registered')
 
@@ -46,6 +47,7 @@ class SelfRegistration_Sample(models.Model):
     email_otp = models.CharField(max_length=20, blank=True)
     phone_otp = models.CharField(max_length=20, blank=True)
     profile_cover_photo = models.FileField(upload_to='static/coverphoto',null=True)
+    admin_create = models.BooleanField(default=False)
 
     class Meta:
         db_table = 'SelfRegistration_Sample'
@@ -68,6 +70,7 @@ class BasicCompanyDetails(models.Model):
     updated_on = models.DateTimeField(auto_now=True,null=True,blank=True)
     created_by = models.BigIntegerField(null=True,blank=True)
     updated_by = models.OneToOneField(SelfRegistration, on_delete=models.CASCADE,null=True,blank=True)
+    admin_create = models.BooleanField(default=False)
 
     class Meta:
         db_table = "BasicCompanyDetails"
@@ -86,6 +89,7 @@ class IndustrialInfo(models.Model):
     created_by = models.BigIntegerField()
     updated_by = models.OneToOneField(SelfRegistration, on_delete=models.CASCADE)
     company_code = models.OneToOneField(BasicCompanyDetails, on_delete=models.CASCADE,null=True)
+    admin_create = models.BooleanField(default=False)
 
     class Meta:
         db_table = "IndustrialInfo"
@@ -101,6 +105,7 @@ class IndustrialHierarchy(models.Model):
     created_by = models.BigIntegerField()
     updated_by = models.OneToOneField(SelfRegistration, on_delete=models.CASCADE)
     company_code = models.OneToOneField(BasicCompanyDetails, on_delete=models.CASCADE)
+    admin_create = models.BooleanField(default=False)
 
     class Meta:
         db_table = "IndustrialHierarchy"
@@ -126,6 +131,7 @@ class BankDetails(models.Model):
     created_by = models.BigIntegerField()
     updated_by = models.ForeignKey(SelfRegistration, on_delete=models.CASCADE)
     company_code = models.ForeignKey(BasicCompanyDetails, on_delete=models.CASCADE)
+    admin_create = models.BooleanField(default=False)
 
     class Meta:
         db_table = "BankDetails"
@@ -138,6 +144,7 @@ class LegalDocuments(models.Model):
     updated_on = models.DateTimeField(auto_now=True)
     created_by = models.BigIntegerField()
     updated_by = models.ForeignKey(SelfRegistration, on_delete=models.CASCADE)
+    admin_create = models.BooleanField(default=False)
 
 
     class Meta:
@@ -304,6 +311,7 @@ class BillingAddress(models.Model):
     updated_by = models.ForeignKey(SelfRegistration, on_delete=models.CASCADE,null=True,blank=True)
     company_code = models.ForeignKey(BasicCompanyDetails,on_delete=models.CASCADE,null=True,blank=True)
     emp_company_code = models.ForeignKey(Employee_CompanyDetails, on_delete=models.CASCADE, null=True, blank=True)
+    admin_create = models.BooleanField(default=False)
 
     class Meta:
         db_table = "BillingAddress"
@@ -324,6 +332,7 @@ class ShippingAddress(models.Model):
     updated_by = models.ForeignKey(SelfRegistration, on_delete=models.CASCADE,null=True,blank=True)
     company_code = models.ForeignKey(BasicCompanyDetails,on_delete=models.CASCADE,null=True,blank=True)
     emp_company_code = models.ForeignKey(Employee_CompanyDetails, on_delete=models.CASCADE, null=True, blank=True)
+    admin_create = models.BooleanField(default=False)
 
     class Meta:
         db_table = "ShippingAddress"

@@ -237,9 +237,9 @@ def company_details_by_subcategory_id(request):
                                     'subcategory':industryobj[0].get('subcategory'),
                                     'usertype':regobj[0].get('user_type'),
                                     'bill_city':billingobj[0].get('bill_city'),
-                                    'industrial_scale':basicobj[0].get('industrial_scale')
-
-
+                                    'industrial_scale':basicobj[0].get('industrial_scale'),
+                                    'email':regobj[0].get('username'),
+                                    'phone':regobj[0].get('phone_number'),
                                     })
 
         return Response({'status':200,'message':'ok','data':basicdatavalues},status=200)

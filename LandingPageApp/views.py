@@ -224,7 +224,7 @@ def company_details_by_subcategory_id(request):
             industryobj=IndustrialHierarchy.objects.filter(company_code_id=supplyobj[0].get('company_code_id')).values()
             # ratingobj=CompanyReviewAndRating.objects.filter(company_code_id=supplyobj[0].get('company_code_id')).values()
 
-            reviewobj = CompanyReviewAndRating.objects.filter(company_code=supplyobj[0].get('company_code_id')).values()
+            reviewobj = CompanyReviewAndRating.objects.filter(company_code_id=supplyobj[0].get('company_code_id')).values()
             sum = 0
             for rating in reviewobj:
                 sum = sum + rating['rating']

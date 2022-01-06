@@ -751,3 +751,51 @@ def get_all_vendor_product_details(request):
 
     except Exception as e:
         return Response({'status':500,'error':str(e)},status=500)
+
+
+@api_view(['post'])
+@permission_classes((AllowAny,))
+def search_texts(request):
+    search_type=request.data['search_type']
+    search_text=request.data['search_text']
+    try:
+        if search_type=='Companies':
+            basicobj=BasicCompanyDetails.objects.filter(company_name__icontains=search_text).values()
+            if len(basicobj)>0:
+
+                return Response({'status':200,'message':'Companies List','data':basicobj},status=200)
+            else:
+                return Response({'status': 204, 'message': 'Companies datas are Not Present','data':basicobj}, status=204)
+        elif search_type=='Products':
+            productobj=VendorProduct_BasicDetails.objects.filter(item_type='Product',item_name__icontains=search_text).values()
+            if len(productobj)>0:
+                return Response({'status': 200, 'message': 'Vendor Product List', 'data': productobj}, status=200)
+            else:
+                return Response({'status': 204, 'message': 'Vendor Product Lists are Not Present','data':productobj}, status=204)
+
+        elif search_type=='Service':
+            productobj=VendorProduct_BasicDetails.objects.filter(item_type='Service',item_name__icontains=search_text).values()
+            if len(productobj)>0:
+                return Response({'status': 200, 'message': 'Vendor Service List', 'data': productobj}, status=200)
+            else:
+                return Response({'status': 204, 'message': 'Vendor Service Lists are Not Present','data':productobj}, status=204)
+        elif search_type == 'All':
+            alldata = VendorProduct_BasicDetails.objects.filter(item_type='Product',item_name__icontains=search_text).values()
+            if len(alldata):
+                return Response({'status': 200, 'message': 'Vendor All List', 'data':alldata}, status=200)
+
+            alldata1 = VendorProduct_BasicDetails.objects.filter(item_type='Service',
+                                                                 item_name__icontains=search_text).values()
+            if len(alldata1):
+                return Response({'status': 200, 'message': 'Vendor All List', 'data': alldata1}, status=200)
+            basicobj = BasicCompanyDetails.objects.filter(company_name__icontains=search_text).values()
+            if len(basicobj):
+                return Response({'status': 200, 'message': 'Vendor All List', 'data':basicobj}, status=200)
+            else:
+                return Response({'status': 204, 'message': 'Vendor All Lists are Not Present','data':[]}, status=204)
+        else:
+            return Response({'status': 204, 'message': 'search type value is mis-spelled or not present'}, status=204)
+
+
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)

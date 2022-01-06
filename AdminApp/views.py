@@ -2931,6 +2931,41 @@ class BrandLegalDocumentsViewSet(viewsets.ModelViewSet):
 #         return Response({'status': 500, 'error': str(e)}, status=500)
 
 
+# @api_view(['post'])
+# @permission_classes((AllowAny,))
+# def fetch_admin_selected_categories(request):
+#     key = request.data['key']
+#     catmasterdata = []
+#     data = []
+#     catarray = []
+#     valuedata=[]
+#
+#     try:
+#         if key == 'vsinadmin':
+#             catmasterdata = AdminSelectedCategories.objects.filter().values()
+#             for i in range(len(catmasterdata)):
+#                 valuedata.append(int(catmasterdata[i].get('priority')))
+#             values = sorted(valuedata)
+#             if len(catmasterdata)>0:
+#                 for i in range(0,len(values)):
+#                     catmasterdata = AdminSelectedCategories.objects.filter(priority=values[i]).values()
+#                     data = CategoryMaster.objects.filter(category_id=catmasterdata[0].get('category_id')).values()
+#                     if data:
+#                         catarray.append({'category_name': data[0].get('category_name'),
+#                                          'category_id': data[0].get('category_id'),
+#                                          'admins': catmasterdata[0].get('admins'),
+#                                          'created_on': catmasterdata[0].get('created_on'),
+#                                          'updated_on': catmasterdata[0].get('updated_on'),
+#                                          'priority': catmasterdata[0].get('priority'),
+#                                          'category_code': data[0].get('category_code'),
+#                                          'category_status': data[0].get('status')
+#                                          })
+#                 return Response({'status': 200, 'message': 'Admin Selected Categories List', 'data': catarray}, status=200)
+#         else:
+#             return Response({'status': 401, 'message': 'Unauthorized'}, status=401)
+#     except Exception as e:
+#         return Response({'status': 500, 'error': str(e)}, status=500)
+
 @api_view(['post'])
 @permission_classes((AllowAny,))
 def fetch_admin_selected_categories(request):
@@ -2942,29 +2977,45 @@ def fetch_admin_selected_categories(request):
 
     try:
         if key == 'vsinadmin':
-            catmasterdata = AdminSelectedCategories.objects.filter().values()
+            catmasterdata1 = AdminSelectedCategories.objects.filter(priority='0').values()
+            catmasterdata = AdminSelectedCategories.objects.filter(~Q(priority='0')).values()
             for i in range(len(catmasterdata)):
                 valuedata.append(int(catmasterdata[i].get('priority')))
             values = sorted(valuedata)
-            if len(catmasterdata)>0:
-                for i in range(0,len(values)):
-                    catmasterdata = AdminSelectedCategories.objects.filter(priority=values[i]).values()
-                    data = CategoryMaster.objects.filter(category_id=catmasterdata[0].get('category_id')).values()
+            print(values)
+            if len(catmasterdata1)>=0:
+                for j in range(0, len(catmasterdata1)):
+                    data = CategoryMaster.objects.filter(category_id=catmasterdata1[j].get('category_id')).values()
                     if data:
                         catarray.append({'category_name': data[0].get('category_name'),
+                                     'category_id': data[0].get('category_id'),
+                                     'admins': catmasterdata1[j].get('admins'),
+                                     'created_on': catmasterdata1[j].get('created_on'),
+                                     'updated_on': catmasterdata1[j].get('updated_on'),
+                                     'priority': catmasterdata1[j].get('priority'),
+                                     'category_code': data[0].get('category_code'),
+                                     'category_status': data[0].get('status')
+                                     })
+                for i in range(0,len(values)):
+                    catmasterdata2 = AdminSelectedCategories.objects.filter(priority=values[i]).values()
+                    for j in range(0, len(catmasterdata2)):
+                        data = CategoryMaster.objects.filter(category_id=catmasterdata2[j].get('category_id')).values()
+                        if data:
+                            catarray.append({'category_name': data[0].get('category_name'),
                                          'category_id': data[0].get('category_id'),
-                                         'admins': catmasterdata[0].get('admins'),
-                                         'created_on': catmasterdata[0].get('created_on'),
-                                         'updated_on': catmasterdata[0].get('updated_on'),
-                                         'priority': catmasterdata[0].get('priority'),
+                                         'admins': catmasterdata2[j].get('admins'),
+                                         'created_on': catmasterdata2[j].get('created_on'),
+                                         'updated_on': catmasterdata2[j].get('updated_on'),
+                                         'priority': catmasterdata2[j].get('priority'),
                                          'category_code': data[0].get('category_code'),
                                          'category_status': data[0].get('status')
                                          })
-                return Response({'status': 200, 'message': 'Admin Selected Categories List', 'data': catarray}, status=200)
+            return Response({'status': 200, 'message': 'Admin Selected Categories List', 'data': catarray}, status=200)
         else:
             return Response({'status': 401, 'message': 'Unauthorized'}, status=401)
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)
+
 
 
 @api_view(['post'])
@@ -2978,22 +3029,37 @@ def fetch_admin_trending_categories(request):
 
     try:
         if key == 'vsinadmin':
-            catmasterdata = TrendingCategories.objects.filter().values()
+            catmasterdata1 = TrendingCategories.objects.filter(trending_priority='0').values()
+            catmasterdata = TrendingCategories.objects.filter(~Q(trending_priority='0')).values()
             for i in range(len(catmasterdata)):
                 valuedata.append(int(catmasterdata[i].get('trending_priority')))
             print(valuedata)
             values = sorted(valuedata)
-            if len(catmasterdata) > 0:
-                for i in range(0, len(values)):
-                    catmasterdata = TrendingCategories.objects.filter(trending_priority=values[i]).values()
-                    data = CategoryMaster.objects.filter(category_id=catmasterdata[0].get('trending_category_id')).values()
+            print(values)
+            if len(catmasterdata1) >=0:
+                for j in range(0, len(catmasterdata1)):
+                    data = CategoryMaster.objects.filter(category_id=catmasterdata1[j].get('trending_category_id')).values()
                     if data:
                         catarray.append({'trending_category_name': data[0].get('category_name'),
                                          'trending_category_id': data[0].get('category_id'),
-                                         'admins': catmasterdata[0].get('admins_id'),
-                                         'created_on': catmasterdata[0].get('created_on'),
-                                         'updated_on': catmasterdata[0].get('updated_on'),
-                                         'trending_priority': catmasterdata[0].get('trending_priority'),
+                                         'admins': catmasterdata1[j].get('admins_id'),
+                                         'created_on': catmasterdata1[j].get('created_on'),
+                                         'updated_on': catmasterdata1[j].get('updated_on'),
+                                         'trending_priority': catmasterdata1[j].get('trending_priority'),
+                                         'category_code': data[0].get('category_code'),
+                                         'category_status': data[0].get('status')
+                                         })
+                for i in range(0, len(values)):
+                    catmasterdata2 = TrendingCategories.objects.filter(trending_priority=values[i]).values()
+                    for j in range(0, len(catmasterdata2)):
+                        data = CategoryMaster.objects.filter(category_id=catmasterdata2[j].get('trending_category_id')).values()
+                        if data:
+                            catarray.append({'trending_category_name': data[0].get('category_name'),
+                                         'trending_category_id': data[0].get('category_id'),
+                                         'admins': catmasterdata2[j].get('admins_id'),
+                                         'created_on': catmasterdata2[j].get('created_on'),
+                                         'updated_on': catmasterdata2[j].get('updated_on'),
+                                         'trending_priority': catmasterdata2[j].get('trending_priority'),
                                          'category_code': data[0].get('category_code'),
                                          'category_status': data[0].get('status')
                                          })
@@ -3003,6 +3069,44 @@ def fetch_admin_trending_categories(request):
             return Response({'status': 401, 'message': 'Unauthorized'}, status=401)
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)
+
+
+# @api_view(['post'])
+# @permission_classes((AllowAny,))
+# def fetch_admin_trending_categories(request):
+#     key = request.data['key']
+#     catmasterdata = []
+#     data = []
+#     catarray = []
+#     valuedata=[]
+#
+#     try:
+#         if key == 'vsinadmin':
+#             catmasterdata = TrendingCategories.objects.filter().values()
+#             for i in range(len(catmasterdata)):
+#                 valuedata.append(int(catmasterdata[i].get('trending_priority')))
+#             print(valuedata)
+#             values = sorted(valuedata)
+#             if len(catmasterdata) > 0:
+#                 for i in range(0, len(values)):
+#                     catmasterdata = TrendingCategories.objects.filter(trending_priority=values[i]).values()
+#                     data = CategoryMaster.objects.filter(category_id=catmasterdata[0].get('trending_category_id')).values()
+#                     if data:
+#                         catarray.append({'trending_category_name': data[0].get('category_name'),
+#                                          'trending_category_id': data[0].get('category_id'),
+#                                          'admins': catmasterdata[0].get('admins_id'),
+#                                          'created_on': catmasterdata[0].get('created_on'),
+#                                          'updated_on': catmasterdata[0].get('updated_on'),
+#                                          'trending_priority': catmasterdata[0].get('trending_priority'),
+#                                          'category_code': data[0].get('category_code'),
+#                                          'category_status': data[0].get('status')
+#                                          })
+#                 return Response({'status': 200, 'message': 'Admin Selected Trending Categories List', 'data': catarray},
+#                             status=200)
+#         else:
+#             return Response({'status': 401, 'message': 'Unauthorized'}, status=401)
+#     except Exception as e:
+#         return Response({'status': 500, 'error': str(e)}, status=500)
 
 
 # @api_view(['post'])
@@ -3041,6 +3145,46 @@ def fetch_admin_trending_categories(request):
 
 
 
+# @api_view(['post'])
+# @permission_classes((AllowAny,))
+# def fetch_admin_selected_sub_categories(request):
+#     key = request.data['key']
+#     subcatmasterdata = []
+#     subdata = []
+#     subcatarray = []
+#     valuedata=[]
+#     try:
+#         if key == 'vsinadmin':
+#             subcatmasterdata = AdminSelectedSubCategories.objects.filter().values()
+#             print("len== ", len(subcatmasterdata))
+#             for i in range(len(subcatmasterdata)):
+#                 valuedata.append(int(subcatmasterdata[i].get('sub_categories_priority')))
+#             print(valuedata)
+#             values = sorted(valuedata)
+#             print("sorted ", sorted(valuedata))
+#             if len(subcatmasterdata)>0:
+#                 for i in range(0,len(values)):
+#                     subcatmasterdata = AdminSelectedSubCategories.objects.filter(sub_categories_priority=values[i]).values()
+#                     subdata = SubCategoryMaster.objects.filter(sub_category_id=subcatmasterdata[0].get('sub_category_id')).values()
+#                     if subdata:
+#                         subcatarray.append({'sub_category_name': subdata[0].get('sub_category_name'),
+#                                         'sub_category_id': subdata[0].get('sub_category_id'),
+#                                         'admins': subcatmasterdata[0].get('admins'),
+#                                         'created_on': subcatmasterdata[0].get('created_on'),
+#                                         'updated_on': subcatmasterdata[0].get('updated_on'),
+#                                         'sub_categories_priority': subcatmasterdata[0].get('sub_categories_priority'),
+#                                         'sub_category_code': subdata[0].get('sub_category_code'),
+#                                         'sub_category_status': subdata[0].get('status')
+#                                         })
+#             return Response({'status': 200, 'message': 'Admin SubCategories List', 'data': subcatarray},
+#                             status=200)
+#         else:
+#             return Response({'status': 401, 'message': 'Unauthorized'}, status=401)
+#
+#     except Exception as e:
+#         return Response({'status': 500, 'error': str(e)}, status=500)
+
+
 @api_view(['post'])
 @permission_classes((AllowAny,))
 def fetch_admin_selected_sub_categories(request):
@@ -3051,24 +3195,38 @@ def fetch_admin_selected_sub_categories(request):
     valuedata=[]
     try:
         if key == 'vsinadmin':
-            subcatmasterdata = AdminSelectedSubCategories.objects.filter().values()
+            subcatmasterdata1 = AdminSelectedSubCategories.objects.filter(sub_categories_priority='0').values()
+            subcatmasterdata=AdminSelectedSubCategories.objects.filter(~Q(sub_categories_priority='0')).values()
             print("len== ", len(subcatmasterdata))
             for i in range(len(subcatmasterdata)):
                 valuedata.append(int(subcatmasterdata[i].get('sub_categories_priority')))
             print(valuedata)
             values = sorted(valuedata)
             print("sorted ", sorted(valuedata))
-            if len(subcatmasterdata)>0:
-                for i in range(0,len(values)):
-                    subcatmasterdata = AdminSelectedSubCategories.objects.filter(sub_categories_priority=values[i]).values()
-                    subdata = SubCategoryMaster.objects.filter(sub_category_id=subcatmasterdata[0].get('sub_category_id')).values()
+            if len(subcatmasterdata1)>=0:
+                for j in range(0, len(subcatmasterdata1)):
+                    subdata = SubCategoryMaster.objects.filter(sub_category_id=subcatmasterdata1[j].get('sub_category_id')).values()
                     if subdata:
                         subcatarray.append({'sub_category_name': subdata[0].get('sub_category_name'),
+                                            'sub_category_id': subdata[0].get('sub_category_id'),
+                                            'admins': subcatmasterdata1[j].get('admins'),
+                                            'created_on': subcatmasterdata1[j].get('created_on'),
+                                            'updated_on': subcatmasterdata1[j].get('updated_on'),
+                                            'sub_categories_priority': subcatmasterdata1[j].get('sub_categories_priority'),
+                                            'sub_category_code': subdata[0].get('sub_category_code'),
+                                            'sub_category_status': subdata[0].get('status')
+                                            })
+                for i in range(0,len(values)):
+                    subcatmasterdata2= AdminSelectedSubCategories.objects.filter(sub_categories_priority=values[i]).values()
+                    for j in range(0, len(subcatmasterdata2)):
+                        subdata = SubCategoryMaster.objects.filter(sub_category_id=subcatmasterdata2[j].get('sub_category_id')).values()
+                        if subdata:
+                            subcatarray.append({'sub_category_name': subdata[0].get('sub_category_name'),
                                         'sub_category_id': subdata[0].get('sub_category_id'),
-                                        'admins': subcatmasterdata[0].get('admins'),
-                                        'created_on': subcatmasterdata[0].get('created_on'),
-                                        'updated_on': subcatmasterdata[0].get('updated_on'),
-                                        'sub_categories_priority': subcatmasterdata[0].get('sub_categories_priority'),
+                                        'admins': subcatmasterdata2[j].get('admins'),
+                                        'created_on': subcatmasterdata2[j].get('created_on'),
+                                        'updated_on': subcatmasterdata2[j].get('updated_on'),
+                                        'sub_categories_priority': subcatmasterdata2[j].get('sub_categories_priority'),
                                         'sub_category_code': subdata[0].get('sub_category_code'),
                                         'sub_category_status': subdata[0].get('status')
                                         })
@@ -3146,7 +3304,7 @@ def fetch_admin_trending_sub_categories(request):
             print(valuedata)
             values = sorted(valuedata)
             print("sorted ", sorted(valuedata))
-            if len(subcatmasterdata1) > 0:
+            if len(subcatmasterdata1) >=0:
                 for j in range(0, len(subcatmasterdata1)):
                     print(subcatmasterdata1[j].get('trending_sub_category_id'))
                     subdata = SubCategoryMaster.objects.filter(sub_category_id=subcatmasterdata1[j].get('trending_sub_category_id')).values()

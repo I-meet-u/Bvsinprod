@@ -3161,21 +3161,21 @@ def fetch_admin_trending_sub_categories(request):
                                             'sub_category_code': subdata[0].get('sub_category_code'),
                                             'sub_category_status': subdata[0].get('status')
                                             })
-                    for i in range(0, len(values)):
-                        subcatmasterdata2 = TrendingSubCategories.objects.filter(trending_sub_categories_priority=values[i]).values()
-                        for j in range(0, len(subcatmasterdata2)):
-                            subdata = SubCategoryMaster.objects.filter(sub_category_id=subcatmasterdata2[j].get('trending_sub_category_id')).values()
-                            if subdata:
-                                subcatarray.append({'trending_sub_category_name': subdata[0].get('sub_category_name'),
-                                        'trending_sub_category_id': subdata[0].get('sub_category_id'),
-                                        'admins': subcatmasterdata2[j].get('admins'),
-                                        'created_on': subcatmasterdata2[j].get('created_on'),
-                                        'updated_on': subcatmasterdata2[j].get('updated_on'),
-                                        'trending_sub_categories_priority': subcatmasterdata2[j].get(
-                                            'trending_sub_categories_priority'),
-                                        'sub_category_code': subdata[0].get('sub_category_code'),
-                                        'sub_category_status': subdata[0].get('status')
-                                        })
+                for i in range(0, len(values)):
+                    subcatmasterdata2 = TrendingSubCategories.objects.filter(trending_sub_categories_priority=values[i]).values()
+                    for j in range(0, len(subcatmasterdata2)):
+                        subdata = SubCategoryMaster.objects.filter(sub_category_id=subcatmasterdata2[j].get('trending_sub_category_id')).values()
+                        if subdata:
+                            subcatarray.append({'trending_sub_category_name': subdata[0].get('sub_category_name'),
+                                    'trending_sub_category_id': subdata[0].get('sub_category_id'),
+                                    'admins': subcatmasterdata2[j].get('admins'),
+                                    'created_on': subcatmasterdata2[j].get('created_on'),
+                                    'updated_on': subcatmasterdata2[j].get('updated_on'),
+                                    'trending_sub_categories_priority': subcatmasterdata2[j].get(
+                                        'trending_sub_categories_priority'),
+                                    'sub_category_code': subdata[0].get('sub_category_code'),
+                                    'sub_category_status': subdata[0].get('status')
+                                    })
             return Response({'status': 200, 'message': 'Trending SubCategories List', 'data': subcatarray},
                             status=200)
         else:

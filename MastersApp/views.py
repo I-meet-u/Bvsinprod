@@ -2742,7 +2742,7 @@ def get_admin_trending_sub_categories(request):
         trendingsubcategory=[]
         trendingsubcategoriesobj=TrendingSubCategories.objects.filter().values()
         for i in range(0,len(trendingsubcategoriesobj)):
-            subcategoryobj=SubCategoryMaster.objects.filter(sub_category_name=trendingsubcategoriesobj[i].get('trending_sub_category_name')).values()
+            subcategoryobj=SubCategoryMaster.objects.filter(sub_category_id=trendingsubcategoriesobj[i].get('trending_sub_category_id')).values()
             trendingsubcategory.append({'sub_category_name':subcategoryobj[0].get('sub_category_name'),
                                         'sub_category_url':subcategoryobj[0].get('sub_category_image'),
                                         'sub_category_id':subcategoryobj[0].get('sub_category_id'),

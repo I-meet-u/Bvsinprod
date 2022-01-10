@@ -90,5 +90,11 @@ urlpatterns = [
     path('update_setup_status/',views.update_setup_status),
     path('update_setup_status_disable/',views.update_setup_status_disable),
     path('getregistrationbyccode/',views.getregistrationbyccode),
-    path('postenquery/',views.postenquery)
+    path('postenquery/',views.postenquery),
+
+
+    # phone and email verificaiton
+    path('phone-otp-verification/', views.phone_otp_verification),
+    path('email-otp-verification/', views.email_otp_verification),
+    path('otp-verification-status/', views.otp_verification_status)
 ]

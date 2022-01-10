@@ -1942,3 +1942,74 @@ def postenquery(request):
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)
 
+
+@api_view(['post'])
+@permission_classes((AllowAny,))
+def phone_otp_verification(request):
+    data=request.data
+    phone_number=data['phone_number']
+    phone_otp=data['phone_otp']
+
+    try:
+        regobj=SelfRegistration.objects.filter(id=data['user_id']).values()
+        if len(regobj)>0:
+            if regobj[0].get('phone_number')==phone_number and regobj[0].get('phone_otp')== phone_otp:
+                regvalue=SelfRegistration.objects.get(phone_number=phone_number,phone_otp=phone_otp)
+                if regvalue.phone_verify=='False':
+                    regvalue.phone_verify='True'
+                    regvalue.save()
+                    return Response({'status':200,'message':'Phone Otp Verified Successfully'},status=200)
+                else:
+                    return Response({'status': 202, 'message': 'Already Verified'}, status=202)
+            else:
+                return Response({'status':204,'message':'Otp Not Verified or otp is not correct'},status=204)
+        else:
+            return Response({'status': 400, 'message': 'User Not Exist'}, status=400)
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)
+
+
+@api_view(['post'])
+@permission_classes((AllowAny,))
+def email_otp_verification(request):
+    data=request.data
+    email_id=data['email_id']
+    email_otp=data['email_otp']
+
+    try:
+        regobj=SelfRegistration.objects.filter(id=data['user_id']).values()
+        if len(regobj)>0:
+            if regobj[0].get('username')==email_id and regobj[0].get('email_otp')== email_otp:
+                regvalue=SelfRegistration.objects.get(username=email_id,email_otp=email_otp)
+                if regvalue.email_verify=='False':
+                    regvalue.email_verify='True'
+                    regvalue.save()
+                    return Response({'status':200,'message':'Email Otp Verified Successfully'},status=200)
+                else:
+                    return Response({'status': 202, 'message': 'Already Verified'}, status=202)
+            else:
+                return Response({'status':204,'message':'Otp Not Verified or otp is not correct'},status=204)
+        else:
+            return Response({'status': 400, 'message': 'User Not Exist'}, status=400)
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)
+
+
+@api_view(['post'])
+@permission_classes((AllowAny,))
+def otp_verification_status(request):
+    data=request.data
+    status_list=[]
+    try:
+        regobj=SelfRegistration.objects.filter(id=data['user_id']).values()
+        if len(regobj)>0:
+            status_list.append({'user_id':regobj[0].get('id'),
+                                'email_verify':regobj[0].get('email_verify'),
+                                'phone_verify':regobj[0].get('phone_verify')
+                                })
+            return Response({'status': 200, 'message': 'Verificaton Status','data':status_list}, status=200)
+        else:
+            return Response({'status': 204, 'message': 'User Not Exist'}, status=204)
+
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)

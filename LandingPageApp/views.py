@@ -781,18 +781,11 @@ def search_texts(request):
                 return Response({'status': 204, 'message': 'Vendor Service Lists are Not Present','data':productobj}, status=204)
         elif search_type == 'All':
             alldata = VendorProduct_BasicDetails.objects.filter(item_type='Product',item_name__icontains=search_text).values()
-            if len(alldata):
-                return Response({'status': 200, 'message': 'Vendor All List', 'data':alldata}, status=200)
 
             alldata1 = VendorProduct_BasicDetails.objects.filter(item_type='Service',
                                                                  item_name__icontains=search_text).values()
-            if len(alldata1):
-                return Response({'status': 200, 'message': 'Vendor All List', 'data': alldata1}, status=200)
             basicobj = BasicCompanyDetails.objects.filter(company_name__icontains=search_text).values()
-            if len(basicobj):
-                return Response({'status': 200, 'message': 'Vendor All List', 'data':basicobj}, status=200)
-            else:
-                return Response({'status': 204, 'message': 'Vendor All Lists are Not Present','data':[]}, status=204)
+            return Response({'status': 200, 'message': 'Vendor All List', 'data_basic_info':basicobj,'vendor_product_data':alldata,'vendor_service_data':alldata1}, status=200)
         else:
             return Response({'status': 204, 'message': 'search type value is mis-spelled or not present'}, status=204)
 

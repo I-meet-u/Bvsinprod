@@ -3019,3 +3019,38 @@ def get_vendor_product_details_based_on_main_id_cat_id_subcat_name(request):
         return Response({'status': 500, 'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
+@api_view(['post'])
+@permission_classes((AllowAny,))
+def get_vendor_product_details_by_pk(request):
+    data=request.data
+    key=data['key']
+    vendorpk=data['vendorpk']
+    try:
+
+        if key == "vsinadmin":
+            vendor_product_basic_details = VendorProduct_BasicDetails.objects.filter(
+                vendor_product_id=vendorpk).values().order_by('vendor_product_id')
+            vendor_product_general_details = VendorProduct_GeneralDetails.objects.filter(
+                vendor_products=vendorpk).values().order_by('vendor_products')
+            vendor_product_technical_specifications = VendorProduct_TechnicalSpecifications.objects.filter(
+                vendor_products=vendorpk).values().order_by('vendor_products')
+            vendor_product_features = VendorProduct_ProductFeatures.objects.filter(
+                vendor_products=vendorpk).values().order_by('vendor_products')
+            vendor_product_documents = VendorProduct_Documents.objects.filter(vendor_products=vendorpk).values().order_by(
+                'vendor_products')
+            if len(vendor_product_basic_details)>0:
+                return Response({'status': 200, 'message': 'ok',
+                                 'vendor_product_basic_details': vendor_product_basic_details,
+                                 'vendor_product_general_details': vendor_product_general_details,
+                                 'vendor_product_technical_specifications': vendor_product_technical_specifications,
+                                 'vendor_product_features': vendor_product_features,
+                                 'vendor_product_documents': vendor_product_documents},
+                                status=status.HTTP_200_OK)
+            else:
+                return Response({'status': 401, 'message': 'vendor product basic details are not present'},
+                                status=status.HTTP_401_UNAUTHORIZED)
+        else:
+            return Response({'status': 401, 'message': 'UnAuthorized'}, status=status.HTTP_401_UNAUTHORIZED)
+
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

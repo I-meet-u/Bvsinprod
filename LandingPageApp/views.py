@@ -753,17 +753,81 @@ def get_all_vendor_product_details(request):
         return Response({'status':500,'error':str(e)},status=500)
 
 
+# @api_view(['post'])
+# @permission_classes((AllowAny,))
+# def search_texts(request):
+#     search_type=request.data['search_type']
+#     search_text=request.data['search_text']
+#     try:
+#         if search_type=='Companies':
+#             basicobj=BasicCompanyDetails.objects.filter(company_name__icontains=search_text).values()
+#             if len(basicobj)>0:
+#
+#                 return Response({'status':200,'message':'Companies List','data':basicobj},status=200)
+#             else:
+#                 return Response({'status': 204, 'message': 'Companies datas are Not Present','data':basicobj}, status=204)
+#         elif search_type=='Products':
+#             productobj=VendorProduct_BasicDetails.objects.filter(item_type='Product',item_name__icontains=search_text).values()
+#             if len(productobj)>0:
+#                 return Response({'status': 200, 'message': 'Vendor Product List', 'data': productobj}, status=200)
+#             else:
+#                 return Response({'status': 204, 'message': 'Vendor Product Lists are Not Present','data':productobj}, status=204)
+#
+#         elif search_type=='Service':
+#             productobj=VendorProduct_BasicDetails.objects.filter(item_type='Service',item_name__icontains=search_text).values()
+#             if len(productobj)>0:
+#                 return Response({'status': 200, 'message': 'Vendor Service List', 'data': productobj}, status=200)
+#             else:
+#                 return Response({'status': 204, 'message': 'Vendor Service Lists are Not Present','data':productobj}, status=204)
+#         elif search_type == 'All':
+#             alldata = VendorProduct_BasicDetails.objects.filter(item_type='Product',item_name__icontains=search_text).values()
+#
+#             alldata1 = VendorProduct_BasicDetails.objects.filter(item_type='Service',
+#                                                                  item_name__icontains=search_text).values()
+#             basicobj = BasicCompanyDetails.objects.filter(company_name__icontains=search_text).values()
+#             return Response({'status': 200, 'message': 'Vendor All List', 'data_basic_info':basicobj,'vendor_product_data':alldata,'vendor_service_data':alldata1}, status=200)
+#         else:
+#             return Response({'status': 204, 'message': 'search type value is mis-spelled or not present'}, status=204)
+#
+#
+#     except Exception as e:
+#         return Response({'status': 500, 'error': str(e)}, status=500)
+
+
 @api_view(['post'])
 @permission_classes((AllowAny,))
 def search_texts(request):
     search_type=request.data['search_type']
     search_text=request.data['search_text']
+    getarray=[]
     try:
         if search_type=='Companies':
             basicobj=BasicCompanyDetails.objects.filter(company_name__icontains=search_text).values()
             if len(basicobj)>0:
+                for i in range(0,len(basicobj)):
+                    print(basicobj[i].get('updated_by_id'))
+                    regobj=SelfRegistration.objects.filter(id=basicobj[i].get('updated_by_id')).values()
+                    billobj=BillingAddress.objects.filter(updated_by_id=basicobj[i].get('updated_by_id')).values()
+                    hierarchyobj=IndustrialHierarchy.objects.filter(updated_by_id=basicobj[i].get('updated_by_id')).values()
+                    getarray.append({'company_code':basicobj[i].get('company_code'),
+                                     'company_name':basicobj[i].get('company_name'),
+                                     'gst_number':basicobj[i].get('gst_number'),
+                                     'user_type':regobj[0].get('user_type'),
+                                     'email':regobj[0].get('username'),
+                                     'phone_number':regobj[0].get('phone_number'),
+                                     'profile_photo': regobj[i].get('profile_cover_photo'),
+                                     'nature_of_business':regobj[0].get('nature_of_business'),
+                                     'bill_city':billobj[0].get('bill_city'),
+                                     'bill_address':billobj[0].get('bill_address'),
+                                     'maincore':hierarchyobj[0].get('maincore'),
+                                     'category':hierarchyobj[0].get('category'),
+                                     'subcategory':hierarchyobj[0].get('subcategory')
 
-                return Response({'status':200,'message':'Companies List','data':basicobj},status=200)
+
+                                     })
+
+
+                return Response({'status':200,'message':'Companies List','data':getarray},status=200)
             else:
                 return Response({'status': 204, 'message': 'Companies datas are Not Present','data':basicobj}, status=204)
         elif search_type=='Products':
@@ -781,11 +845,31 @@ def search_texts(request):
                 return Response({'status': 204, 'message': 'Vendor Service Lists are Not Present','data':productobj}, status=204)
         elif search_type == 'All':
             alldata = VendorProduct_BasicDetails.objects.filter(item_type='Product',item_name__icontains=search_text).values()
-
             alldata1 = VendorProduct_BasicDetails.objects.filter(item_type='Service',
                                                                  item_name__icontains=search_text).values()
             basicobj = BasicCompanyDetails.objects.filter(company_name__icontains=search_text).values()
-            return Response({'status': 200, 'message': 'Vendor All List', 'data_basic_info':basicobj,'vendor_product_data':alldata,'vendor_service_data':alldata1}, status=200)
+            for i in range(0,len(basicobj)):
+                regobj=SelfRegistration.objects.filter(id=basicobj[i].get('updated_by_id')).values()
+                billobj=BillingAddress.objects.filter(updated_by_id=basicobj[i].get('updated_by_id')).values()
+                hierarchyobj=IndustrialHierarchy.objects.filter(updated_by_id=basicobj[i].get('updated_by_id')).values()
+                getarray.append({'company_code':basicobj[i].get('company_code'),
+                                 'company_name':basicobj[i].get('company_name'),
+                                 'gst_number':basicobj[i].get('gst_number'),
+                                 'user_type':regobj[0].get('user_type'),
+                                 'email':regobj[0].get('username'),
+                                 'phone_number':regobj[0].get('phone_number'),
+                                 'profile_photo': regobj[i].get('profile_cover_photo'),
+                                 'nature_of_business':regobj[0].get('nature_of_business'),
+                                 'bill_city':billobj[0].get('bill_city'),
+                                 'bill_address':billobj[0].get('bill_address'),
+                                 'maincore':hierarchyobj[0].get('maincore'),
+                                 'category':hierarchyobj[0].get('category'),
+                                 'subcategory':hierarchyobj[0].get('subcategory')
+
+
+                                 })
+
+            return Response({'status': 200, 'message': 'Vendor All List', 'data_basic_info':getarray,'vendor_product_data':alldata,'vendor_service_data':alldata1}, status=200)
         else:
             return Response({'status': 204, 'message': 'search type value is mis-spelled or not present'}, status=204)
 

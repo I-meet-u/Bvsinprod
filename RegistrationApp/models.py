@@ -21,6 +21,8 @@ class SelfRegistration(AbstractUser):
     admin_approve = models.CharField(max_length=50, default='Pending')
     email_otp = models.CharField(max_length=20, blank=True,null=True)
     phone_otp = models.CharField(max_length=20, blank=True,null=True)
+    email_verify = models.CharField(max_length=20, blank=True, null=True, default=False)
+    phone_verify = models.CharField(max_length=20, blank=True, null=True, default=False)
     department=models.CharField(max_length=100,null=True,blank=True)
     designation = models.CharField(max_length=100, null=True, blank=True)
     profile_cover_photo = models.FileField(upload_to='coverphoto',null=True)

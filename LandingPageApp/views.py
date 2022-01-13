@@ -221,10 +221,10 @@ def company_details_by_subcategory_id(request):
             basicobj=BasicCompanyDetails.objects.filter(company_code=supplyobj[i].get('company_code_id')).values()
             billingobj=BillingAddress.objects.filter(company_code=supplyobj[i].get('company_code_id')).values()
             regobj=SelfRegistration.objects.filter(id=supplyobj[i].get('updated_by_id')).values()
-            industryobj=IndustrialHierarchy.objects.filter(company_code_id=supplyobj[0].get('company_code_id')).values()
+            industryobj=IndustrialHierarchy.objects.filter(company_code_id=supplyobj[i].get('company_code_id')).values()
             # ratingobj=CompanyReviewAndRating.objects.filter(company_code_id=supplyobj[0].get('company_code_id')).values()
 
-            reviewobj = CompanyReviewAndRating.objects.filter(company_code_id=supplyobj[0].get('company_code_id')).values()
+            reviewobj = CompanyReviewAndRating.objects.filter(company_code_id=supplyobj[i].get('company_code_id')).values()
             sum = 0
             for rating in reviewobj:
                 sum = sum + rating['rating']
@@ -370,7 +370,8 @@ class CompanyReviewViewSet(viewsets.ModelViewSet):
         review = request.data.get('review', None),
         rating = request.data.get('rating', None)
         full_name = SelfRegistration.objects.filter(id=user_id).values()
-        name = full_name[0].get('contact_person')
+        if len(full_name)>0:
+            name = full_name[0].get('contact_person')
         basicobj = BasicCompanyDetails.objects.filter(company_code=company_code).values()
         request.data['company_name'] = basicobj[0].get('company_name')
         request.data['name'] = name
@@ -821,7 +822,9 @@ def search_texts(request):
                                      'bill_address':billobj[0].get('bill_address'),
                                      'maincore':hierarchyobj[0].get('maincore'),
                                      'category':hierarchyobj[0].get('category'),
-                                     'subcategory':hierarchyobj[0].get('subcategory')
+                                     'subcategory':hierarchyobj[0].get('subcategory'),
+                                     'industrial_scale': basicobj[i].get('industrial_scale'),
+                                     'registered_date': regobj[0].get('created_on')
 
 
                                      })
@@ -864,7 +867,9 @@ def search_texts(request):
                                  'bill_address':billobj[0].get('bill_address'),
                                  'maincore':hierarchyobj[0].get('maincore'),
                                  'category':hierarchyobj[0].get('category'),
-                                 'subcategory':hierarchyobj[0].get('subcategory')
+                                 'subcategory':hierarchyobj[0].get('subcategory'),
+                                 'industrial_scale': basicobj[i].get('industrial_scale'),
+                                 'registered_date': regobj[0].get('created_on')
 
 
                                  })

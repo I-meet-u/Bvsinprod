@@ -36,6 +36,7 @@ urlpatterns = [
     path('get-approved-companies-list/', views.get_approved_companies_list),
     path('get-all-vendor-product-details/', views.get_all_vendor_product_details),
     path('average-rating/',views.average_rating),
-    path('search-texts/',views.search_texts)
+    path('search-texts/',views.search_texts),
+    path('getproductbymaincore/',views.getproductbymaincore)
 
 ]

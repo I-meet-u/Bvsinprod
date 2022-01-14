@@ -881,3 +881,21 @@ def search_texts(request):
 
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)
+
+@api_view(['post'])
+@permission_classes([AllowAny],)
+def getproductbymaincore(request):
+    try:
+        data=request.data
+        maincoreproducts=""
+        if data['key']=="vsinadmindb":
+            MaincoreMasterobj=MaincoreMaster.objects.filter(maincore_id=data['mid']).values()
+            if MaincoreMasterobj:
+                maincoreproducts=VendorProduct_BasicDetails.objects.filter(core_sector=MaincoreMasterobj[0].get('maincore_name')).values()
+                if maincoreproducts:
+                    return Response({'status': 200, 'message': 'product list','products':maincoreproducts},status=200)
+            return Response({'status': 202, 'message': 'product list', 'products': maincoreproducts}, status=202)
+        else:
+            return Response({'status':400,'message':'Bad Request'},status=400)
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)

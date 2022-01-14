@@ -37,6 +37,7 @@ urlpatterns = [
     path('get-all-vendor-product-details/', views.get_all_vendor_product_details),
     path('average-rating/',views.average_rating),
     path('search-texts/',views.search_texts),
-    path('getproductbymaincore/',views.getproductbymaincore)
+    path('getproductbymaincore/',views.getproductbymaincore),
+    path('company_details_by_maincore_id/',views.company_details_by_maincore_id)
 
 ]

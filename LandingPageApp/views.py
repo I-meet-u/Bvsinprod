@@ -899,3 +899,68 @@ def getproductbymaincore(request):
             return Response({'status':400,'message':'Bad Request'},status=400)
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)
+
+
+
+
+@api_view(['post'])
+@permission_classes([AllowAny])
+def company_details_by_maincore_id(request):
+    data=request.data
+    maincore_id=data['maincore_id']
+    companycodearray=[]
+    maincorearray=[]
+    basicdatavalues=[]
+    average=0
+    try:
+        maincoreobj=MaincoreMaster.objects.filter(maincore_id=maincore_id).values()
+        for i in range(0, len(maincoreobj)):
+            maincorearray.append(maincoreobj[i].get('maincore_name'))
+        companycodearray.append(maincorearray)
+        supplyobj = IndustrialHierarchy.objects.filter(maincore__overlap=maincorearray).values()
+
+
+        for i  in range(0,len(supplyobj)):
+            basicobj=BasicCompanyDetails.objects.filter(company_code=supplyobj[i].get('company_code_id')).values()
+            billingobj=BillingAddress.objects.filter(company_code=supplyobj[i].get('company_code_id')).values()
+            regobj=SelfRegistration.objects.filter(id=supplyobj[i].get('updated_by_id')).values()
+            industryobj=IndustrialHierarchy.objects.filter(company_code_id=supplyobj[i].get('company_code_id')).values()
+
+            reviewobj = CompanyReviewAndRating.objects.filter(company_code_id=supplyobj[i].get('company_code_id')).values()
+            sum = 0
+            for rating in reviewobj:
+                sum = sum + rating['rating']
+                if len(reviewobj) > 0:
+                    average = sum / len(reviewobj)
+                else:
+                    average = 0
+            print(average)
+
+            basicdatavalues.append({'company_code': basicobj[0].get('company_code'),
+                                    'company_name': basicobj[0].get('company_name'),
+                                    'company_type': basicobj[0].get('company_type'),
+                                    'listing_date': basicobj[0].get('listing_date'),
+                                    'pan_number': basicobj[0].get('pan_number'),
+                                    'tax_payer_type': basicobj[0].get('tax_payer_type'),
+                                    'msme_registered': basicobj[0].get('msme_registered'),
+                                    'company_established': basicobj[0].get('company_established'),
+                                    'updated_by': basicobj[0].get('updated_by_id'),
+                                    'gst_no': basicobj[0].get('gst_number'),
+                                    'billing_address': billingobj[0].get('bill_address'),
+                                    'nature_of_business': regobj[0].get('nature_of_business'),
+                                    'profile_image': regobj[0].get('profile_cover_photo'),
+                                    'maincore': industryobj[0].get('maincore'),
+                                    'category': industryobj[0].get('category'),
+                                    'subcategory': industryobj[0].get('subcategory'),
+                                    'usertype': regobj[0].get('user_type'),
+                                    'bill_city': billingobj[0].get('bill_city'),
+                                    'industrial_scale': basicobj[0].get('industrial_scale'),
+                                    'email': regobj[0].get('username'),
+                                    'phone': regobj[0].get('phone_number'),
+                                    'registered_date': regobj[0].get('created_on'),
+                                    'rating':round(average)
+                                    })
+
+        return Response({'status':200,'message':'ok','data':basicdatavalues},status=200)
+    except Exception as e:
+        return Response({'status':500,'error':str(e)},status=500)

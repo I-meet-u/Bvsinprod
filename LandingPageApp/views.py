@@ -808,15 +808,18 @@ def search_texts(request):
                 for i in range(0,len(basicobj)):
                     print(basicobj[i].get('updated_by_id'))
                     regobj=SelfRegistration.objects.filter(id=basicobj[i].get('updated_by_id')).values()
+                    print(len(regobj),regobj[0].get('user_type'))
                     billobj=BillingAddress.objects.filter(updated_by_id=basicobj[i].get('updated_by_id')).values()
+                    print(len(billobj), billobj[0].get('bill_city'))
                     hierarchyobj=IndustrialHierarchy.objects.filter(updated_by_id=basicobj[i].get('updated_by_id')).values()
+                    print(len(hierarchyobj),hierarchyobj[0].get('maincore'))
                     getarray.append({'company_code':basicobj[i].get('company_code'),
                                      'company_name':basicobj[i].get('company_name'),
                                      'gst_number':basicobj[i].get('gst_number'),
                                      'user_type':regobj[0].get('user_type'),
                                      'email':regobj[0].get('username'),
                                      'phone_number':regobj[0].get('phone_number'),
-                                     'profile_photo': regobj[i].get('profile_cover_photo'),
+                                     'profile_photo': regobj[0].get('profile_cover_photo'),
                                      'nature_of_business':regobj[0].get('nature_of_business'),
                                      'bill_city':billobj[0].get('bill_city'),
                                      'bill_address':billobj[0].get('bill_address'),
@@ -825,11 +828,9 @@ def search_texts(request):
                                      'subcategory':hierarchyobj[0].get('subcategory'),
                                      'industrial_scale': basicobj[i].get('industrial_scale'),
                                      'registered_date': regobj[0].get('created_on')
-
-
+                    #
+                    #
                                      })
-
-
                 return Response({'status':200,'message':'Companies List','data':getarray},status=200)
             else:
                 return Response({'status': 204, 'message': 'Companies datas are Not Present','data':basicobj}, status=204)
@@ -861,7 +862,7 @@ def search_texts(request):
                                  'user_type':regobj[0].get('user_type'),
                                  'email':regobj[0].get('username'),
                                  'phone_number':regobj[0].get('phone_number'),
-                                 'profile_photo': regobj[i].get('profile_cover_photo'),
+                                 'profile_photo': regobj[0].get('profile_cover_photo'),
                                  'nature_of_business':regobj[0].get('nature_of_business'),
                                  'bill_city':billobj[0].get('bill_city'),
                                  'bill_address':billobj[0].get('bill_address'),

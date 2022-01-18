@@ -16,6 +16,7 @@ from rest_framework.views import APIView
 
 from AdminApp.models import AdminRegister, AdminSelectedCategories, TrendingCategories, AdminSelectedSubCategories, \
     TrendingSubCategories
+from MaterialApp.models import VendorProduct_BasicDetails
 from .serializers import *
 from .models import  *
 
@@ -2769,5 +2770,26 @@ def sub_categories_data_by_cat_id(request):
              return Response({'status': 200, 'message': 'OK', 'data':sucatdata},status=200)
         else:
              return Response({'status': 204, 'message': 'Not Presnet'},status=204)
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)
+
+
+@api_view(['post'])
+@permission_classes([AllowAny,])
+def get_sub_categories_by_cat_maincat(request):
+    data = request.data
+    maincore_name = data['maincore_name']
+    cat_name = data['cat_name']
+    try:
+        maincoreobj=MaincoreMaster.objects.filter(maincore_name=maincore_name).values()
+        catobj=CategoryMaster.objects.filter(category_name=cat_name).values()
+        if maincoreobj and catobj:
+            # subcatobj = SubCategoryMaster.objects.filter(maincore_id=maincoreobj[0].get('maincore_id'),
+            #                                                  category_id=catobj[0].get('category_id')).values()
+            vendorobj=VendorProduct_BasicDetails.objects.filter(core_sector=maincoreobj[0].get('maincore_name'),category=catobj[0].get('category_name')).values()
+            return Response({'status': 200, 'message': 'OK', 'data':vendorobj},status=200)
+        else:
+            return Response({'status': 204, 'message': 'Not Presnet'},status=204)
+
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)

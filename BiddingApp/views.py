@@ -1838,6 +1838,7 @@ def get_ccode_by_userid_without_tk(request):
 
 
 @api_view(['post'])
+@permission_classes((AllowAny,))
 def price_analysis_product(request):
     data = request.data
     resarray = []
@@ -3934,6 +3935,7 @@ def createbuyerbiddinggetvendors(request):
 
 
 @api_view(['post'])
+@permission_classes((AllowAny,))
 def termsanddescriptionpriceanalysis(request):
     data=request.data
     userid=data['userid']

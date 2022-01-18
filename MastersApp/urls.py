@@ -196,7 +196,8 @@ urlpatterns = [
     path('getselectedcatmasters/',views.getselectedcatmasters),
     path('get-trending-categories/',views.get_trending_categories),
     path('get-admin-trending-sub-categories/',views.get_admin_trending_sub_categories),
-    path('get-admin-selected-sub-categories/', views.get_admin_selected_sub_categories)
+    path('get-admin-selected-sub-categories/', views.get_admin_selected_sub_categories),
+    path('sub_categories_data_by_cat_id/',views.sub_categories_data_by_cat_id)
 
 ]
 

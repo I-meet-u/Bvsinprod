@@ -2753,3 +2753,21 @@ def get_admin_trending_sub_categories(request):
         return Response({'status': 200, 'message': 'Trending SubCategoires List', 'data': trendingsubcategory}, status=200)
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)
+
+
+
+@api_view(['post'])
+@permission_classes([AllowAny,])
+def sub_categories_data_by_cat_id(request):
+    data = request.data
+    subcat_name = data['subcat_name']
+    try:
+        subcatobj=SubCategoryMaster.objects.filter(sub_category_name=subcat_name).values()
+        if subcatobj:
+             catobj = CategoryMaster.objects.filter(category_id=subcatobj[0].get('category_id')).values()
+             sucatdata= SubCategoryMaster.objects.filter(category=catobj[0].get('category_id')).values()
+             return Response({'status': 200, 'message': 'OK', 'data':sucatdata},status=200)
+        else:
+             return Response({'status': 204, 'message': 'Not Presnet'},status=204)
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)

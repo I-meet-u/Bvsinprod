@@ -2980,10 +2980,17 @@ def get_vendor_product_details_based_on_subcategory(request):
     newval=[]
     try:
         if key=="vsinadmin":
-            vendorobjcategory=VendorProduct_BasicDetails.objects.filter(company_code=ccode,sub_category=sub_category).values()
+            vendorobjcategory=VendorProduct_BasicDetails.objects.filter(company_code=ccode,sub_category=sub_category).distinct().values()
+            if len(vendorobjcategory)>0:
+                return Response({'status': 200, 'message': 'Vendor Product Basic Details List', 'category': vendorobjcategory},
+                                status=status.HTTP_200_OK)
+            else:
+                return Response(
+                    {'status': 204, 'message': 'Data Not Present'},status=status.HTTP_204_NO_CONTENT)
+        else:
+            return Response(
+                {'status': 401, 'message': 'UnAuthorized'}, status=status.HTTP_401_UNAUTHORIZED)
 
-        return Response({'status': 200, 'message': 'Vendor Product Basic Details List', 'category': vendorobjcategory},
-                    status=status.HTTP_200_OK)
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 

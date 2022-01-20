@@ -2013,3 +2013,33 @@ def otp_verification_status(request):
 
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)
+
+
+@api_view(['post'])
+@permission_classes((AllowAny,))
+def get_approved_companies_list(request):
+    company_array=[]
+    try:
+        if request.data['key']=="vsinadmindb":
+            regobj=SelfRegistration.objects.filter(admin_approve='Approved').values().order_by('id')
+            if len(regobj)>0:
+                for i in range(0,len(regobj)):
+                    basicobj=BasicCompanyDetails.objects.filter(updated_by_id=regobj[i].get('id')).values()
+                    billobj=BillingAddress.objects.filter(updated_by_id=regobj[i].get('id')).values()
+                    company_array.append({'user_id':regobj[i].get('id'),
+                                          'company_code':basicobj[0].get('company_code'),
+                                          'company_name':basicobj[0].get('company_name'),
+                                          'gst_number':basicobj[0].get('gst_number'),
+                                          'bill_city':billobj[0].get('bill_city')
+
+                                          })
+                return Response({'status':200,'message':'Approved Companies List','data':company_array},status=status.HTTP_200_OK)
+            else:
+                return Response({'status': 204, 'message': 'Approved Companies Lists are not present'},
+                                status=status.HTTP_204_NO_CONTENT)
+        else:
+            return Response({'status': 401, 'message': 'UnAuthorized'}, status=status.HTTP_401_UNAUTHORIZED)
+
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+

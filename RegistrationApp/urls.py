@@ -91,6 +91,7 @@ urlpatterns = [
     path('update_setup_status_disable/',views.update_setup_status_disable),
     path('getregistrationbyccode/',views.getregistrationbyccode),
     path('postenquery/',views.postenquery),
+    path('get_approved_companies_list/',views.get_approved_companies_list),  #get approved companies list
 
 
     # phone and email verificaiton

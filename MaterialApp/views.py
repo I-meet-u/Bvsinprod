@@ -3054,8 +3054,8 @@ def get_vendor_product_details_by_pk(request):
                                  'vendor_product_documents': vendor_product_documents},
                                 status=status.HTTP_200_OK)
             else:
-                return Response({'status': 401, 'message': 'vendor product basic details are not present'},
-                                status=status.HTTP_401_UNAUTHORIZED)
+                return Response({'status': 204, 'message': 'vendor product basic details are not present'},
+                                status=status.HTTP_204_NO_CONTENT)
         else:
             return Response({'status': 401, 'message': 'UnAuthorized'}, status=status.HTTP_401_UNAUTHORIZED)
 

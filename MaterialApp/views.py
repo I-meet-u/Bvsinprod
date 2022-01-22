@@ -1667,9 +1667,6 @@ def get_vendor_details_by_sub_category(request):
                 return Response({'status': 204, 'message': 'Vendor Product Details Not Present', 'data': vendordetails}, status=status.HTTP_204_NO_CONTENT)
         else:
             return Response({'status': 401, 'message': 'UnAuthorized'},status=status.HTTP_401_UNAUTHORIZED)
-
-
-
     except Exception as e:
         return Response({'status':500,'error':str(e)},status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 

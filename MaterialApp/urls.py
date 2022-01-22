@@ -88,5 +88,6 @@ urlpatterns = [
     path('get_vendor_product_details_based_on_subcategory/',views.get_vendor_product_details_based_on_subcategory),
     path('get_vendor_product_details_based_on_main_id_cat_id_subcat_name/',
          views.get_vendor_product_details_based_on_main_id_cat_id_subcat_name),
-    path('get_vendor_product_details_by_pk/', views.get_vendor_product_details_by_pk)
+    path('get_vendor_product_details_by_pk/', views.get_vendor_product_details_by_pk),
+    path('get_admin_added_vendor_product_details/',views.get_admin_added_vendor_product_details)
 ]

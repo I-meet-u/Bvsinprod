@@ -3061,3 +3061,25 @@ def get_vendor_product_details_by_pk(request):
 
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+@api_view(['post'])
+@permission_classes((AllowAny,))
+def get_admin_added_vendor_product_details(request):
+    data=request.data
+    key=data['key']
+    admin_create=data['admin_create']
+    try:
+        if key=='vsinadmindb':
+            vendorobj=VendorProduct_BasicDetails.objects.filter(admin_create=True).values().order_by('vendor_product_id')
+            if len(vendorobj):
+                return Response({'status':200,'message':'Admin Create Product Details List','data':vendorobj},status=200)
+            else:
+                return Response({'status': 204, 'message': 'Admin Create Product Details List Not Present', 'data': vendorobj},
+                                status=204)
+        else:
+            return Response({'status': 401, 'message': 'UnAuthorized'}, status=status.HTTP_401_UNAUTHORIZED)
+
+
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

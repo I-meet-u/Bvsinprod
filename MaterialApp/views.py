@@ -3034,7 +3034,7 @@ def get_vendor_product_details_by_pk(request):
     vendorpk=data['vendorpk']
     try:
 
-        if key == "vsinadmin":
+        if key == "vsinadmindb":
             vendor_product_basic_details = VendorProduct_BasicDetails.objects.filter(
                 vendor_product_id=vendorpk).values().order_by('vendor_product_id')
             vendor_product_general_details = VendorProduct_GeneralDetails.objects.filter(

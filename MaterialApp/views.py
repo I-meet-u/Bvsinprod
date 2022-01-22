@@ -12,8 +12,10 @@ from rest_framework.parsers import MultiPartParser
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 
+from LandingPageApp.models import CompanyReviewAndRating
 from MastersApp.models import CategoryMaster, MaincoreMaster, SubCategoryMaster
-from RegistrationApp.models import SelfRegistration, IndustrialInfo, BillingAddress, BasicCompanyDetails
+from RegistrationApp.models import SelfRegistration, IndustrialInfo, BillingAddress, BasicCompanyDetails, \
+    IndustrialHierarchy
 from .models import *
 import sib_api_v3_sdk
 from sib_api_v3_sdk.rest import ApiException
@@ -1575,31 +1577,97 @@ def fetch_vendor_product_document_details(request):
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
+# @api_view(['post'])
+# @permission_classes((AllowAny,))
+# def get_vendor_details_by_sub_category(request):
+#     data=request.data
+#     subcategoryname=data['subcategoryname']
+#     vendordetails=[]
+#     ccodearray=[]
+#     try:
+#         vendorobj = VendorProduct_BasicDetails.objects.filter(sub_category__icontains=subcategoryname).distinct('sub_category','company_code').values()
+#         for i in range(0,len(vendorobj)):
+#             basicobj=BasicCompanyDetails.objects.filter(company_code=vendorobj[i].get('company_code')).values()
+#             regobj=SelfRegistration.objects.filter(id=basicobj[0].get('updated_by_id')).values()
+#             industryobj=IndustrialInfo.objects.get(company_code=vendorobj[i].get('company_code'))
+#             billobj=BillingAddress.objects.filter(company_code_id=vendorobj[i].get('company_code')).values()
+#             vendordetails.append({
+#                 'company_name':basicobj[0].get('company_name'),
+#                 'name': regobj[0].get('contact_person'),
+#                 'email':regobj[0].get('username'),
+#                 'phone_number':regobj[0].get('phone_number'),
+#                 'profile_photo': regobj[0].get('profile_cover_photo'),
+#                 'city':billobj[0].get('bill_city')
+#                 # 'nature_of_business':industryobj.nature_of_business,
+#                 # 'industry_to_serve':industryobj.industry_to_serve
+#             })
+#         return Response({'status': 200, 'message': 'ok','data':vendordetails},status=status.HTTP_200_OK)
+#
+#
+#     except Exception as e:
+#         return Response({'status':500,'error':str(e)},status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
 @api_view(['post'])
 @permission_classes((AllowAny,))
 def get_vendor_details_by_sub_category(request):
     data=request.data
+    key=data['key']
     subcategoryname=data['subcategoryname']
     vendordetails=[]
     ccodearray=[]
+    average=0
     try:
-        vendorobj = VendorProduct_BasicDetails.objects.filter(sub_category__icontains=subcategoryname).distinct('sub_category','company_code').values()
-        for i in range(0,len(vendorobj)):
-            basicobj=BasicCompanyDetails.objects.filter(company_code=vendorobj[i].get('company_code')).values()
-            regobj=SelfRegistration.objects.filter(id=basicobj[0].get('updated_by_id')).values()
-            industryobj=IndustrialInfo.objects.get(company_code=vendorobj[i].get('company_code'))
-            billobj=BillingAddress.objects.filter(company_code_id=vendorobj[i].get('company_code')).values()
-            vendordetails.append({
-                'company_name':basicobj[0].get('company_name'),
-                'name': regobj[0].get('contact_person'),
-                'email':regobj[0].get('username'),
-                'phone_number':regobj[0].get('phone_number'),
-                'profile_photo': regobj[0].get('profile_cover_photo'),
-                'city':billobj[0].get('bill_city')
-                # 'nature_of_business':industryobj.nature_of_business,
-                # 'industry_to_serve':industryobj.industry_to_serve
-            })
-        return Response({'status': 200, 'message': 'ok','data':vendordetails},status=status.HTTP_200_OK)
+        if key=='vsinadmindb':
+            vendorobj = VendorProduct_BasicDetails.objects.filter(sub_category__icontains=subcategoryname).distinct('sub_category','company_code').values()
+            if len(vendorobj)>0:
+                for i in range(0,len(vendorobj)):
+                    print(vendorobj[i].get('company_code'))
+                    basicobj=BasicCompanyDetails.objects.filter(company_code=vendorobj[i].get('company_code')).values()
+                    regobj=SelfRegistration.objects.filter(id=basicobj[0].get('updated_by_id')).values()
+                    industryobj=IndustrialInfo.objects.filter(company_code=vendorobj[i].get('company_code')).values()
+                    billobj=BillingAddress.objects.filter(company_code_id=vendorobj[i].get('company_code')).values()
+                    hierarchyobj=IndustrialHierarchy.objects.filter(company_code_id=vendorobj[i].get('company_code')).values()
+                    reviewobj = CompanyReviewAndRating.objects.filter(company_code=vendorobj[i].get('company_code')).values()
+                    print(len(reviewobj))
+                    if len(reviewobj) > 0:
+                        print('sssssssssssss')
+                        sum = 0
+                        for rating in reviewobj:
+                            sum = sum + rating['rating']
+                            if len(reviewobj) > 0:
+                                average = sum / len(reviewobj)
+                            else:
+                                average = 0
+                        print(average,'Aaaaaaaaa')
+                    else:
+                        pass
+                    vendordetails.append({
+                        'company_name':basicobj[0].get('company_name'),
+                        'name': regobj[0].get('contact_person'),
+                        'email':regobj[0].get('username'),
+                        'phone_number':regobj[0].get('phone_number'),
+                        'profile_photo': regobj[0].get('profile_cover_photo'),
+                        'city':billobj[0].get('bill_city'),
+                        'nature_of_business':industryobj[0].get('nature_of_business'),
+                        'industry_to_serve':industryobj[0].get('industry_to_serve'),
+                        'user_type': regobj[0].get('user_type'),
+                        'bill_city': billobj[0].get('bill_city'),
+                        'bill_address': billobj[0].get('bill_address'),
+                        'maincore': hierarchyobj[0].get('maincore'),
+                        'category': hierarchyobj[0].get('category'),
+                        'subcategory': hierarchyobj[0].get('subcategory'),
+                        'industrial_scale': basicobj[0].get('industrial_scale'),
+                        'registered_date': regobj[0].get('created_on'),
+                        'rating': round(average)
+                    })
+                return Response({'status': 200, 'message': 'ok','data':vendordetails},status=status.HTTP_200_OK)
+
+            else:
+                return Response({'status': 204, 'message': 'Vendor Product Details Not Present', 'data': vendordetails}, status=status.HTTP_204_NO_CONTENT)
+        else:
+            return Response({'status': 401, 'message': 'UnAuthorized'},status=status.HTTP_401_UNAUTHORIZED)
+
 
 
     except Exception as e:

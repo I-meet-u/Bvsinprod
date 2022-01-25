@@ -1885,33 +1885,7 @@ def fetch_vendor_product_basic_details_by_pk(request):
 
 
 
-@api_view(['put'])
-def edit_technical_specifications(request):
-    data = request.data
-    technicaldetailslist = request.data['technicaldetails']
-    updated_by = request.data.get('updated_by', None)
-    vendor_products = request.data.get('vendor_products', None)
-    try:
-        if updated_by is None:
-            return Response({'status': 204, 'message': 'Enter user id or user id not exist'}, status=204)
-        for i in range(0, len(technicaldetailslist)):
-            vendors=VendorProduct_TechnicalSpecifications.objects.filter(vendor_products_id=vendor_products).values()
-            for i in range(0,len(vendors)):
-                if len(vendors)>0:
-                    vendorproduct=VendorProduct_TechnicalSpecifications.objects.filter(id=vendors[i].get('id')).update(item_specification=technicaldetailslist[i].get('item_specification'),
-                                                                                                                    item_description=technicaldetailslist[i].get('item_description'),
-                                                                                                                    vendor_products=VendorProduct_BasicDetails.objects.get(
-                                                                                                                        vendor_product_id=vendor_products),
-                                                                                                                    updated_by=SelfRegistration.objects.get(
-                                                                                                                        id=updated_by),
-                                                                                                                    created_by=updated_by)
 
-            vendorsvals = VendorProduct_TechnicalSpecifications.objects.filter(vendor_products_id=vendor_products).values()
-
-            return Response({'status': 202, 'message': 'Vendor Product Technical Specifications Are Updated','data':vendorsvals}, status=202)
-
-    except Exception as e:
-        return Response({'status': 500, 'error': str(e)}, status=500)
 
 
 @api_view(['post'])
@@ -3148,3 +3122,31 @@ def get_admin_added_vendor_product_details(request):
 
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+
+@api_view(['put'])
+def edit_technical_specifications(request):
+    data = request.data
+    technicaldetailslist = data['technicaldetails']
+    updated_by =data['updated_by']
+    vendor_products =data['vendor_products']
+    try:
+         for i in range(0,len(technicaldetailslist)):
+             print(len(technicaldetailslist))
+             vendorobj=VendorProduct_TechnicalSpecifications.objects.filter(vendor_products_id=vendor_products,updated_by_id=updated_by).values().order_by('id')
+             if len(vendorobj)>0:
+                 print(vendorobj[i].get('id'))
+                 vendorvalue=VendorProduct_TechnicalSpecifications.objects.get(id=vendorobj[i].get('id'))
+                 if vendorvalue.item_specification!=technicaldetailslist[i].get('item_specification'):
+                     vendorvalue.item_specification=technicaldetailslist[i].get('item_specification')
+                     vendorvalue.save()
+                 if vendorvalue.item_description != technicaldetailslist[i].get('item_description'):
+                     vendorvalue.item_description = technicaldetailslist[i].get('item_description')
+                     vendorvalue.save()
+             else:
+                 print('not present')
+         return Response({'status': 202, 'message': 'Vendor Product Technical Specifications Are Updated'}, status=202)
+
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)

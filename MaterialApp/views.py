@@ -3150,3 +3150,20 @@ def edit_technical_specifications(request):
 
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)
+
+@api_view(['PUT'])
+@permission_classes((AllowAny,))
+def update_vendor_product_basic_details(request,vendor_product_id=None):
+    if request.data['key']=='vsinadmindb':
+        try:
+            vendorobj=VendorProduct_BasicDetails.objects.get(vendor_product_id=vendor_product_id)
+        except VendorProduct_BasicDetails.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+        if request.method=='PUT':
+            serializer=VendorProduct_BasicDetailsSerializer(vendorobj,request.data)
+            if serializer.is_valid():
+                serializer.save()
+                return Response(serializer.data)
+            return  Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
+    else:
+        return Response({'status':401,'message':'UnAuthorized'},status=status.HTTP_401_UNAUTHORIZED)

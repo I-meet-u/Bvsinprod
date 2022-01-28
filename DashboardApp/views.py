@@ -1256,7 +1256,7 @@ def trail_vendor_data_based_on_userid(request):
                             'gst_number': cmp_code_name_gst[0].get('gst_number'),
                             'user_type':regobj[0].get('user_type')
                               })
-        return Response({'status': 200, 'message': 'ok','trail_vendor_data':data3,}, status=200)
+        return Response({'status': 200, 'message': 'ok','trail_vendor_data':data3}, status=200)
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)
 

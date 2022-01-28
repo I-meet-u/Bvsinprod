@@ -2793,3 +2793,28 @@ def get_sub_categories_by_cat_maincat(request):
 
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)
+
+
+@api_view(['post'])
+@permission_classes([AllowAny,])
+def pf_masters_user_id(request):
+    data=request.data
+    key=data['key']
+    userid = data['userid']
+    try:
+        if key=='vsinadmindb':
+            pfobj = PFChargesMaster.objects.filter(updated_by=userid).values().order_by('pf_charge_id')
+            pfadmin=PFChargesMaster.objects.filter(admins=1).values().order_by('pf_charge_id')
+            hsnval=list(chain(pfobj,pfadmin))
+            if len(pfobj)==0:
+                return Response({'status': 200, 'message': 'PF masters data', 'data': pfadmin}, status=200)
+            if len(pfadmin) == 0:
+                return Response({'status': 200, 'message': 'PF admins datas', 'data': pfobj}, status=200)
+            elif len(pfobj)!=0 and len(pfadmin)!=0:
+                return Response({'status': 200, 'message': 'PF all datas', 'data':hsnval}, status=200)
+            else:
+                return Response({'status':204,'message':'No PF data present'},status=204)
+        else:
+            return Response({'status': 401, 'message': 'UnAuthorized'}, status=401)
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)

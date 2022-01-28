@@ -329,7 +329,7 @@ class CurrencyMaster(models.Model):
 class PFChargesMaster(models.Model):
     # pf_charge models and fields
     pf_charge_id = models.BigAutoField(primary_key=True)
-    pf_charge_code = models.CharField(max_length=30,unique=True)
+    pf_charge_code = models.CharField(max_length=30,unique=True,null=True,blank=True)
     pf_charge_description = models.CharField(max_length=200,null=True,blank=True)
     is_verified = models.BooleanField(default=False)
     created_on = models.DateTimeField(auto_now_add=True)

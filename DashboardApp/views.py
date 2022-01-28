@@ -896,11 +896,13 @@ def all_vendors_list(request):
                                           'usertype': regobjdata1[i].get('user_type'),
                                           })
 
+            # else:
+            #     pass
 
 
-            return Response({'status': 200, 'message': 'External Vendor List', 'data': externalarray}, status=200)
-        else:
-            return Response({'status': 204, 'message': 'Not Present','data':[]}, status=204)
+        return Response({'status': 200, 'message': 'External Vendor List', 'data': externalarray}, status=200)
+        # else:
+        #     return Response({'status': 204, 'message': 'Not Present','data':[]}, status=204)
 
 
     except Exception as e:

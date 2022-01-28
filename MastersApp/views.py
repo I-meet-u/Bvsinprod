@@ -2959,7 +2959,7 @@ def tax_duties_master_user_id(request):
     key=data['key']
     userid = data['userid']
     try:
-        if key=='vinadmindb':
+        if key=='vsinadmindb':
             taxdutiesobj = TaxesAndDutiesMaster.objects.filter(updated_by=userid).values().order_by('tax_duties_id')
             taxdutiesadmin=TaxesAndDutiesMaster.objects.filter(admins=1).values().order_by('tax_duties_id')
             taxdutiesval=list(chain(taxdutiesobj,taxdutiesadmin))

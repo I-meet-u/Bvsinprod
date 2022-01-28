@@ -2374,34 +2374,30 @@ def pending_list_listing_leads(request):
         #
         # if len(landingpageobj) > 0:
         basicobj1 = BasicCompanyDetails.objects.filter(updated_by_id=userid).values()
-        if len(basicobj1)>0:
-            landingvendors = landingpagelistingleadsselectvendors.objects.filter(selectedvendorcode=basicobj1[0].get('company_code'),listingstatus='Pending').values()
-            if len(landingvendors)>0:
-                for i in range(0,len(landingvendors)):
-
-                    landingdata=LandingPageBidding.objects.filter(id=landingvendors[i].get('LandingPageBiddingid_id')).values()
-                    print(landingdata[0].get('updated_by_id'))
-                    vendorobj=VendorProduct_BasicDetails.objects.filter(vendor_product_id=landingdata[0].get('vendor_product_pk')).values()
-                    basicobj = BasicCompanyDetails.objects.filter(updated_by_id=landingdata[0].get('updated_by_id')).values().order_by('company_code')
-                    billingobj=BillingAddress.objects.filter(updated_by_id=basicobj[0].get('updated_by_id')).values().order_by('id')
-                    landingarray.append({'company_code':basicobj[0].get('company_code'),
-                                         'company_name': basicobj[0].get('company_name'),
-                                         'city':billingobj[0].get('bill_city'),
-                                         'item_name':vendorobj[0].get('item_name'),
-                                         'item_description': vendorobj[0].get('item_description'),
-                                         'uom':vendorobj[0].get('uom'),
-                                         'quantity':landingdata[0].get('quantity'),
-                                         'publish_date': landingdata[0].get('publish_date'),
-                                         'deadline_date': landingdata[0].get('deadline_date'),
-                                         'vendor_user_id': landingdata[0].get('vendor_user_id'),
-                                         'landing_page_pk': landingdata[0].get('id'),
-                                         'landing_vendors':landingvendors[i].get('id')
-                                         })
-                return Response({'status': 200, 'message': 'Listing Leads List','data':landingarray}, status=200)
-            else:
-                return Response({'status': 204, 'message': 'Not Present','daata':landingarray},status=status.HTTP_204_NO_CONTENT)
+        landingvendors = landingpagelistingleadsselectvendors.objects.filter(selectedvendorcode=basicobj1[0].get('company_code'),listingstatus='Pending').values()
+        if len(landingvendors)>0:
+            for i in range(0,len(landingvendors)):
+                landingdata=LandingPageBidding.objects.filter(id=landingvendors[i].get('LandingPageBiddingid_id')).values()
+                # print(landingdata[0].get('updated_by_id'))
+                vendorobj=VendorProduct_BasicDetails.objects.filter(vendor_product_id=landingdata[0].get('vendor_product_pk')).values()
+                basicobj = BasicCompanyDetails.objects.filter(updated_by_id=landingdata[0].get('updated_by_id')).values().order_by('company_code')
+                billingobj=BillingAddress.objects.filter(updated_by_id=basicobj[0].get('updated_by_id')).values().order_by('id')
+                landingarray.append({'company_code':basicobj[0].get('company_code'),
+                                     'company_name': basicobj[0].get('company_name'),
+                                     'city':billingobj[0].get('bill_city'),
+                                     'item_name':vendorobj[0].get('item_name'),
+                                     'item_description': vendorobj[0].get('item_description'),
+                                     'uom':vendorobj[0].get('uom'),
+                                     'quantity':landingdata[0].get('quantity'),
+                                     'publish_date': landingdata[0].get('publish_date'),
+                                     'deadline_date': landingdata[0].get('deadline_date'),
+                                     'vendor_user_id': landingdata[0].get('vendor_user_id'),
+                                     'landing_page_pk': landingdata[0].get('id'),
+                                     'landing_vendors':landingvendors[i].get('id')
+                                     })
+            return Response({'status': 200, 'message': 'Listing Leads List','data':landingarray}, status=200)
         else:
-            pass
+            return Response({'status': 204, 'message': 'Not Present','daata':landingarray},status=status.HTTP_204_NO_CONTENT)
 
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)

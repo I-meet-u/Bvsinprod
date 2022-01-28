@@ -2793,3 +2793,185 @@ def get_sub_categories_by_cat_maincat(request):
 
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)
+
+
+
+@api_view(['post'])
+@permission_classes([AllowAny,])
+def warranty_master_user_id(request):
+    data=request.data
+    key=data['key']
+    userid = data['userid']
+    try:
+        if key=='vsinadmindb':
+            warrantyobj = WarrantyMaster.objects.filter(updated_by=userid).values().order_by('warranty_id')
+            warrantyadmin=WarrantyMaster.objects.filter(admins=1).values().order_by('warranty_id')
+            warrantyval=list(chain(warrantyobj,warrantyadmin))
+            if len(warrantyobj)==0:
+                return Response({'status': 200, 'message': 'Warranty masters data', 'data': warrantyadmin}, status=200)
+            if len(warrantyadmin) == 0:
+                return Response({'status': 200, 'message': 'Warranty admins datas', 'data': warrantyobj}, status=200)
+            elif len(warrantyobj)!=0 and len(warrantyadmin)!=0:
+                return Response({'status': 200, 'message': 'Warranty all datas', 'data':warrantyval}, status=200)
+            else:
+                return Response({'status':204,'message':'noo'},status=204)
+        else:
+            return Response({'status': 401, 'message': 'UnAuthorized'}, status=401)
+
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)
+
+
+@api_view(['post'])
+@permission_classes([AllowAny,])
+def price_basis_master_user_id(request):
+    data=request.data
+    key=data['key']
+    userid = data['userid']
+    try:
+        if key=='vsinadmindb':
+            priceobj = PriceBasisMaster.objects.filter(updated_by=userid).values().order_by('price_basis_id')
+            priceadmin=PriceBasisMaster.objects.filter(admins=1).values().order_by('price_basis_id')
+            priceval=list(chain(priceobj,priceadmin))
+            if len(priceobj)==0:
+                return Response({'status': 200, 'message': 'Price Basis masters data', 'data': priceadmin}, status=200)
+            if len(priceadmin) == 0:
+                return Response({'status': 200, 'message': 'Price Basis admins datas', 'data': priceobj}, status=200)
+            elif len(priceobj)!=0 and len(priceadmin)!=0:
+                return Response({'status': 200, 'message': 'Price Basis all datas', 'data':priceval}, status=200)
+            else:
+                return Response({'status':204,'message':'noo'},status=204)
+        else:
+            return Response({'status': 401, 'message': 'UnAuthorized'}, status=401)
+
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)
+
+
+@api_view(['post'])
+@permission_classes([AllowAny,])
+def inspection_master_user_id(request):
+    data=request.data
+    key=data['key']
+    userid = data['userid']
+    try:
+        if key=='vsinadmindb':
+            inspectionobj = InspectionMaster.objects.filter(updated_by=userid).values().order_by('inspection_id')
+            inspectionadmin=InspectionMaster.objects.filter(admins=1).values().order_by('inspection_id')
+            inspectionval=list(chain(inspectionobj,inspectionadmin))
+            if len(inspectionobj)==0:
+                return Response({'status': 200, 'message': 'Inspection masters data', 'data': inspectionadmin}, status=200)
+            if len(inspectionadmin) == 0:
+                return Response({'status': 200, 'message': 'Inspection admins datas', 'data': inspectionobj}, status=200)
+            elif len(inspectionobj)!=0 and len(inspectionadmin)!=0:
+                return Response({'status': 200, 'message': 'Inspection all datas', 'data':inspectionval}, status=200)
+            else:
+                return Response({'status':204,'message':'noo'},status=204)
+        else:
+            return Response({'status': 401, 'message': 'UnAuthorized'}, status=401)
+
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)
+
+
+@api_view(['post'])
+@permission_classes([AllowAny,])
+def liquidated_master_user_id(request):
+    data=request.data
+    key=data['key']
+    userid = data['userid']
+    try:
+        if key=='vsinadmindb':
+            liquidatedobj = LiquidatedDamageMaster.objects.filter(updated_by=userid).values().order_by('liquidated_id')
+            liquidatedadmin=LiquidatedDamageMaster.objects.filter(admins=1).values().order_by('liquidated_id')
+            liquidatedval=list(chain(liquidatedobj,liquidatedadmin))
+            if len(liquidatedobj)==0:
+                return Response({'status': 200, 'message': 'Liquidated masters data', 'data': liquidatedadmin}, status=200)
+            if len(liquidatedadmin) == 0:
+                return Response({'status': 200, 'message': 'Liquidated admins datas', 'data': liquidatedobj}, status=200)
+            elif len(liquidatedobj)!=0 and len(liquidatedadmin)!=0:
+                return Response({'status': 200, 'message': 'Liquidated all datas', 'data':liquidatedval}, status=200)
+            else:
+                return Response({'status':204,'message':'noo'},status=204)
+        else:
+            return Response({'status': 401, 'message': 'UnAuthorized'}, status=401)
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)
+
+
+@api_view(['post'])
+@permission_classes([AllowAny,])
+def performance_master_user_id(request):
+    data=request.data
+    key=data['key']
+    userid = data['userid']
+    try:
+        if key=='vsinadmindb':
+            performanceobj = PerformanceGuaranteesMaster.objects.filter(updated_by=userid).values().order_by('performance_id')
+            perforanceadmin=PerformanceGuaranteesMaster.objects.filter(admins=1).values().order_by('performance_id')
+            performancval=list(chain(performanceobj,perforanceadmin))
+            if len(performanceobj)==0:
+                return Response({'status': 200, 'message': 'Performance masters data', 'data': perforanceadmin}, status=200)
+            if len(perforanceadmin) == 0:
+                return Response({'status': 200, 'message': 'Performance admins datas', 'data': performanceobj}, status=200)
+            elif len(performanceobj)!=0 and len(perforanceadmin)!=0:
+                return Response({'status': 200, 'message': 'Performance all datas', 'data':performancval}, status=200)
+            else:
+                return Response({'status':204,'message':'noo'},status=204)
+        else:
+            return Response({'status': 401, 'message': 'UnAuthorized'}, status=401)
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)
+
+
+
+
+@api_view(['post'])
+@permission_classes([AllowAny,])
+def test_qap_master_user_id(request):
+    data=request.data
+    key=data['key']
+    userid = data['userid']
+    try:
+        if key=='vsinadmindb':
+            testobj = TestAndQapMaster.objects.filter(updated_by=userid).values().order_by('test_qap_id')
+            testadmin=TestAndQapMaster.objects.filter(admins=1).values().order_by('test_qap_id')
+            testval=list(chain(testobj,testadmin))
+            if len(testobj)==0:
+                return Response({'status': 200, 'message': 'Test Qap masters data', 'data': testadmin}, status=200)
+            if len(testadmin) == 0:
+                return Response({'status': 200, 'message': 'Test Qap  admins datas', 'data': testobj}, status=200)
+            elif len(testobj)!=0 and len(testadmin)!=0:
+                return Response({'status': 200, 'message': 'Test Qap  all datas', 'data':testval}, status=200)
+            else:
+                return Response({'status':204,'message':'noo'},status=204)
+        else:
+            return Response({'status': 401, 'message': 'UnAuthorized'}, status=401)
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)
+
+
+
+@api_view(['post'])
+@permission_classes([AllowAny,])
+def tax_duties_master_user_id(request):
+    data=request.data
+    key=data['key']
+    userid = data['userid']
+    try:
+        if key=='vinadmindb':
+            taxdutiesobj = TaxesAndDutiesMaster.objects.filter(updated_by=userid).values().order_by('tax_duties_id')
+            taxdutiesadmin=TaxesAndDutiesMaster.objects.filter(admins=1).values().order_by('tax_duties_id')
+            taxdutiesval=list(chain(taxdutiesobj,taxdutiesadmin))
+            if len(taxdutiesobj)==0:
+                return Response({'status': 200, 'message': 'Tax Duties masters data', 'data': taxdutiesadmin}, status=200)
+            if len(taxdutiesadmin) == 0:
+                return Response({'status': 200, 'message': 'Tax Duties admins datas', 'data': taxdutiesobj}, status=200)
+            elif len(taxdutiesobj)!=0 and len(taxdutiesadmin)!=0:
+                return Response({'status': 200, 'message': 'Tax Duties all datas', 'data':taxdutiesval}, status=200)
+            else:
+                return Response({'status':204,'message':'noo'},status=204)
+        else:
+            return Response({'status': 401, 'message': 'UnAuthorized'}, status=401)
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)

@@ -200,5 +200,13 @@ urlpatterns = [
     path('sub_categories_data_by_cat_id/',views.sub_categories_data_by_cat_id),
     path('get_sub_categories_by_cat_maincat/', views.get_sub_categories_by_cat_maincat),
 
+    path('warranty-master-get-by-userid/', views.warranty_master_user_id),
+    path('price-basis-master-get-by-userid/', views.price_basis_master_user_id),
+    path('inspection-master-get-by-userid/', views.inspection_master_user_id),
+    path('liquidated-master-get-by-userid/', views.liquidated_master_user_id),
+    path('performance-master-get-by-userid/',views.performance_master_user_id),
+    path('test-qap-master-get-by-userid/', views.test_qap_master_user_id),
+    path('tax-duties-master-get-by-userid/', views.tax_duties_master_user_id)
+
 ]
 

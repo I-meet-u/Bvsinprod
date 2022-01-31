@@ -2994,7 +2994,8 @@ def fetch_admin_selected_categories(request):
                                      'updated_on': catmasterdata1[j].get('updated_on'),
                                      'priority': catmasterdata1[j].get('priority'),
                                      'category_code': data[0].get('category_code'),
-                                     'category_status': data[0].get('status')
+                                     'category_status': data[0].get('status'),
+                                     'maincore_id':data[0].get('maincore_id')
                                      })
                 for i in range(0,len(values)):
                     catmasterdata2 = AdminSelectedCategories.objects.filter(priority=values[i]).values()
@@ -3008,7 +3009,8 @@ def fetch_admin_selected_categories(request):
                                          'updated_on': catmasterdata2[j].get('updated_on'),
                                          'priority': catmasterdata2[j].get('priority'),
                                          'category_code': data[0].get('category_code'),
-                                         'category_status': data[0].get('status')
+                                         'category_status': data[0].get('status'),
+                                         'maincore_id':data[0].get('maincore_id')
                                          })
             return Response({'status': 200, 'message': 'Admin Selected Categories List', 'data': catarray}, status=200)
         else:
@@ -3047,7 +3049,8 @@ def fetch_admin_trending_categories(request):
                                          'updated_on': catmasterdata1[j].get('updated_on'),
                                          'trending_priority': catmasterdata1[j].get('trending_priority'),
                                          'category_code': data[0].get('category_code'),
-                                         'category_status': data[0].get('status')
+                                         'category_status': data[0].get('status'),
+                                         'maincore_id': data[0].get('maincore_id')
                                          })
                 for i in range(0, len(values)):
                     catmasterdata2 = TrendingCategories.objects.filter(trending_priority=values[i]).values()
@@ -3061,7 +3064,8 @@ def fetch_admin_trending_categories(request):
                                          'updated_on': catmasterdata2[j].get('updated_on'),
                                          'trending_priority': catmasterdata2[j].get('trending_priority'),
                                          'category_code': data[0].get('category_code'),
-                                         'category_status': data[0].get('status')
+                                         'category_status': data[0].get('status'),
+                                         'maincore_id': data[0].get('maincore_id')
                                          })
                 return Response({'status': 200, 'message': 'Admin Selected Trending Categories List', 'data': catarray},
                             status=200)
@@ -3214,7 +3218,8 @@ def fetch_admin_selected_sub_categories(request):
                                             'updated_on': subcatmasterdata1[j].get('updated_on'),
                                             'sub_categories_priority': subcatmasterdata1[j].get('sub_categories_priority'),
                                             'sub_category_code': subdata[0].get('sub_category_code'),
-                                            'sub_category_status': subdata[0].get('status')
+                                            'sub_category_status': subdata[0].get('status'),
+                                            'maincore_id': subdata[0].get('maincore_id')
                                             })
                 for i in range(0,len(values)):
                     subcatmasterdata2= AdminSelectedSubCategories.objects.filter(sub_categories_priority=values[i]).values()
@@ -3222,13 +3227,14 @@ def fetch_admin_selected_sub_categories(request):
                         subdata = SubCategoryMaster.objects.filter(sub_category_id=subcatmasterdata2[j].get('sub_category_id')).values()
                         if subdata:
                             subcatarray.append({'sub_category_name': subdata[0].get('sub_category_name'),
-                                        'sub_category_id': subdata[0].get('sub_category_id'),
-                                        'admins': subcatmasterdata2[j].get('admins'),
-                                        'created_on': subcatmasterdata2[j].get('created_on'),
-                                        'updated_on': subcatmasterdata2[j].get('updated_on'),
-                                        'sub_categories_priority': subcatmasterdata2[j].get('sub_categories_priority'),
-                                        'sub_category_code': subdata[0].get('sub_category_code'),
-                                        'sub_category_status': subdata[0].get('status')
+                                                'sub_category_id': subdata[0].get('sub_category_id'),
+                                                'admins': subcatmasterdata2[j].get('admins'),
+                                                'created_on': subcatmasterdata2[j].get('created_on'),
+                                                'updated_on': subcatmasterdata2[j].get('updated_on'),
+                                                'sub_categories_priority': subcatmasterdata2[j].get('sub_categories_priority'),
+                                                'sub_category_code': subdata[0].get('sub_category_code'),
+                                                'sub_category_status': subdata[0].get('status'),
+                                                'maincore_id': subdata[0].get('maincore_id')
                                         })
             return Response({'status': 200, 'message': 'Admin SubCategories List', 'data': subcatarray},
                             status=200)
@@ -3317,7 +3323,8 @@ def fetch_admin_trending_sub_categories(request):
                                             'trending_sub_categories_priority': subcatmasterdata1[j].get(
                                                 'trending_sub_categories_priority'),
                                             'sub_category_code': subdata[0].get('sub_category_code'),
-                                            'sub_category_status': subdata[0].get('status')
+                                            'sub_category_status': subdata[0].get('status'),
+                                            'maincore_id': subdata[0].get('maincore_id')
                                             })
                 for i in range(0, len(values)):
                     subcatmasterdata2 = TrendingSubCategories.objects.filter(trending_sub_categories_priority=values[i]).values()
@@ -3325,14 +3332,15 @@ def fetch_admin_trending_sub_categories(request):
                         subdata = SubCategoryMaster.objects.filter(sub_category_id=subcatmasterdata2[j].get('trending_sub_category_id')).values()
                         if subdata:
                             subcatarray.append({'trending_sub_category_name': subdata[0].get('sub_category_name'),
-                                    'trending_sub_category_id': subdata[0].get('sub_category_id'),
-                                    'admins': subcatmasterdata2[j].get('admins'),
-                                    'created_on': subcatmasterdata2[j].get('created_on'),
-                                    'updated_on': subcatmasterdata2[j].get('updated_on'),
-                                    'trending_sub_categories_priority': subcatmasterdata2[j].get(
-                                        'trending_sub_categories_priority'),
-                                    'sub_category_code': subdata[0].get('sub_category_code'),
-                                    'sub_category_status': subdata[0].get('status')
+                                                'trending_sub_category_id': subdata[0].get('sub_category_id'),
+                                                'admins': subcatmasterdata2[j].get('admins'),
+                                                'created_on': subcatmasterdata2[j].get('created_on'),
+                                                'updated_on': subcatmasterdata2[j].get('updated_on'),
+                                                'trending_sub_categories_priority': subcatmasterdata2[j].get(
+                                                    'trending_sub_categories_priority'),
+                                                'sub_category_code': subdata[0].get('sub_category_code'),
+                                                'sub_category_status': subdata[0].get('status'),
+                                                'maincore_id': subdata[0].get('maincore_id')
                                     })
             return Response({'status': 200, 'message': 'Trending SubCategories List', 'data': subcatarray},
                             status=200)

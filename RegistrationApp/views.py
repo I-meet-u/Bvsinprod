@@ -1788,7 +1788,7 @@ def vendor_buyer_list(request):
                     if len(basicobj) > 0:
                         addressobj = BillingAddress.objects.filter(updated_by_id=regobj[i].get('id')).values()
                         maincoreobj=IndustrialHierarchy.objects.filter(updated_by_id=regobj[i].get('id')).values()
-                        if len(maincoreobj)>0:
+                        if len(maincoreobj)>0 and len(addressobj)>0:
                             detailslist.append({"company_code": basicobj[0].get('company_code'),
                                                 "company_name": basicobj[0].get('company_name'),
                                                 "company_type": basicobj[0].get('company_type'),
@@ -1808,7 +1808,7 @@ def vendor_buyer_list(request):
                             detailslist.append({"company_code": basicobj[0].get('company_code'),
                                                 "company_name": basicobj[0].get('company_name'),
                                                 "company_type": basicobj[0].get('company_type'),
-                                                "address": addressobj[0].get('bill_address'),
+                                                "address": "",
                                                 "gst_number": basicobj[0].get('gst_number'),
                                                 "profile_image": regobj[i].get('profile_cover_photo'),
                                                 "user_type": regobj[i].get('user_type'),

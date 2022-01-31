@@ -2682,7 +2682,8 @@ def getselectedcatmasters(request):
                             'category_url':categorymasterdetails[0].get('category_image'),
                             'category_id':categorymasterdetails[0].get('category_id'),
                             'category_code':categorymasterdetails[0].get('category_code'),
-                            'category_status':categorymasterdetails[0].get('status')
+                            'category_status':categorymasterdetails[0].get('status'),
+                            'maincore_id':categorymasterdetails[0].get('maincore_id')
 
                             })
             i=i+1

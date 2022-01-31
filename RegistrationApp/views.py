@@ -1816,6 +1816,8 @@ def vendor_buyer_list(request):
                                                 "maincore": ""
 
                                                 })
+                    else:
+                        pass
                 return Response({'status': 200, 'message': 'List Of Vendors & Buyers','data':detailslist}, status=200)
             else:
                 return Response({'status': 204, 'message': 'Registered Details Are Not Present'}, status=204)

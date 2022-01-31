@@ -60,7 +60,7 @@ def category_list(request):
             for i in range(0, len(catobj)):
                 categoryarray.append({'category_id': catobj[i].get('category_id'),
                                       'category_name': catobj[i].get('category_name'),
-                                      'category_image':catobj[i].get('category_image')
+                                      'category_image':catobj[i].get('category_image'),
                                       })
                 subcat = SubCategoryMaster.objects.filter(category_id=catobj[i].get('category_id')).values()
                 for j in range(0,len(subcat)):

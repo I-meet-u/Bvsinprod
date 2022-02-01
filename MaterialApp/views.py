@@ -1818,7 +1818,7 @@ def get_landing_page_bidding_by_userid_vendors_list(request):
                     basicobj1=BasicCompanyDetails.objects.filter(updated_by_id=landingobj[i].get('updated_by_id')).values()
                     vendorproductobj=VendorProduct_BasicDetails.objects.filter(updated_by_id=userid,item_name=landingobj[i].get('product_name')).values()
                     billobj=BillingAddress.objects.filter(updated_by_id=landingobj[i].get('updated_by_id')).values()
-                    if len(basicobj)>0 and len(billobj)>0 and len(vendorproductobj)>0:
+                    if len(billobj)>0 and len(vendorproductobj)>0:
                         vendorlandingpagebidarray.append({'vendor_code':basicobj1[0].get('company_code'),
                                                           'vendor_company_name':basicobj1[0].get('company_name'),
                                                           'item_name':landingobj[i].get('product_name'),
@@ -1834,12 +1834,10 @@ def get_landing_page_bidding_by_userid_vendors_list(request):
                                                           'item_code':vendorproductobj[0].get('item_code'),
                                                           'item_type':landingobj[i].get('item_type'),
                                                           'bill_city':billobj[0].get('bill_city')
-
-
                                                           })
                     else:
-                        vendorlandingpagebidarray.append({'vendor_code': "",
-                                                          'vendor_company_name': "",
+                        vendorlandingpagebidarray.append({'vendor_code': basicobj1[0].get('company_code'),
+                                                          'vendor_company_name': basicobj1[0].get('company_name'),
                                                           'item_name': landingobj[i].get('product_name'),
                                                           'item_description': "",
                                                           'uom': "",

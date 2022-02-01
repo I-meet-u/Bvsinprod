@@ -1809,15 +1809,16 @@ def get_landing_page_bidding_by_userid_vendors_list(request):
         basicobj=BasicCompanyDetails.objects.filter(updated_by_id=userid).values().order_by('company_code')
         if len(basicobj)>0:
             ccodearray=[basicobj[0].get('company_code')]
-            print(ccodearray)
+            # print(ccodearray)
             landingobj=LandingPageBidding.objects.filter(vendors_code__contains=ccodearray).values().order_by('id')
-            print(len(landingobj))
+            # print(len(landingobj))
             if len(landingobj)>0:
                 for i in range(0,len(landingobj)):
+                    print(landingobj[i].get('updated_by_id'))
                     basicobj1=BasicCompanyDetails.objects.filter(updated_by_id=landingobj[i].get('updated_by_id')).values()
                     vendorproductobj=VendorProduct_BasicDetails.objects.filter(updated_by_id=userid,item_name=landingobj[i].get('product_name')).values()
                     billobj=BillingAddress.objects.filter(updated_by_id=landingobj[i].get('updated_by_id')).values()
-                    if len(billobj)>0 and len(vendorproductobj)>0:
+                    if len(basicobj)>0 and len(billobj)>0 and len(vendorproductobj)>0:
                         vendorlandingpagebidarray.append({'vendor_code':basicobj1[0].get('company_code'),
                                                           'vendor_company_name':basicobj1[0].get('company_name'),
                                                           'item_name':landingobj[i].get('product_name'),
@@ -1837,8 +1838,8 @@ def get_landing_page_bidding_by_userid_vendors_list(request):
 
                                                           })
                     else:
-                        vendorlandingpagebidarray.append({'vendor_code': basicobj1[0].get('company_code'),
-                                                          'vendor_company_name': basicobj1[0].get('company_name'),
+                        vendorlandingpagebidarray.append({'vendor_code': "",
+                                                          'vendor_company_name': "",
                                                           'item_name': landingobj[i].get('product_name'),
                                                           'item_description': "",
                                                           'uom': "",

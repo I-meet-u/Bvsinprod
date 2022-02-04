@@ -4002,14 +4002,22 @@ def getsorcelistresponse(request):
             for i in range(0,len(srcobj)):
                 srcpublishobj=SourcePublish.objects.filter(source=srcobj[i].get('id')).values()
                 # print(srcpublishobj)
-                resarry.append({'type':srcobj[i].get('item_type'),
-                                'item_name':srcobj[i].get('item_name'),
-                                'description':srcobj[i].get('item_description'),
-                                'UOM':srcobj[i].get('uom'),
-                                'qty':srcobj[i].get('quantity'),
-                                'source_code':srcobj[i].get('source_code'),
-                                'publishcount':len(srcpublishobj)})
-
+                if len(srcpublishobj)>=5:
+                    resarry.append({'type':srcobj[i].get('item_type'),
+                                    'item_name':srcobj[i].get('item_name'),
+                                    'description':srcobj[i].get('item_description'),
+                                    'UOM':srcobj[i].get('uom'),
+                                    'qty':srcobj[i].get('quantity'),
+                                    'source_code':srcobj[i].get('source_code'),
+                                    'publishcount':5})
+                else:
+                    resarry.append({'type': srcobj[i].get('item_type'),
+                                    'item_name': srcobj[i].get('item_name'),
+                                    'description': srcobj[i].get('item_description'),
+                                    'UOM': srcobj[i].get('uom'),
+                                    'qty': srcobj[i].get('quantity'),
+                                    'source_code': srcobj[i].get('source_code'),
+                                    'publishcount': len(srcpublishobj)})
             return Response({'status': 200,'message':'ok','data':resarry},status=200)
         else:
             return Response({'status': 204, 'message': 'Source List Not Present', 'data': []}, status=204)

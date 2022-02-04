@@ -25,6 +25,32 @@ class VendorProduct_BasicDetailsSerializer(serializers.ModelSerializer):
         values = VendorProduct_BasicDetails.objects.create(item_code=item_code, **validate_data)
         return values
 
+    def update(self, instance, validated_data):
+        print(validated_data['add_image1'])
+        if validated_data['add_image1'] == None:
+            print('do nothing')
+            if validated_data['add_image2']==None:
+                pass
+                if validated_data['add_image3']==None:
+                    pass
+                    if validated_data['add_image4']==None:
+                        pass
+                    else:
+                        instance.add_image4 = validated_data.get('add_image4', instance.add_image4)
+                        instance.save()
+                else:
+                    instance.add_image3 = validated_data.get('add_image3', instance.add_image3)
+                    instance.save()
+            else:
+                instance.add_image2 = validated_data.get('add_image2', instance.add_image2)
+                instance.save()
+
+
+        else:
+            instance.add_image1 = validated_data.get('add_image1', instance.add_image1)
+            instance.save()
+        return instance
+
 
 
 class VendorProduct_GeneralDetailsSerializer(serializers.ModelSerializer):

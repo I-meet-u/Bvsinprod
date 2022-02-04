@@ -1277,12 +1277,6 @@ def get_source_items_list_by_source_user_id(request):
         sourceobj = SourcePublish.objects.filter(source_user_id=sourceuserid).values().order_by('source_total_amount')
         if len(sourceobj) > 0:
             for i in range(0,len(sourceobj)):
-                print(sourceobj[i].get('source_total_amount'))
-                if float(source_total_amount) > float(sourcepublishobj[i].get('source_total_amount')):
-                    count = count + 1
-                    if count == 5:
-                        return Response({'status': 202, 'message': 'Upto level 5 data exist'}, status=202)
-                i = i + 1
                 compobj=BasicCompanyDetails.objects.filter(updated_by=sourceobj[i].get('updated_by_id')).values()
                 sourceobj[i].setdefault('compname',compobj[0].get('company_name'))
                 sourcecreateobj=SourceList_CreateItems.objects.filter(id=sourceobj[i].get('source_id')).values()
@@ -5233,7 +5227,7 @@ def source_publish_data_store(request):
                 if float(source_total_amount) > float(sourcepublishobj[i].get('source_total_amount')):
                     count = count + 1
                     if count == 5:
-                        return Response({'status': 202, 'message': 'Upto level 5 data exist'}, status=202)
+                        return Response({'status': 202, 'message': '5 data present'}, status=202)
                 i = i + 1
             if count < 5:
                 SourcePublish.objects.create(source_item_type=data['source_item_type'],

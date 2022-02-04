@@ -2699,8 +2699,6 @@ def get_trending_categories(request):
         trendingcategories=[]
         i=0
         adminobj=TrendingCategories.objects.filter().values().order_by('id')
-
-
         while i<len(adminobj):
             categorymasterdetails=CategoryMaster.objects.filter(category_name=adminobj[i].get('trending_category_name')).values()
             if categorymasterdetails:
@@ -2708,7 +2706,8 @@ def get_trending_categories(request):
                                            'category_url':categorymasterdetails[0].get('category_image'),
                                            'category_id':categorymasterdetails[0].get('category_id'),
                                            'category_code': categorymasterdetails[0].get('category_code'),
-                                           'category_status': categorymasterdetails[0].get('status')
+                                           'category_status': categorymasterdetails[0].get('status'),
+                                           'maincore_id':categorymasterdetails[0].get('maincore_id')
                                            })
             i=i+1
         return Response({'status': 200, 'message': 'Trending Categoires List','data':trendingcategories}, status=200)

@@ -2719,13 +2719,21 @@ def get_trending_categories(request):
 @permission_classes([AllowAny,])
 def get_admin_selected_sub_categories(request):
     try:
+        maincoreid=""
         selectedsubcategory=[]
         selectedsubcategoriesobj=AdminSelectedSubCategories.objects.filter().values()
+        print("selectedsubcategoriesobj ",selectedsubcategoriesobj)
         for i in range(0,len(selectedsubcategoriesobj)):
+
             subcategoryobj=SubCategoryMaster.objects.filter(sub_category_name=selectedsubcategoriesobj[i].get('sub_category_name')).values()
+            catobj=CategoryMaster.objects.filter(category_id=subcategoryobj[0].get('category_id')).values()
+            if catobj:
+                maincoreid=catobj[0].get('maincore_id')
             selectedsubcategory.append({'sub_category_name':subcategoryobj[0].get('sub_category_name'),
                                         'sub_category_url':subcategoryobj[0].get('sub_category_image'),
+                                        'maincore_id':maincoreid,
                                         'sub_category_id':subcategoryobj[0].get('sub_category_id'),
+                                        'Category_id':subcategoryobj[0].get('category_id'),
                                         'sub_category_code': subcategoryobj[0].get('sub_category_code'),
                                         'sub_category_status': subcategoryobj[0].get('status')
 

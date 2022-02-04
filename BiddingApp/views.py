@@ -5208,3 +5208,80 @@ def getpublishedcommonrfqbid(request):
         return Response({'status': 500, 'message': str(e)}, status=500)
 
 
+
+@api_view(['post'])
+def source_publish_data_store(request):
+    # data = request.data
+    try:
+        data = request.data
+        source_id = data['source_id']
+        updated_by = data['updated_by']
+        source_total_amount = data['source_total_amount']
+        i = 0
+        count = 0
+        sourcepublishobj = SourcePublish.objects.filter(
+            source=source_id).values().order_by('source_total_amount')
+        if len(sourcepublishobj) > 5:
+            while i < len(sourcepublishobj):
+                print(sourcepublishobj[i].get('source_total_amount'))
+                if float(source_total_amount) > float(sourcepublishobj[i].get('source_total_amount')):
+                    count = count + 1
+                    if count == 5:
+                        return Response({'status': 202, 'message': 'Upto level 5 data exist'}, status=202)
+                i = i + 1
+            if count <= 5:
+                SourcePublish.objects.create(source_item_type=data['source_item_type'],
+                                             source_type=data['source_type'],
+                                             source_department=data['source_department'],
+                                             source_present_cost=data['source_present_cost'],
+                                             source_target_cost=data['source_target_cost'],
+                                             source_pf_charges=data['source_pf_charges'],
+                                             source_frieght_charges=data['source_frieght_charges'],
+                                             source_delivery_charges=data['source_delivery_charges'],
+                                             source_item_code=data['source_item_code'],
+                                             source_item_name=['source_item_name'],
+                                             source_item_description=data['source_item_description'],
+                                             source_uom=data['source_uom'],
+                                             source_product_category=data['source_product_category'],
+                                             source_priority=data['source_priority'],
+                                             source_quantity=data['source_quantity'],
+                                             source_tax=data['source_tax'],
+                                             source_unit_rate=data['source_unit_rate'],
+                                             source_discount=data['source_discount'],
+                                             source_total_amount=data['source_total_amount'],
+                                             source=SourceList_CreateItems.objects.get(
+                                                 id=data['source_id']),
+                                             source_user_id=data['source_user_id'],
+                                             created_by=updated_by,
+                                             updated_by=SelfRegistration.objects.get(id=updated_by))
+            else:
+                SourcePublish.objects.create(source_item_type=data['source_item_type'],
+                                             source_type=data['source_type'],
+                                             source_department=data['source_department'],
+                                             source_present_cost=data['source_present_cost'],
+                                             source_target_cost=data['source_target_cost'],
+                                             source_pf_charges=data['source_pf_charges'],
+                                             source_frieght_charges=data['source_frieght_charges'],
+                                             source_delivery_charges=data['source_delivery_charges'],
+                                             source_item_code=data['source_item_code'],
+                                             source_item_name=['source_item_name'],
+                                             source_item_description=data['source_item_description'],
+                                             source_uom=data['source_uom'],
+                                             source_product_category=data['source_product_category'],
+                                             source_priority=data['source_priority'],
+                                             source_quantity=data['source_quantity'],
+                                             source_tax=data['source_tax'],
+                                             source_unit_rate=data['source_unit_rate'],
+                                             source_discount=data['source_discount'],
+                                             source_total_amount=data['source_total_amount'],
+                                             source=SourceList_CreateItems.objects.get(
+                                                 id=data['source_id']),
+                                             source_user_id=data['source_user_id'],
+                                             created_by=updated_by,
+                                             updated_by=SelfRegistration.objects.get(id=updated_by))
+            return Response({'status': 200, 'message': 'ok'}, status=200)
+        else:
+            return Response({'status': 204, 'message': '5 datas are not present'}, status=204)
+
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)

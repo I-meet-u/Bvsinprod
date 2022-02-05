@@ -5318,7 +5318,6 @@ def get_source_items_list_by_source_user_id(request):
                                        'source_unit_rate': sourceobj1[j].get('source_unit_rate'),
                                        'source_tax': sourceobj1[j].get('source_tax'),
                                        'source_discount': sourceobj1[j].get('source_discount'),
-                                       'source_total_amount': sourceobj1[j].get('source_total_amount'),
                                        'source': sourceobj1[j].get('source'),
                                        'source_user_id': sourceobj1[j].get('source_user_id'),
                                        'created_on': sourceobj1[j].get('created_on'),

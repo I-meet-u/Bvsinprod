@@ -487,6 +487,8 @@ class SourcePublish(models.Model):
     created_by = models.BigIntegerField()
     updated_by = models.ForeignKey(SelfRegistration, on_delete=models.CASCADE)
     admins = models.ForeignKey(AdminRegister, on_delete=models.CASCADE, null=True, blank=True)
+    source_payment_terms = models.CharField(max_length=200, null=True, blank=True)
+    source_warranty = models.CharField(max_length=200, null=True, blank=True)
 
     class Meta:
         db_table="SourcePublish"

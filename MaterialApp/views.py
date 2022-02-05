@@ -2077,6 +2077,12 @@ def get_buyer_posted_response_by_pk(request):
         landingpagebidd=LandingPageBidding.objects.filter(id=landingpk).values()
         if len(landingpagebidd)>0:
             landingpagevendorbidpublishobj=LandingPageBidding_Publish.objects.filter(listing_leads=landingpagebidd[0].get('id')).values()
+            for i in range(0, len(landingpagevendorbidpublishobj)):
+                vendorobj = VendorProduct_BasicDetails.objects.filter(
+                    vendor_product_id=landingpagebidd[i].get('vendor_product_pk')).values()
+                billobj = BillingAddress.objects.filter(updated_by_id=landingpagebidd[i].get('updated_by_id')).values()
+                landingpagevendorbidpublishobj[i].setdefault('item_code', vendorobj[0].get('item_code'))
+                landingpagevendorbidpublishobj[i].setdefault('bill_city', billobj[0].get('bill_city'))
             return Response({'status': 200, 'message': 'Listing Leads Publish','data':landingpagevendorbidpublishobj,'buyer_data':landingpagebidd}, status=200)
         else:
             return Response({'status':204,'message':'Listing Leads Not Present'},status=204)

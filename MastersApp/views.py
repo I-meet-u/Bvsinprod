@@ -2748,17 +2748,24 @@ def get_admin_selected_sub_categories(request):
 @permission_classes([AllowAny,])
 def get_admin_trending_sub_categories(request):
     try:
+        maincoreid=""
         trendingsubcategory=[]
         trendingsubcategoriesobj=TrendingSubCategories.objects.filter().values()
         for i in range(0,len(trendingsubcategoriesobj)):
             subcategoryobj=SubCategoryMaster.objects.filter(sub_category_id=trendingsubcategoriesobj[i].get('trending_sub_category_id')).values()
-            trendingsubcategory.append({'sub_category_name':subcategoryobj[0].get('sub_category_name'),
+            if subcategoryobj:
+                catobj=CategoryMaster.objects.filter(category_id=subcategoryobj[0].get('category_id')).values()
+                if catobj:
+                    maincoreid=catobj[0].get('maincore_id')
+                trendingsubcategory.append({'sub_category_name':subcategoryobj[0].get('sub_category_name'),
                                         'sub_category_url':subcategoryobj[0].get('sub_category_image'),
+                                        'maincore_id':maincoreid,
+                                        'Category_id':subcategoryobj[0].get('category_id'),
                                         'sub_category_id':subcategoryobj[0].get('sub_category_id'),
                                         'sub_category_code': subcategoryobj[0].get('sub_category_code'),
                                         'sub_category_status': subcategoryobj[0].get('status')
 
-            })
+                })
         return Response({'status': 200, 'message': 'Trending SubCategoires List', 'data': trendingsubcategory}, status=200)
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)

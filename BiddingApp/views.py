@@ -5313,6 +5313,8 @@ def get_source_items_list_by_source_user_id(request):
                                        'source_pf_charges':sourceobj1[j].get('source_pf_charges'),
                                        'source_frieght_charges':sourceobj1[j].get('source_frieght_charges'),
                                        'source_delivery_charges':sourceobj1[j].get('source_delivery_charges'),
+                                       'source_payment_terms':sourceobj1[j].get('source_payment_terms'),
+                                       'source_warranty':sourceobj1[j].get('source_warranty'),
                                        'source_item_code':sourceobj1[j].get('source_item_code'),
                                        'source_item_name': sourceobj1[j].get('source_item_name'),
                                        'source_item_description': sourceobj1[j].get('source_item_description'),

@@ -5239,34 +5239,32 @@ def source_publish_data_store(request):
                                              source_user_id=data['source_user_id'],
                                              created_by=updated_by,
                                              updated_by=SelfRegistration.objects.get(id=updated_by))
-            else:
-                SourcePublish.objects.create(source_item_type=data['source_item_type'],
-                                             source_type=data['source_type'],
-                                             source_department=data['source_department'],
-                                             source_present_cost=data['source_present_cost'],
-                                             source_target_cost=data['source_target_cost'],
-                                             source_pf_charges=data['source_pf_charges'],
-                                             source_frieght_charges=data['source_frieght_charges'],
-                                             source_delivery_charges=data['source_delivery_charges'],
-                                             source_item_code=data['source_item_code'],
-                                             source_item_name=['source_item_name'],
-                                             source_item_description=data['source_item_description'],
-                                             source_uom=data['source_uom'],
-                                             source_product_category=data['source_product_category'],
-                                             source_priority=data['source_priority'],
-                                             source_quantity=data['source_quantity'],
-                                             source_tax=data['source_tax'],
-                                             source_unit_rate=data['source_unit_rate'],
-                                             source_discount=data['source_discount'],
-                                             source_total_amount=data['source_total_amount'],
-                                             source=SourceList_CreateItems.objects.get(
-                                                 id=data['source_id']),
-                                             source_user_id=data['source_user_id'],
-                                             created_by=updated_by,
-                                             updated_by=SelfRegistration.objects.get(id=updated_by))
-            return Response({'status': 200, 'message': 'ok'}, status=200)
         else:
-            return Response({'status': 204, 'message': '5 datas are not present'}, status=204)
+            SourcePublish.objects.create(source_item_type=data['source_item_type'],
+                                         source_type=data['source_type'],
+                                         source_department=data['source_department'],
+                                         source_present_cost=data['source_present_cost'],
+                                         source_target_cost=data['source_target_cost'],
+                                         source_pf_charges=data['source_pf_charges'],
+                                         source_frieght_charges=data['source_frieght_charges'],
+                                         source_delivery_charges=data['source_delivery_charges'],
+                                         source_item_code=data['source_item_code'],
+                                         source_item_name=['source_item_name'],
+                                         source_item_description=data['source_item_description'],
+                                         source_uom=data['source_uom'],
+                                         source_product_category=data['source_product_category'],
+                                         source_priority=data['source_priority'],
+                                         source_quantity=data['source_quantity'],
+                                         source_tax=data['source_tax'],
+                                         source_unit_rate=data['source_unit_rate'],
+                                         source_discount=data['source_discount'],
+                                         source_total_amount=data['source_total_amount'],
+                                         source=SourceList_CreateItems.objects.get(
+                                             id=data['source_id']),
+                                         source_user_id=data['source_user_id'],
+                                         created_by=updated_by,
+                                         updated_by=SelfRegistration.objects.get(id=updated_by))
+        return Response({'status': 200, 'message': 'ok'}, status=200)
 
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)
@@ -5330,9 +5328,7 @@ def get_source_items_list_by_source_user_id(request):
                                        'source_required_city':sourcecreateobj[0].get('source_required_city')
 
                                        })
-            return Response({'status': 200, 'message': 'Source Create Items List','data':newsourcearray},
-
-                                status=status.HTTP_200_OK)
+            return Response({'status': 200, 'message': 'Source Create Items List','data':newsourcearray},status=status.HTTP_200_OK)
 
         else:
             return Response({'status': 204, 'message': 'Not Found'}, status=status.HTTP_204_NO_CONTENT)

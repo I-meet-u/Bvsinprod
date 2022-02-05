@@ -27,10 +27,6 @@ class VendorProduct_GeneralDetailsView(viewsets.ModelViewSet):
     queryset = VendorProduct_GeneralDetails.objects.all()
     serializer_class = VendorProduct_GeneralDetailsSerializer
 
-    def update(self, request, *args, **kwargs):
-        pass
-
-
 class VendorProduct_TechnicalSpecificationsView(viewsets.ModelViewSet):
     queryset = VendorProduct_TechnicalSpecifications.objects.all()
     serializer_class = VendorProduct_TechnicalSpecificationsSerialzer

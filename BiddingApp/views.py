@@ -5304,16 +5304,16 @@ def get_source_items_list_by_source_user_id(request):
                 compobj = BasicCompanyDetails.objects.filter(
                     updated_by=sourceobj1[j].get('updated_by_id')).values()
 
-                newsourcearray.append({'source_item_type':sourceobj1[j].get('source_item_type'),
+                newsourcearray.append({'source_item_type_'+str(j):sourceobj1[j].get('source_item_type'),
                                        'source_code':sourceobj1[j].get('source_code'),
                                        'source_type':sourceobj1[j].get('source_type'),
                                        'source_department':sourceobj1[j].get('source_department'),
                                        'source_present_cost':sourceobj1[j].get('source_present_cost'),
                                        'source_target_cost':sourceobj1[j].get('source_target_cost'),
                                        'source_pf_charges':sourceobj1[j].get('source_pf_charges'),
-                                       'source_frieght_charges':sourceobj1[j].get('source_frieght_charges'),
-                                       'source_delivery_charges':sourceobj1[j].get('source_delivery_charges'),
-                                       'source_payment_terms':sourceobj1[j].get('source_payment_terms'),
+                                       'source_frieght_charges_'+str(j):sourceobj1[j].get('source_frieght_charges'),
+                                       'source_delivery_charges_'+str(j):sourceobj1[j].get('source_delivery_charges'),
+                                       'source_payment_terms_'+str(j):sourceobj1[j].get('source_payment_terms'),
                                        'source_warranty':sourceobj1[j].get('source_warranty'),
                                        'source_item_code':sourceobj1[j].get('source_item_code'),
                                        'source_item_name': sourceobj1[j].get('source_item_name'),
@@ -5332,7 +5332,7 @@ def get_source_items_list_by_source_user_id(request):
                                        'created_by': sourceobj1[j].get('created_by'),
                                        'updated_by':sourceobj1[j].get('updated_by'),
                                        'admins':sourceobj1[j].get('admins'),
-                                       'compname': compobj[0].get('company_name'),
+                                       'compname_'+str(j): compobj[0].get('company_name'),
                                        'source_total_amount':amountarray[j],
                                        'source_required_city':sourcecreateobj[0].get('source_required_city')
 

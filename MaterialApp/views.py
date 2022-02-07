@@ -3061,23 +3061,24 @@ def get_vendor_product_details_based_on_main_id_cat_id_subcat_name(request):
         if key == "vsinadmin":
             if main_core_id!="" and cat_id!="" and sub_cat_name!="":
                 maincoreobj=MaincoreMaster.objects.filter(maincore_id=main_core_id).values()
+                print(len(maincoreobj),maincoreobj[0].get('maincore_id'))
                 categoryobj=CategoryMaster.objects.filter(category_id=cat_id).values()
-                vendorobj1=VendorProduct_BasicDetails.objects.filter(core_sector=maincoreobj[0].get('maincore_id'),category=categoryobj[0].get('category_id'),sub_category=sub_cat_name).values()
-                if len(vendorobj1):
-                    return Response({'status': 200, 'message': 'ok', 'data': vendorobj1},
-                                    status=status.HTTP_200_OK)
-                else:
-                    return Response({'status': 204, 'message': 'ok', 'data': 'Vendor Product Details Not Present'},
-                                    status=status.HTTP_204_NO_CONTENT)
+                print(len(categoryobj),categoryobj[0].get('category_id'))
+                subcategoryobj=SubCategoryMaster.objects.filter(sub_category_name=sub_cat_name).values()
+                vendorobj1 = VendorProduct_BasicDetails.objects.filter(core_sector=maincoreobj[0].get('maincore_name'),
+                                                                       category=categoryobj[0].get('category_name'),sub_category=subcategoryobj[0].get('sub_category_name')).values()
+                if len(vendorobj1)>0:
+                    return Response({'status': 200, 'error':'ok','data':vendorobj1}, status=status.HTTP_200_OK)
 
             else:
-                vendorobj1=VendorProduct_BasicDetails.objects.filter(sub_category=sub_cat_name).values()
-                if len(vendorobj1)>0:
-                    return Response({'status': 200, 'message': 'ok', 'data': vendorobj1},
-                                    status=status.HTTP_200_OK)
-                else:
-                    return Response({'status': 204, 'message': 'ok', 'data': 'Vendor Product Details Not Present'},
-                                    status=status.HTTP_204_NO_CONTENT)
+                subcategoryobj=SubCategoryMaster.objects.filter(sub_category_name=sub_cat_name).values()
+
+                vendorobj1 = VendorProduct_BasicDetails.objects.filter(sub_category=subcategoryobj[0].get(
+                                                                       'sub_category_name')).values()
+                if len(vendorobj1) > 0:
+                    return Response({'status': 200, 'error': 'ok', 'data': vendorobj1}, status=status.HTTP_200_OK)
+
+        return Response({'status': 401, 'message': 'UnAuthorized'},status=status.HTTP_401_UNAUTHORIZED)
 
 
 

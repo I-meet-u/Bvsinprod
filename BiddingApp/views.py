@@ -5345,11 +5345,13 @@ def vendor_source_responses(request):
     data=request.data
     vendor_user_id=data['vendor_user_id']
     publish_pk=data['publish_pk']
+
     try:
-        sourcepublishobj=SourcePublish.objects.filter(updated_by_id=vendor_user_id,source_id=publish_pk).values()
-        if len(sourcepublishobj)>0:
-            return Response({'status':200,'message':'Vendor Response for Source','data':sourcepublishobj},status=status.HTTP_200_OK)
+        sourceobj=SourceList_CreateItems.objects.filter(id=publish_pk).values()
+        if len(sourceobj)>0:
+            sourcepublishobj=SourcePublish.objects.filter(updated_by_id=vendor_user_id,source_id=sourceobj[0].get('id')).values()
+            return Response({'status':200,'message':'Vendor Response for Source','data':sourcepublishobj,'buyer_data':sourceobj},status=status.HTTP_200_OK)
         else:
-            return Response({'status':204,'message':'Source Publish Details are not present','data':sourcepublishobj},status=status.HTTP_204_NO_CONTENT)
+            return Response({'status':204,'message':'Source Publish Details are not present'},status=status.HTTP_204_NO_CONTENT)
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

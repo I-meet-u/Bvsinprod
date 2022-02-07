@@ -2055,15 +2055,26 @@ def getbuyerpostedresponse(request):
             vendor_product_details=VendorProduct_BasicDetails.objects.filter(vendor_product_id=landingpagebidd[i].get('vendor_product_pk')).values()
             if vendor_product_details:
                 landingpagevendorbidpublishobj=LandingPageBidding_Publish.objects.filter(listing_leads=landingpagebidd[i].get('id')).values()
-                res.append({
-                            'landong_page_pk':landingpagebidd[i].get('id'),
-                            'productname':landingpagebidd[i].get('product_name'),
-                            'productdesc':vendor_product_details[0].get('item_description'),
-                            'Quantity':landingpagebidd[i].get('quantity'),
-                            'Priority':landingpagebidd[i].get('priority'),
-                            'publish_date':landingpagebidd[i].get('publish_date'),
-                            'deadline_date':landingpagebidd[i].get('deadline_date'),
-                            'count_of_res':len(landingpagevendorbidpublishobj)})
+                if len(landingpagevendorbidpublishobj)>=5:
+                    res.append({
+                        'landong_page_pk': landingpagebidd[i].get('id'),
+                        'productname': landingpagebidd[i].get('product_name'),
+                        'productdesc': vendor_product_details[0].get('item_description'),
+                        'Quantity': landingpagebidd[i].get('quantity'),
+                        'Priority': landingpagebidd[i].get('priority'),
+                        'publish_date': landingpagebidd[i].get('publish_date'),
+                        'deadline_date': landingpagebidd[i].get('deadline_date'),
+                        'count_of_res':5})
+                else:
+                    res.append({
+                                'landong_page_pk':landingpagebidd[i].get('id'),
+                                'productname':landingpagebidd[i].get('product_name'),
+                                'productdesc':vendor_product_details[0].get('item_description'),
+                                'Quantity':landingpagebidd[i].get('quantity'),
+                                'Priority':landingpagebidd[i].get('priority'),
+                                'publish_date':landingpagebidd[i].get('publish_date'),
+                                'deadline_date':landingpagebidd[i].get('deadline_date'),
+                                'count_of_res':len(landingpagevendorbidpublishobj)})
         return Response({'status': 200, 'message': 'Ok','data':res}, status=200)
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)

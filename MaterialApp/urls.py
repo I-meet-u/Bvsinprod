@@ -90,5 +90,7 @@ urlpatterns = [
          views.get_vendor_product_details_based_on_main_id_cat_id_subcat_name),
     path('get_vendor_product_details_by_pk/', views.get_vendor_product_details_by_pk),
     path('get_admin_added_vendor_product_details/',views.get_admin_added_vendor_product_details),
-    path('update_vendor_product_basic_details/<int:vendor_product_id>',views.update_vendor_product_basic_details)
+    path('update_vendor_product_basic_details/<int:vendor_product_id>',views.update_vendor_product_basic_details),
+    path('get_companies_based_on_landing_page_pk/',views.get_companies_based_on_landing_page_pk),
+    path('vendor_source_responses_listing_leads/',views.vendor_source_responses_listing_leads)
 ]

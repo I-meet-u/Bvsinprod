@@ -5350,7 +5350,7 @@ def vendor_source_responses(request):
         sourceobj=SourceList_CreateItems.objects.filter(id=publish_pk).values()
         if len(sourceobj)>0:
             sourcepublishobj=SourcePublish.objects.filter(updated_by_id=vendor_user_id,source_id=sourceobj[0].get('id')).values()
-            return Response({'status':200,'message':'Vendor Response for Source','data':sourcepublishobj,'buyer_data':sourceobj},status=status.HTTP_200_OK)
+            return Response({'status':200,'message':'Vendor Response for Source','data':sourcepublishobj,'pf_charges':sourceobj[0].get('p_f_charges'),'frieght_charges':sourceobj[0].get('frieght_charges'),'delivery':sourceobj[0].get('delivery')},status=status.HTTP_200_OK)
         else:
             return Response({'status':204,'message':'Source Publish Details are not present'},status=status.HTTP_204_NO_CONTENT)
     except Exception as e:

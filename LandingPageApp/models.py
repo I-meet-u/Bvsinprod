@@ -38,6 +38,8 @@ class Message(models.Model):
     sender_designation=models.CharField(max_length=200,null=True,blank=True)
     receiver_designation = models.CharField(max_length=200, null=True, blank=True)
     created_time=models.DateTimeField(auto_now_add=True)
+    sender_name=models.CharField(max_length=100,null=True,blank=True)
+    receiver_name=models.CharField(max_length=100,null=True,blank=True)
     is_read=models.BooleanField(default=False)
     history=HistoricalRecords()
 

@@ -39,6 +39,11 @@ urlpatterns = [
     path('search-texts/',views.search_texts),
     path('getproductbymaincore/',views.getproductbymaincore),
     path('company_details_by_maincore_id/',views.company_details_by_maincore_id),
-    path('company_details_by_maincore_id_cat_id/',views.company_details_by_maincore_id_cat_id)
+    path('company_details_by_maincore_id_cat_id/',views.company_details_by_maincore_id_cat_id),
+
+    # chat urls
+
+    path('get-messages/<int:sender>/<int:receiver>', views.messages_lists, name='message-details'),  # get request
+    path('create-messages/', views.messages_lists, name='message-create'),  # post request
 
 ]

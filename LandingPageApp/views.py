@@ -7,8 +7,8 @@ from rest_framework.decorators import api_view, permission_classes, action
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 # Create your views here.
-from LandingPageApp.models import CompanyReviewAndRating
-from LandingPageApp.serializers import CompanyReviewSerializer
+from LandingPageApp.models import CompanyReviewAndRating, Message
+from LandingPageApp.serializers import CompanyReviewSerializer, MessageSerializer
 from MastersApp.models import MaincoreMaster, CategoryMaster, SubCategoryMaster
 from MaterialApp.models import VendorProduct_BasicDetails
 from RegistrationApp.models import SelfRegistration, BasicCompanyDetails, IndustrialHierarchy, BillingAddress, \
@@ -1090,3 +1090,25 @@ def company_details_by_maincore_id_cat_id(request):
             return Response({'status': 401, 'message': 'UnAuthorized'}, status=status.HTTP_401_UNAUTHORIZED)
     except Exception as e:
         return Response({'status':500,'error':str(e)},status=500)
+
+
+@api_view(['GET','POST'])
+@permission_classes((AllowAny,))
+def messages_lists(request,sender=None,receiver=None):
+    try:
+        if request.data['key']=='vsinadmindb':
+            if request.method=='GET':
+                messages=Message.objects.filter(sender_id=sender,receiver_id=receiver)
+                serializer=MessageSerializer(messages,many=True)
+                return Response(serializer.data)
+
+            elif(request.method=='POST'):
+                serializer=MessageSerializer(data=request.data)
+                if serializer.is_valid():
+                    serializer.save()
+                    return Response(serializer.data,status=status.HTTP_201_CREATED)
+                return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
+        else:
+            return Response({'status':401,'message':'UnAuthorized'},status=status.HTTP_401_UNAUTHORIZED)
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)

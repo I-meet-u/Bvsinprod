@@ -5278,50 +5278,27 @@ def source_publish_data_store(request):
 
 
 @api_view(['post'])
+@permission_classes((AllowAny,))
 def get_source_items_list_by_source_user_id(request):
     data = request.data
     sourceuserid = data['sourceuserid']
-    amountarray=[]
-    newsourcearray=[]
-    count=0
     try:
         sourceobj = SourcePublish.objects.filter(source_user_id=sourceuserid).values()
         if len(sourceobj) > 0:
             for i in range(0,len(sourceobj)):
-                amountarray.append(float(sourceobj[i].get('source_total_amount')))
-            amountarray.sort()
+                compobj=BasicCompanyDetails.objects.filter(updated_by=sourceobj[i].get('updated_by_id')).values()
+                sourceobj[i].setdefault('compname',compobj[0].get('company_name'))
+                sourcecreateobj=SourceList_CreateItems.objects.filter(id=sourceobj[i].get('source_id')).values()
+                sourceobj[i].setdefault('source_required_city',sourcecreateobj[0].get('source_required_city'))
 
-            for j in range(0,len(amountarray)):
-                count=count+1
-                print(count)
-                if count==6:
-
-                    print('5  oonly')
-                    break
-                sourceobj1= SourcePublish.objects.filter(source_user_id=sourceuserid).values()
-                print(sourceobj1[j].get('updated_by_id'))
-                sourcecreateobj = SourceList_CreateItems.objects.filter(id=sourceobj[j].get('source_id')).values()
-                compobj = BasicCompanyDetails.objects.filter(
-                    updated_by=sourceobj1[j].get('updated_by_id')).values()
-
-                newsourcearray.append({'source_pf_charges':sourceobj1[j].get('source_pf_charges'),
-                                       'source_frieght_charges':sourceobj1[j].get('source_frieght_charges'),
-                                       'source_delivery_charges':sourceobj1[j].get('source_delivery_charges'),
-                                       'source_payment_terms':sourceobj1[j].get('source_payment_terms'),
-                                       'source_warranty':sourceobj1[j].get('source_warranty'),
-                                       'compname': compobj[0].get('company_name'),
-                                       'source_total_amount':amountarray[j],
-                                       'source_required_city':sourcecreateobj[0].get('source_required_city')
-
-                                       })
-            return Response({'status': 200, 'message': 'Source Create Items List','data':newsourcearray},status=status.HTTP_200_OK)
+            return Response({'status': 200, 'message': 'Source Create Items List', 'data': sourceobj},
+                            status=status.HTTP_200_OK)
 
         else:
             return Response({'status': 204, 'message': 'Not Found'}, status=status.HTTP_204_NO_CONTENT)
-
-
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
 
 
 @api_view(['post'])
@@ -5357,9 +5334,9 @@ def get_companies_based_on_source_pk(request):
                     })
                 else:
                     pass
-            return Response({'status':200,'message':'Vendor Publish Company List','data':companyarray},status=200)
+            return Response({'status':200,'message':'Vendor Publish Company List','data':companyarray},status=status.HTTP_200_OK)
         else:
-            return Response({'status':204,'message':'Source Publish Details Not Present','data':companyarray},status=204)
+            return Response({'status':204,'message':'Source Publish Details Not Present','data':companyarray},status=status.HTTP_204_NO_CONTENT)
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
@@ -5371,17 +5348,8 @@ def vendor_source_responses(request):
     try:
         sourcepublishobj=SourcePublish.objects.filter(updated_by_id=vendor_user_id,source_id=buyer_pk).values()
         if len(sourcepublishobj)>0:
-            return Response({'status':200,'message':'Vendor Response for Source','data':sourcepublishobj},status=200)
+            return Response({'status':200,'message':'Vendor Response for Source','data':sourcepublishobj},status=status.HTTP_200_OK)
         else:
-            return Response({'status':204,'message':'Source Publish Details are not present','data':sourcepublishobj},status=204)
+            return Response({'status':204,'message':'Source Publish Details are not present','data':sourcepublishobj},status=status.HTTP_204_NO_CONTENT)
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-
-
-
-
-
-
-    except Exception as e:
-        return Response({'status': 500, 'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-

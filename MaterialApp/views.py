@@ -3187,12 +3187,12 @@ def update_vendor_product_basic_details(request,vendor_product_id=None):
 @api_view(['post'])
 def get_companies_based_on_landing_page_pk(request):
     data=request.data
-    listing_leads_pk=data['listing_leads_pk']
+    landing_pk=data['landing_pk']
     companyarray=[]
     amountarray=[]
     count=0
     try:
-        landingpublishobj=LandingPageBidding_Publish.objects.filter(listing_leads_id=listing_leads_pk).values()
+        landingpublishobj=LandingPageBidding_Publish.objects.filter(listing_leads_id=landing_pk).values()
         if len(landingpublishobj)>0:
             for i in range(0,len(landingpublishobj)):
                 amountarray.append(float(landingpublishobj[i].get('total_amount')))
@@ -3204,7 +3204,7 @@ def get_companies_based_on_landing_page_pk(request):
                 if count == 6:
                     print('5  oonly')
                     break
-                publishlanding = LandingPageBidding_Publish.objects.filter(listing_leads_id=listing_leads_pk).values()
+                publishlanding = LandingPageBidding_Publish.objects.filter(listing_leads_id=landing_pk).values()
 
                 basicobj=BasicCompanyDetails.objects.filter(updated_by_id=publishlanding[j].get('updated_by_id')).values()
                 if len(basicobj)>0:
@@ -3230,11 +3230,11 @@ def get_companies_based_on_landing_page_pk(request):
 def vendor_source_responses_listing_leads(request):
     data=request.data
     vendor_user_id=data['vendor_user_id']
-    listing_leads_pk=data['listing_leads_pk']
+    landing_pk=data['landing_pk']
     try:
-        landingpagebidd = LandingPageBidding.objects.filter(id=listing_leads_pk).values()
+        landingpagebidd = LandingPageBidding.objects.filter(id=landing_pk).values()
         if len(landingpagebidd) > 0:
-            landingpagepublisheobj=LandingPageBidding_Publish.objects.filter(updated_by_id=vendor_user_id,listing_leads=listing_leads_pk).values()
+            landingpagepublisheobj=LandingPageBidding_Publish.objects.filter(updated_by_id=vendor_user_id,listing_leads=landingpagebidd[0].get('id')).values()
             return Response({'status':200,'message':'Vendor Response for Listing Leads','data':landingpagepublisheobj,'pf_charges':landingpagebidd[0].get('packaging_forwarding'),'delivery_terms':landingpagebidd[0].get('delivery_terms'),'payment_terms':landingpagebidd[0].get('payment_terms')},status=status.HTTP_200_OK)
         else:
             return Response({'status':204,'message':'Landing Page Publish Details are not present'},status=status.HTTP_204_NO_CONTENT)

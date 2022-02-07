@@ -3246,6 +3246,13 @@ def vendor_source_responses_listing_leads(request):
         landingpagebidd = LandingPageBidding.objects.filter(id=landing_pk).values()
         if len(landingpagebidd) > 0:
             landingpagepublisheobj=LandingPageBidding_Publish.objects.filter(updated_by_id=vendor_user_id,listing_leads=landingpagebidd[0].get('id')).values()
+            for i in range(0,len(landingpagepublisheobj)):
+                vendorobj = VendorProduct_BasicDetails.objects.filter(
+                    vendor_product_id=landingpagebidd[0].get('vendor_product_pk')).values()
+                billobj = BillingAddress.objects.filter(
+                    updated_by_id=landingpagepublisheobj[0].get('updated_by_id')).values()
+                landingpagepublisheobj[i].setdefault('item_code', vendorobj[0].get('item_code'))
+                landingpagepublisheobj[i].setdefault('bill_city', billobj[0].get('bill_city'))
             return Response({'status':200,'message':'Vendor Response for Listing Leads','data':landingpagepublisheobj,'pf_charges':landingpagebidd[0].get('packaging_forwarding'),'delivery_terms':landingpagebidd[0].get('delivery_terms'),'payment_terms':landingpagebidd[0].get('payment_terms')},status=status.HTTP_200_OK)
         else:
             return Response({'status':204,'message':'Landing Page Publish Details are not present'},status=status.HTTP_204_NO_CONTENT)

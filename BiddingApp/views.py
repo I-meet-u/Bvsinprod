@@ -5346,7 +5346,7 @@ def vendor_source_responses(request):
     vendor_user_id=data['vendor_user_id']
     publish_pk=data['publish_pk']
     try:
-        sourcepublishobj=SourcePublish.objects.filter(updated_by_id=vendor_user_id,id=publish_pk).values()
+        sourcepublishobj=SourcePublish.objects.filter(updated_by_id=vendor_user_id,source_id=publish_pk).values()
         if len(sourcepublishobj)>0:
             return Response({'status':200,'message':'Vendor Response for Source','data':sourcepublishobj},status=status.HTTP_200_OK)
         else:

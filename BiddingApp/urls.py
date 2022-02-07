@@ -130,7 +130,9 @@ urlpatterns = [
     path('bidding-open-leads-all-true/',views.bidding_open_leads_all_true),
     path('getparticularcommonrfqdetailsinlandingpage/',views.getparticularcommonrfqdetailsinlandingpage),
     path('getpublishedcommonrfqbid/',views.getpublishedcommonrfqbid),
-    path('source_publish_data_store/',views.source_publish_data_store)
+    path('source_publish_data_store/',views.source_publish_data_store),
+    path('get_companies_based_on_source_pk/',views.get_companies_based_on_source_pk),
+    path('vendor_source_responses/',views.vendor_source_responses)
 
 
 

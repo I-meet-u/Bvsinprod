@@ -5304,35 +5304,12 @@ def get_source_items_list_by_source_user_id(request):
                 compobj = BasicCompanyDetails.objects.filter(
                     updated_by=sourceobj1[j].get('updated_by_id')).values()
 
-                newsourcearray.append({'source_item_type_'+str(j):sourceobj1[j].get('source_item_type'),
-                                       'source_code':sourceobj1[j].get('source_code'),
-                                       'source_type':sourceobj1[j].get('source_type'),
-                                       'source_department':sourceobj1[j].get('source_department'),
-                                       'source_present_cost':sourceobj1[j].get('source_present_cost'),
-                                       'source_target_cost':sourceobj1[j].get('source_target_cost'),
-                                       'source_pf_charges':sourceobj1[j].get('source_pf_charges'),
-                                       'source_frieght_charges_'+str(j):sourceobj1[j].get('source_frieght_charges'),
-                                       'source_delivery_charges_'+str(j):sourceobj1[j].get('source_delivery_charges'),
-                                       'source_payment_terms_'+str(j):sourceobj1[j].get('source_payment_terms'),
+                newsourcearray.append({'source_pf_charges':sourceobj1[j].get('source_pf_charges'),
+                                       'source_frieght_charges':sourceobj1[j].get('source_frieght_charges'),
+                                       'source_delivery_charges':sourceobj1[j].get('source_delivery_charges'),
+                                       'source_payment_terms':sourceobj1[j].get('source_payment_terms'),
                                        'source_warranty':sourceobj1[j].get('source_warranty'),
-                                       'source_item_code':sourceobj1[j].get('source_item_code'),
-                                       'source_item_name': sourceobj1[j].get('source_item_name'),
-                                       'source_item_description': sourceobj1[j].get('source_item_description'),
-                                       'source_uom': sourceobj1[j].get('source_uom'),
-                                       'source_product_category': sourceobj1[j].get('source_product_category'),
-                                       'source_priority': sourceobj1[j].get('source_priority'),
-                                       'source_quantity': sourceobj1[j].get('source_quantity'),
-                                       'source_unit_rate': sourceobj1[j].get('source_unit_rate'),
-                                       'source_tax': sourceobj1[j].get('source_tax'),
-                                       'source_discount': sourceobj1[j].get('source_discount'),
-                                       'source': sourceobj1[j].get('source'),
-                                       'source_user_id': sourceobj1[j].get('source_user_id'),
-                                       'created_on': sourceobj1[j].get('created_on'),
-                                       'updated_on': sourceobj1[j].get('updated_on'),
-                                       'created_by': sourceobj1[j].get('created_by'),
-                                       'updated_by':sourceobj1[j].get('updated_by'),
-                                       'admins':sourceobj1[j].get('admins'),
-                                       'compname_'+str(j): compobj[0].get('company_name'),
+                                       'compname': compobj[0].get('company_name'),
                                        'source_total_amount':amountarray[j],
                                        'source_required_city':sourcecreateobj[0].get('source_required_city')
 
@@ -5345,3 +5322,66 @@ def get_source_items_list_by_source_user_id(request):
 
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+@api_view(['post'])
+def get_companies_based_on_source_pk(request):
+    data=request.data
+    buyer_source_pk=data['buyer_source_pk']
+    companyarray=[]
+    amountarray=[]
+    count=0
+    try:
+        sourcepublishobj=SourcePublish.objects.filter(source_id=buyer_source_pk).values()
+        if len(sourcepublishobj)>0:
+            for i in range(0,len(sourcepublishobj)):
+                amountarray.append(float(sourcepublishobj[i].get('source_total_amount')))
+            amountarray.sort()
+
+            for j in range(0, len(amountarray)):
+                count = count + 1
+                print(count)
+                if count == 6:
+                    print('5  oonly')
+                    break
+                publishsource = SourcePublish.objects.filter(source_id=buyer_source_pk).values()
+
+                basicobj=BasicCompanyDetails.objects.filter(updated_by_id=publishsource[j].get('updated_by_id')).values()
+                if len(basicobj)>0:
+                    companyarray.append({
+                        'company_code':basicobj[0].get('company_code'),
+                        'company_name': basicobj[0].get('company_name'),
+                        'user_id':basicobj[0].get('updated_by_id'),
+                        'source_total_amount':amountarray[j]
+
+                    })
+                else:
+                    pass
+            return Response({'status':200,'message':'Vendor Publish Company List','data':companyarray},status=200)
+        else:
+            return Response({'status':204,'message':'Source Publish Details Not Present','data':companyarray},status=204)
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+@api_view(['post'])
+def vendor_source_responses(request):
+    data=request.data
+    vendor_user_id=data['vendor_user_id']
+    buyer_pk=data['buyer_pk']
+    try:
+        sourcepublishobj=SourcePublish.objects.filter(updated_by_id=vendor_user_id,source_id=buyer_pk).values()
+        if len(sourcepublishobj)>0:
+            return Response({'status':200,'message':'Vendor Response for Source','data':sourcepublishobj},status=200)
+        else:
+            return Response({'status':204,'message':'Source Publish Details are not present','data':sourcepublishobj},status=204)
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+
+
+
+
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+

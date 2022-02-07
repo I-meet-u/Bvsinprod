@@ -3069,6 +3069,9 @@ def get_vendor_product_details_based_on_main_id_cat_id_subcat_name(request):
                                                                        category=categoryobj[0].get('category_name'),sub_category=subcategoryobj[0].get('sub_category_name')).values()
                 if len(vendorobj1)>0:
                     return Response({'status': 200, 'error':'ok','data':vendorobj1}, status=status.HTTP_200_OK)
+                else:
+                    return Response({'status': 204, 'message': 'ok', 'data': 'Vendor Product Details Not Present'},
+                                    status=status.HTTP_204_NO_CONTENT)
 
             else:
                 subcategoryobj=SubCategoryMaster.objects.filter(sub_category_name=sub_cat_name).values()
@@ -3077,7 +3080,9 @@ def get_vendor_product_details_based_on_main_id_cat_id_subcat_name(request):
                                                                        'sub_category_name')).values()
                 if len(vendorobj1) > 0:
                     return Response({'status': 200, 'error': 'ok', 'data': vendorobj1}, status=status.HTTP_200_OK)
-
+                else:
+                    return Response({'status': 204, 'data': 'Vendor Product Details Not Present'},
+                                    status=status.HTTP_204_NO_CONTENT)
         return Response({'status': 401, 'message': 'UnAuthorized'},status=status.HTTP_401_UNAUTHORIZED)
 
 

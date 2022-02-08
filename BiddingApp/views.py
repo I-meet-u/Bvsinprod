@@ -5355,3 +5355,23 @@ def vendor_source_responses(request):
             return Response({'status':204,'message':'Source Publish Details are not present'},status=status.HTTP_204_NO_CONTENT)
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+@api_view(['post'])
+def get_source_awards_by_user_id(request):
+    data=request.data
+    userid=data['userid']
+    try:
+        sourceobj=SourceAwards.objects.filter(updated_by_id=userid).values()
+        if len(sourceobj)>0:
+            for i in range(0,len(sourceobj)):
+                sourcecreateobj=SourceList_CreateItems.objects.filter(id=sourceobj[i].get('source_create_pk_id')).values()
+                sourceobj[i].setdefault('deadline_date',sourcecreateobj[0].get('deadline_date'))
+                sourceobj[i].setdefault('buyer_user_id',sourcecreateobj[0].get('updated_by_id')),
+                sourceobj[i].setdefault('publish_date',sourcecreateobj[0].get('publish_date'))
+
+            return Response({'status':200,'message':'Source Award List','data':sourceobj},status=status.HTTP_200_OK)
+        else:
+            return Response({'status':204,'message':'Source Award Not Present'},status=status.HTTP_204_NO_CONTENT)
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

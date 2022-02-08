@@ -3,7 +3,8 @@ from itertools import chain
 
 from django.shortcuts import render
 from rest_framework import permissions, viewsets, status
-from rest_framework.decorators import api_view, permission_classes, action
+from rest_framework.decorators import api_view, permission_classes, action, parser_classes
+from rest_framework.parsers import FileUploadParser, MultiPartParser
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 # Create your views here.
@@ -1094,6 +1095,7 @@ def company_details_by_maincore_id_cat_id(request):
 
 @api_view(['GET','POST'])
 @permission_classes((AllowAny,))
+@parser_classes([MultiPartParser])
 def messages_lists(request,sender=None,receiver=None):
     try:
         # if request.data['key']=='vsinadmindb':

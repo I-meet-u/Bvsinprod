@@ -5372,6 +5372,6 @@ def get_source_awards_by_user_id(request):
 
             return Response({'status':200,'message':'Source Award List','data':sourceobj},status=status.HTTP_200_OK)
         else:
-            return Response({'status':204,'message':'Source Award Not Present'},status=status.HTTP_204_NO_CONTENT)
+            return Response({'status':204,'message':'Source Award Not Present','data':sourceobj},status=status.HTTP_204_NO_CONTENT)
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

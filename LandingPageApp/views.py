@@ -1104,11 +1104,6 @@ def messages_lists(request,sender=None,receiver=None):
 
             elif(request.method=='POST'):
                 serializer=MessageSerializer(data=request.data)
-                regobj=SelfRegistration.objects.filter(username=request.data['sender']).values()
-                regobj1=SelfRegistration.objects.filter(username=request.data['receiver']).values()
-
-                request.data['sender_name']=regobj[0].get('contact_person')
-                request.data['receiver_name'] = regobj1[0].get('contact_person')
                 if serializer.is_valid():
                     serializer.save()
                     return Response(serializer.data,status=status.HTTP_201_CREATED)

@@ -3245,7 +3245,8 @@ def vendor_source_responses_listing_leads(request):
     try:
         landingpagebidd = LandingPageBidding.objects.filter(id=landing_pk).values()
         if len(landingpagebidd) > 0:
-            landingpagepublisheobj=LandingPageBidding_Publish.objects.filter(updated_by_id=vendor_user_id,listing_leads=landingpagebidd[0].get('id')).values()
+            landingpagepublisheobj=LandingPageBidding_Publish.objects.filter(updated_by_id=vendor_user_id,listing_leads_id=landingpagebidd[0].get('id')).values()
+            print(len(landingpagepublisheobj))
             for i in range(0,len(landingpagepublisheobj)):
                 vendorobj = VendorProduct_BasicDetails.objects.filter(
                     vendor_product_id=landingpagebidd[0].get('vendor_product_pk')).values()

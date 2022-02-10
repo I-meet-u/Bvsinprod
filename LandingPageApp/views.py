@@ -1,7 +1,9 @@
 import math
 from itertools import chain
 
+from django.http import JsonResponse
 from django.shortcuts import render
+from django.views.decorators.csrf import csrf_exempt
 from rest_framework import permissions, viewsets, status
 from rest_framework.decorators import api_view, permission_classes, action, parser_classes
 from rest_framework.parsers import FileUploadParser, MultiPartParser
@@ -1099,13 +1101,13 @@ def messages_lists(request,sender=None,receiver=None):
     try:
         # if request.data['key']=='vsinadmindb':
         if request.method=='GET':
-            messages=Message.objects.filter(sender_id=sender,receiver_id=receiver,is_read=False)
+            messages=Message.objects.filter(sender_id=sender,receiver_id=receiver)
             serializer=MessageSerializer(messages,many=True)
             for msg in messages:
-                msg.is_read=True
-                msg.save()
-            return Response(serializer.data,safe=False)
-
+                if msg.is_read==False:
+                    msg.is_read=True
+                    msg.save()
+            return Response(serializer.data)
         elif(request.method=='POST'):
             if request.data['key'] == 'vsinadmindb':
                 serializer=MessageSerializer(data=request.data)

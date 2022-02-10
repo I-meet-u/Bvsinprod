@@ -20,10 +20,10 @@ class CompanyReviewSerializer(serializers.ModelSerializer):
 class MessageSerializer(serializers.ModelSerializer):
     sender=serializers.SlugRelatedField(many=False,slug_field='username',queryset=SelfRegistration.objects.all())
     receiver=serializers.SlugRelatedField(many=False,slug_field='username',queryset=SelfRegistration.objects.all())
-    reguser=SelfRegistrationSerializer(required=False)
+    # reguser=SelfRegistrationSerializer(required=False)
     class Meta:
         model=Message
-        fields=['sender','receiver','messages','created_time','company_name_sender','company_name_receiver','sender_files','receiver_files','sender_images','receiver_images','sender_designation','receiver_designation','sender_name','receiver_name','reguser']
+        fields=['sender','receiver','messages','created_time','company_name_sender','company_name_receiver','sender_files','receiver_files','sender_images','receiver_images','sender_designation','receiver_designation','sender_name','receiver_name','sender_id','receiver_id']
 
     def create(self, validated_data):
         print(validated_data['sender_files'])

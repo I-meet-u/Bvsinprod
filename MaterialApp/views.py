@@ -3293,3 +3293,61 @@ def update_productgeneraldetails(request):
                         status=status.HTTP_200_OK)
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+@api_view(['put'])
+def update_vendor_product_documents_details(request):
+    try:
+        data = request.data
+        basicproddetails = VendorProduct_BasicDetails.objects.filter(vendor_product_id=data['vendor_products']).values()
+        if basicproddetails:
+            generaldetails = VendorProduct_TechnicalSpecifications.objects.filter(
+                vendor_products=data['vendor_products']).values()
+            if generaldetails:
+                documentdetailsobj = VendorProduct_Documents.objects.get(vendor_products=data['vendor_products'])
+                documentdetailsobj.document1 = data['document1']
+                documentdetailsobj.document_description1 = data['document_description1']
+                documentdetailsobj.document2 = data['document2']
+                documentdetailsobj.document_description2 = data['document_description2']
+                documentdetailsobj.document3 = data['document3']
+                documentdetailsobj.document_description3 = data['document_description3']
+                documentdetailsobj.save()
+            else:
+                VendorProduct_Documents.objects.create(document1=data['document1'],
+                                                       document_description1=data['document_description1'],
+                                                       document2=data['document2'],
+                                                       document_description2=data['document_description2'],
+                                                       document3=data['document3'],
+                                                       document_description3=data['document_description3'],
+                                                       updated_by=SelfRegistration.objects.get(id=data['userid']),
+                                                       created_by=data['userid'],
+                                                       vendor_products=VendorProduct_BasicDetails.objects.get(
+                                                           vendor_product_id=data['vendor_products']))
+        return Response({'status': 200, 'message': 'updated'}, status=status.HTTP_200_OK)
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+# @api_view(['put'])
+# def update_vendor_product_specifications_details(request):
+#     try:
+#         data = request.data
+#         basicproddetails = VendorProduct_BasicDetails.objects.filter(vendor_product_id=data['vendor_products']).values()
+#         if basicproddetails:
+#             generaldetails = VendorProduct_TechnicalSpecifications.objects.filter(
+#                 vendor_products=data['vendor_products']).values()
+#             if generaldetails:
+#                 specificationdetailsobj = VendorProduct_TechnicalSpecifications.objects.get(
+#                     vendor_products=data['vendor_products'])
+#                 specificationdetailsobj.item_specification = data['item_specification']
+#                 specificationdetailsobj.item_description = data['item_description']
+#                 specificationdetailsobj.save()
+#             else:
+#                 VendorProduct_Documents.objects.create(item_specification=data['item_specification'],
+#                                                        item_description=data['item_description'],
+#                                                        updated_by=SelfRegistration.objects.get(id=data['userid']),
+#                                                        created_by=data['userid'],
+#                                                        vendor_products=VendorProduct_BasicDetails.objects.get(
+#                                                            vendor_product_id=data['vendor_products']))
+#         return Response({'status': 200, 'message': 'updated'}, status=status.HTTP_200_OK)
+#     except Exception as e:
+#         return Response({'status': 500, 'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

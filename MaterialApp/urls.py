@@ -93,6 +93,8 @@ urlpatterns = [
     path('update_vendor_product_basic_details/<int:vendor_product_id>',views.update_vendor_product_basic_details),
     path('get_companies_based_on_landing_page_pk/',views.get_companies_based_on_landing_page_pk),
     path('vendor_source_responses_listing_leads/',views.vendor_source_responses_listing_leads),
-    path('update_productgeneraldetails/',views.update_productgeneraldetails)
+    path('update_productgeneraldetails/',views.update_productgeneraldetails),
+    path('update_vendor_product_documents_details/', views.update_vendor_product_documents_details),
+    # path('update_vendor_product_specifications_details', views.update_vendor_product_specifications_details)
 
 ]

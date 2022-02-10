@@ -5313,7 +5313,6 @@ def get_source_pubish_leads_based_on_publish_pk(request):
         return Response({'status': 500, 'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
-
 @api_view(['post'])
 def source_publish_data_store(request):
     # data = request.data
@@ -5338,6 +5337,7 @@ def source_publish_data_store(request):
                 SourcePublish.objects.create(source_item_type=data['source_item_type'],
                                              source_type=data['source_type'],
                                              source_department=data['source_department'],
+                                             source_code=data['source_code'],
                                              source_present_cost=data['source_present_cost'],
                                              source_target_cost=data['source_target_cost'],
                                              source_pf_charges=data['source_pf_charges'],
@@ -5359,13 +5359,14 @@ def source_publish_data_store(request):
                                              source_user_id=data['source_user_id'],
                                              created_by=updated_by,
                                              updated_by=SelfRegistration.objects.get(id=updated_by),
-                                             # source_payment_terms=data['source_payment_terms'],
-                                             # source_warranty=data['source_warranty']
+                                             source_payment_terms=data['source_payment_terms'],
+                                             source_warranty=data['source_warranty']
                                              )
         else:
             SourcePublish.objects.create(source_item_type=data['source_item_type'],
                                          source_type=data['source_type'],
                                          source_department=data['source_department'],
+                                         source_code=data['source_code'],
                                          source_present_cost=data['source_present_cost'],
                                          source_target_cost=data['source_target_cost'],
                                          source_pf_charges=data['source_pf_charges'],
@@ -5387,8 +5388,8 @@ def source_publish_data_store(request):
                                          source_user_id=data['source_user_id'],
                                          created_by=updated_by,
                                          updated_by=SelfRegistration.objects.get(id=updated_by),
-                                         # source_payment_terms=data['source_payment_terms'],
-                                         # source_warranty=data['source_warranty']
+                                         source_payment_terms=data['source_payment_terms'],
+                                         source_warranty=data['source_warranty']
                                          )
         return Response({'status': 200, 'message': 'ok'}, status=200)
 

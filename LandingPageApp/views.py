@@ -1135,7 +1135,7 @@ def messages_user_list(request):
     data=request.data
     sender=data['sender']
     try:
-        msgobj=Message.objects.filter(sender_id=sender).values('sender_name','receiver_name','created_time').order_by('created_time')
+        msgobj=Message.objects.filter(sender_id=sender).values('sender_name','receiver_name','created_time','sender_id','receiver_id').order_by('created_time')
         if len(msgobj)>0:
             return Response({'status':200,'message':'Users List','data':msgobj},status=200)
         else:

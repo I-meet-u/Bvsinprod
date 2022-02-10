@@ -46,5 +46,5 @@ urlpatterns = [
     path('get-messages/<int:sender>/<int:receiver>', views.messages_lists, name='message-details'),  # get request
     path('receiver_sender_messages/<int:receiver>/<int:sender>',views.receiver_sender_messages), # get request
     path('create-messages/', views.messages_lists, name='message-create'),  # post request
-
+    path('messages_user_list/',views.messages_user_list)
 ]

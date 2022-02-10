@@ -1099,9 +1099,12 @@ def messages_lists(request,sender=None,receiver=None):
     try:
         # if request.data['key']=='vsinadmindb':
         if request.method=='GET':
-            messages=Message.objects.filter(sender_id=sender,receiver_id=receiver)
+            messages=Message.objects.filter(sender_id=sender,receiver_id=receiver,is_read=False)
             serializer=MessageSerializer(messages,many=True)
-            return Response(serializer.data)
+            for msg in messages:
+                msg.is_read=True
+                msg.save()
+            return Response(serializer.data,safe=False)
 
         elif(request.method=='POST'):
             if request.data['key'] == 'vsinadmindb':
@@ -1123,5 +1126,20 @@ def receiver_sender_messages(request,sender=None,receiver=None):
             messages = Message.objects.filter(sender_id=sender, receiver_id=receiver)
             serializer = MessageSerializer(messages, many=True)
             return Response(serializer.data)
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)
+
+@api_view(['post'])
+@permission_classes((AllowAny,))
+def messages_user_list(request):
+    data=request.data
+    sender=data['sender']
+    try:
+        msgobj=Message.objects.filter(sender_id=sender).values('sender_name','receiver_name','created_time').order_by('created_time')
+        if len(msgobj)>0:
+            return Response({'status':200,'message':'Users List','data':msgobj},status=200)
+        else:
+            return Response({'status':204,'message':'Users Not Present','data':msgobj},status=200)
+
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)

@@ -1114,3 +1114,14 @@ def messages_lists(request,sender=None,receiver=None):
                 return Response({'status':401,'message':'UnAuthorized'},status=status.HTTP_401_UNAUTHORIZED)
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)
+
+@api_view(['GET'])
+@permission_classes((AllowAny,))
+def receiver_sender_messages(request,sender=None,receiver=None):
+    try:
+        if request.method == 'GET':
+            messages = Message.objects.filter(sender_id=sender, receiver_id=receiver)
+            serializer = MessageSerializer(messages, many=True)
+            return Response(serializer.data)
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)

@@ -3259,3 +3259,37 @@ def vendor_source_responses_listing_leads(request):
             return Response({'status':204,'message':'Landing Page Publish Details are not present'},status=status.HTTP_204_NO_CONTENT)
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+@api_view(['put'])
+def update_productgeneraldetails(request):
+    try:
+        data=request.data
+        basicproddetails=VendorProduct_BasicDetails.objects.filter(vendor_product_id=data['vendor_products']).values()
+        if basicproddetails:
+            generaldetails=VendorProduct_GeneralDetails.objects.filter(vendor_products=data['vendor_products']).values()
+            if generaldetails:
+                generaldetailsobj=VendorProduct_GeneralDetails.objects.get(vendor_products=data['vendor_products'])
+                generaldetailsobj.p_f_charges=data['p_f_charges']
+                generaldetailsobj.frieght_charges = data['frieght_charges']
+                generaldetailsobj.delivery = data['delivery']
+                generaldetailsobj.warranty = data['warranty']
+                generaldetailsobj.insurance = data['insurance']
+                generaldetailsobj.department = data['department']
+                generaldetailsobj.guarantee = data['guarantee']
+                generaldetailsobj.not_covered_w_g = data['not_covered_w_g']
+                generaldetailsobj.after_sale_service = data['after_sale_service']
+                generaldetailsobj.available_stock = data['available_stock']
+                generaldetailsobj.packing_type = data['packing_type']
+                generaldetailsobj.packing_type = data['packing_type']
+                generaldetailsobj.save()
+            else:
+                VendorProduct_GeneralDetails.objects.create(p_f_charges=data['p_f_charges'],
+                                                            frieght_charges=data['frieght_charges'],delivery=data['delivery'],
+                                                            warranty=data['warranty'],insurance=data['insurance'],department=data['department'],
+                                                            guarantee=data['guarantee'],not_covered_w_g=data['not_covered_w_g'],after_sale_service=data['after_sale_service'],
+                                                            available_stock=data['available_stock'],packing_type=data['packing_type'],updated_by=SelfRegistration.objects.get(id=data['userid']),
+                                                            created_by=data['userid'],vendor_products=VendorProduct_BasicDetails.objects.get(vendor_product_id=data['vendor_products']))
+        return Response({'status': 200, 'message': 'updated'},
+                        status=status.HTTP_200_OK)
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

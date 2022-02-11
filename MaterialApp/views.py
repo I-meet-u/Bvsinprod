@@ -2061,7 +2061,8 @@ def getawardlistoflistingleadsnew(request):
                                                                 'created_by': dummyvar[0].get('created_by'),
                                                                 'publish_status': dummyvar[0].get('publish_status'),
                                                                 'updated_by_id':dummyvar[0].get('updated_by_id'),
-                                                                 'award_pk':awardpostedRFQobj[i].get('id'),
+                                                                'award_pk':awardpostedRFQobj[i].get('id'),
+                                                                'awarderd_date':awardpostedRFQobj[i].get('awarded_date'),
                                                                 'po_status':awardpostedRFQobj[i].get('po_status'),
                                                                 'bill_city':cityobj[0].get('bill_city')
                                                                 })
@@ -2727,8 +2728,10 @@ def get_award_list_by_pk_value(request):
             awardobj=awardpostedRFQ.objects.filter(landing_page_bidding_publish_id=landingarray).values()
             if len(awardobj)>0:
                 landingobj[0].__setitem__('po_status', awardobj[0].get('po_status'))
+                landingobj[0].__setitem__('awarded_date', awardobj[0].get('awarded_date'))
             else:
                 landingobj[0].__setitem__('po_status',"")
+                landingobj[0].__setitem__('awarded_date',"")
 
             bill_city=BillingAddress.objects.filter(updated_by_id=landingobj[0].get('updated_by_id')).values()
             if len(bill_city)>0:

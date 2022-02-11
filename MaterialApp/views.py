@@ -2024,7 +2024,6 @@ class LandingPageBiddingRFQAwardsSerializerViewSet(viewsets.ModelViewSet):
             return landingpageobj
         raise ValidationError({'message': 'Award is not exist', 'status': 204})
 
-
 @api_view(['post'])
 def getawardlistoflistingleadsnew(request):
     data=request.data
@@ -2032,16 +2031,44 @@ def getawardlistoflistingleadsnew(request):
     landing_vendor_publish_leading_data=[]
     userid=data['userid']
     try:
-        awardpostedRFQobj=awardpostedRFQ.objects.filter(updated_by=userid).values()
+        awardpostedRFQobj=awardpostedRFQ.objects.filter(updated_by=userid).values().order_by('id')
         for i in range(len(awardpostedRFQobj)):
-            dummyvar=LandingPageBidding_Publish.objects.filter(id__in=awardpostedRFQobj[i].get('landing_page_bidding_publish_id')).values()
-            print(len(dummyvar))
-            for j in range(0,len(dummyvar)):
-                dummyvar[j].__setitem__('award_pk', awardpostedRFQobj[i].get('id'))
-            res = list(chain(landing_vendor_publish_leading_data, dummyvar))
-        return Response({'status': 200, 'message': 'Ok', 'data':res}, status=200)
+            dummyvar=LandingPageBidding_Publish.objects.filter(id__in=awardpostedRFQobj[i].get('landing_page_bidding_publish_id')).values().order_by('id')
+            landing_vendor_publish_leading_data.append({'id':dummyvar[0].get('id'),
+                                                        'item_type':dummyvar[0].get('item_type'),
+                                                        'company_name': dummyvar[0].get('company_name'),
+                                                        'company_code': dummyvar[0].get('company_code'),
+                                                        'priority': dummyvar[0].get('priority'),
+                                                        'deadline_date': dummyvar[0].get('deadline_date'),
+                                                        'item_name': dummyvar[0].get('item_name'),
+                                                        'item_description': dummyvar[0].get('item_description'),
+                                                        'uom': dummyvar[0].get('uom'),
+                                                        'quantity': dummyvar[0].get('quantity'),
+                                                        'hsn_sac': dummyvar[0].get('hsn_sac'),
+                                                        'category': dummyvar[0].get('category'),
+                                                        'unit_rate': dummyvar[0].get('unit_rate'),
+                                                        'tax': dummyvar[0].get('tax'),
+                                                        'discount': dummyvar[0].get('discount'),
+                                                        'total_amount': dummyvar[0].get('total_amount'),
+                                                        'pf_charges': dummyvar[0].get('pf_charges'),
+                                                        'payment_charges': dummyvar[0].get('payment_charges'),
+                                                        'delivery_charges': dummyvar[0].get('delivery_charges'),
+                                                        'listing_leads_id': dummyvar[0].get('listing_leads_id'),
+                                                        'created_on': dummyvar[0].get('created_on'),
+                                                        'updated_on': dummyvar[0].get('updated_on'),
+                                                        'created_by': dummyvar[0].get('created_by'),
+                                                        'publish_status': dummyvar[0].get('publish_status'),
+                                                        'updated_by_id':dummyvar[0].get('updated_by_id'),
+                                                         'award_pk':awardpostedRFQobj[i].get('id')
+                                                        })
+            # print(len(dummyvar))
+            # for j in range(0,len(dummyvar)):
+            #     dummyvar[j].__setitem__('award_pk', awardpostedRFQobj[i].get('id'))
+            # res = list(chain(landing_vendor_publish_leading_data, dummyvar))
+        return Response({'status': 200, 'message': 'Ok', 'data':landing_vendor_publish_leading_data}, status=200)
     except Exception as e:
         return Response({'status': 500, 'message': str(e)}, status=500)
+
 
 @api_view(['post'])
 def getbuyerpostedresponse(request):

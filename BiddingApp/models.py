@@ -661,7 +661,7 @@ class SourcePurchaseOrder(models.Model):
     company_name=models.CharField(max_length=100,null=True,blank=True)
     awarded_date=models.CharField(max_length=100,null=True,blank=True)
     po_date=models.CharField(max_length=100,null=True,blank=True)
-    po_number=models.CharField(max_length=100,null=True,blank=True)
+    po_number=models.CharField(max_length=100,unique=True)
     delivery_date=models.CharField(max_length=100,null=True,blank=True)
     remind_date=models.CharField(max_length=100,null=True,blank=True)
     delivery_days=models.CharField(max_length=100,null=True,blank=True)

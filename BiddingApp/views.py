@@ -5461,3 +5461,28 @@ class SourcePurchaseOrderViewset(viewsets.ModelViewSet):
             return sourceobj
         raise ValidationError(
             {'message': 'Source Purchase Order details of particular user id is not exist', 'status': 204})
+
+
+@api_view(['put'])
+def update_source_po_status(request):
+    data = request.data
+    awardpk = data['awardpk']
+    try:
+        awardobj = SourceAwards.objects.filter(id=awardpk).values()
+        if len(awardobj) > 0:
+            awards = SourceAwards.objects.get(id=awardpk)
+            if awards.source_po_status == 'Pending':
+                awards.source_po_status = 'PO_Sent'
+                awards.save()
+                return Response({'status': 200, 'message': 'Source PO sent successfully', 'data': awards.source_po_status},
+                                status=200)
+            else:
+                if awards.source_po_status == 'PO_Sent':
+                    return Response({'status': 202, 'message': 'Source PO Already Sent'}, status=202)
+                else:
+                    return Response({'status': 202, 'message': 'PO sent failed or po not sent'}, status=202)
+
+        else:
+            return Response({'status': 204, 'message': 'No data found'}, status=204)
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)

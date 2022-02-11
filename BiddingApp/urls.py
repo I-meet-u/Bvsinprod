@@ -135,7 +135,8 @@ urlpatterns = [
     path('get_companies_based_on_source_pk/',views.get_companies_based_on_source_pk),
     path('vendor_source_responses/',views.vendor_source_responses),
     path('get_source_awards_by_user_id/',views.get_source_awards_by_user_id),
-    path('get_source_pubish_leads_based_on_publish_pk/',views.get_source_pubish_leads_based_on_publish_pk)
+    path('get_source_pubish_leads_based_on_publish_pk/',views.get_source_pubish_leads_based_on_publish_pk),
+    path('update_source_po_status/',views.update_source_po_status)
 
 
 

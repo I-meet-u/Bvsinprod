@@ -1136,10 +1136,23 @@ def receiver_sender_messages(request,sender=None,receiver=None):
 def messages_user_list(request):
     data=request.data
     sender=data['sender']
+    message_list=[]
     try:
-        msgobj=Message.objects.filter(sender_id=sender).values('sender_name','receiver_name','created_time','sender_id','receiver_id').order_by('created_time')
+        msgobj=Message.objects.filter(sender_id=sender).values().order_by('created_time')
         if len(msgobj)>0:
-            return Response({'status':200,'message':'Users List','data':msgobj},status=200)
+            for i in range(0,len(msgobj)):
+                regobj1=SelfRegistration.objects.filter(id=msgobj[i].get('sender_id')).values()
+                regobj2 = SelfRegistration.objects.filter(id=msgobj[i].get('receiver_id')).values()
+                message_list.append({'sender_name':msgobj[i].get('sender_name'),
+                                     'receiver_name':msgobj[i].get('receiver_name'),
+                                     'created_time': msgobj[i].get('created_time'),
+                                     'sender_id': msgobj[i].get('sender_id'),
+                                     'receiver_id': msgobj[i].get('receiver_id'),
+                                     'sender_email_id':regobj1[0].get('username'),
+                                     'receiver_email_id': regobj2[0].get('username')
+
+                                     })
+            return Response({'status':200,'message':'Users List','data':message_list},status=200)
         else:
             return Response({'status':204,'message':'Users Not Present','data':msgobj},status=200)
 

@@ -2719,10 +2719,24 @@ def updatelandingpagevendor_publish_update(request):
 def get_award_list_by_pk_value(request):
     data=request.data
     id=data['id']
+    landingarray=[]
     try:
         landingobj = LandingPageBidding_Publish.objects.filter(id=id).values().order_by('id')
+        landingarray.append(landingobj[0].get('id'))
         if len(landingobj)>0:
-            return Response({'status': 200, 'message': 'Ok', 'data':landingobj}, status=200)
+            awardobj=awardpostedRFQ.objects.filter(landing_page_bidding_publish_id=landingarray).values()
+            if len(awardobj)>0:
+                landingobj[0].__setitem__('po_status', awardobj[0].get('po_status'))
+            else:
+                landingobj[0].__setitem__('po_status',"")
+
+            bill_city=BillingAddress.objects.filter(updated_by_id=landingobj[0].get('updated_by_id')).values()
+            if len(bill_city)>0:
+                landingobj[0].__setitem__('bill_city', bill_city[0].get('bill_city'))
+            else:
+                landingobj[0].__setitem__('bill_city',"")
+            landingbidobj=LandingPageBidding.objects.filter(id=landingobj[0].get('listing_leads_id')).values()
+            return Response({'status': 200, 'message': 'Ok', 'data':landingobj,'delivery_terms':landingbidobj[0].get('delivery_terms'),'pf_charges':landingbidobj[0].get('packaging_forwarding'),'payment_terms':landingbidobj[0].get('payment_terms')}, status=200)
         else:
             return Response({'status': 204, 'message': 'Data Not Present'}, status=204)
 

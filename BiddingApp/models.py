@@ -684,6 +684,8 @@ class SourcePurchaseOrder(models.Model):
     updated_by = models.ForeignKey(SelfRegistration, on_delete=models.CASCADE, null=True, blank=True)
     source_code=models.CharField(max_length=100,null=True,blank=True)
     source_type=models.CharField(max_length=100,null=True,blank=True)
+    source_award_pk = models.ForeignKey(SourceAwards, on_delete=models.CASCADE, null=True, blank=True)
+    source_publish_pk = models.ForeignKey(SourcePublish, on_delete=models.CASCADE, null=True, blank=True)
 
     class Meta:
         db_table = "SourcePurchaseOrder"

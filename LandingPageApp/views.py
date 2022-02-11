@@ -1275,7 +1275,7 @@ def internal_external_trail_buyers_users_list(request):
             else:
                 return Response({'status': 204, 'message': 'Not Present'}, status=204)
         else:
-            return Response({'status': 400, 'message': 'Users Name is not correct or mis-spelled'}, status=204)
+            return Response({'status': 202, 'message': 'Users Name is not correct or mis-spelled'}, status=202)
 
 
     except Exception as e:

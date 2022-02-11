@@ -1225,11 +1225,11 @@ def internal_external_trail_buyers_users_list(request):
             internalobj = InternalVendor.objects.filter().values().order_by('internal_vendor_id')
             if len(internalobj)>0:
                 for i in range(len(internalobj)):
-                    regobj=SelfRegistration.objects.filter(id=internalobj[i].get('updated_by_id')).values()
+                    regobj=SelfRegistration.objects.filter(username=internalobj[i].get('email_id')).values()
                     if len(regobj)>0:
                         internal_list.append({'company_code': internalobj[i].get('company_code'),
                                               'company_name': internalobj[i].get('company_name'),
-                                              'phone_no': internalobj[i].get('phone_numner'),
+                                              'phone_no': internalobj[i].get('phone_number'),
                                               'email_id':internalobj[i].get('email_id'),
                                               'internal_user_name': regobj[0].get('contact_person'),
                                               'internal_user_id': regobj[0].get('id')
@@ -1237,8 +1237,8 @@ def internal_external_trail_buyers_users_list(request):
                     else:
                         internal_list.append({'company_code': internalobj[i].get('company_code'),
                                               'company_name': internalobj[i].get('company_name'),
-                                              'phone_no': internalobj[i].get('phone_numner'),
-                                              'email_id': internalobj[i].get('email_id'),
+                                              'phone_no': "",
+                                              'email_id': "",
                                               'internal_user_name':"",
                                               'internal_user_id': ""
                                               })
@@ -1251,24 +1251,25 @@ def internal_external_trail_buyers_users_list(request):
             trailobj=TrailVendors.objects.filter().values().order_by('id')
             if len(trailobj)>0:
                 for i in range(0,len(trailobj)):
-                    regobj=SelfRegistration.objects.filter(id=trailobj[i].get('updated_by_id')).values()
-                    if len(regobj)>0:
-                        basicobj = BasicCompanyDetails.objects.filter(updated_by_id=regobj[0].get('id')).values()
-                        if len(basicobj)>0:
-                            trail_list.append({'company_code': basicobj[0].get('company_code'),
-                                                  'company_name': basicobj[0].get('company_name'),
-                                                  'phone_no': regobj[0].get('phone_numner'),
-                                                  'email_id': regobj[0].get('email_id'),
-                                                  'trail_user_name':regobj[0].get('contact_person'),
-                                                  'trail_user_id': regobj[0].get('id')
-                                                  })
+                    basicobj = BasicCompanyDetails.objects.filter(
+                        company_code=trailobj[i].get('company_code_id')).values()
+                    if len(basicobj) > 0:
+                        regobj=SelfRegistration.objects.filter(id=basicobj[0].get('updated_by_id')).values()
+                        if len(regobj)>0:
+                                trail_list.append({'company_code': basicobj[0].get('company_code'),
+                                                      'company_name': basicobj[0].get('company_name'),
+                                                      'phone_no': regobj[0].get('phone_number'),
+                                                      'email_id': regobj[0].get('username'),
+                                                      'trail_user_name':regobj[0].get('contact_person'),
+                                                      'trail_user_id': regobj[0].get('id')
+                                                      })
                         else:
-                            trail_list.append({'company_code': "",
-                                               'company_name': "",
-                                               'phone_no': regobj[0].get('phone_numner'),
-                                               'email_id': regobj[0].get('email_id'),
-                                               'trail_user_name': regobj[0].get('contact_person'),
-                                               'trail_user_id': regobj[0].get('id')
+                            trail_list.append({'company_code': basicobj[0].get('company_code'),
+                                               'company_name': basicobj[0].get('company_name'),
+                                               'phone_no': "",
+                                               'email_id': "",
+                                               'trail_user_name': "",
+                                               'trail_user_id': ""
                                                })
                 return Response({'status': 200, 'message': 'Trail Users List', 'data': trail_list},
                                 status=200)

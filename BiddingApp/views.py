@@ -5400,4 +5400,10 @@ def source_publish_data_store(request):
 class SourcePurchaseOrderViewset(viewsets.ModelViewSet):
     queryset = SourcePurchaseOrder.objects.all()
     serializer_class = SourcePurchaseOrderSerializer
-    # permission_classes = [permissions.AllowAny]
+
+    def get_queryset(self):
+        sourceobj = SourcePurchaseOrder.objects.filter(updated_by=self.request.GET.get('updated_by')).order_by('id')
+        if sourceobj:
+            return sourceobj
+        raise ValidationError(
+            {'message': 'Source Purchase Order details of particular user id is not exist', 'status': 204})

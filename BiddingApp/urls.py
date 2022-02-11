@@ -23,6 +23,7 @@ router.register('purchase-order',views.PurchaseOrderViewSet)
 router.register('source-list-create-items',views.SourceList_CreateItemViewSet)
 router.register('source-publish',views.SourcePublishViewSet)
 router.register('source-awards',views.SourceAwardsViewSet)
+router.register('source-purchase-order',views.SourcePurchaseOrderViewset)
 
 #common open rfq leads vendor publish
 router.register('VendorProductBiddingOpenCommonBidView',views.VendorProductBiddingOpenCommonBidView)

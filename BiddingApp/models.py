@@ -654,3 +654,36 @@ class AwardsOpenCommonBid(models.Model):
 
     class Meta:
         db_table = "AwardsOpenCommonBid"
+
+
+class SourcePurchaseOrder(models.Model):
+    vendor_code=models.CharField(max_length=100,null=True,blank=True)
+    company_name=models.CharField(max_length=100,null=True,blank=True)
+    awarded_date=models.CharField(max_length=100,null=True,blank=True)
+    po_date=models.CharField(max_length=100,null=True,blank=True)
+    po_number=models.CharField(max_length=100,null=True,blank=True)
+    delivery_date=models.CharField(max_length=100,null=True,blank=True)
+    remind_date=models.CharField(max_length=100,null=True,blank=True)
+    delivery_days=models.CharField(max_length=100,null=True,blank=True)
+    item_name=models.CharField(max_length=200,null=True,blank=True)
+    item_description=models.TextField(null=True,blank=True)
+    uom=models.CharField(max_length=100,null=True,blank=True)
+    quantity=models.CharField(max_length=100,null=True,blank=True)
+    unit_rate=models.CharField(max_length=100,null=True,blank=True)
+    discount=models.CharField(max_length=100,null=True,blank=True)
+    tax=models.CharField(max_length=100,null=True,blank=True)
+    total_amount=models.CharField(max_length=100,null=True,blank=True)
+    subject=models.CharField(max_length=1000,null=True,blank=True)
+    description=models.TextField(null=True,blank=True)
+    attachment_1=models.FileField(upload_to='SourcePOFiles',null=True,blank=True)
+    attachment_2 = models.FileField(upload_to='SourcePOFiles', null=True, blank=True)
+    attachment_3 = models.FileField(upload_to='SourcePOFiles', null=True, blank=True)
+    createdon = models.DateTimeField(null=True, auto_now_add=True, blank=True)
+    updatedon = models.DateTimeField(auto_now=True, null=True, blank=True)
+    created_by = models.BigIntegerField(null=True, blank=True)
+    updated_by = models.ForeignKey(SelfRegistration, on_delete=models.CASCADE, null=True, blank=True)
+    source_code=models.CharField(max_length=100,null=True,blank=True)
+    source_type=models.CharField(max_length=100,null=True,blank=True)
+
+    class Meta:
+        db_table = "SourcePurchaseOrder"

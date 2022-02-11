@@ -152,3 +152,8 @@ class VendorProductBiddingOpenCommonBidtermsSerializer(serializers.ModelSerializ
         model=VendorRfqTermsDescriptionOpenCommonBid
         fields='__all__'
 
+
+class SourcePurchaseOrderSerializer(serializers.ModelSerializer):
+    class Meta:
+        model=SourcePurchaseOrder
+        fields='__all__'

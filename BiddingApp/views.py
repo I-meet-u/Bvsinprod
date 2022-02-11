@@ -5396,3 +5396,8 @@ def source_publish_data_store(request):
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)
 
+
+class SourcePurchaseOrderViewset(viewsets.ModelViewSet):
+    queryset = SourcePurchaseOrder.objects.all()
+    serializer_class = SourcePurchaseOrderSerializer
+    # permission_classes = [permissions.AllowAny]

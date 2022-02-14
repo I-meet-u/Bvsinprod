@@ -1165,6 +1165,8 @@ def messages_user_list(request):
                                              'receiver_country': receiver_addressobj[0].get('bill_country'),
                                              'company_logo_sender':regobj1[0].get('profile_cover_photo'),
                                              'company_logo_receiver': regobj2[0].get('profile_cover_photo'),
+                                             'company_name_sender':msgobj[i].get('company_name_sender'),
+                                             'company_name_receiver':msgobj[i].get('company_name_receiver')
 
 
                                              })
@@ -1185,6 +1187,8 @@ def messages_user_list(request):
                                              'receiver_country': "",
                                              'company_logo_sender': regobj1[0].get('profile_cover_photo'),
                                              'company_logo_receiver': regobj2[0].get('profile_cover_photo'),
+                                             'company_name_sender': msgobj[i].get('company_name_sender'),
+                                             'company_name_receiver': msgobj[i].get('company_name_receiver')
 
                                              })
             return Response({'status':200,'message':'Users List','data':message_list},status=200)

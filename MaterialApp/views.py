@@ -2681,10 +2681,15 @@ def landing_page_published_list(request):
             for i in range(0,len(landingpublishobj)):
                 landingobj = LandingPageBidding.objects.filter(id=landingpublishobj[i].get('listing_leads_id')).values().order_by('id')
                 basicobj=BasicCompanyDetails.objects.filter(updated_by_id=landingobj[0].get('updated_by_id')).values()
-                landingpublishobj[i].__setitem__('buyer_company_name',
-                                                 basicobj[0].get('company_name'))
-                landingpublishobj[i].__setitem__('buyer_company_code',
-                                                 basicobj[0].get('company_code'))
+                if basicobj:
+                    billobj=BillingAddress.objects.filter(updated_by_id=basicobj[0].get('updated_by_id')).values()
+                    landingpublishobj[i].__setitem__('buyer_company_name',
+                                                     basicobj[0].get('company_name'))
+                    landingpublishobj[i].__setitem__('buyer_company_code',
+                                                     basicobj[0].get('company_code')),
+
+                    landingpublishobj[i].__setitem__('bill_city',billobj[0].get('bill_city')),
+                    landingpublishobj[i].__setitem__('publish_date',landingobj[0].get('publish_date'))
 
             return Response({'status':200,'message':'Published Listing Leads','data':landingpublishobj},status=200)
         else:

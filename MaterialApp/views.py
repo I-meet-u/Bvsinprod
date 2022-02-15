@@ -3062,14 +3062,34 @@ def get_vendor_product_details_difference_industry_category(request):
     ccode=data['ccode']
     resarray=[]
     newval=[]
+    maincore_list=[]
     try:
         if key=="vsinadmin":
             vendorobjmaincore=VendorProduct_BasicDetails.objects.filter(company_code=ccode).distinct('core_sector').values()
+            if len(vendorobjmaincore)>0:
+                for i in range(0,len(vendorobjmaincore)):
+                    maincoreobj=MaincoreMaster.objects.filter(maincore_name=vendorobjmaincore[i].get('core_sector')).values()
+                    vendorobjmaincore[i].__setitem__('maincore_image_url',maincoreobj[0].get('maincore_image'))
+
             vendorobjcategory=VendorProduct_BasicDetails.objects.filter(company_code=ccode).distinct('category').values()
+            if len(vendorobjcategory)>0:
+                for i in range(0, len(vendorobjcategory)):
+                    categoryobj = CategoryMaster.objects.filter(
+                        category_name=vendorobjcategory[i].get('category')).values()
+                    vendorobjcategory[i].__setitem__('category_image_url', categoryobj[0].get('category_image'))
             vendorobjsubcategory=VendorProduct_BasicDetails.objects.filter(company_code=ccode).distinct('sub_category').values()
-        return Response({'status': 200, 'message': 'Vendor Product Basic Details List', 'maincore': vendorobjmaincore,
-                        'category':vendorobjcategory,'Subcategory':vendorobjsubcategory},
-                    status=status.HTTP_200_OK)
+            if len(vendorobjsubcategory)>0:
+                for i in range(0, len(vendorobjsubcategory)):
+                    subcategoryobj = SubCategoryMaster.objects.filter(sub_category_name=vendorobjsubcategory[i].get('sub_category')).values()
+                    vendorobjsubcategory[i].__setitem__('sub_category_image_url', subcategoryobj[0].get('sub_category_image'))
+
+            return Response({'status': 200, 'message': 'Vendor Product Basic Details List', 'maincore': vendorobjmaincore,
+                            'category':vendorobjcategory,'Subcategory':vendorobjsubcategory},
+                        status=status.HTTP_200_OK)
+        else:
+            return Response(
+                {'status': 401, 'message': 'UnAuthorized'},
+                status=status.HTTP_401_UNAUTHORIZED)
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 

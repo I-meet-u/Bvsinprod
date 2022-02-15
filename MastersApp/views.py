@@ -2740,15 +2740,16 @@ def get_admin_selected_sub_categories(request):
 
                 })
             else:
-                selectedsubcategory.append({'sub_category_name': "",
-                                            'sub_category_url': "",
-                                            'maincore_id': maincoreid,
-                                            'sub_category_id': "",
-                                            'Category_id': "",
-                                            'sub_category_code': "",
-                                            'sub_category_status': ""
-
-                                            })
+                pass
+                # selectedsubcategory.append({'sub_category_name': "",
+                #                             'sub_category_url': "",
+                #                             'maincore_id': maincoreid,
+                #                             'sub_category_id': "",
+                #                             'Category_id': "",
+                #                             'sub_category_code': "",
+                #                             'sub_category_status': ""
+                #
+                #                             })
 
         return Response({'status': 200, 'message': 'Top SubCategoires List', 'data': selectedsubcategory}, status=200)
     except Exception as e:

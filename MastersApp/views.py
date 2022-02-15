@@ -2722,7 +2722,7 @@ def get_admin_selected_sub_categories(request):
         maincoreid=""
         selectedsubcategory=[]
         selectedsubcategoriesobj=AdminSelectedSubCategories.objects.filter().values()
-        print("selectedsubcategoriesobj ",selectedsubcategoriesobj)
+        # print("selectedsubcategoriesobj ",selectedsubcategoriesobj)
         for i in range(0,len(selectedsubcategoriesobj)):
 
             subcategoryobj=SubCategoryMaster.objects.filter(sub_category_name=selectedsubcategoriesobj[i].get('sub_category_name')).values()

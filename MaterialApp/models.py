@@ -127,6 +127,29 @@ class VendorProduct_Documents(models.Model):
     class Meta:
         db_table="VendorProduct_Documents"
 
+
+
+class VendorProduct_Requirements(models.Model):
+    label_name=models.CharField(max_length=600,null=True,blank=True)
+    data_type=models.CharField(max_length=700,null=True,blank=True)
+    is_mandatory=models.BooleanField(default=False)
+    default_value=ArrayField(models.CharField(max_length=200),null=True,blank=True)
+    text_box_with_dropdown=models.BooleanField(default=False)
+    number_with_dropdown = models.BooleanField(default=False)
+    textbox_w_dropdown_text_value=models.CharField(max_length=800,null=True,blank=True)
+    textbox_w_dropdown_dropdown_value=ArrayField(models.CharField(max_length=200),null=True,blank=True)
+    number_with_dropdown_num_value=models.FloatField(null=True,blank=True)
+    number_wih_dropdown_dropdown_value=ArrayField(models.CharField(max_length=200),null=True,blank=True)
+    created_on = models.DateTimeField(auto_now_add=True)
+    updated_on = models.DateTimeField(auto_now=True)
+    created_by = models.BigIntegerField()
+    updated_by = models.ForeignKey(SelfRegistration, on_delete=models.CASCADE,null=True,blank=True)
+    vendor_products=models.ForeignKey(VendorProduct_BasicDetails,on_delete=models.CASCADE,null=True,blank=True)
+
+    class Meta:
+        db_table="VendorProduct_Requirements"
+
+
 class BuyerProductDetails(models.Model):
     buyer_product_id = models.BigAutoField(primary_key=True)
     buyer_item_type = models.CharField(max_length=100, null=True)

@@ -3484,3 +3484,9 @@ def update_vendor_product_documents_details(request):
 class VendorProduct_RequirementsViewSet(viewsets.ModelViewSet):
     queryset = VendorProduct_Requirements.objects.all()
     serializer_class = VendorProduct_RequirementsSerializer
+
+    def get_queryset(self):
+        vendorrequirementobj=VendorProduct_Requirements.objects.filter(updated_by=self.request.GET.get('updated_by')).order_by('id')
+        if vendorrequirementobj:
+            return vendorrequirementobj
+        raise ValidationError({'message':'Vendor Product Requirement details of particular user id is not exist','status':204})

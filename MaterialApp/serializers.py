@@ -108,6 +108,12 @@ class VendorProduct_DocumentsSerializer(serializers.ModelSerializer):
         model=VendorProduct_Documents
         fields='__all__'
 
+class VendorProduct_RequirementsSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model=VendorProduct_Requirements
+        fields='__all__'
+
 
 class BuyerProductDetailsSerializer(serializers.ModelSerializer):
 

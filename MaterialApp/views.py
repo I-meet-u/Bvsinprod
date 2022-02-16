@@ -3480,3 +3480,7 @@ def update_vendor_product_documents_details(request):
 #         return Response({'status': 200, 'message': 'updated'}, status=status.HTTP_200_OK)
 #     except Exception as e:
 #         return Response({'status': 500, 'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+class VendorProduct_RequirementsViewSet(viewsets.ModelViewSet):
+    queryset = VendorProduct_Requirements.objects.all()
+    serializer_class = VendorProduct_RequirementsSerializer

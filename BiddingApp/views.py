@@ -1305,24 +1305,59 @@ def get_source_based_on_item_type_user_id(request):
         if itemtype=='Product':
             sourceobj=SourceList_CreateItems.objects.filter(updated_by_id=userid,item_type='Product').values()
             if len(sourceobj)>0:
+                for i in range(0,len(sourceobj)):
+                    basicobj=BasicCompanyDetails.objects.filter(updated_by_id=sourceobj[i].get('updated_by_id')).values()
+                    if basicobj:
+                        sourceobj[i].__setitem__('company_code',basicobj[0].get('company_code'))
+                        sourceobj[i].__setitem__('company_name', basicobj[0].get('company_name'))
+                    else:
+                        sourceobj[i].__setitem__('company_code', "")
+                        sourceobj[i].__setitem__('company_name', "")
                 return Response({'status':200,'message':'Product Source List','data':sourceobj},status=status.HTTP_200_OK)
             else:
                 return Response({'status': 204, 'message': 'Product Source Code Not Present'},status=status.HTTP_204_NO_CONTENT)
         elif itemtype=='Service':
             sourceobj=SourceList_CreateItems.objects.filter(updated_by_id=userid,item_type='Service').values()
             if len(sourceobj)>0:
+                for i in range(0, len(sourceobj)):
+                    basicobj = BasicCompanyDetails.objects.filter(
+                        updated_by_id=sourceobj[i].get('updated_by_id')).values()
+                    if basicobj:
+                        sourceobj[i].__setitem__('company_code', basicobj[0].get('company_code'))
+                        sourceobj[i].__setitem__('company_name', basicobj[0].get('company_name'))
+                    else:
+                        sourceobj[i].__setitem__('company_code', "")
+                        sourceobj[i].__setitem__('company_name', "")
                 return Response({'status':200,'message':'Service Source List','data':sourceobj},status=status.HTTP_200_OK)
             else:
                 return Response({'status': 204, 'message': 'Service Source Code Not Present'},status=status.HTTP_204_NO_CONTENT)
         elif itemtype=='Equipment':
             sourceobj=SourceList_CreateItems.objects.filter(updated_by_id=userid,item_type='Equipment').values()
             if len(sourceobj)>0:
+                for i in range(0, len(sourceobj)):
+                    basicobj = BasicCompanyDetails.objects.filter(
+                        updated_by_id=sourceobj[i].get('updated_by_id')).values()
+                    if basicobj:
+                        sourceobj[i].__setitem__('company_code', basicobj[0].get('company_code'))
+                        sourceobj[i].__setitem__('company_name', basicobj[0].get('company_name'))
+                    else:
+                        sourceobj[i].__setitem__('company_code', "")
+                        sourceobj[i].__setitem__('company_name', "")
                 return Response({'status':200,'message':'Equipment Source List','data':sourceobj},status=status.HTTP_200_OK)
             else:
                 return Response({'status': 204, 'message': 'Equipment Source Code Not Present'},status=status.HTTP_204_NO_CONTENT)
         elif itemtype=='Machinery':
             sourceobj=SourceList_CreateItems.objects.filter(updated_by_id=userid,item_type='Machinery').values()
             if len(sourceobj)>0:
+                for i in range(0, len(sourceobj)):
+                    basicobj = BasicCompanyDetails.objects.filter(
+                        updated_by_id=sourceobj[i].get('updated_by_id')).values()
+                    if basicobj:
+                        sourceobj[i].__setitem__('company_code', basicobj[0].get('company_code'))
+                        sourceobj[i].__setitem__('company_name', basicobj[0].get('company_name'))
+                    else:
+                        sourceobj[i].__setitem__('company_code', "")
+                        sourceobj[i].__setitem__('company_name', "")
                 return Response({'status':200,'message':'Machinery Source List','data':sourceobj},status=status.HTTP_200_OK)
             else:
                 return Response({'status': 204, 'message': 'Machinery Source Code Not Present'},status=status.HTTP_204_NO_CONTENT)

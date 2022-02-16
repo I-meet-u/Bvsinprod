@@ -1218,16 +1218,16 @@ def internal_external_trail_buyers_users_list(request):
                                               'company_name': basicobj.company_name,
                                               'phone_no': regobjdata[i].get('phone_number'),
                                               'email_id': regobjdata[i].get('username'),
-                                              'external_user_name':regobjdata[i].get('contact_person'),
-                                              'external_user_id':regobjdata[i].get('id')
+                                              'user_name':regobjdata[i].get('contact_person'),
+                                              'user_id':regobjdata[i].get('id')
                                               })
                     else:
                         external_list.append({'company_code': "",
                                               'company_name': "",
                                               'phone_no': regobjdata[i].get('phone_number'),
                                               'email_id': regobjdata[i].get('username'),
-                                              'external_user_name': regobjdata[i].get('contact_person'),
-                                              'external_user_id': regobjdata[i].get('id')
+                                              'user_name': regobjdata[i].get('contact_person'),
+                                              'user_id': regobjdata[i].get('id')
                                               })
 
                 return Response({'status':200,'message':'External Users List','data':external_list},status=200)
@@ -1243,16 +1243,16 @@ def internal_external_trail_buyers_users_list(request):
                                           'company_name': basicobj.company_name,
                                           'phone_no': regobjdata[i].get('phone_number'),
                                           'email_id': regobjdata[i].get('username'),
-                                          'buyer_user_name': regobjdata[i].get('contact_person'),
-                                          'buyer_user_id': regobjdata[i].get('id')
+                                          'user_name': regobjdata[i].get('contact_person'),
+                                          'user_id': regobjdata[i].get('id')
                                             })
                     else:
                         buyer_list.append({'company_code': "",
                                            'company_name': "",
                                            'phone_no': regobjdata[i].get('phone_number'),
                                            'email_id': regobjdata[i].get('username'),
-                                           'buyer_user_name': regobjdata[i].get('contact_person'),
-                                           'buyer_user_id': regobjdata[i].get('id')
+                                           'user_name': regobjdata[i].get('contact_person'),
+                                           'user_id': regobjdata[i].get('id')
                                            })
                 return Response({'status': 200, 'message': 'Buyers List', 'data': buyer_list}, status=200)
             else:
@@ -1268,16 +1268,16 @@ def internal_external_trail_buyers_users_list(request):
                                               'company_name': internalobj[i].get('company_name'),
                                               'phone_no': internalobj[i].get('phone_number'),
                                               'email_id':internalobj[i].get('email_id'),
-                                              'internal_user_name': regobj[0].get('contact_person'),
-                                              'internal_user_id': regobj[0].get('id')
+                                              'user_name': regobj[0].get('contact_person'),
+                                              'user_id': regobj[0].get('id')
                                                   })
                     else:
                         internal_list.append({'company_code': internalobj[i].get('company_code'),
                                               'company_name': internalobj[i].get('company_name'),
                                               'phone_no': "",
                                               'email_id': "",
-                                              'internal_user_name':"",
-                                              'internal_user_id': ""
+                                              'user_name':"",
+                                              'user_id': ""
                                               })
 
                 return Response({'status': 200, 'message': 'Internal Users List', 'data': internal_list},
@@ -1297,16 +1297,16 @@ def internal_external_trail_buyers_users_list(request):
                                                       'company_name': basicobj[0].get('company_name'),
                                                       'phone_no': regobj[0].get('phone_number'),
                                                       'email_id': regobj[0].get('username'),
-                                                      'trail_user_name':regobj[0].get('contact_person'),
-                                                      'trail_user_id': regobj[0].get('id')
+                                                      'user_name':regobj[0].get('contact_person'),
+                                                      'user_id': regobj[0].get('id')
                                                       })
                         else:
                             trail_list.append({'company_code': basicobj[0].get('company_code'),
                                                'company_name': basicobj[0].get('company_name'),
                                                'phone_no': "",
                                                'email_id': "",
-                                               'trail_user_name': "",
-                                               'trail_user_id': ""
+                                               'user_name': "",
+                                               'user_id': ""
                                                })
                 return Response({'status': 200, 'message': 'Trail Users List', 'data': trail_list},
                                 status=200)

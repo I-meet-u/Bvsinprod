@@ -2934,18 +2934,9 @@ def store_vendor_publish(request):
         listing_leads=data['listing_leads']
         updated_by=data['updated_by']
         total_amount=data['total_amount']
-        i=0
-        count=0
+        publisharray=[]
         Vendor_publish_obj=LandingPageBidding_Publish.objects.filter(listing_leads=listing_leads).values().order_by('total_amount')
-        if len(Vendor_publish_obj)>3:
-            while i<len(Vendor_publish_obj):
-                print(Vendor_publish_obj[i].get('total_amount'))
-                if  float(total_amount)>float(Vendor_publish_obj[i].get('total_amount')):
-                    count=count+1
-                    if count==3:
-                        return Response({'status': 202, 'message': 'Upto level 3 data exist'}, status=202)
-                i=i+1
-            if count<3:
+        if len(Vendor_publish_obj)<5:
                 LandingPageBidding_Publish.objects.create(item_type=data['item_type'],
                                                           company_name=data['company_name'],
                                                           company_code=data['company_code'], priority=data['priority'],
@@ -2963,20 +2954,39 @@ def store_vendor_publish(request):
                                                           listing_leads=LandingPageBidding.objects.get(id=data['listing_leads']), created_by=updated_by,
                                                           updated_by=SelfRegistration.objects.get(id=updated_by))
         else:
-            LandingPageBidding_Publish.objects.create(item_type=data['item_type'],company_name=data['company_name'],
-                                                      company_code=data['company_code'],priority=data['priority'],
-                                                      deadline_date=data['deadline_date'],item_name=data['item_name'],
-                                                      item_description=data['item_description'],uom=data['uom'],
-                                                      quantity=data['quantity'],hsn_sac=['hsn_sac'],category=data['category'],
-                                                      unit_rate=data['unit_rate'],tax=data['tax'],discount=data['discount'],
-                                                      total_amount=data['total_amount'],pf_charges=data['pf_charges'],
-                                                      payment_charges=data['payment_charges'],delivery_charges=data['delivery_charges'],
-                                                      listing_leads=LandingPageBidding.objects.get(id=data['listing_leads']),
-                                                      created_by=updated_by,
-                                                      updated_by=SelfRegistration.objects.get(id=updated_by))
+            for i in range(0, len(Vendor_publish_obj)):
+                print('s')
+                if float(total_amount) == float(Vendor_publish_obj[i].get('total_amount')) and len(Vendor_publish_obj) == 5:
+                    return Response({'status': 202, 'message': '5 data exist already'}, status=202)
+                else:
+                    publisharray.append(float(Vendor_publish_obj[i].get('total_amount')))
+                publisharray.sort()
+            val = max(publisharray)
+            if float(total_amount) < val:
+                print(val, 'lll')
+                x = int(val)
+
+                landingpublishobj = LandingPageBidding_Publish.objects.filter(
+                    listing_leads=listing_leads,total_amount=x).values().order_by('total_amount')
+                print(len(landingpublishobj), 'length')
+                landingobj = LandingPageBidding_Publish.objects.get(id=landingpublishobj[0].get('id'))
+                print(landingobj.total_amount, landingobj.id)
+                landingobj.delete()
+                LandingPageBidding_Publish.objects.create(item_type=data['item_type'],company_name=data['company_name'],
+                                                          company_code=data['company_code'],priority=data['priority'],
+                                                          deadline_date=data['deadline_date'],item_name=data['item_name'],
+                                                          item_description=data['item_description'],uom=data['uom'],
+                                                          quantity=data['quantity'],hsn_sac=['hsn_sac'],category=data['category'],
+                                                          unit_rate=data['unit_rate'],tax=data['tax'],discount=data['discount'],
+                                                          total_amount=data['total_amount'],pf_charges=data['pf_charges'],
+                                                          payment_charges=data['payment_charges'],delivery_charges=data['delivery_charges'],
+                                                          listing_leads=LandingPageBidding.objects.get(id=data['listing_leads']),
+                                                          created_by=updated_by,
+                                                          updated_by=SelfRegistration.objects.get(id=updated_by))
         return Response({'status': 200, 'message': 'ok'}, status=200)
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)
+
 
 
 @api_view(['post'])

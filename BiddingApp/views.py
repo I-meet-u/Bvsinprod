@@ -4944,8 +4944,23 @@ def get_all_source_leads_by_id(request):
     data = request.data
     id = data['source_pk']
     try:
-        bidobj =SourceList_CreateItems.objects.filter(id=id).values()
+        bidobj=SourceList_CreateItems.objects.filter(id=id).values()
         if len(bidobj)>0:
+            basicobj=BasicCompanyDetails.objects.filter(updated_by_id=bidobj[0].get('updated_by_id')).values()
+            if basicobj:
+                billobj=BillingAddress.objects.filter(updated_by_id=basicobj[0].get('updated_by_id')).values()
+                if billobj:
+                    bidobj[0].__setitem__('company_code',basicobj[0].get('company_code'))
+                    bidobj[0].__setitem__('company_name', basicobj[0].get('company_name'))
+                    bidobj[0].__setitem__('bill_address',billobj[0].get('bill_address'))
+                else:
+                    bidobj[0].__setitem__('bill_address',"")
+
+
+            else:
+                bidobj[0].__setitem__('company_code', "")
+                bidobj[0].__setitem__('company_name', "")
+
             return Response({'status': 200, 'message': 'ok', 'data': bidobj}, status=200)
         else:
             return Response({'status': 204, 'message': 'Not Present'}, status=204)

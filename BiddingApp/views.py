@@ -1152,30 +1152,48 @@ def source_list_leads(request):
         basicobj = BasicCompanyDetails.objects.filter(updated_by_id=userid).values()
         if len(basicobj)>0:
             sourcobj = SourceList_CreateItems.objects.filter(source_vendors__contains=[basicobj[0].get('company_code')]).values()
-            # print(len(sourcobj),'qwertyuuywqas')
-            for i in range(0,len(sourcobj)):
-                print(sourcobj[i].get('source_vendors'),'ccode')
-                if sourcobj[i].get('id') not in sourceleadsarray:
-                    # print('ndgsfvdas cdasjnmd djnnaddadjnkadjnk')
-                    basicval = BasicCompanyDetails.objects.filter(updated_by_id=sourcobj[i].get('updated_by_id')).values()
-                    billingobj = BillingAddress.objects.filter(company_code_id=basicval[0].get('company_code'),
-                                                               updated_by_id=basicval[0].get('updated_by_id')).values()
-                    listarray.append({'id': sourcobj[i].get('id'),
-                                      'company_code': basicval[0].get('company_code'),
-                                      'company_name': basicval[0].get('company_name'),
-                                      'source_code': sourcobj[i].get('source_code'),
-                                      'source': sourcobj[i].get('source'),
-                                      'item_type': sourcobj[i].get('item_type'),
-                                      'quantity': sourcobj[i].get('quantity'),
-                                      'source_required_city': sourcobj[i].get('source_required_city'),
-                                      'product_category': sourcobj[i].get('product_category'),
-                                      'client_city': billingobj[0].get('bill_city'),
-                                      'updated_by': sourcobj[i].get('updated_by_id'),
-                                      'item_name': sourcobj[i].get('item_name'),
-                                      })
-                else:
-                    print('already present in publish')
-            return Response({'status': 200, 'message': 'Source Leads', 'data': listarray}, status=200)
+            if len(sourcobj)>0:
+                for i in range(0,len(sourcobj)):
+                    print(sourcobj[i].get('source_vendors'),'ccode')
+                    if sourcobj[i].get('id') not in sourceleadsarray:
+                        # print('ndgsfvdas cdasjnmd djnnaddadjnkadjnk')
+                        basicval = BasicCompanyDetails.objects.filter(updated_by_id=sourcobj[i].get('updated_by_id')).values()
+                        if basicval:
+                            billingobj = BillingAddress.objects.filter(company_code_id=basicval[0].get('company_code'),
+                                                                       updated_by_id=basicval[0].get('updated_by_id')).values()
+                            if billingobj:
+                                listarray.append({'id': sourcobj[i].get('id'),
+                                                  'company_code': basicval[0].get('company_code'),
+                                                  'company_name': basicval[0].get('company_name'),
+                                                  'source_code': sourcobj[i].get('source_code'),
+                                                  'source': sourcobj[i].get('source'),
+                                                  'item_type': sourcobj[i].get('item_type'),
+                                                  'quantity': sourcobj[i].get('quantity'),
+                                                  'source_required_city': sourcobj[i].get('source_required_city'),
+                                                  'product_category': sourcobj[i].get('product_category'),
+                                                  'client_city': billingobj[0].get('bill_city'),
+                                                  'updated_by': sourcobj[i].get('updated_by_id'),
+                                                  'item_name': sourcobj[i].get('item_name'),
+                                                  })
+                            else:
+                                listarray.append({'id': sourcobj[i].get('id'),
+                                                  'company_code': basicval[0].get('company_code'),
+                                                  'company_name': basicval[0].get('company_name'),
+                                                  'source_code': sourcobj[i].get('source_code'),
+                                                  'source': sourcobj[i].get('source'),
+                                                  'item_type': sourcobj[i].get('item_type'),
+                                                  'quantity': sourcobj[i].get('quantity'),
+                                                  'source_required_city': sourcobj[i].get('source_required_city'),
+                                                  'product_category': sourcobj[i].get('product_category'),
+                                                  'client_city': "",
+                                                  'updated_by': sourcobj[i].get('updated_by_id'),
+                                                  'item_name': sourcobj[i].get('item_name'),
+                                                  })
+                    else:
+                        print('already present in publish')
+                return Response({'status': 200, 'message': 'Source Leads', 'data': listarray}, status=200)
+            else:
+                return Response({'status':202,'message':'Source Leads Not Present'},status=204)
 
         else:
             return Response({'status': 204, 'message': 'Basic details are not present','data':[]}, status=204)

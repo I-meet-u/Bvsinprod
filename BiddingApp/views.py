@@ -1156,7 +1156,6 @@ def source_list_leads(request):
                 for i in range(0,len(sourcobj)):
                     print(sourcobj[i].get('source_vendors'),'ccode')
                     if sourcobj[i].get('id') not in sourceleadsarray:
-                        # print('ndgsfvdas cdasjnmd djnnaddadjnkadjnk')
                         basicval = BasicCompanyDetails.objects.filter(updated_by_id=sourcobj[i].get('updated_by_id')).values()
                         if basicval:
                             billingobj = BillingAddress.objects.filter(company_code_id=basicval[0].get('company_code'),
@@ -1174,6 +1173,13 @@ def source_list_leads(request):
                                                   'client_city': billingobj[0].get('bill_city'),
                                                   'updated_by': sourcobj[i].get('updated_by_id'),
                                                   'item_name': sourcobj[i].get('item_name'),
+                                                  'maincore':sourcobj[i].get('maincore'),
+                                                  'category':sourcobj[i].get('category'),
+                                                  'uom':sourcobj[i].get('uom'),
+                                                  'publish_date':sourcobj[i].get('publish_date'),
+                                                  'deadline_date':sourcobj[i].get('deadline_date'),
+                                                  'item_description':sourcobj[i].get('item_description'),
+
                                                   })
                             else:
                                 listarray.append({'id': sourcobj[i].get('id'),
@@ -1188,6 +1194,13 @@ def source_list_leads(request):
                                                   'client_city': "",
                                                   'updated_by': sourcobj[i].get('updated_by_id'),
                                                   'item_name': sourcobj[i].get('item_name'),
+                                                  'maincore': sourcobj[i].get('maincore'),
+                                                  'category': sourcobj[i].get('category'),
+                                                  'uom': sourcobj[i].get('uom'),
+                                                  'publish_date': sourcobj[i].get('publish_date'),
+                                                  'deadline_date': sourcobj[i].get('deadline_date'),
+                                                  'item_description': sourcobj[i].get('item_description'),
+
                                                   })
                     else:
                         print('already present in publish')

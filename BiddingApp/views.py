@@ -5398,6 +5398,7 @@ class SourcePurchaseOrderViewset(viewsets.ModelViewSet):
     serializer_class = SourcePurchaseOrderSerializer
 
     def create(self, request, *args, **kwargs):
+        source_publish_pk = request.data.get('source_publish_pk', None)
         configuration = sib_api_v3_sdk.Configuration()
         configuration.api_key[
             'api-key'] = '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'
@@ -5405,50 +5406,31 @@ class SourcePurchaseOrderViewset(viewsets.ModelViewSet):
             'accept': 'application/json',
             'content-type': 'application/json',
         }
-        if request.data['source_type'] == 'Product':
-            api_instance = sib_api_v3_sdk.TransactionalEmailsApi(sib_api_v3_sdk.ApiClient(configuration))
-            basicobj = BasicCompanyDetails.objects.get(company_code=request.data['vendor_code'])
+        sourcepublishobj = SourcePublish.objects.filter(id=source_publish_pk).values()
+        if sourcepublishobj:
+            basicobj = BasicCompanyDetails.objects.get(updated_by_id=sourcepublishobj[0].get('updated_by_id'))
             regobj = SelfRegistration.objects.get(id=basicobj.updated_by_id)
-            subject = request.data['subject']
-            text_content = "Dear " + basicobj.company_name + "," + "\n\n" + request.data['description'] + "\n\n" + "Regards , " + "\n\n" + "Note: Please Don't Share this email with anyone"
-            sender = {"name": 'Admin', "email": 'admin@vendorsin.com'}
-            to = [{"email": regobj.username, "name": regobj.contact_person}]
-            send_smtp_email = sib_api_v3_sdk.SendSmtpEmail(to=to, text_content=text_content,
-                                                           sender=sender, subject=subject)
-            print(send_smtp_email)
+            print(regobj.username, 'ok')
+            api_instance = sib_api_v3_sdk.TransactionalEmailsApi(sib_api_v3_sdk.ApiClient(configuration))
+            send_smtp_email = sib_api_v3_sdk.SendSmtpEmail(
+                to=[{"email": regobj.username, "name": regobj.contact_person}],
+                template_id=33, params={
+                    "itemname": request.data['item_name'],
+                    "itemdescription": request.data['item_description'],
+                    "podate": request.data['po_date'],
+                    "ponum": request.data['po_number'],
+                    # "poexpires": request.data['PO_expirydate'],
+                    "quantity": sourcepublishobj[0].get('source_quantity'),
+                    "companyname": basicobj.company_name
+                },
+                headers=headers,
+                subject='Source PO Confirmation'
+            )  # SendSmtpEmail | Values to send a transactional email
+            # Send a transactional email
             api_response = api_instance.send_transac_email(send_smtp_email)
             print(api_response)
-
-        elif request.data['source_type'] == 'Service':
-            api_instance = sib_api_v3_sdk.TransactionalEmailsApi(sib_api_v3_sdk.ApiClient(configuration))
-            basicobj = BasicCompanyDetails.objects.get(company_code=request.data['vendor_code'])
-            regobj = SelfRegistration.objects.get(id=basicobj.updated_by_id)
-            subject = request.data['subject']
-            text_content = "Dear " + basicobj.company_name + "," + "\n\n" + request.data['description'] + "\n\n" + "Regards , " + "\n\n" + "Note: Please Don't Share this email with anyone"
-            sender = {"name": 'Admin', "email": 'admin@vendorsin.com'}
-            to = [{"email": regobj.username, "name": regobj.contact_person}]
-            send_smtp_email = sib_api_v3_sdk.SendSmtpEmail(to=to, text_content=text_content,
-                                                           sender=sender, subject=subject)
-            print(send_smtp_email)
-            api_response = api_instance.send_transac_email(send_smtp_email)
-            print(api_response)
-
-
-        elif request.data['source_type'] == 'Machinary & equipments':
-            api_instance = sib_api_v3_sdk.TransactionalEmailsApi(sib_api_v3_sdk.ApiClient(configuration))
-            basicobj = BasicCompanyDetails.objects.get(company_code=request.data['vendor_code'])
-            regobj = SelfRegistration.objects.get(id=basicobj.updated_by_id)
-            subject = request.data['subject']
-            text_content = "Dear " + basicobj.company_name + "," + "\n\n" + request.data[
-                'description'] + "\n\n" + "Regards , " + "\n\n" + "Note: Please Don't Share this email with anyone"
-            sender = {"name": 'Admin', "email": 'admin@vendorsin.com'}
-            to = [{"email": regobj.username, "name": regobj.contact_person}]
-            send_smtp_email = sib_api_v3_sdk.SendSmtpEmail(to=to, text_content=text_content,
-                                                           sender=sender, subject=subject)
-            print(send_smtp_email)
-            api_response = api_instance.send_transac_email(send_smtp_email)
-            print(api_response)
-
+        else:
+            print('Not Present')
         return super().create(request, *args, **kwargs)
 
     def get_queryset(self):

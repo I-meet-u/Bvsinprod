@@ -1330,11 +1330,31 @@ def internal_external_trail_buyers_users_list(request):
 
 
 @api_view(['post'])
+@permission_classes((AllowAny,))
 def post_listings(request):
     data=request.data
+    product_name=data['product_name']
+    product_list=[]
     try:
-        vendorobj=VendorProduct_BasicDetails.objects.filter().values()
-        return Response({'status': 200, 'message': 'Listing Data'},
-                        status=200)
+        vendorobj=VendorProduct_BasicDetails.objects.filter(item_name=product_name).values()
+        if len(vendorobj)>0:
+            for i in range(0,len(vendorobj)):
+                regobj=SelfRegistration.objects.filter(id=vendorobj[i].get('updated_by_id')).values()
+                if regobj:
+                    basicobj=BasicCompanyDetails.objects.filter(updated_by_id=regobj[0].get('id')).values()
+                    product_list.append({'product_name':vendorobj[i].get('item_name'),
+                                         'company_name':basicobj[0].get('company_name'),
+                                         'company_code':basicobj[0].get('company_code'),
+                                         'username':regobj[0].get('conact_person'),
+                                         'email_id':regobj[0].get('username'),
+                                         'profile_cover_photo':regobj[0].get('profile_cover_photo'),
+                                         'user_id':regobj[0].get('id')
+                                         })
+            return Response({'status': 200, 'message': 'Listing Data','data':product_list},
+                            status=200)
+        else:
+            return Response({'status': 204, 'message': 'Product Details are not present'},
+                            status=204)
+
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)

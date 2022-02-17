@@ -1219,7 +1219,8 @@ def internal_external_trail_buyers_users_list(request):
                                               'phone_no': regobjdata[i].get('phone_number'),
                                               'email_id': regobjdata[i].get('username'),
                                               'user_name':regobjdata[i].get('contact_person'),
-                                              'user_id':regobjdata[i].get('id')
+                                              'user_id':regobjdata[i].get('id'),
+                                              'profile_cover_photo':regobjdata[i].get('profile_cover_photo')
                                               })
                     else:
                         external_list.append({'company_code': "",
@@ -1227,7 +1228,8 @@ def internal_external_trail_buyers_users_list(request):
                                               'phone_no': regobjdata[i].get('phone_number'),
                                               'email_id': regobjdata[i].get('username'),
                                               'user_name': regobjdata[i].get('contact_person'),
-                                              'user_id': regobjdata[i].get('id')
+                                              'user_id': regobjdata[i].get('id'),
+                                              'profile_cover_photo': regobjdata[i].get('profile_cover_photo')
                                               })
 
                 return Response({'status':200,'message':'External Users List','data':external_list},status=200)
@@ -1244,7 +1246,8 @@ def internal_external_trail_buyers_users_list(request):
                                           'phone_no': regobjdata[i].get('phone_number'),
                                           'email_id': regobjdata[i].get('username'),
                                           'user_name': regobjdata[i].get('contact_person'),
-                                          'user_id': regobjdata[i].get('id')
+                                          'user_id': regobjdata[i].get('id'),
+                                           'profile_cover_photo': regobjdata[i].get('profile_cover_photo')
                                             })
                     else:
                         buyer_list.append({'company_code': "",
@@ -1252,7 +1255,8 @@ def internal_external_trail_buyers_users_list(request):
                                            'phone_no': regobjdata[i].get('phone_number'),
                                            'email_id': regobjdata[i].get('username'),
                                            'user_name': regobjdata[i].get('contact_person'),
-                                           'user_id': regobjdata[i].get('id')
+                                           'user_id': regobjdata[i].get('id'),
+                                           'profile_cover_photo': regobjdata[i].get('profile_cover_photo')
                                            })
                 return Response({'status': 200, 'message': 'Buyers List', 'data': buyer_list}, status=200)
             else:
@@ -1269,7 +1273,8 @@ def internal_external_trail_buyers_users_list(request):
                                               'phone_no': internalobj[i].get('phone_number'),
                                               'email_id':internalobj[i].get('email_id'),
                                               'user_name': regobj[0].get('contact_person'),
-                                              'user_id': regobj[0].get('id')
+                                              'user_id': regobj[0].get('id'),
+                                              'profile_cover_photo': regobj[0].get('profile_cover_photo')
                                                   })
                     else:
                         internal_list.append({'company_code': internalobj[i].get('company_code'),
@@ -1277,7 +1282,8 @@ def internal_external_trail_buyers_users_list(request):
                                               'phone_no': "",
                                               'email_id': "",
                                               'user_name':"",
-                                              'user_id': ""
+                                              'user_id': "",
+                                              'profile_cover_photo': ""
                                               })
 
                 return Response({'status': 200, 'message': 'Internal Users List', 'data': internal_list},
@@ -1298,7 +1304,8 @@ def internal_external_trail_buyers_users_list(request):
                                                       'phone_no': regobj[0].get('phone_number'),
                                                       'email_id': regobj[0].get('username'),
                                                       'user_name':regobj[0].get('contact_person'),
-                                                      'user_id': regobj[0].get('id')
+                                                      'user_id': regobj[0].get('id'),
+                                                      'profile_cover_photo': regobj[0].get('profile_cover_photo')
                                                       })
                         else:
                             trail_list.append({'company_code': basicobj[0].get('company_code'),
@@ -1306,7 +1313,8 @@ def internal_external_trail_buyers_users_list(request):
                                                'phone_no': "",
                                                'email_id': "",
                                                'user_name': "",
-                                               'user_id': ""
+                                               'user_id': "",
+                                               'profile_cover_photo': "",
                                                })
                 return Response({'status': 200, 'message': 'Trail Users List', 'data': trail_list},
                                 status=200)
@@ -1319,3 +1327,14 @@ def internal_external_trail_buyers_users_list(request):
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)
 
+
+
+@api_view(['post'])
+def post_listings(request):
+    data=request.data
+    try:
+        vendorobj=VendorProduct_BasicDetails.objects.filter().values()
+        return Response({'status': 200, 'message': 'Listing Data'},
+                        status=200)
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)

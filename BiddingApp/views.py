@@ -5424,7 +5424,7 @@ class SourcePurchaseOrderViewset(viewsets.ModelViewSet):
                     "companyname": basicobj.company_name
                 },
                 headers=headers,
-                subject='Source PO Confirmation'
+                subject='PO Confirmation'
             )  # SendSmtpEmail | Values to send a transactional email
             # Send a transactional email
             api_response = api_instance.send_transac_email(send_smtp_email)

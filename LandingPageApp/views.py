@@ -616,20 +616,31 @@ def get_all_company_products_services(request):
             if len(alldata) > 0:
                 for i in range(0, len(alldata)):
                     Maaincoreid=MaincoreMaster.objects.filter(maincore_name=alldata[i].get('core_sector')).values()
-                    Categoryid=CategoryMaster.objects.filter(category_name=alldata[i].get('category')).values()
-                    print("maincore =====================================")
-                    print(Maaincoreid)
-                    print("category =====================================")
-                    print(alldata[i].get('category'))
-                    print(Categoryid)
+                    if Maaincoreid:
+                        Categoryid=CategoryMaster.objects.filter(category_name=alldata[i].get('category')).values()
+                        if Categoryid:
+                            print("maincore =====================================")
+                            print(Maaincoreid)
+                            print("category =====================================")
+                            print(alldata[i].get('category'))
+                            print(Categoryid)
 
-                    getarray.append({'name': alldata[i].get('item_name'),
-                                     'product_code':alldata[i].get('item_code'),
-                                     'maincore':Maaincoreid[0].get('maincore_id'),
-                                     'category':Categoryid[0].get('category_id'),
-                                     'subcategory':alldata[i].get('sub_category'),
-                                     'itemtype':alldata[i].get('item_type')
-                                     })
+                            getarray.append({'name': alldata[i].get('item_name'),
+                                             'product_code':alldata[i].get('item_code'),
+                                             'maincore':Maaincoreid[0].get('maincore_id'),
+                                             'category':Categoryid[0].get('category_id'),
+                                             'subcategory':alldata[i].get('sub_category'),
+                                             'itemtype':alldata[i].get('item_type')
+                                             })
+                        else:
+                            getarray.append({'name': alldata[i].get('item_name'),
+                                             'product_code': alldata[i].get('item_code'),
+                                             'maincore': Maaincoreid[0].get('maincore_id'),
+                                             'category': "",
+                                             'subcategory': alldata[i].get('sub_category'),
+                                             'itemtype': alldata[i].get('item_type')
+                                             })
+
             basicobj = BasicCompanyDetails.objects.filter().values()
             if len(basicobj) > 0:
                 for i in range(0, len(basicobj)):

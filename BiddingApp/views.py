@@ -4961,6 +4961,9 @@ def get_all_source_leads(request):
         if get_vendors=='True':
             bidobj =SourceList_CreateItems.objects.filter(get_vendors=get_vendors).values().order_by('-id')
             if len(bidobj)>-0:
+                for i in range(0,len(bidobj)):
+                    basicobj=BasicCompanyDetails.objects.filter(updated_by_id=bidobj[i].get('updated_by_id')).values()
+                    bidobj[i].__setitem__('company_name',basicobj[0].get('company_name'))
                 return Response({'status': 200, 'message': 'ok', 'data': bidobj}, status=200)
             else:
                 return Response({'status': 204, 'message': 'Not Present'}, status=204)

@@ -599,14 +599,24 @@ def get_all_company_products_services(request):
                 for i in range(0,len(productobj)):
                     maincorevalue = MaincoreMaster.objects.filter(maincore_name=productobj[i].
                                                                   get('core_sector')).values()
-                    Categorydetails=CategoryMaster.objects.filter(maincore=maincorevalue[0].get('maincore_id')).values()
-                    getarray.append({'name':productobj[i].get('item_name'),
-                                     'product_code': productobj[i].get('item_code'),
-                                     'maincore':productobj[i].get('core_sector'),
-                                     'category':Categorydetails[0].get('category_id'),
-                                     'subcategory':productobj[i].get('sub_category'),
-                                     'itemtype':productobj[i].get('item_type')
-                                     })
+                    if maincorevalue:
+                        Categorydetails=CategoryMaster.objects.filter(maincore=maincorevalue[0].get('maincore_id')).values()
+                        if Categorydetails:
+                            getarray.append({'name':productobj[i].get('item_name'),
+                                             'product_code': productobj[i].get('item_code'),
+                                             'maincore':productobj[i].get('core_sector'),
+                                             'category':Categorydetails[0].get('category_id'),
+                                             'subcategory':productobj[i].get('sub_category'),
+                                             'itemtype':productobj[i].get('item_type')
+                                             })
+                        else:
+                            getarray.append({'name': productobj[i].get('item_name'),
+                                             'product_code': productobj[i].get('item_code'),
+                                             'maincore': productobj[i].get('core_sector'),
+                                             'category':"",
+                                             'subcategory': productobj[i].get('sub_category'),
+                                             'itemtype': productobj[i].get('item_type')
+                                             })
                 return Response({'status': 200, 'message': 'Vendor Product List', 'data': getarray}, status=200)
             else:
                 return Response({'status': 204, 'message': 'Vendor Product Lists are Not Present','data':getarray}, status=204)
@@ -656,15 +666,25 @@ def get_all_company_products_services(request):
                 for i in range(0, len(productobj)):
                     maincorevalue = MaincoreMaster.objects.filter(maincore_name=productobj[i].
                                                                   get('core_sector')).values()
-                    Categorydetails = CategoryMaster.objects.filter(
-                        maincore=maincorevalue[0].get('maincore_id')).values()
-                    getarray.append({'name': productobj[i].get('item_name'),
-                                     'product_code': productobj[i].get('item_code'),
-                                     'maincore': productobj[i].get('core_sector'),
-                                     'category': Categorydetails[0].get('category_id'),
-                                     'subcategory': productobj[i].get('sub_category'),
-                                     'itemtype': productobj[i].get('item_type')
-                                     })
+                    if maincorevalue:
+                        Categorydetails = CategoryMaster.objects.filter(
+                            maincore=maincorevalue[0].get('maincore_id')).values()
+                        if Categorydetails:
+                            getarray.append({'name': productobj[i].get('item_name'),
+                                             'product_code': productobj[i].get('item_code'),
+                                             'maincore': productobj[i].get('core_sector'),
+                                             'category': "",
+                                             'subcategory': productobj[i].get('sub_category'),
+                                             'itemtype': productobj[i].get('item_type')
+                                             })
+                        else:
+                            getarray.append({'name': productobj[i].get('item_name'),
+                                             'product_code': productobj[i].get('item_code'),
+                                             'maincore': productobj[i].get('core_sector'),
+                                             'category': "",
+                                             'subcategory': productobj[i].get('sub_category'),
+                                             'itemtype': productobj[i].get('item_type')
+                                             })
                 return Response({'status': 200, 'message': 'Vendor Service List', 'data': getarray}, status=200)
             else:
                 return Response({'status': 204, 'message': 'Vendor Service Lists are Not Present','data':getarray}, status=204)

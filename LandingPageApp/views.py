@@ -11,7 +11,7 @@ from rest_framework.parsers import FileUploadParser, MultiPartParser
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 # Create your views here.
-from DashboardApp.models import InternalVendor, TrailVendors
+from DashboardApp.models import InternalVendor, TrailVendors, BusinessRequest
 from LandingPageApp.models import CompanyReviewAndRating, Message
 from LandingPageApp.serializers import CompanyReviewSerializer, MessageSerializer
 from MastersApp.models import MaincoreMaster, CategoryMaster, SubCategoryMaster
@@ -1208,6 +1208,7 @@ def internal_external_trail_buyers_users_list(request):
     buyer_list=[]
     internal_list=[]
     trail_list=[]
+    business_network=[]
     try:
         if users=='external_user':
             regobjdata = SelfRegistration.objects.filter(Q(user_type='Vendor') | Q(user_type='Both'),
@@ -1319,6 +1320,35 @@ def internal_external_trail_buyers_users_list(request):
                                                'profile_cover_photo': "",
                                                })
                 return Response({'status': 200, 'message': 'Trail Users List', 'data': trail_list},
+                                status=200)
+            else:
+                return Response({'status': 204, 'message': 'Not Present'}, status=204)
+        elif users=='business_network':
+            businessacceptobj = BusinessRequest.objects.filter(send_status='Accept').values().order_by('id')
+            if len(businessacceptobj) > 0:
+                for i in range(0, len(businessacceptobj)):
+                    regobj=SelfRegistration.objects.filter(id=businessacceptobj[i].get('updated_by_id')).values().order_by('id')
+                    if regobj:
+                        basicobj = BasicCompanyDetails.objects.filter(
+                            updated_by_id=regobj[0].get('id')).values()
+                        if basicobj:
+                            business_network.append({'company_code': basicobj[0].get('company_code'),
+                                                      'company_name': basicobj[0].get('company_name'),
+                                                      'phone_no': regobj[0].get('phone_number'),
+                                                      'email_id': regobj[0].get('username'),
+                                                      'user_name':regobj[0].get('contact_person'),
+                                                      'user_id': regobj[0].get('id'),
+                                                      'profile_cover_photo': regobj[0].get('profile_cover_photo')})
+                        else:
+                            business_network.append({'company_code': "",
+                                                     'company_name': "",
+                                                     'phone_no': regobj[0].get('phone_number'),
+                                                     'email_id': regobj[0].get('username'),
+                                                     'user_name': regobj[0].get('contact_person'),
+                                                     'user_id': regobj[0].get('id'),
+                                                     'profile_cover_photo': regobj[0].get('profile_cover_photo')})
+
+                return Response({'status': 200, 'message': 'Business Network Users List', 'data': business_network},
                                 status=200)
             else:
                 return Response({'status': 204, 'message': 'Not Present'}, status=204)

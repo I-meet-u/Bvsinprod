@@ -5554,19 +5554,3 @@ def source_publish_data_store(request):
         return Response({'status': 200, 'message': 'ok'}, status=200)
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)
-
-
-@api_view(['post'])
-def source_responses_view(request):
-    data=request.data
-    source_id=data['source_id']
-
-    try:
-        sourceobj=SourceList_CreateItems.objects.filter(id=source_id).values()
-        if len(sourceobj)>0:
-            sourcepublishobj=SourcePublish.objects.filter(source_id=sourceobj[0].get('id')).values()
-            return Response({'status':200,'message':'Vendor Response for Source','data':sourcepublishobj,'pf_charges':sourceobj[0].get('p_f_charges'),'frieght_charges':sourceobj[0].get('frieght_charges'),'delivery':sourceobj[0].get('delivery')},status=status.HTTP_200_OK)
-        else:
-            return Response({'status':204,'message':'Source Publish Details are not present'},status=status.HTTP_204_NO_CONTENT)
-    except Exception as e:
-        return Response({'status': 500, 'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

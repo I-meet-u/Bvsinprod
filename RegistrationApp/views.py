@@ -46,7 +46,7 @@ class SelfRegisterView(viewsets.ModelViewSet):
     queryset = SelfRegistration.objects.all()
     serializer_class = SelfRegistrationSerializer
     permission_classes = (AllowAny,)
-    parser_classes = [MultiPartParser]
+    # parser_classes = [MultiPartParser]
 
 class SelfRegistrationSampleView(viewsets.ModelViewSet):
     # registration user information sample view

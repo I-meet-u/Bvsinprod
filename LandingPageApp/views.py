@@ -1099,8 +1099,10 @@ def company_details_by_maincore_id_cat_id(request):
 
 @api_view(['GET','POST'])
 @permission_classes((AllowAny,))
+@parser_classes([MultiPartParser])
 def messages_lists(request,sender=None,receiver=None):
     try:
+
         # if request.data['key']=='vsinadmindb':
         if request.method=='GET':
             messages=Message.objects.filter(sender_id=sender,receiver_id=receiver)

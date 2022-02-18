@@ -46,16 +46,13 @@ class SelfRegisterView(viewsets.ModelViewSet):
     queryset = SelfRegistration.objects.all()
     serializer_class = SelfRegistrationSerializer
     permission_classes = (AllowAny,)
-    ordering_fields = ['id']
-    ordering = ['id']
+    parser_classes = [MultiPartParser]
 
 class SelfRegistrationSampleView(viewsets.ModelViewSet):
     # registration user information sample view
     queryset= SelfRegistration_Sample.objects.all()
     serializer_class = SelfRegistrationSerializerSample
     permission_classes = (AllowAny,)
-    ordering_fields = ['id']
-    ordering = ['id']
 
     def perform_create(self, serializer):
         # Hash password but passwords are not required

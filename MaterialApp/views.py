@@ -3503,14 +3503,20 @@ class VendorProduct_RequirementsViewSet(viewsets.ModelViewSet):
 
 
 @api_view(['post'])
+@permission_classes((AllowAny,))
 def get_vendor_product_requirements_based_on_vendor_pk(request):
     data=request.data
     try:
-        vendorrequirementobj=VendorProduct_Requirements.objects.filter(vendor_products_id=data['vendor_pk']).values().order_by('id')
-        if len(vendorrequirementobj)>0:
-            return Response({'status': 200, 'message': 'Vendor Product Requirements list','data':vendorrequirementobj}, status=status.HTTP_200_OK)
+        if data['key']=='vsinadmindb':
+            vendorrequirementobj=VendorProduct_Requirements.objects.filter(vendor_products_id=data['vendor_pk']).values().order_by('id')
+            if len(vendorrequirementobj)>0:
+                return Response({'status': 200, 'message': 'Vendor Product Requirements list','data':vendorrequirementobj}, status=status.HTTP_200_OK)
+            else:
+                return Response({'status': 204, 'message': 'Vendor Product Requirements Are Not Present','data':vendorrequirementobj}, status=status.HTTP_204_NO_CONTENT)
         else:
-            return Response({'status': 204, 'message': 'Vendor Product Requirements Are Not Present','data':vendorrequirementobj}, status=status.HTTP_204_NO_CONTENT)
+            return Response({'status': 401, 'message': 'UnAuthorized'},status=status.HTTP_401_UNAUTHORIZED)
+
+
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 

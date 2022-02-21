@@ -401,11 +401,9 @@ class LandingPageListingLeadsPurchaseOrder(models.Model):
 
 
 class BuyerProduct_Requirements(models.Model):
-    product_name=models.CharField(max_length=200,null=True,blank=True)
     buyer_label_name=models.CharField(max_length=600,null=True,blank=True)
-    buyer_radio_button=models.CharField(max_length=200,null=True,blank=True)
-    buyer_single_selection_check=models.CharField(max_length=200,null=True,blank=True)
-    buyer_multiple_selection_check=ArrayField(models.CharField(max_length=200),null=True,blank=True)
+    buyer_data_type = models.CharField(max_length=700, null=True, blank=True)
+    buyer_default_value = ArrayField(models.CharField(max_length=200), null=True, blank=True)
     buyer_text_area=models.TextField(null=True,blank=True)
     buyer_number_type=models.FloatField(null=True,blank=True)
     buyer_textbox_with_dropdown=models.CharField(max_length=800,null=True,blank=True)
@@ -414,6 +412,10 @@ class BuyerProduct_Requirements(models.Model):
     updated_on = models.DateTimeField(auto_now=True)
     created_by = models.BigIntegerField()
     updated_by = models.ForeignKey(SelfRegistration, on_delete=models.CASCADE,null=True,blank=True)
+    vendor_product_basic_pk = models.ForeignKey(VendorProduct_BasicDetails,on_delete=models.CASCADE, null=True,blank=True)
+    vendor_product_requirement_pk = models.ForeignKey(VendorProduct_Requirements, on_delete=models.CASCADE, null=True,
+                                                      blank=True)
+
 
     class Meta:
         db_table="BuyerProduct_Requirements"

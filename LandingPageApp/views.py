@@ -11,7 +11,7 @@ from rest_framework.parsers import FileUploadParser, MultiPartParser
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 # Create your views here.
-from DashboardApp.models import InternalVendor, TrailVendors, BusinessRequest
+from DashboardApp.models import InternalVendor, TrailVendors, BusinessRequest, InternalBuyer
 from LandingPageApp.models import CompanyReviewAndRating, Message
 from LandingPageApp.serializers import CompanyReviewSerializer, MessageSerializer
 from MastersApp.models import MaincoreMaster, CategoryMaster, SubCategoryMaster
@@ -1231,164 +1231,164 @@ def messages_user_list(request):
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)
 
-@api_view(['post'])
-@permission_classes((AllowAny,))
-def internal_external_trail_buyers_users_list(request):
-    users=request.data['users']
-    external_list=[]
-    buyer_list=[]
-    internal_list=[]
-    trail_list=[]
-    business_network=[]
-    try:
-        if users=='external_user':
-            regobjdata = SelfRegistration.objects.filter(Q(user_type='Vendor') | Q(user_type='Both'),
-                                                         admin_approve='Approved').values().order_by('id')
-            if len(regobjdata)>0:
-                for i in range(0, len(regobjdata)):
-                    basicobj = BasicCompanyDetails.objects.get(updated_by_id=regobjdata[i].get('id'))
-                    if basicobj:
-                        external_list.append({'company_code': basicobj.company_code,
-                                              'company_name': basicobj.company_name,
-                                              'phone_no': regobjdata[i].get('phone_number'),
-                                              'email_id': regobjdata[i].get('username'),
-                                              'user_name':regobjdata[i].get('contact_person'),
-                                              'user_id':regobjdata[i].get('id'),
-                                              'profile_cover_photo':regobjdata[i].get('profile_cover_photo')
-                                              })
-                    else:
-                        external_list.append({'company_code': "",
-                                              'company_name': "",
-                                              'phone_no': regobjdata[i].get('phone_number'),
-                                              'email_id': regobjdata[i].get('username'),
-                                              'user_name': regobjdata[i].get('contact_person'),
-                                              'user_id': regobjdata[i].get('id'),
-                                              'profile_cover_photo': regobjdata[i].get('profile_cover_photo')
-                                              })
-
-                return Response({'status':200,'message':'External Users List','data':external_list},status=200)
-            else:
-                return Response({'status': 204, 'message': 'Not Present'}, status=204)
-        elif users=='buyer':
-            regobjdata = SelfRegistration.objects.filter(user_type='Buyer',admin_approve='Approved').values().order_by('id')
-            if len(regobjdata) > 0:
-                for i in range(0, len(regobjdata)):
-                    basicobj = BasicCompanyDetails.objects.get(updated_by_id=regobjdata[i].get('id'))
-                    if basicobj:
-                        buyer_list.append({'company_code': basicobj.company_code,
-                                          'company_name': basicobj.company_name,
-                                          'phone_no': regobjdata[i].get('phone_number'),
-                                          'email_id': regobjdata[i].get('username'),
-                                          'user_name': regobjdata[i].get('contact_person'),
-                                          'user_id': regobjdata[i].get('id'),
-                                           'profile_cover_photo': regobjdata[i].get('profile_cover_photo')
-                                            })
-                    else:
-                        buyer_list.append({'company_code': "",
-                                           'company_name': "",
-                                           'phone_no': regobjdata[i].get('phone_number'),
-                                           'email_id': regobjdata[i].get('username'),
-                                           'user_name': regobjdata[i].get('contact_person'),
-                                           'user_id': regobjdata[i].get('id'),
-                                           'profile_cover_photo': regobjdata[i].get('profile_cover_photo')
-                                           })
-                return Response({'status': 200, 'message': 'Buyers List', 'data': buyer_list}, status=200)
-            else:
-                return Response({'status': 204, 'message': 'Not Present'}, status=204)
-
-        elif users == 'internal_user':
-            internalobj = InternalVendor.objects.filter().values().order_by('internal_vendor_id')
-            if len(internalobj)>0:
-                for i in range(len(internalobj)):
-                    regobj=SelfRegistration.objects.filter(username=internalobj[i].get('email_id')).values()
-                    if len(regobj)>0:
-                        internal_list.append({'company_code': internalobj[i].get('company_code'),
-                                              'company_name': internalobj[i].get('company_name'),
-                                              'phone_no': internalobj[i].get('phone_number'),
-                                              'email_id':internalobj[i].get('email_id'),
-                                              'user_name': regobj[0].get('contact_person'),
-                                              'user_id': regobj[0].get('id'),
-                                              'profile_cover_photo': regobj[0].get('profile_cover_photo')
-                                                  })
-                    else:
-                        internal_list.append({'company_code': internalobj[i].get('company_code'),
-                                              'company_name': internalobj[i].get('company_name'),
-                                              'phone_no': "",
-                                              'email_id': "",
-                                              'user_name':"",
-                                              'user_id': "",
-                                              'profile_cover_photo': ""
-                                              })
-
-                return Response({'status': 200, 'message': 'Internal Users List', 'data': internal_list},
-                                status=200)
-            else:
-                return Response({'status': 204, 'message': 'Not Present'}, status=204)
-        elif users=='trail_user':
-            trailobj=TrailVendors.objects.filter().values().order_by('id')
-            if len(trailobj)>0:
-                for i in range(0,len(trailobj)):
-                    basicobj = BasicCompanyDetails.objects.filter(
-                        company_code=trailobj[i].get('company_code_id')).values()
-                    if len(basicobj) > 0:
-                        regobj=SelfRegistration.objects.filter(id=basicobj[0].get('updated_by_id')).values()
-                        if len(regobj)>0:
-                                trail_list.append({'company_code': basicobj[0].get('company_code'),
-                                                      'company_name': basicobj[0].get('company_name'),
-                                                      'phone_no': regobj[0].get('phone_number'),
-                                                      'email_id': regobj[0].get('username'),
-                                                      'user_name':regobj[0].get('contact_person'),
-                                                      'user_id': regobj[0].get('id'),
-                                                      'profile_cover_photo': regobj[0].get('profile_cover_photo')
-                                                      })
-                        else:
-                            trail_list.append({'company_code': basicobj[0].get('company_code'),
-                                               'company_name': basicobj[0].get('company_name'),
-                                               'phone_no': "",
-                                               'email_id': "",
-                                               'user_name': "",
-                                               'user_id': "",
-                                               'profile_cover_photo': "",
-                                               })
-                return Response({'status': 200, 'message': 'Trail Users List', 'data': trail_list},
-                                status=200)
-            else:
-                return Response({'status': 204, 'message': 'Not Present'}, status=204)
-        elif users=='business_network':
-            businessacceptobj = BusinessRequest.objects.filter(send_status='Accept').values().order_by('id')
-            if len(businessacceptobj) > 0:
-                for i in range(0, len(businessacceptobj)):
-                    regobj=SelfRegistration.objects.filter(id=businessacceptobj[i].get('updated_by_id')).values().order_by('id')
-                    if regobj:
-                        basicobj = BasicCompanyDetails.objects.filter(
-                            updated_by_id=regobj[0].get('id')).values()
-                        if basicobj:
-                            business_network.append({'company_code': basicobj[0].get('company_code'),
-                                                      'company_name': basicobj[0].get('company_name'),
-                                                      'phone_no': regobj[0].get('phone_number'),
-                                                      'email_id': regobj[0].get('username'),
-                                                      'user_name':regobj[0].get('contact_person'),
-                                                      'user_id': regobj[0].get('id'),
-                                                      'profile_cover_photo': regobj[0].get('profile_cover_photo')})
-                        else:
-                            business_network.append({'company_code': "",
-                                                     'company_name': "",
-                                                     'phone_no': regobj[0].get('phone_number'),
-                                                     'email_id': regobj[0].get('username'),
-                                                     'user_name': regobj[0].get('contact_person'),
-                                                     'user_id': regobj[0].get('id'),
-                                                     'profile_cover_photo': regobj[0].get('profile_cover_photo')})
-
-                return Response({'status': 200, 'message': 'Business Network Users List', 'data': business_network},
-                                status=200)
-            else:
-                return Response({'status': 204, 'message': 'Not Present'}, status=204)
-        else:
-            return Response({'status': 202, 'message': 'Users Name is not correct or mis-spelled'}, status=202)
-
-
-    except Exception as e:
-        return Response({'status': 500, 'error': str(e)}, status=500)
+# @api_view(['post'])
+# @permission_classes((AllowAny,))
+# def internal_external_trail_buyers_users_list(request):
+#     users=request.data['users']
+#     external_list=[]
+#     buyer_list=[]
+#     internal_list=[]
+#     trail_list=[]
+#     business_network=[]
+#     try:
+#         if users=='external_user':
+#             regobjdata = SelfRegistration.objects.filter(Q(user_type='Vendor') | Q(user_type='Both'),
+#                                                          admin_approve='Approved').values().order_by('id')
+#             if len(regobjdata)>0:
+#                 for i in range(0, len(regobjdata)):
+#                     basicobj = BasicCompanyDetails.objects.get(updated_by_id=regobjdata[i].get('id'))
+#                     if basicobj:
+#                         external_list.append({'company_code': basicobj.company_code,
+#                                               'company_name': basicobj.company_name,
+#                                               'phone_no': regobjdata[i].get('phone_number'),
+#                                               'email_id': regobjdata[i].get('username'),
+#                                               'user_name':regobjdata[i].get('contact_person'),
+#                                               'user_id':regobjdata[i].get('id'),
+#                                               'profile_cover_photo':regobjdata[i].get('profile_cover_photo')
+#                                               })
+#                     else:
+#                         external_list.append({'company_code': "",
+#                                               'company_name': "",
+#                                               'phone_no': regobjdata[i].get('phone_number'),
+#                                               'email_id': regobjdata[i].get('username'),
+#                                               'user_name': regobjdata[i].get('contact_person'),
+#                                               'user_id': regobjdata[i].get('id'),
+#                                               'profile_cover_photo': regobjdata[i].get('profile_cover_photo')
+#                                               })
+#
+#                 return Response({'status':200,'message':'External Users List','data':external_list},status=200)
+#             else:
+#                 return Response({'status': 204, 'message': 'Not Present'}, status=204)
+#         elif users=='buyer':
+#             regobjdata = SelfRegistration.objects.filter(user_type='Buyer',admin_approve='Approved').values().order_by('id')
+#             if len(regobjdata) > 0:
+#                 for i in range(0, len(regobjdata)):
+#                     basicobj = BasicCompanyDetails.objects.get(updated_by_id=regobjdata[i].get('id'))
+#                     if basicobj:
+#                         buyer_list.append({'company_code': basicobj.company_code,
+#                                           'company_name': basicobj.company_name,
+#                                           'phone_no': regobjdata[i].get('phone_number'),
+#                                           'email_id': regobjdata[i].get('username'),
+#                                           'user_name': regobjdata[i].get('contact_person'),
+#                                           'user_id': regobjdata[i].get('id'),
+#                                            'profile_cover_photo': regobjdata[i].get('profile_cover_photo')
+#                                             })
+#                     else:
+#                         buyer_list.append({'company_code': "",
+#                                            'company_name': "",
+#                                            'phone_no': regobjdata[i].get('phone_number'),
+#                                            'email_id': regobjdata[i].get('username'),
+#                                            'user_name': regobjdata[i].get('contact_person'),
+#                                            'user_id': regobjdata[i].get('id'),
+#                                            'profile_cover_photo': regobjdata[i].get('profile_cover_photo')
+#                                            })
+#                 return Response({'status': 200, 'message': 'Buyers List', 'data': buyer_list}, status=200)
+#             else:
+#                 return Response({'status': 204, 'message': 'Not Present'}, status=204)
+#
+#         elif users == 'internal_user':
+#             internalobj = InternalVendor.objects.filter().values().order_by('internal_vendor_id')
+#             if len(internalobj)>0:
+#                 for i in range(len(internalobj)):
+#                     regobj=SelfRegistration.objects.filter(username=internalobj[i].get('email_id')).values()
+#                     if len(regobj)>0:
+#                         internal_list.append({'company_code': internalobj[i].get('company_code'),
+#                                               'company_name': internalobj[i].get('company_name'),
+#                                               'phone_no': internalobj[i].get('phone_number'),
+#                                               'email_id':internalobj[i].get('email_id'),
+#                                               'user_name': regobj[0].get('contact_person'),
+#                                               'user_id': regobj[0].get('id'),
+#                                               'profile_cover_photo': regobj[0].get('profile_cover_photo')
+#                                                   })
+#                     else:
+#                         internal_list.append({'company_code': internalobj[i].get('company_code'),
+#                                               'company_name': internalobj[i].get('company_name'),
+#                                               'phone_no': "",
+#                                               'email_id': "",
+#                                               'user_name':"",
+#                                               'user_id': "",
+#                                               'profile_cover_photo': ""
+#                                               })
+#
+#                 return Response({'status': 200, 'message': 'Internal Users List', 'data': internal_list},
+#                                 status=200)
+#             else:
+#                 return Response({'status': 204, 'message': 'Not Present'}, status=204)
+#         elif users=='trail_user':
+#             trailobj=TrailVendors.objects.filter().values().order_by('id')
+#             if len(trailobj)>0:
+#                 for i in range(0,len(trailobj)):
+#                     basicobj = BasicCompanyDetails.objects.filter(
+#                         company_code=trailobj[i].get('company_code_id')).values()
+#                     if len(basicobj) > 0:
+#                         regobj=SelfRegistration.objects.filter(id=basicobj[0].get('updated_by_id')).values()
+#                         if len(regobj)>0:
+#                                 trail_list.append({'company_code': basicobj[0].get('company_code'),
+#                                                       'company_name': basicobj[0].get('company_name'),
+#                                                       'phone_no': regobj[0].get('phone_number'),
+#                                                       'email_id': regobj[0].get('username'),
+#                                                       'user_name':regobj[0].get('contact_person'),
+#                                                       'user_id': regobj[0].get('id'),
+#                                                       'profile_cover_photo': regobj[0].get('profile_cover_photo')
+#                                                       })
+#                         else:
+#                             trail_list.append({'company_code': basicobj[0].get('company_code'),
+#                                                'company_name': basicobj[0].get('company_name'),
+#                                                'phone_no': "",
+#                                                'email_id': "",
+#                                                'user_name': "",
+#                                                'user_id': "",
+#                                                'profile_cover_photo': "",
+#                                                })
+#                 return Response({'status': 200, 'message': 'Trail Users List', 'data': trail_list},
+#                                 status=200)
+#             else:
+#                 return Response({'status': 204, 'message': 'Not Present'}, status=204)
+#         elif users=='business_network':
+#             businessacceptobj = BusinessRequest.objects.filter(send_status='Accept').values().order_by('id')
+#             if len(businessacceptobj) > 0:
+#                 for i in range(0, len(businessacceptobj)):
+#                     regobj=SelfRegistration.objects.filter(id=businessacceptobj[i].get('updated_by_id')).values().order_by('id')
+#                     if regobj:
+#                         basicobj = BasicCompanyDetails.objects.filter(
+#                             updated_by_id=regobj[0].get('id')).values()
+#                         if basicobj:
+#                             business_network.append({'company_code': basicobj[0].get('company_code'),
+#                                                       'company_name': basicobj[0].get('company_name'),
+#                                                       'phone_no': regobj[0].get('phone_number'),
+#                                                       'email_id': regobj[0].get('username'),
+#                                                       'user_name':regobj[0].get('contact_person'),
+#                                                       'user_id': regobj[0].get('id'),
+#                                                       'profile_cover_photo': regobj[0].get('profile_cover_photo')})
+#                         else:
+#                             business_network.append({'company_code': "",
+#                                                      'company_name': "",
+#                                                      'phone_no': regobj[0].get('phone_number'),
+#                                                      'email_id': regobj[0].get('username'),
+#                                                      'user_name': regobj[0].get('contact_person'),
+#                                                      'user_id': regobj[0].get('id'),
+#                                                      'profile_cover_photo': regobj[0].get('profile_cover_photo')})
+#
+#                 return Response({'status': 200, 'message': 'Business Network Users List', 'data': business_network},
+#                                 status=200)
+#             else:
+#                 return Response({'status': 204, 'message': 'Not Present'}, status=204)
+#         else:
+#             return Response({'status': 202, 'message': 'Users Name is not correct or mis-spelled'}, status=202)
+#
+#
+#     except Exception as e:
+#         return Response({'status': 500, 'error': str(e)}, status=500)
 
 
 
@@ -1484,6 +1484,179 @@ def messages_user_list_receiver(request):
             return Response({'status':200,'message':'Receiver Users List','data':message_list},status=200)
         else:
             return Response({'status':204,'message':'Users Not Present','data':msgobj},status=200)
+
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)
+
+
+@api_view(['post'])
+@permission_classes((AllowAny,))
+def internal_external_trail_buyers_users_list(request):
+    users=request.data['users']
+    user_id=request.data['user_id']
+    external_list=[]
+    buyer_list=[]
+    internal_list=[]
+    trail_list=[]
+    business_network=[]
+    internalarray=[]
+    internalbuyerarray=[]
+    try:
+        if users=='external_user':
+            regobjdata = SelfRegistration.objects.filter(Q(user_type='Vendor') | Q(user_type='Both'),
+                                                         admin_approve='Approved').values().order_by('id')
+            if len(regobjdata)>0:
+                internalobj = InternalVendor.objects.filter(updated_by_id=user_id).values()
+                for i in range(0, len(internalobj)):
+                    internalarray.append(internalobj[i].get('company_code'))
+                internalbuyer = InternalBuyer.objects.filter(updated_by_id=user_id).values()
+                for i in range(0, len(internalbuyer)):
+                    internalbuyerarray.append(internalbuyer[i].get('company_code'))
+                for i in range(0, len(regobjdata)):
+                    basicobj = BasicCompanyDetails.objects.get(updated_by_id=regobjdata[i].get('id'))
+                    if basicobj.company_code not in internalarray or basicobj.company_code not in internalbuyerarray:
+                        external_list.append({'company_code': basicobj.company_code,
+                                              'company_name': basicobj.company_name,
+                                              'phone_no': regobjdata[i].get('phone_number'),
+                                              'email_id': regobjdata[i].get('username'),
+                                              'user_name':regobjdata[i].get('contact_person'),
+                                              'user_id':regobjdata[i].get('id'),
+                                              'profile_cover_photo':regobjdata[i].get('profile_cover_photo')
+                                              })
+                    else:
+                        external_list.append({'company_code': "",
+                                              'company_name': "",
+                                              'phone_no': regobjdata[i].get('phone_number'),
+                                              'email_id': regobjdata[i].get('username'),
+                                              'user_name': regobjdata[i].get('contact_person'),
+                                              'user_id': regobjdata[i].get('id'),
+                                              'profile_cover_photo': regobjdata[i].get('profile_cover_photo')
+                                              })
+
+                return Response({'status':200,'message':'External Users List','data':external_list},status=200)
+            else:
+                return Response({'status': 204, 'message': 'Not Present'}, status=204)
+        elif users=='buyer':
+            regobjdata = SelfRegistration.objects.filter(user_type='Buyer',admin_approve='Approved').values().order_by('id')
+            print(len(regobjdata))
+            if len(regobjdata) > 0:
+                internalbuyer = InternalBuyer.objects.filter(updated_by_id=user_id).values()
+                for i in range(0, len(internalbuyer)):
+                    internalbuyerarray.append(internalbuyer[i].get('company_code'))
+                for i in range(0, len(regobjdata)):
+                    basicobj = BasicCompanyDetails.objects.get(updated_by_id=regobjdata[i].get('id'))
+                    if basicobj.company_code not in internalarray or basicobj.company_code not in internalbuyerarray:
+                        buyer_list.append({'company_code': basicobj.company_code,
+                                          'company_name': basicobj.company_name,
+                                          'phone_no': regobjdata[i].get('phone_number'),
+                                          'email_id': regobjdata[i].get('username'),
+                                          'user_name': regobjdata[i].get('contact_person'),
+                                          'user_id': regobjdata[i].get('id'),
+                                           'profile_cover_photo': regobjdata[i].get('profile_cover_photo')
+                                            })
+                    else:
+                        buyer_list.append({'company_code': "",
+                                           'company_name': "",
+                                           'phone_no': regobjdata[i].get('phone_number'),
+                                           'email_id': regobjdata[i].get('username'),
+                                           'user_name': regobjdata[i].get('contact_person'),
+                                           'user_id': regobjdata[i].get('id'),
+                                           'profile_cover_photo': regobjdata[i].get('profile_cover_photo')
+                                           })
+                return Response({'status': 200, 'message': 'Buyers List', 'data': buyer_list}, status=200)
+            else:
+                return Response({'status': 204, 'message': 'Not Present'}, status=204)
+
+        elif users == 'internal_user':
+            internalobj = InternalVendor.objects.filter(updated_by_id=user_id).values().order_by('internal_vendor_id')
+            if len(internalobj)>0:
+                for i in range(len(internalobj)):
+                    regobj=SelfRegistration.objects.filter(username=internalobj[i].get('email_id')).values()
+                    if len(regobj)>0:
+                        internal_list.append({'company_code': internalobj[i].get('company_code'),
+                                              'company_name': internalobj[i].get('company_name'),
+                                              'phone_no': internalobj[i].get('phone_number'),
+                                              'email_id':internalobj[i].get('email_id'),
+                                              'user_name': regobj[0].get('contact_person'),
+                                              'user_id': regobj[0].get('id'),
+                                              'profile_cover_photo': regobj[0].get('profile_cover_photo')
+                                                  })
+                    else:
+                        internal_list.append({'company_code': internalobj[i].get('company_code'),
+                                              'company_name': internalobj[i].get('company_name'),
+                                              'phone_no': "",
+                                              'email_id': "",
+                                              'user_name':"",
+                                              'user_id': "",
+                                              'profile_cover_photo': ""
+                                              })
+
+                return Response({'status': 200, 'message': 'Internal Users List', 'data': internal_list},
+                                status=200)
+            else:
+                return Response({'status': 204, 'message': 'Not Present'}, status=204)
+        elif users=='trail_user':
+            trailobj=TrailVendors.objects.filter(updated_by_id=user_id).values().order_by('id')
+            if len(trailobj)>0:
+                for i in range(0,len(trailobj)):
+                    basicobj = BasicCompanyDetails.objects.filter(
+                        company_code=trailobj[i].get('company_code_id')).values()
+                    if len(basicobj) > 0:
+                        regobj=SelfRegistration.objects.filter(id=basicobj[0].get('updated_by_id')).values()
+                        if len(regobj)>0:
+                                trail_list.append({'company_code': basicobj[0].get('company_code'),
+                                                      'company_name': basicobj[0].get('company_name'),
+                                                      'phone_no': regobj[0].get('phone_number'),
+                                                      'email_id': regobj[0].get('username'),
+                                                      'user_name':regobj[0].get('contact_person'),
+                                                      'user_id': regobj[0].get('id'),
+                                                      'profile_cover_photo': regobj[0].get('profile_cover_photo')
+                                                      })
+                        else:
+                            trail_list.append({'company_code': basicobj[0].get('company_code'),
+                                               'company_name': basicobj[0].get('company_name'),
+                                               'phone_no': "",
+                                               'email_id': "",
+                                               'user_name': "",
+                                               'user_id': "",
+                                               'profile_cover_photo': "",
+                                               })
+                return Response({'status': 200, 'message': 'Trail Users List', 'data': trail_list},
+                                status=200)
+            else:
+                return Response({'status': 204, 'message': 'Not Present'}, status=204)
+        elif users=='business_network':
+            businessacceptobj = BusinessRequest.objects.filter(send_status='Accept',updated_by_id=user_id).values().order_by('id')
+            if len(businessacceptobj) > 0:
+                for i in range(0, len(businessacceptobj)):
+                    regobj=SelfRegistration.objects.filter(id=businessacceptobj[i].get('updated_by_id')).values().order_by('id')
+                    if regobj:
+                        basicobj = BasicCompanyDetails.objects.filter(
+                            updated_by_id=regobj[0].get('id')).values()
+                        if basicobj:
+                            business_network.append({'company_code': basicobj[0].get('company_code'),
+                                                      'company_name': basicobj[0].get('company_name'),
+                                                      'phone_no': regobj[0].get('phone_number'),
+                                                      'email_id': regobj[0].get('username'),
+                                                      'user_name':regobj[0].get('contact_person'),
+                                                      'user_id': regobj[0].get('id'),
+                                                      'profile_cover_photo': regobj[0].get('profile_cover_photo')})
+                        else:
+                            business_network.append({'company_code': "",
+                                                     'company_name': "",
+                                                     'phone_no': regobj[0].get('phone_number'),
+                                                     'email_id': regobj[0].get('username'),
+                                                     'user_name': regobj[0].get('contact_person'),
+                                                     'user_id': regobj[0].get('id'),
+                                                     'profile_cover_photo': regobj[0].get('profile_cover_photo')})
+
+                return Response({'status': 200, 'message': 'Business Network Users List', 'data': business_network},
+                                status=200)
+            else:
+                return Response({'status': 204, 'message': 'Not Present'}, status=204)
+        else:
+            return Response({'status': 202, 'message': 'Users Name is not correct or mis-spelled'}, status=202)
+
 
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)

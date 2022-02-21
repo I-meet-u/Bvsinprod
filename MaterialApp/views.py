@@ -3520,3 +3520,12 @@ def get_vendor_product_requirements_based_on_vendor_pk(request):
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
+class BuyerProduct_RequirementsViewSet(viewsets.ModelViewSet):
+    queryset = BuyerProduct_Requirements.objects.all()
+    serializer_class = BuyerProduct_RequirementsSerializer
+
+    def get_queryset(self):
+        buyerobj=BuyerProduct_Requirements.objects.filter(updated_by=self.request.GET.get('updated_by')).order_by('id')
+        if buyerobj:
+            return buyerobj
+        raise ValidationError({'message':'Buyer Product Requirement details of particular user id is not exist','status':204})

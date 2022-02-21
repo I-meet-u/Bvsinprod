@@ -162,3 +162,9 @@ class LandingPageListingLeadsPurchaseOrderSerializer(serializers.ModelSerializer
     class Meta:
         model = LandingPageListingLeadsPurchaseOrder
         fields = "__all__"
+
+class BuyerProduct_RequirementsSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model=BuyerProduct_Requirements
+        fields='__all__'

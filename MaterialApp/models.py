@@ -396,3 +396,23 @@ class LandingPageListingLeadsPurchaseOrder(models.Model):
 
     class Meta:
         db_table = "LandingPageListingLeadsPurchaseOrder"
+
+
+
+
+class BuyerProduct_Requirements(models.Model):
+    buyer_label_name=models.CharField(max_length=600,null=True,blank=True)
+    buyer_radio_button=models.CharField(max_length=200,null=True,blank=True)
+    buyer_single_selection_check=models.CharField(max_length=200,null=True,blank=True)
+    buyer_multiple_selection_check=ArrayField(models.CharField(max_length=200),null=True,blank=True)
+    buyer_text_area=models.TextField(null=True,blank=True)
+    buyer_number_type=models.FloatField(null=True,blank=True)
+    buyer_textbox_with_dropdown=models.CharField(max_length=800,null=True,blank=True)
+    buyer_number_with_dropdown=models.FloatField(null=True,blank=True)
+    created_on = models.DateTimeField(auto_now_add=True)
+    updated_on = models.DateTimeField(auto_now=True)
+    created_by = models.BigIntegerField()
+    updated_by = models.ForeignKey(SelfRegistration, on_delete=models.CASCADE,null=True,blank=True)
+
+    class Meta:
+        db_table="BuyerProduct_Requirements"

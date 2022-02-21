@@ -18,6 +18,7 @@ router.register('landing-page-bidding-publish',views.LandingPageBidding_PublishV
 router.register('LandingPageBiddingRFQAwardsSerializerViewSet',views.LandingPageBiddingRFQAwardsSerializerViewSet)
 router.register('LandingPageBiddingRFQ_SelectVendorSerializerview',views.LandingPageBiddingRFQ_SelectVendorSerializerview)
 router.register('landing-page-po',views.LandingPageListingLeadsPurchaseOrderViewSet)
+router.register('buyer-product-requirements',views.BuyerProduct_RequirementsViewSet)
 urlpatterns = [
     path('vendor-product-router-urls/',include(router.urls)),
     path('get-itemtype-based-on-userid/',views.get_itemtype_based_on_userid),

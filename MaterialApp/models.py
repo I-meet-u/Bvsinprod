@@ -401,6 +401,7 @@ class LandingPageListingLeadsPurchaseOrder(models.Model):
 
 
 class BuyerProduct_Requirements(models.Model):
+    product_name=models.CharField(max_length=200,null=True,blank=True)
     buyer_label_name=models.CharField(max_length=600,null=True,blank=True)
     buyer_radio_button=models.CharField(max_length=200,null=True,blank=True)
     buyer_single_selection_check=models.CharField(max_length=200,null=True,blank=True)

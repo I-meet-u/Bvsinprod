@@ -3500,3 +3500,17 @@ class VendorProduct_RequirementsViewSet(viewsets.ModelViewSet):
         if vendorrequirementobj:
             return vendorrequirementobj
         raise ValidationError({'message':'Vendor Product Requirement details of particular user id is not exist','status':204})
+
+
+@api_view(['post'])
+def get_vendor_product_requirements_based_on_vendor_pk(request):
+    data=request.data
+    try:
+        vendorrequirementobj=VendorProduct_Requirements.objects.filter(vendor_products_id=data['vendor_pk']).values()
+        if len(vendorrequirementobj)>0:
+            return Response({'status': 200, 'message': 'Vendor Product Requirements list','data':vendorrequirementobj}, status=status.HTTP_200_OK)
+        else:
+            return Response({'status': 204, 'message': 'Vendor Product Requirements Are Not Present','data':vendorrequirementobj}, status=status.HTTP_204_NO_CONTENT)
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+

@@ -3506,7 +3506,7 @@ class VendorProduct_RequirementsViewSet(viewsets.ModelViewSet):
 def get_vendor_product_requirements_based_on_vendor_pk(request):
     data=request.data
     try:
-        vendorrequirementobj=VendorProduct_Requirements.objects.filter(vendor_products_id=data['vendor_pk']).values()
+        vendorrequirementobj=VendorProduct_Requirements.objects.filter(vendor_products_id=data['vendor_pk']).values().order_by('id')
         if len(vendorrequirementobj)>0:
             return Response({'status': 200, 'message': 'Vendor Product Requirements list','data':vendorrequirementobj}, status=status.HTTP_200_OK)
         else:

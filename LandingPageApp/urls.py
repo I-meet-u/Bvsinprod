@@ -47,6 +47,7 @@ urlpatterns = [
     path('receiver_sender_messages/<int:receiver>/<int:sender>',views.receiver_sender_messages), # get request
     path('create-messages/', views.messages_lists, name='message-create'),  # post request
     path('messages_user_list/',views.messages_user_list),
+    path('messages_user_list_receiver/',views.messages_user_list_receiver),
     path('internal_external_trail_buyers_users_list/',views.internal_external_trail_buyers_users_list),
     path('post_listings/',views.post_listings)
 ]

@@ -1421,3 +1421,69 @@ def post_listings(request):
 
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)
+
+
+@api_view(['post'])
+@permission_classes((AllowAny,))
+def messages_user_list_receiver(request):
+    data=request.data
+    receiver=data['receiver']
+    message_list=[]
+    try:
+        msgobj=Message.objects.filter(receiver_id=receiver).values().order_by('created_time')
+        if len(msgobj)>0:
+            for i in range(0,len(msgobj)):
+                regobj1=SelfRegistration.objects.filter(id=msgobj[i].get('sender_id')).values()
+                regobj2 = SelfRegistration.objects.filter(id=msgobj[i].get('receiver_id')).values()
+                sender_addressobj=BillingAddress.objects.filter(updated_by_id=regobj1[0].get('id')).values()
+                if sender_addressobj:
+                    receiver_addressobj=BillingAddress.objects.filter(updated_by_id=regobj2[0].get('id')).values()
+                    if receiver_addressobj:
+                        message_list.append({'sender_name':msgobj[i].get('sender_name'),
+                                             'receiver_name':msgobj[i].get('receiver_name'),
+                                             'created_time': msgobj[i].get('created_time'),
+                                             'sender_id': msgobj[i].get('sender_id'),
+                                             'receiver_id': msgobj[i].get('receiver_id'),
+                                             'sender_email_id':regobj1[0].get('username'),
+                                             'receiver_email_id': regobj2[0].get('username'),
+                                             'messages':msgobj[i].get('messages'),
+                                             'sender_city':sender_addressobj[0].get('bill_city'),
+                                             'sender_state': sender_addressobj[0].get('bill_state'),
+                                             'sender_country': sender_addressobj[0].get('bill_country'),
+                                             'receiver_city': receiver_addressobj[0].get('bill_city'),
+                                             'receiver_state': receiver_addressobj[0].get('bill_state'),
+                                             'receiver_country': receiver_addressobj[0].get('bill_country'),
+                                             'company_logo_sender':regobj1[0].get('profile_cover_photo'),
+                                             'company_logo_receiver': regobj2[0].get('profile_cover_photo'),
+                                             'company_name_sender':msgobj[i].get('company_name_sender'),
+                                             'company_name_receiver':msgobj[i].get('company_name_receiver')
+
+
+                                             })
+                    else:
+                        message_list.append({'sender_name': msgobj[i].get('sender_name'),
+                                             'receiver_name': msgobj[i].get('receiver_name'),
+                                             'created_time': msgobj[i].get('created_time'),
+                                             'sender_id': msgobj[i].get('sender_id'),
+                                             'receiver_id': msgobj[i].get('receiver_id'),
+                                             'sender_email_id': regobj1[0].get('username'),
+                                             'receiver_email_id': regobj2[0].get('username'),
+                                             'messages': msgobj[i].get('messages'),
+                                             'sender_city': sender_addressobj[0].get('bill_city'),
+                                             'sender_state': sender_addressobj[0].get('bill_state'),
+                                             'sender_country': sender_addressobj[0].get('bill_country'),
+                                             'receiver_city': "",
+                                             'receiver_state': "",
+                                             'receiver_country': "",
+                                             'company_logo_sender': regobj1[0].get('profile_cover_photo'),
+                                             'company_logo_receiver': regobj2[0].get('profile_cover_photo'),
+                                             'company_name_sender': msgobj[i].get('company_name_sender'),
+                                             'company_name_receiver': msgobj[i].get('company_name_receiver')
+
+                                             })
+            return Response({'status':200,'message':'Receiver Users List','data':message_list},status=200)
+        else:
+            return Response({'status':204,'message':'Users Not Present','data':msgobj},status=200)
+
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)

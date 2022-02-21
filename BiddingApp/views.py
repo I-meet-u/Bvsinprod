@@ -1158,50 +1158,56 @@ def source_list_leads(request):
                     if sourcobj[i].get('id') not in sourceleadsarray:
                         basicval = BasicCompanyDetails.objects.filter(updated_by_id=sourcobj[i].get('updated_by_id')).values()
                         if basicval:
-                            billingobj = BillingAddress.objects.filter(company_code_id=basicval[0].get('company_code'),
+                            regobj= SelfRegistration.objects.filter(id=basicval[0].get('updated_by_id')).values()
+                            if regobj:
+                                billingobj = BillingAddress.objects.filter(company_code_id=basicval[0].get('company_code'),
                                                                        updated_by_id=basicval[0].get('updated_by_id')).values()
-                            if billingobj:
-                                listarray.append({'id': sourcobj[i].get('id'),
-                                                  'company_code': basicval[0].get('company_code'),
-                                                  'company_name': basicval[0].get('company_name'),
-                                                  'source_code': sourcobj[i].get('source_code'),
-                                                  'source': sourcobj[i].get('source'),
-                                                  'item_type': sourcobj[i].get('item_type'),
-                                                  'quantity': sourcobj[i].get('quantity'),
-                                                  'source_required_city': sourcobj[i].get('source_required_city'),
-                                                  'product_category': sourcobj[i].get('product_category'),
-                                                  'client_city': billingobj[0].get('bill_city'),
-                                                  'updated_by': sourcobj[i].get('updated_by_id'),
-                                                  'item_name': sourcobj[i].get('item_name'),
-                                                  'maincore':sourcobj[i].get('maincore'),
-                                                  'category':sourcobj[i].get('category'),
-                                                  'uom':sourcobj[i].get('uom'),
-                                                  'publish_date':sourcobj[i].get('publish_date'),
-                                                  'deadline_date':sourcobj[i].get('deadline_date'),
-                                                  'item_description':sourcobj[i].get('item_description'),
+                                if billingobj:
+                                    listarray.append({'id': sourcobj[i].get('id'),
+                                                      'company_code': basicval[0].get('company_code'),
+                                                      'company_name': basicval[0].get('company_name'),
+                                                      'source_code': sourcobj[i].get('source_code'),
+                                                      'source': sourcobj[i].get('source'),
+                                                      'item_type': sourcobj[i].get('item_type'),
+                                                      'quantity': sourcobj[i].get('quantity'),
+                                                      'source_required_city': sourcobj[i].get('source_required_city'),
+                                                      'product_category': sourcobj[i].get('product_category'),
+                                                      'client_city': billingobj[0].get('bill_city'),
+                                                      'updated_by': sourcobj[i].get('updated_by_id'),
+                                                      'item_name': sourcobj[i].get('item_name'),
+                                                      'maincore':sourcobj[i].get('maincore'),
+                                                      'category':sourcobj[i].get('category'),
+                                                      'uom':sourcobj[i].get('uom'),
+                                                      'publish_date':sourcobj[i].get('publish_date'),
+                                                      'deadline_date':sourcobj[i].get('deadline_date'),
+                                                      'item_description':sourcobj[i].get('item_description'),
+                                                      'profile_image':regobj[0].get('profile_cover_photo'),
+                                                      'bill_address':billingobj[0].get('bill_address')
 
-                                                  })
-                            else:
-                                listarray.append({'id': sourcobj[i].get('id'),
-                                                  'company_code': basicval[0].get('company_code'),
-                                                  'company_name': basicval[0].get('company_name'),
-                                                  'source_code': sourcobj[i].get('source_code'),
-                                                  'source': sourcobj[i].get('source'),
-                                                  'item_type': sourcobj[i].get('item_type'),
-                                                  'quantity': sourcobj[i].get('quantity'),
-                                                  'source_required_city': sourcobj[i].get('source_required_city'),
-                                                  'product_category': sourcobj[i].get('product_category'),
-                                                  'client_city': "",
-                                                  'updated_by': sourcobj[i].get('updated_by_id'),
-                                                  'item_name': sourcobj[i].get('item_name'),
-                                                  'maincore': sourcobj[i].get('maincore'),
-                                                  'category': sourcobj[i].get('category'),
-                                                  'uom': sourcobj[i].get('uom'),
-                                                  'publish_date': sourcobj[i].get('publish_date'),
-                                                  'deadline_date': sourcobj[i].get('deadline_date'),
-                                                  'item_description': sourcobj[i].get('item_description'),
+                                                      })
+                                else:
+                                    listarray.append({'id': sourcobj[i].get('id'),
+                                                      'company_code': basicval[0].get('company_code'),
+                                                      'company_name': basicval[0].get('company_name'),
+                                                      'source_code': sourcobj[i].get('source_code'),
+                                                      'source': sourcobj[i].get('source'),
+                                                      'item_type': sourcobj[i].get('item_type'),
+                                                      'quantity': sourcobj[i].get('quantity'),
+                                                      'source_required_city': sourcobj[i].get('source_required_city'),
+                                                      'product_category': sourcobj[i].get('product_category'),
+                                                      'client_city': "",
+                                                      'updated_by': sourcobj[i].get('updated_by_id'),
+                                                      'item_name': sourcobj[i].get('item_name'),
+                                                      'maincore': sourcobj[i].get('maincore'),
+                                                      'category': sourcobj[i].get('category'),
+                                                      'uom': sourcobj[i].get('uom'),
+                                                      'publish_date': sourcobj[i].get('publish_date'),
+                                                      'deadline_date': sourcobj[i].get('deadline_date'),
+                                                      'item_description': sourcobj[i].get('item_description'),
+                                                      'profile_image': regobj[0].get('profile_cover_photo'),
+                                                      'bill_address': ""
 
-                                                  })
+                                                      })
                     else:
                         print('already present in publish')
                 return Response({'status': 200, 'message': 'Source Leads', 'data': listarray}, status=200)

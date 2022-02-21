@@ -1171,10 +1171,9 @@ def receiver_sender_messages(request,sender=None,receiver=None):
 def messages_user_list(request):
     data=request.data
     sender=data['sender']
-    receiver=data['receiver']
     message_list=[]
     try:
-        msgobj=Message.objects.filter(sender_id=sender,receiver_id=receiver).values().order_by('created_time')
+        msgobj=Message.objects.filter(sender_id=sender).values().order_by('created_time')
         if len(msgobj)>0:
             for i in range(0,len(msgobj)):
                 regobj1=SelfRegistration.objects.filter(id=msgobj[i].get('sender_id')).values()

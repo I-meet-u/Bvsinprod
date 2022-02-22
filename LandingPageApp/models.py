@@ -8,6 +8,7 @@ from django.db import models
 # Create your models here.
 from simple_history.models import HistoricalRecords
 
+from MaterialApp.models import VendorProduct_BasicDetails
 from RegistrationApp.models import SelfRegistration, BasicCompanyDetails
 
 
@@ -66,6 +67,7 @@ class Message(models.Model):
     sender_name=models.CharField(max_length=100,null=True,blank=True)
     receiver_name=models.CharField(max_length=100,null=True,blank=True)
     is_read=models.BooleanField(default=False)
+    vendor_product_pk=models.ForeignKey(VendorProduct_BasicDetails,on_delete=models.CASCADE,null=True,blank=True)
     history=HistoricalRecords()
 
     def __str__(self):

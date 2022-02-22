@@ -15,7 +15,7 @@ from DashboardApp.models import InternalVendor, TrailVendors, BusinessRequest, I
 from LandingPageApp.models import CompanyReviewAndRating, Message
 from LandingPageApp.serializers import CompanyReviewSerializer, MessageSerializer
 from MastersApp.models import MaincoreMaster, CategoryMaster, SubCategoryMaster
-from MaterialApp.models import VendorProduct_BasicDetails
+from MaterialApp.models import VendorProduct_BasicDetails, LandingPageBidding
 from RegistrationApp.models import SelfRegistration, BasicCompanyDetails, IndustrialHierarchy, BillingAddress, \
     IndustrialInfo
 
@@ -1395,32 +1395,72 @@ def messages_user_list(request):
 @api_view(['post'])
 @permission_classes((AllowAny,))
 def post_listings(request):
-    data=request.data
-    product_name=data['product_name']
-    product_list=[]
+    data = request.data
+    product_name = data['product_name']
+    prodarray = []
     try:
-        vendorobj=VendorProduct_BasicDetails.objects.filter(item_name=product_name).values()
-        if len(vendorobj)>0:
-            for i in range(0,len(vendorobj)):
-                regobj=SelfRegistration.objects.filter(id=vendorobj[i].get('updated_by_id')).values()
-                if regobj:
-                    basicobj=BasicCompanyDetails.objects.filter(updated_by_id=regobj[0].get('id')).values()
-                    product_list.append({'product_name':vendorobj[i].get('item_name'),
-                                         'company_name':basicobj[0].get('company_name'),
-                                         'company_code':basicobj[0].get('company_code'),
-                                         'username':regobj[0].get('conact_person'),
-                                         'email_id':regobj[0].get('username'),
-                                         'profile_cover_photo':regobj[0].get('profile_cover_photo'),
-                                         'user_id':regobj[0].get('id')
-                                         })
-            return Response({'status': 200, 'message': 'Listing Data','data':product_list},
-                            status=200)
+        biddingobj = LandingPageBidding.objects.filter(product_name=product_name).values()
+        if len(biddingobj) > 0:
+            for i in range(len(biddingobj)):
+                print(biddingobj[i].get('publish_date'))
+                productobj = VendorProduct_BasicDetails.objects.filter(
+                    vendor_product_id=biddingobj[i].get('vendor_product_pk')).values()
+                userobj = SelfRegistration.objects.filter(id=productobj[0].get('updated_by_id')).values()
+                cmpobj = BasicCompanyDetails.objects.filter(updated_by_id=productobj[0].get('updated_by_id')).values()
+                locationobj = BillingAddress.objects.filter(updated_by_id=userobj[0].get('id')).values()
+                if locationobj:
+                    prodarray.append({'product': biddingobj[i].get('product_name'),
+                                      'company_name': cmpobj[0].get('company_name'),
+                                      'contact_person': userobj[0].get('contact_person'),
+                                      'uom': productobj[i].get('uom'),
+                                      'date_time': productobj[i].get('created_on'),
+                                      'publish_date': biddingobj[i].get('publish_date'),
+                                      'deadline_date': biddingobj[i].get('deadline_date'),
+                                      'location': locationobj[0].get('bill_location'),
+                                      })
+                else:
+                    prodarray.append({'product': biddingobj[i].get('product_name'),
+                                      'company_name': cmpobj[0].get('company_name'),
+                                      'contact_person': userobj[0].get('contact_person'),
+                                      'uom': productobj[i].get('uom'),
+                                      'date_time': productobj[i].get('created_on'),
+                                      'publish_date': biddingobj[i].get('publish_date'),
+                                      'deadline_date': biddingobj[i].get('deadline_date'),
+                                      'location': "",
+                                      })
+                return Response({'status': 200, 'message': 'product List', 'data': prodarray},
+                                status=status.HTTP_200_OK)
         else:
-            return Response({'status': 204, 'message': 'Product Details are not present'},
-                            status=204)
-
+            return Response({'status': 204, 'message': 'product details are not exist'},
+                            status=status.HTTP_204_NO_CONTENT)
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)
+    # data=request.data
+    # product_name=data['product_name']
+    # product_list=[]
+    # try:
+    #     vendorobj=VendorProduct_BasicDetails.objects.filter(item_name=product_name).values()
+    #     if len(vendorobj)>0:
+    #         for i in range(0,len(vendorobj)):
+    #             regobj=SelfRegistration.objects.filter(id=vendorobj[i].get('updated_by_id')).values()
+    #             if regobj:
+    #                 basicobj=BasicCompanyDetails.objects.filter(updated_by_id=regobj[0].get('id')).values()
+    #                 product_list.append({'product_name':vendorobj[i].get('item_name'),
+    #                                      'company_name':basicobj[0].get('company_name'),
+    #                                      'company_code':basicobj[0].get('company_code'),
+    #                                      'username':regobj[0].get('conact_person'),
+    #                                      'email_id':regobj[0].get('username'),
+    #                                      'profile_cover_photo':regobj[0].get('profile_cover_photo'),
+    #                                      'user_id':regobj[0].get('id')
+    #                                      })
+    #         return Response({'status': 200, 'message': 'Listing Data','data':product_list},
+    #                         status=200)
+    #     else:
+    #         return Response({'status': 204, 'message': 'Product Details are not present'},
+    #                         status=204)
+    #
+    # except Exception as e:
+    #     return Response({'status': 500, 'error': str(e)}, status=500)
 
 
 @api_view(['post'])

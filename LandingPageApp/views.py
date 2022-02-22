@@ -1734,7 +1734,8 @@ def post_listings(request):
                                           'location': locationobj[0].get('bill_location'),
                                           'landing_page_pk': biddingobj[0].get('id'),
                                           'userid':userobj[0].get('id'),
-                                          'vendor_product_pk':productobj[0].get('vendor_product_id')
+                                          'vendor_product_pk':productobj[0].get('vendor_product_id'),
+                                          'email_id':userobj[0].get('username')
                                           })
                     else:
                         prodarray.append({'product': biddingobj[0].get('product_name'),
@@ -1748,7 +1749,8 @@ def post_listings(request):
                                           'location': "",
                                           'landing_page_pk': biddingobj[0].get('id'),
                                           'userid': userobj[0].get('id'),
-                                          'vendor_product_pk': productobj[0].get('vendor_product_id')
+                                          'vendor_product_pk': productobj[0].get('vendor_product_id'),
+                                          'email_id': userobj[0].get('username')
                                           })
             return Response({'status': 200, 'message': 'product List', 'data': prodarray},
                                         status=status.HTTP_200_OK)

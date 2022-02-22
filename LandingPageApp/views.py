@@ -1417,6 +1417,7 @@ def post_listings(request):
                                       'publish_date': biddingobj[i].get('publish_date'),
                                       'deadline_date': biddingobj[i].get('deadline_date'),
                                       'location': locationobj[0].get('bill_location'),
+                                      'product_id':biddingobj[i].get('id')
                                       })
                 else:
                     prodarray.append({'product': biddingobj[i].get('product_name'),
@@ -1427,6 +1428,7 @@ def post_listings(request):
                                       'publish_date': biddingobj[i].get('publish_date'),
                                       'deadline_date': biddingobj[i].get('deadline_date'),
                                       'location': "",
+                                      'product_id': biddingobj[i].get('id')
                                       })
                 return Response({'status': 200, 'message': 'product List', 'data': prodarray},
                                 status=status.HTTP_200_OK)

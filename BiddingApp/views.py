@@ -5512,8 +5512,8 @@ def source_publish_data_store(request):
                                              source_user_id=data['source_user_id'],
                                              created_by=updated_by,
                                              updated_by=SelfRegistration.objects.get(id=updated_by),
-                                             # source_payment_terms=data['source_payment_terms'],
-                                             # source_warranty=data['source_warranty']
+                                             source_payment_terms=data['source_payment_terms'],
+                                             source_warranty=data['source_warranty']
                                              )
         else:
             for i in range(0, len(sourcepublishobj)):
@@ -5558,8 +5558,8 @@ def source_publish_data_store(request):
                                              source_user_id=data['source_user_id'],
                                              created_by=updated_by,
                                              updated_by=SelfRegistration.objects.get(id=updated_by),
-                                             # source_payment_terms=data['source_payment_terms'],
-                                             # source_warranty=data['source_warranty']
+                                             source_payment_terms=data['source_payment_terms'],
+                                             source_warranty=data['source_warranty']
                                              )
         return Response({'status': 200, 'message': 'ok'}, status=200)
     except Exception as e:

@@ -3540,8 +3540,7 @@ class BuyerProduct_RequirementsViewSet(viewsets.ModelViewSet):
                                                                    is_mandatory=values_array[i].get('mandatory'),
                                                                    created_by=request.data['created_by'],
                                                                    updated_by=SelfRegistration.objects.get(id=request.data['updated_by']),
-                                                                   vendor_product_basic_pk=VendorProduct_BasicDetails.objects.get(vendor_product_id=request.data['vendor_product_basic_pk']),
-                                                                   vendor_product_requirement_pk=VendorProduct_Requirements.objects.get(id=request.data['vendor_product_requirement_pk'])
+                                                                   vendor_product_basic_pk=VendorProduct_BasicDetails.objects.get(vendor_product_id=request.data['vendor_product_basic_pk'])
                                                                    )
 
             return Response({'status':201,'message':'Buyer Product Requirements are  Created'},status=201)

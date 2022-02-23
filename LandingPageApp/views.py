@@ -15,7 +15,7 @@ from DashboardApp.models import InternalVendor, TrailVendors, BusinessRequest, I
 from LandingPageApp.models import CompanyReviewAndRating, Message
 from LandingPageApp.serializers import CompanyReviewSerializer, MessageSerializer
 from MastersApp.models import MaincoreMaster, CategoryMaster, SubCategoryMaster
-from MaterialApp.models import VendorProduct_BasicDetails, LandingPageBidding
+from MaterialApp.models import VendorProduct_BasicDetails, LandingPageBidding, BuyerProduct_Requirements
 from RegistrationApp.models import SelfRegistration, BasicCompanyDetails, IndustrialHierarchy, BillingAddress, \
     IndustrialInfo
 
@@ -1757,5 +1757,23 @@ def post_listings(request):
         else:
             return Response({'status': 204, 'message': 'product details are not exist'},
                                     status=status.HTTP_204_NO_CONTENT)
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)
+
+
+@api_view(['post'])
+@permission_classes((AllowAny,))
+def get_buyer_requirements_for_same_subcategories(request):
+    data=request.data
+    vendor_pk=data['vendor_pk']
+    try:
+        buyerrequirementobj=BuyerProduct_Requirements.objects.filter(vendor_product_basic_pk__in=vendor_pk).values()
+        if len(buyerrequirementobj)>0:
+            return Response({'status': 200, 'message': 'Buyer Product Requirement List' ,'data':buyerrequirementobj},
+                            status=status.HTTP_200_OK)
+        else:
+            return Response({'status': 204, 'message': 'Not Present'},
+                            status=status.HTTP_204_NO_CONTENT)
+
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)

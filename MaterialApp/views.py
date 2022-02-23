@@ -2961,28 +2961,33 @@ def store_vendor_publish(request):
                 else:
                     publisharray.append(float(Vendor_publish_obj[i].get('total_amount')))
                 publisharray.sort()
+            # print(publisharray)
             val = max(publisharray)
             if float(total_amount) < val:
                 print(val, 'lll')
-                x = int(val)
+                floatvalue=format(val,'.2f')
+                print(floatvalue,'vals')
+                x = str(floatvalue)
 
-                landingpublishobj = LandingPageBidding_Publish.objects.filter(
-                    listing_leads=listing_leads,total_amount=x).values().order_by('total_amount')
+                landingpublishobj = LandingPageBidding_Publish.objects.filter(listing_leads=listing_leads,total_amount=x).values().order_by('total_amount')
                 print(len(landingpublishobj), 'length')
-                landingobj = LandingPageBidding_Publish.objects.get(id=landingpublishobj[0].get('id'))
-                print(landingobj.total_amount, landingobj.id)
-                landingobj.delete()
-                LandingPageBidding_Publish.objects.create(item_type=data['item_type'],company_name=data['company_name'],
-                                                          company_code=data['company_code'],priority=data['priority'],
-                                                          deadline_date=data['deadline_date'],item_name=data['item_name'],
-                                                          item_description=data['item_description'],uom=data['uom'],
-                                                          quantity=data['quantity'],hsn_sac=['hsn_sac'],category=data['category'],
-                                                          unit_rate=data['unit_rate'],tax=data['tax'],discount=data['discount'],
-                                                          total_amount=data['total_amount'],pf_charges=data['pf_charges'],
-                                                          payment_charges=data['payment_charges'],delivery_charges=data['delivery_charges'],
-                                                          listing_leads=LandingPageBidding.objects.get(id=data['listing_leads']),
-                                                          created_by=updated_by,
-                                                          updated_by=SelfRegistration.objects.get(id=updated_by))
+                if landingpublishobj:
+                    landingobj = LandingPageBidding_Publish.objects.get(id=landingpublishobj[0].get('id'))
+                    print(landingobj.total_amount, landingobj.id)
+                    landingobj.delete()
+                    LandingPageBidding_Publish.objects.create(item_type=data['item_type'],company_name=data['company_name'],
+                                                              company_code=data['company_code'],priority=data['priority'],
+                                                              deadline_date=data['deadline_date'],item_name=data['item_name'],
+                                                              item_description=data['item_description'],uom=data['uom'],
+                                                              quantity=data['quantity'],hsn_sac=['hsn_sac'],category=data['category'],
+                                                              unit_rate=data['unit_rate'],tax=data['tax'],discount=data['discount'],
+                                                              total_amount=data['total_amount'],pf_charges=data['pf_charges'],
+                                                              payment_charges=data['payment_charges'],delivery_charges=data['delivery_charges'],
+                                                              listing_leads=LandingPageBidding.objects.get(id=data['listing_leads']),
+                                                              created_by=updated_by,
+                                                              updated_by=SelfRegistration.objects.get(id=updated_by))
+                else:
+                    print('not present')
         return Response({'status': 200, 'message': 'ok'}, status=200)
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)

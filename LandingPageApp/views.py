@@ -1199,7 +1199,8 @@ def messages_user_list(request):
                                              'company_logo_sender':regobj1[0].get('profile_cover_photo'),
                                              'company_logo_receiver': regobj2[0].get('profile_cover_photo'),
                                              'company_name_sender':msgobj[i].get('company_name_sender'),
-                                             'company_name_receiver':msgobj[i].get('company_name_receiver')
+                                             'company_name_receiver':msgobj[i].get('company_name_receiver'),
+                                             'vendor_product_pk':msgobj[i].get('vendor_product_pk')
 
 
                                              })
@@ -1221,7 +1222,8 @@ def messages_user_list(request):
                                              'company_logo_sender': regobj1[0].get('profile_cover_photo'),
                                              'company_logo_receiver': regobj2[0].get('profile_cover_photo'),
                                              'company_name_sender': msgobj[i].get('company_name_sender'),
-                                             'company_name_receiver': msgobj[i].get('company_name_receiver')
+                                             'company_name_receiver': msgobj[i].get('company_name_receiver'),
+                                             'vendor_product_pk': msgobj[i].get('vendor_product_pk')
 
                                              })
             return Response({'status':200,'message':'Users List','data':message_list},status=200)
@@ -1498,7 +1500,8 @@ def messages_user_list_receiver(request):
                                              'company_logo_sender':regobj1[0].get('profile_cover_photo'),
                                              'company_logo_receiver': regobj2[0].get('profile_cover_photo'),
                                              'company_name_sender':msgobj[i].get('company_name_sender'),
-                                             'company_name_receiver':msgobj[i].get('company_name_receiver')
+                                             'company_name_receiver':msgobj[i].get('company_name_receiver'),
+                                             'vendor_product_pk': msgobj[i].get('vendor_product_pk')
 
 
                                              })
@@ -1520,7 +1523,8 @@ def messages_user_list_receiver(request):
                                              'company_logo_sender': regobj1[0].get('profile_cover_photo'),
                                              'company_logo_receiver': regobj2[0].get('profile_cover_photo'),
                                              'company_name_sender': msgobj[i].get('company_name_sender'),
-                                             'company_name_receiver': msgobj[i].get('company_name_receiver')
+                                             'company_name_receiver': msgobj[i].get('company_name_receiver'),
+                                             'vendor_product_pk': msgobj[i].get('vendor_product_pk')
 
                                              })
             return Response({'status':200,'message':'Receiver Users List','data':message_list},status=200)

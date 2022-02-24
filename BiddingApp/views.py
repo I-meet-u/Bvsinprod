@@ -5582,10 +5582,10 @@ def source_closed_list(request):
             for i in range(0, len(sourcepublish)):
                 sourceleadsarray.append(sourcepublish[i].get('source_id'))
         print(sourceleadsarray)
-        for i in range(0, len(sourcepublish)):
-            sourcobj = SourceList_CreateItems.objects.filter(id__in=sourceleadsarray, get_vendors='False').values()
-            if sourcobj:
-                basicval = BasicCompanyDetails.objects.filter(updated_by_id=sourcobj[0].get('updated_by_id')).values()
+        sourcobj = SourceList_CreateItems.objects.filter(id__in=sourceleadsarray, get_vendors='False').values()
+        if len(sourcobj)>0:
+            for i in range(0,len(sourcobj)):
+                basicval = BasicCompanyDetails.objects.filter(updated_by_id=sourcobj[i].get('updated_by_id')).values()
                 if basicval:
                     billingobj = BillingAddress.objects.filter(company_code_id=basicval[0].get('company_code'),
                                                                updated_by_id=basicval[0].get('updated_by_id')).values()
@@ -5598,48 +5598,52 @@ def source_closed_list(request):
                         if converted_deadline < date.today():
                             print('expired')
                             print('s',sourcobj[i].get('deadline_date'))
-                            listarray.append({'id': sourcobj[0].get('id'),
+                            listarray.append({'id': sourcobj[i].get('id'),
                                               'company_code': basicval[0].get('company_code'),
                                               'company_name': basicval[0].get('company_name'),
                                               'source_code': sourcobj[0].get('source_code'),
-                                              'source': sourcobj[0].get('source'),
-                                              'item_type': sourcobj[0].get('item_type'),
-                                              'quantity': sourcobj[0].get('quantity'),
-                                              'source_required_city': sourcobj[0].get('source_required_city'),
-                                              'product_category': sourcobj[0].get('product_category'),
+                                              'source': sourcobj[i].get('source'),
+                                              'item_type': sourcobj[i].get('item_type'),
+                                              'quantity': sourcobj[i].get('quantity'),
+                                              'source_required_city': sourcobj[i].get('source_required_city'),
+                                              'product_category': sourcobj[i].get('product_category'),
                                               'client_city': billingobj[0].get('bill_city'),
-                                              'updated_by': sourcobj[0].get('updated_by_id'),
-                                              'item_name': sourcobj[0].get('item_name'),
+                                              'updated_by': sourcobj[i].get('updated_by_id'),
+                                              'item_name': sourcobj[i].get('item_name'),
                                               'source_publish_pk': sourcepublish[i].get('id'),
-                                              'deadline_date': sourcobj[0].get('deadline_date'),
-                                              'publish_date': sourcobj[0].get('publish_date'),
-                                              'uom': sourcobj[0].get('uom'),
-                                              'item_description': sourcobj[0].get('item_description')
+                                              'deadline_date': sourcobj[i].get('deadline_date'),
+                                              'publish_date': sourcobj[i].get('publish_date'),
+                                              'uom': sourcobj[i].get('uom'),
+                                              'item_description': sourcobj[i].get('item_description')
                                               })
                         else:
-                            print('Not Expired')
+                            print('Not Expired',sourcobj[i].get('deadline_date'))
                     else:
-                        listarray.append({'id': sourcobj[0].get('id'),
+                        listarray.append({'id': sourcobj[i].get('id'),
                                           'company_code': basicval[0].get('company_code'),
                                           'company_name': basicval[0].get('company_name'),
                                           'source_code': sourcobj[0].get('source_code'),
-                                          'source': sourcobj[0].get('source'),
-                                          'item_type': sourcobj[0].get('item_type'),
-                                          'quantity': sourcobj[0].get('quantity'),
-                                          'source_required_city': sourcobj[0].get('source_required_city'),
-                                          'product_category': sourcobj[0].get('product_category'),
+                                          'source': sourcobj[i].get('source'),
+                                          'item_type': sourcobj[i].get('item_type'),
+                                          'quantity': sourcobj[i].get('quantity'),
+                                          'source_required_city': sourcobj[i].get('source_required_city'),
+                                          'product_category': sourcobj[i].get('product_category'),
                                           'client_city': "",
-                                          'updated_by': sourcobj[0].get('updated_by_id'),
-                                          'item_name': sourcobj[0].get('item_name'),
+                                          'updated_by': sourcobj[i].get('updated_by_id'),
+                                          'item_name': sourcobj[i].get('item_name'),
                                           'source_publish_pk': sourcepublish[i].get('id'),
-                                          'deadline_date': sourcobj[0].get('deadline_date'),
-                                          'publish_date': sourcobj[0].get('publish_date'),
-                                          'uom': sourcobj[0].get('uom'),
-                                          'item_description': sourcobj[0].get('item_description')
+                                          'deadline_date': sourcobj[i].get('deadline_date'),
+                                          'publish_date': sourcobj[i].get('publish_date'),
+                                          'uom': sourcobj[i].get('uom'),
+                                          'item_description': sourcobj[i].get('item_description')
                                           })
+            return Response({'status': 200, 'message': 'Source  Closed List', 'data': listarray}, status=200)
+
+        else:
+            return Response({'status':204,'message':'Not Presenr'},status=204)
 
 
-        return Response({'status': 200, 'message': 'Source  Closed List','data':listarray}, status=200)
+
     except Exception as e:
         return Response({'status': 500, 'message': str(e)}, status=500)
 

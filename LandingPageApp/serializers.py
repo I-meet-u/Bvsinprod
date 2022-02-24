@@ -23,7 +23,7 @@ class MessageSerializer(serializers.ModelSerializer):
     # reguser=SelfRegistrationSerializer(required=False)
     class Meta:
         model=Message
-        fields=['sender','receiver','messages','created_time','company_name_sender','company_name_receiver','sender_files','receiver_files','sender_images','receiver_images','sender_designation','receiver_designation','sender_name','receiver_name','sender_id','receiver_id']
+        fields=['sender','receiver','messages','created_time','company_name_sender','company_name_receiver','sender_files','receiver_files','sender_images','receiver_images','sender_designation','receiver_designation','sender_name','receiver_name','sender_id','receiver_id','vendor_product_pk']
 
     def create(self, validated_data):
         print(validated_data['sender_files'])
@@ -59,6 +59,7 @@ class MessageSerializer(serializers.ModelSerializer):
                     created_time=timezone.now(),
                     sender_name=regobj[0].get('contact_person'),
                     receiver_name=regobj1[0].get('contact_person'),
+                    vendor_product_pk=validated_data['vendor_product_pk']
                 )
             return msgobj
         except(AssertionError):

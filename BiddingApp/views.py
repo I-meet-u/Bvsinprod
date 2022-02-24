@@ -5651,13 +5651,13 @@ def source_closed_list(request):
 @api_view(['post'])
 def source_publish_view(request):
     data=request.data
-    source_id=data['source_id']
+    source_publish_pk=data['source_publish_pk']
     source_publish_list=[]
     try:
-        sourcecreateobj=SourceList_CreateItems.objects.filter(id=source_id).values()
-        if len(sourcecreateobj)>0:
-            sourcepublishobj=SourcePublish.objects.filter(source_id=sourcecreateobj[0].get('id')).values()
-            if sourcepublishobj:
+        sourcepublishobj = SourcePublish.objects.filter(id=source_publish_pk).values()
+        if len(sourcepublishobj)>0:
+            sourcecreateobj = SourceList_CreateItems.objects.filter(id=sourcepublishobj[0].get('source_id')).values()
+            if sourcecreateobj:
                 basicobj=BasicCompanyDetails.objects.filter(updated_by_id=sourcepublishobj[0].get('updated_by_id')).values()
                 if basicobj:
                     billobj=BillingAddress.objects.filter(updated_by_id=basicobj[0].get('updated_by_id')).values()
@@ -5670,7 +5670,6 @@ def source_publish_view(request):
                         sourcepublishobj[0].__setitem__('company_code', basicobj[0].get('company_code')),
                         sourcepublishobj[0].__setitem__('bill_city', ""),
             return Response({'status': 200, 'message': 'Source List', 'source_vendor_pubish': sourcepublishobj,'source_buyer':sourcecreateobj}, status=200)
-
         else:
             return Response({'status':204,'message':'Not Presenr'},status=204)
 

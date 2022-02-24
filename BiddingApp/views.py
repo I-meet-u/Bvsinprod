@@ -5640,7 +5640,7 @@ def source_closed_list(request):
             return Response({'status': 200, 'message': 'Source  Closed List', 'data': listarray}, status=200)
 
         else:
-            return Response({'status':204,'message':'Not Presenr'},status=204)
+            return Response({'status':204,'message':'Not Present'},status=204)
 
 
 
@@ -5671,7 +5671,7 @@ def source_publish_view(request):
                         sourcepublishobj[0].__setitem__('bill_city', ""),
             return Response({'status': 200, 'message': 'Source List', 'source_vendor_pubish': sourcepublishobj,'source_buyer':sourcecreateobj}, status=200)
         else:
-            return Response({'status':204,'message':'Not Presenr'},status=204)
+            return Response({'status':204,'message':'Not Present'},status=204)
 
 
     except Exception as e:

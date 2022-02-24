@@ -5639,7 +5639,7 @@ def source_closed_list(request):
                                           })
 
 
-        return Response({'status': 200, 'message': 'Source Leads','data':listarray}, status=200)
+        return Response({'status': 200, 'message': 'Source  Closed List','data':listarray}, status=200)
     except Exception as e:
         return Response({'status': 500, 'message': str(e)}, status=500)
 

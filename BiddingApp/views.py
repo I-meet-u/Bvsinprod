@@ -5648,3 +5648,36 @@ def source_closed_list(request):
         return Response({'status': 500, 'message': str(e)}, status=500)
 
 
+@api_view(['post'])
+def source_publish_view(request):
+    data=request.data
+    source_id=data['source_id']
+    source_publish_list=[]
+    try:
+        sourcecreateobj=SourceList_CreateItems.objects.filter(id=source_id).values()
+        if len(sourcecreateobj)>0:
+            sourcepublishobj=SourcePublish.objects.filter(source_id=sourcecreateobj[0].get('id')).values()
+            if sourcepublishobj:
+                basicobj=BasicCompanyDetails.objects.filter(updated_by_id=sourcepublishobj[0].get('updated_by_id')).values()
+                if basicobj:
+                    billobj=BillingAddress.objects.filter(updated_by_id=basicobj[0].get('updated_by_id')).values()
+                    if billobj:
+                        sourcepublishobj[0].__setitem__('company_name',basicobj[0].get('company_name')),
+                        sourcepublishobj[0].__setitem__('company_code', basicobj[0].get('company_code')),
+                        sourcepublishobj[0].__setitem__('bill_city', billobj[0].get('bill_city')),
+                    else:
+                        sourcepublishobj[0].__setitem__('company_name', basicobj[0].get('company_name')),
+                        sourcepublishobj[0].__setitem__('company_code', basicobj[0].get('company_code')),
+                        sourcepublishobj[0].__setitem__('bill_city', ""),
+            return Response({'status': 200, 'message': 'Source  Closed List', 'source_vendor_pubish': sourcepublishobj,'source_buyer':sourcecreateobj}, status=200)
+
+
+
+
+
+        else:
+            return Response({'status':204,'message':'Not Presenr'},status=204)
+
+
+    except Exception as e:
+        return Response({'status':500,'error':str(e)},status=500)

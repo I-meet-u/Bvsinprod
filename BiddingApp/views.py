@@ -5652,7 +5652,6 @@ def source_closed_list(request):
 def source_publish_view(request):
     data=request.data
     source_publish_pk=data['source_publish_pk']
-    source_publish_list=[]
     try:
         sourcepublishobj = SourcePublish.objects.filter(id=source_publish_pk).values()
         if len(sourcepublishobj)>0:
@@ -5668,7 +5667,9 @@ def source_publish_view(request):
                     else:
                         sourcepublishobj[0].__setitem__('company_name', basicobj[0].get('company_name')),
                         sourcepublishobj[0].__setitem__('company_code', basicobj[0].get('company_code')),
-                        sourcepublishobj[0].__setitem__('bill_city', ""),
+                        sourcepublishobj[0].__setitem__('bill_city', "")
+            else:
+                pass
             return Response({'status': 200, 'message': 'Source Published List', 'source_vendor_pubish': sourcepublishobj,'source_buyer':sourcecreateobj}, status=200)
         else:
             return Response({'status':204,'message':'Not Present'},status=204)

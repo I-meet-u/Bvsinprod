@@ -5657,9 +5657,10 @@ def source_publish_view(request):
         if len(sourcepublishobj)>0:
             sourcecreateobj = SourceList_CreateItems.objects.filter(id=sourcepublishobj[0].get('source_id')).values()
             if sourcecreateobj:
-                basicobj=BasicCompanyDetails.objects.filter(updated_by_id=sourcepublishobj[0].get('updated_by_id')).values()
+                basicobj=BasicCompanyDetails.objects.filter(updated_by_id=sourcepublishobj[0].get('source_user_id')).values()
                 if basicobj:
                     billobj=BillingAddress.objects.filter(updated_by_id=basicobj[0].get('updated_by_id')).values()
+                    print(len(billobj))
                     if billobj:
                         sourcepublishobj[0].__setitem__('company_name',basicobj[0].get('company_name')),
                         sourcepublishobj[0].__setitem__('company_code', basicobj[0].get('company_code')),

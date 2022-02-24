@@ -5669,7 +5669,7 @@ def source_publish_view(request):
                         sourcepublishobj[0].__setitem__('company_name', basicobj[0].get('company_name')),
                         sourcepublishobj[0].__setitem__('company_code', basicobj[0].get('company_code')),
                         sourcepublishobj[0].__setitem__('bill_city', ""),
-            return Response({'status': 200, 'message': 'Source List', 'source_vendor_pubish': sourcepublishobj,'source_buyer':sourcecreateobj}, status=200)
+            return Response({'status': 200, 'message': 'Source Published List', 'source_vendor_pubish': sourcepublishobj,'source_buyer':sourcecreateobj}, status=200)
         else:
             return Response({'status':204,'message':'Not Present'},status=204)
 

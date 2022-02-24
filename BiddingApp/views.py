@@ -4967,14 +4967,66 @@ def buyer_award_bidding(request):
 @permission_classes((AllowAny,))
 def get_all_source_leads(request):
     get_vendors=request.data['get_vendors']
+    source_create_list=[]
     try:
         if get_vendors=='True':
-            bidobj =SourceList_CreateItems.objects.filter(get_vendors=get_vendors).values().order_by('-id')
+            bidobj=SourceList_CreateItems.objects.filter(get_vendors=get_vendors).values().order_by('-id')
             if len(bidobj)>-0:
                 for i in range(0,len(bidobj)):
-                    basicobj=BasicCompanyDetails.objects.filter(updated_by_id=bidobj[i].get('updated_by_id')).values()
-                    bidobj[i].__setitem__('company_name',basicobj[0].get('company_name'))
-                return Response({'status': 200, 'message': 'ok', 'data': bidobj}, status=200)
+
+                    deadline = bidobj[i].get('deadline_date')
+                    # print(date.today(),'ol')
+                    deadlinedateobj = datetime.strptime(deadline, '%Y-%m-%d')
+                    converted_deadline = datetime.date(deadlinedateobj)
+
+                    if converted_deadline > date.today():
+                        print('s', bidobj[i].get('deadline_date'),'not expired')
+
+                        basicobj=BasicCompanyDetails.objects.filter(updated_by_id=bidobj[i].get('updated_by_id')).values()
+                        source_create_list.append({'item_type':bidobj[i].get('item_type'),
+                                                   'source_code':bidobj[i].get('source_code'),
+                                                   'source':bidobj[i].get('source'),
+                                                   'item_name':bidobj[i].get('item_name'),
+                                                   'item_code':bidobj[i].get('item_code'),
+                                                   'item_description':bidobj[i].get('item_description'),
+                                                   'uom':bidobj[i].get('uom'),
+                                                   'department':bidobj[i].get('department'),
+                                                   'quantity':bidobj[i].get('quantity'),
+                                                   'deadline_date':bidobj[i].get('deadline_date'),
+                                                   'publish_date':bidobj[i].get('publish_date'),
+                                                   'product_category': bidobj[i].get('product_category'),
+                                                   'p_f_charges': bidobj[i].get('p_f_charges'),
+                                                   'frieght_charges': bidobj[i].get('frieght_charges'),
+                                                   'delivery': bidobj[i].get('delivery'),
+                                                   'priority': bidobj[i].get('priority'),
+                                                   'annual_consumption': bidobj[i].get('annual_consumption'),
+                                                   'source_required_city': bidobj[i].get('source_required_city'),
+                                                   'source_vendors': bidobj[i].get('source_vendors'),
+                                                   'document_name1': bidobj[i].get('document_name1'),
+                                                   'document_name2': bidobj[i].get('document_name2'),
+                                                   'document_name3': bidobj[i].get('document_name3'),
+                                                   'document_1': bidobj[i].get('document_1'),
+                                                   'document_2': bidobj[i].get('document_2'),
+                                                   'document_3': bidobj[i].get('document_3'),
+                                                   'created_on': bidobj[i].get('created_on'),
+                                                   'updated_on': bidobj[i].get('updated_on'),
+                                                   'created_by': bidobj[i].get('created_by'),
+                                                   'updated_by': bidobj[i].get('updated_by'),
+                                                   'admins': bidobj[i].get('admins'),
+                                                   'source_status': bidobj[i].get('source_status'),
+                                                   'payment_terms': bidobj[i].get('payment_terms'),
+                                                   'warranty': bidobj[i].get('warranty'),
+                                                   'remarks': bidobj[i].get('remarks'),
+                                                   'maincore': bidobj[i].get('maincore'),
+                                                   'category': bidobj[i].get('category'),
+                                                   'get_vendors': bidobj[i].get('get_vendors'),
+                                                   'company_name': basicobj[0].get('company_name')
+
+                                                   })
+
+                    else:
+                        print('expired',bidobj[i].get('deadline_date'))
+                return Response({'status': 200, 'message': 'ok', 'data': source_create_list}, status=200)
             else:
                 return Response({'status': 204, 'message': 'Not Present'}, status=204)
         else:
@@ -5077,23 +5129,29 @@ def get_all_bidding_leads(request):
                         BiddingBuyerProductDetailsobj=BiddingBuyerProductDetails.objects.filter(buyer_rfq_number=bidobj[0].get('user_rfq_number')).values()
                         for j in range(0,len(BiddingBuyerProductDetailsobj)):
                             materialquantity=materialquantity+int(BiddingBuyerProductDetailsobj[j].get('buyer_quantity'))
+                        print(bidobj[0].get('product_deadline_date'),type(bidobj[0].get('product_deadline_date')))
+                        if bidobj[0].get('product_deadline_date') > date.today():
+                            print('Not Expired')
+                            resarray.append({'product_bidding_id':bidobj[0].get('product_bidding_id'),
+                                              'product_rfq_number':bidobj[0].get('product_rfq_number'),
+                                              'user_rfq_number':bidobj[0].get('user_rfq_number'),
+                                              'product_rfq_type':bidobj[0].get('product_rfq_type'),
+                                              'product_publish_date':bidobj[0].get('product_publish_date'),
+                                              'product_deadline_date':bidobj[0].get('product_deadline_date'),
+                                              'product_delivery_date':bidobj[0].get('product_delivery_date'),
+                                              'product_bill_address':bidobj[0].get('product_bill_address'),
+                                              'product_ship_address':bidobj[0].get('product_ship_address'),
+                                              'product_rfq_title':bidobj[0].get('product_rfq_title'),
+                                              'Maincore':bidobj[0].get('maincore'),
+                                              'Category':bidobj[0].get('category'),
+                                              'subcategory':bidobj[0].get('subcategory'),
+                                              'productcount':len(BiddingBuyerProductDetailsobj),
+                                              'quantitycount':materialquantity})
+                            materialquantity=0
+                        else:
+                            print('Expired')
 
-                        resarray.append({'product_bidding_id':bidobj[0].get('product_bidding_id'),
-                                          'product_rfq_number':bidobj[0].get('product_rfq_number'),
-                                          'user_rfq_number':bidobj[0].get('user_rfq_number'),
-                                          'product_rfq_type':bidobj[0].get('product_rfq_type'),
-                                          'product_publish_date':bidobj[0].get('product_publish_date'),
-                                          'product_deadline_date':bidobj[0].get('product_deadline_date'),
-                                          'product_delivery_date':bidobj[0].get('product_delivery_date'),
-                                          'product_bill_address':bidobj[0].get('product_bill_address'),
-                                          'product_ship_address':bidobj[0].get('product_ship_address'),
-                                          'product_rfq_title':bidobj[0].get('product_rfq_title'),
-                                          'Maincore':bidobj[0].get('maincore'),
-                                          'Category':bidobj[0].get('category'),
-                                          'subcategory':bidobj[0].get('subcategory'),
-                                          'productcount':len(BiddingBuyerProductDetailsobj),
-                                          'quantitycount':materialquantity})
-                        materialquantity=0
+
                     return Response({'status': 200, 'message': 'ok', 'data': resarray}, status=200)
                 else:
                     return Response({'status': 204, 'message': 'Not Present'}, status=204)

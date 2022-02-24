@@ -4875,7 +4875,11 @@ def source_list_leads_all(request):
                                   'client_city': billingobj[0].get('bill_city'),
                                   'updated_by': sourcobj[0].get('updated_by_id'),
                                   'item_name': sourcobj[0].get('item_name'),
-                                  'source_publish_pk': sourcepublish[i].get('id')
+                                  'source_publish_pk': sourcepublish[i].get('id'),
+                                  'deadline_date': sourcobj[0].get('deadline_date'),
+                                  'publish_date': sourcobj[0].get('publish_date'),
+                                  'uom': sourcobj[0].get('uom'),
+                                  'item_description': sourcobj[0].get('item_description')
                                   })
 
         return Response({'status': 200, 'message': 'Source Leads', 'data': listarray}, status=200)

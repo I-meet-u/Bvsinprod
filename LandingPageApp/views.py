@@ -1564,6 +1564,10 @@ def internal_external_trail_buyers_users_list(request):
                     internalbuyerarray.append(internalbuyer[i].get('company_code'))
                 for i in range(0, len(regobjdata)):
                     basicobj = BasicCompanyDetails.objects.get(updated_by_id=regobjdata[i].get('id'))
+                    billaddobj=BillingAddress.objects.filter(updated_by=regobjdata[i].get('id')).values()
+                    print(billaddobj)
+                    print('*************************')
+
                     if basicobj.company_code not in internalarray or basicobj.company_code not in internalbuyerarray:
                         external_list.append({'company_code': basicobj.company_code,
                                               'company_name': basicobj.company_name,
@@ -1571,7 +1575,11 @@ def internal_external_trail_buyers_users_list(request):
                                               'email_id': regobjdata[i].get('username'),
                                               'user_name':regobjdata[i].get('contact_person'),
                                               'user_id':regobjdata[i].get('id'),
-                                              'profile_cover_photo':regobjdata[i].get('profile_cover_photo')
+                                              'profile_cover_photo':regobjdata[i].get('profile_cover_photo'),
+                                              'bill_city': billaddobj[0].get('bill_city'),
+                                              'bill_state': billaddobj[0].get('bill_state'),
+                                              'bill_country': billaddobj[0].get('bill_country'),
+
                                               })
                     else:
                         external_list.append({'company_code': "",
@@ -1580,7 +1588,10 @@ def internal_external_trail_buyers_users_list(request):
                                               'email_id': regobjdata[i].get('username'),
                                               'user_name': regobjdata[i].get('contact_person'),
                                               'user_id': regobjdata[i].get('id'),
-                                              'profile_cover_photo': regobjdata[i].get('profile_cover_photo')
+                                              'profile_cover_photo': regobjdata[i].get('profile_cover_photo'),
+                                              'bill_city': billaddobj[0].get('bill_city'),
+                                              'bill_state': billaddobj[0].get('bill_state'),
+                                              'bill_country': billaddobj[0].get('bill_country'),
                                               })
 
                 return Response({'status':200,'message':'External Users List','data':external_list},status=200)
@@ -1595,6 +1606,8 @@ def internal_external_trail_buyers_users_list(request):
                     internalbuyerarray.append(internalbuyer[i].get('company_code'))
                 for i in range(0, len(regobjdata)):
                     basicobj = BasicCompanyDetails.objects.get(updated_by_id=regobjdata[i].get('id'))
+                    billaddobj=BillingAddress.objects.filter(updated_by_id=regobjdata[i].get('id')).values()
+
                     if basicobj.company_code not in internalarray or basicobj.company_code not in internalbuyerarray:
                         buyer_list.append({'company_code': basicobj.company_code,
                                           'company_name': basicobj.company_name,
@@ -1602,7 +1615,10 @@ def internal_external_trail_buyers_users_list(request):
                                           'email_id': regobjdata[i].get('username'),
                                           'user_name': regobjdata[i].get('contact_person'),
                                           'user_id': regobjdata[i].get('id'),
-                                           'profile_cover_photo': regobjdata[i].get('profile_cover_photo')
+                                           'profile_cover_photo': regobjdata[i].get('profile_cover_photo'),
+                                           'bill_city': billaddobj[0].get('bill_city'),
+                                           'bill_state': billaddobj[0].get('bill_state'),
+                                           'bill_country': billaddobj[0].get('bill_country'),
                                             })
                     else:
                         buyer_list.append({'company_code': "",
@@ -1611,7 +1627,10 @@ def internal_external_trail_buyers_users_list(request):
                                            'email_id': regobjdata[i].get('username'),
                                            'user_name': regobjdata[i].get('contact_person'),
                                            'user_id': regobjdata[i].get('id'),
-                                           'profile_cover_photo': regobjdata[i].get('profile_cover_photo')
+                                           'profile_cover_photo': regobjdata[i].get('profile_cover_photo'),
+                                           'bill_city': billaddobj[0].get('bill_city'),
+                                           'bill_state': billaddobj[0].get('bill_state'),
+                                           'bill_country': billaddobj[0].get('bill_country'),
                                            })
                 return Response({'status': 200, 'message': 'Buyers List', 'data': buyer_list}, status=200)
             else:
@@ -1622,6 +1641,8 @@ def internal_external_trail_buyers_users_list(request):
             if len(internalobj)>0:
                 for i in range(len(internalobj)):
                     regobj=SelfRegistration.objects.filter(username=internalobj[i].get('email_id')).values()
+                    billaddobj=BillingAddress.objects.filter(updated_by_id=regobj[0].get('id')).values()
+
                     if len(regobj)>0:
                         internal_list.append({'company_code': internalobj[i].get('company_code'),
                                               'company_name': internalobj[i].get('company_name'),
@@ -1629,7 +1650,10 @@ def internal_external_trail_buyers_users_list(request):
                                               'email_id':internalobj[i].get('email_id'),
                                               'user_name': regobj[0].get('contact_person'),
                                               'user_id': regobj[0].get('id'),
-                                              'profile_cover_photo': regobj[0].get('profile_cover_photo')
+                                              'profile_cover_photo': regobj[0].get('profile_cover_photo'),
+                                              'bill_city': billaddobj[0].get('bill_city'),
+                                              'bill_state': billaddobj[0].get('bill_state'),
+                                              'bill_country': billaddobj[0].get('bill_country'),
                                                   })
                     else:
                         internal_list.append({'company_code': internalobj[i].get('company_code'),
@@ -1638,7 +1662,10 @@ def internal_external_trail_buyers_users_list(request):
                                               'email_id': "",
                                               'user_name':"",
                                               'user_id': "",
-                                              'profile_cover_photo': ""
+                                              'profile_cover_photo': "",
+                                              'bill_city': "",
+                                              'bill_state':"",
+                                              'bill_country':"",
                                               })
 
                 return Response({'status': 200, 'message': 'Internal Users List', 'data': internal_list},
@@ -1653,6 +1680,8 @@ def internal_external_trail_buyers_users_list(request):
                         company_code=trailobj[i].get('company_code_id')).values()
                     if len(basicobj) > 0:
                         regobj=SelfRegistration.objects.filter(id=basicobj[0].get('updated_by_id')).values()
+                        billaddobj = BillingAddress.objects.filter(updated_by_id=regobj[0].get('id')).values()
+
                         if len(regobj)>0:
                                 trail_list.append({'company_code': basicobj[0].get('company_code'),
                                                       'company_name': basicobj[0].get('company_name'),
@@ -1660,7 +1689,10 @@ def internal_external_trail_buyers_users_list(request):
                                                       'email_id': regobj[0].get('username'),
                                                       'user_name':regobj[0].get('contact_person'),
                                                       'user_id': regobj[0].get('id'),
-                                                      'profile_cover_photo': regobj[0].get('profile_cover_photo')
+                                                      'profile_cover_photo': regobj[0].get('profile_cover_photo'),
+                                                   'bill_city': billaddobj[0].get('bill_city'),
+                                                   'bill_state': billaddobj[0].get('bill_state'),
+                                                   'bill_country': billaddobj[0].get('bill_country'),
                                                       })
                         else:
                             trail_list.append({'company_code': basicobj[0].get('company_code'),
@@ -1670,6 +1702,9 @@ def internal_external_trail_buyers_users_list(request):
                                                'user_name': "",
                                                'user_id': "",
                                                'profile_cover_photo': "",
+                                               'bill_city': "",
+                                               'bill_state': "",
+                                               'bill_country':"" ,
                                                })
                 return Response({'status': 200, 'message': 'Trail Users List', 'data': trail_list},
                                 status=200)
@@ -1681,8 +1716,9 @@ def internal_external_trail_buyers_users_list(request):
                 for i in range(0, len(businessacceptobj)):
                     regobj=SelfRegistration.objects.filter(id=businessacceptobj[i].get('updated_by_id')).values().order_by('id')
                     if regobj:
-                        basicobj = BasicCompanyDetails.objects.filter(
-                            updated_by_id=regobj[0].get('id')).values()
+                        basicobj = BasicCompanyDetails.objects.filter(updated_by_id=regobj[0].get('id')).values()
+                        billaddobj = BillingAddress.objects.filter(updated_by_id=regobj[0].get('id')).values()
+
                         if basicobj:
                             business_network.append({'company_code': basicobj[0].get('company_code'),
                                                       'company_name': basicobj[0].get('company_name'),
@@ -1690,7 +1726,11 @@ def internal_external_trail_buyers_users_list(request):
                                                       'email_id': regobj[0].get('username'),
                                                       'user_name':regobj[0].get('contact_person'),
                                                       'user_id': regobj[0].get('id'),
-                                                      'profile_cover_photo': regobj[0].get('profile_cover_photo')})
+                                                      'profile_cover_photo': regobj[0].get('profile_cover_photo'),
+                                                     'bill_city': billaddobj[0].get('bill_city'),
+                                                     'bill_state': billaddobj[0].get('bill_state'),
+                                                     'bill_country': billaddobj[0].get('bill_country'),
+                                                     })
                         else:
                             business_network.append({'company_code': "",
                                                      'company_name': "",
@@ -1698,7 +1738,11 @@ def internal_external_trail_buyers_users_list(request):
                                                      'email_id': regobj[0].get('username'),
                                                      'user_name': regobj[0].get('contact_person'),
                                                      'user_id': regobj[0].get('id'),
-                                                     'profile_cover_photo': regobj[0].get('profile_cover_photo')})
+                                                     'profile_cover_photo': regobj[0].get('profile_cover_photo'),
+                                                     'bill_city': billaddobj[0].get('bill_city'),
+                                                     'bill_state': billaddobj[0].get('bill_state'),
+                                                     'bill_country': billaddobj[0].get('bill_country'),
+                                                     })
 
                 return Response({'status': 200, 'message': 'Business Network Users List', 'data': business_network},
                                 status=200)

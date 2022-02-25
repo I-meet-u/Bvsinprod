@@ -11,6 +11,7 @@ from rest_framework.parsers import FileUploadParser, MultiPartParser
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 # Create your views here.
+from BiddingApp.models import SourcePublish, SourceList_CreateItems
 from DashboardApp.models import InternalVendor, TrailVendors, BusinessRequest, InternalBuyer
 from LandingPageApp.models import CompanyReviewAndRating, Message
 from LandingPageApp.serializers import CompanyReviewSerializer, MessageSerializer
@@ -1817,5 +1818,63 @@ def get_buyer_requirements_for_same_subcategories(request):
             return Response({'status': 204, 'message': 'Not Present'},
                             status=status.HTTP_204_NO_CONTENT)
 
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)
+
+
+@api_view(['post'])
+@permission_classes((AllowAny,))
+def source_listings(request):
+    data = request.data
+    user_id = data['user_id']
+    prodarray = []
+    try:
+        subcatproobj = SourcePublish.objects.filter(updated_by_id=user_id).values()
+        print(len(subcatproobj))
+        if len(subcatproobj) > 0:
+            for i in range(len(subcatproobj)):
+                sourceobj = SourceList_CreateItems.objects.filter(item_name=subcatproobj[i].get('source_item_name')).values()
+                userobj = SelfRegistration.objects.filter(id=sourceobj[0].get('updated_by_id')).values()
+                cmpobj = BasicCompanyDetails.objects.filter(updated_by_id=sourceobj[0].get('updated_by_id')).values()
+                locationobj = BillingAddress.objects.filter(updated_by_id=userobj[0].get('id')).values()
+                if locationobj:
+                    prodarray.append({'product': subcatproobj[0].get('source_item_name'),
+                                      'source_item_type': subcatproobj[0].get('source_item_type'),
+                                      'source_quantity': subcatproobj[0].get('source_quantity'),
+                                      'source_item_description': subcatproobj[0].get('source_item_description'),
+                                      'company_name': cmpobj[0].get('company_name'),
+                                      'company_code':cmpobj[0].get('company_code'),
+                                      'contact_person': userobj[0].get('contact_person'),
+                                      'source_uom': subcatproobj[0].get('source_uom'),
+                                      'date_time': subcatproobj[0].get('created_on'),
+                                      'publish_date': sourceobj[0].get('publish_date'),
+                                      'deadline_date': sourceobj[0].get('deadline_date'),
+                                      'location': locationobj[0].get('bill_location'),
+                                      'userid':userobj[0].get('id'),
+                                      'email_id':userobj[0].get('username')
+                                      })
+                else:
+                    prodarray.append({'product': biddingobj[0].get('product_name'),
+                                      'source_item_type': subcatproobj[0].get('source_item_type'),
+                                      'source_quantity': subcatproobj[0].get('source_quantity'),
+                                      'source_item_description': subcatproobj[0].get('source_item_description'),
+                                      'company_name': cmpobj[0].get('company_name'),
+                                      'company_code': cmpobj[0].get('company_code'),
+                                      'contact_person': userobj[0].get('contact_person'),
+                                      'uom': productobj[0].get('uom'),
+                                      'date_time': productobj[0].get('created_on'),
+                                      'publish_date': biddingobj[0].get('publish_date'),
+                                      'deadline_date': biddingobj[0].get('deadline_date'),
+                                      'location': "",
+                                      'landing_page_pk': biddingobj[0].get('id'),
+                                      'userid': userobj[0].get('id'),
+                                      'vendor_product_pk': productobj[0].get('vendor_product_id'),
+                                      'email_id': userobj[0].get('username')
+                                      })
+            return Response({'status': 200, 'message': 'source List', 'data': prodarray},
+                                    status=status.HTTP_200_OK)
+        else:
+            return Response({'status': 204, 'message': 'source details are not exist'},
+                                    status=status.HTTP_204_NO_CONTENT)
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)

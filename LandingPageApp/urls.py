@@ -50,5 +50,6 @@ urlpatterns = [
     path('messages_user_list_receiver/',views.messages_user_list_receiver),
     path('internal_external_trail_buyers_users_list/',views.internal_external_trail_buyers_users_list),
     path('post_listings/',views.post_listings),
-    path('get_buyer_requirements_for_same_subcategories/',views.get_buyer_requirements_for_same_subcategories)
+    path('get_buyer_requirements_for_same_subcategories/',views.get_buyer_requirements_for_same_subcategories),
+    path('source_listings/',views.source_listings)
 ]

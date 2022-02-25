@@ -5011,7 +5011,7 @@ def get_all_source_leads(request):
                                                    'created_on': bidobj[i].get('created_on'),
                                                    'updated_on': bidobj[i].get('updated_on'),
                                                    'created_by': bidobj[i].get('created_by'),
-                                                   'updated_by': bidobj[i].get('updated_by'),
+                                                   'updated_by': bidobj[i].get('updated_by_id'),
                                                    'admins': bidobj[i].get('admins'),
                                                    'source_status': bidobj[i].get('source_status'),
                                                    'payment_terms': bidobj[i].get('payment_terms'),

@@ -597,7 +597,7 @@ def get_all_company_products_services(request):
             productobj=VendorProduct_BasicDetails.objects.filter(item_type='Product').values()
             if len(productobj)>0:
                 for i in range(0,len(productobj)):
-                    maincorevalue = MaincoreMaster.objects.filter(maincore_name=productobj[i].
+                    maincorevalue = MaincoreMaster.objects.filter(maincore_name__icontains=productobj[i].
                                                                   get('core_sector')).values()
                     if maincorevalue:
                         Categorydetails=CategoryMaster.objects.filter(maincore=maincorevalue[0].get('maincore_id')).values()
@@ -622,9 +622,13 @@ def get_all_company_products_services(request):
                 return Response({'status': 204, 'message': 'Vendor Product Lists are Not Present','data':getarray}, status=204)
         elif search_type == 'All':
             itemtypearr=['Product','Service']
+            # alldata = VendorProduct_BasicDetails.objects.filter(item_type__in=itemtypearr).values()
             alldata = VendorProduct_BasicDetails.objects.filter(item_type__in=itemtypearr).values()
+
+
             if len(alldata) > 0:
                 for i in range(0, len(alldata)):
+                    print(alldata[i].get('item_name'))
                     Maaincoreid=MaincoreMaster.objects.filter(maincore_name=alldata[i].get('core_sector')).values()
                     if Maaincoreid:
                         Categoryid=CategoryMaster.objects.filter(category_name=alldata[i].get('category')).values()

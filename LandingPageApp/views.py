@@ -1853,24 +1853,24 @@ def source_listings(request):
                                       'userid':userobj[0].get('id'),
                                       'email_id':userobj[0].get('username')
                                       })
-                else:
-                    prodarray.append({'product': biddingobj[0].get('product_name'),
-                                      'source_item_type': subcatproobj[0].get('source_item_type'),
-                                      'source_quantity': subcatproobj[0].get('source_quantity'),
-                                      'source_item_description': subcatproobj[0].get('source_item_description'),
-                                      'company_name': cmpobj[0].get('company_name'),
-                                      'company_code': cmpobj[0].get('company_code'),
-                                      'contact_person': userobj[0].get('contact_person'),
-                                      'uom': productobj[0].get('uom'),
-                                      'date_time': productobj[0].get('created_on'),
-                                      'publish_date': biddingobj[0].get('publish_date'),
-                                      'deadline_date': biddingobj[0].get('deadline_date'),
-                                      'location': "",
-                                      'landing_page_pk': biddingobj[0].get('id'),
-                                      'userid': userobj[0].get('id'),
-                                      'vendor_product_pk': productobj[0].get('vendor_product_id'),
-                                      'email_id': userobj[0].get('username')
-                                      })
+                # else:
+                #     prodarray.append({'product': biddingobj[0].get('product_name'),
+                #                       'source_item_type': subcatproobj[0].get('source_item_type'),
+                #                       'source_quantity': subcatproobj[0].get('source_quantity'),
+                #                       'source_item_description': subcatproobj[0].get('source_item_description'),
+                #                       'company_name': cmpobj[0].get('company_name'),
+                #                       'company_code': cmpobj[0].get('company_code'),
+                #                       'contact_person': userobj[0].get('contact_person'),
+                #                       'uom': productobj[0].get('uom'),
+                #                       'date_time': productobj[0].get('created_on'),
+                #                       'publish_date': biddingobj[0].get('publish_date'),
+                #                       'deadline_date': biddingobj[0].get('deadline_date'),
+                #                       'location': "",
+                #                       'landing_page_pk': biddingobj[0].get('id'),
+                #                       'userid': userobj[0].get('id'),
+                #                       'vendor_product_pk': productobj[0].get('vendor_product_id'),
+                #                       'email_id': userobj[0].get('username')
+                #                       })
             return Response({'status': 200, 'message': 'source List', 'data': prodarray},
                                     status=status.HTTP_200_OK)
         else:

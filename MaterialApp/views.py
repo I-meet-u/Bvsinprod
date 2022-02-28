@@ -3250,13 +3250,16 @@ def get_vendor_product_details_by_pk(request):
                 vendor_products=vendorpk).values().order_by('vendor_products')
             vendor_product_documents = VendorProduct_Documents.objects.filter(vendor_products=vendorpk).values().order_by(
                 'vendor_products')
+            VendorProduct_Requirementsobj=VendorProduct_Requirements.objects.filter(vendor_products=vendorpk).values()
+
             if len(vendor_product_basic_details)>0:
                 return Response({'status': 200, 'message': 'ok',
                                  'vendor_product_basic_details': vendor_product_basic_details,
                                  'vendor_product_general_details': vendor_product_general_details,
                                  'vendor_product_technical_specifications': vendor_product_technical_specifications,
                                  'vendor_product_features': vendor_product_features,
-                                 'vendor_product_documents': vendor_product_documents},
+                                 'vendor_product_documents': vendor_product_documents,
+                                 'VendorProduct_Requirements':VendorProduct_Requirementsobj},
                                 status=status.HTTP_200_OK)
             else:
                 return Response({'status': 204, 'message': 'vendor product basic details are not present'},

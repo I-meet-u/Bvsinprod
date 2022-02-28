@@ -2094,6 +2094,8 @@ def getawardlistoflistingleadsnew(request):
                                                                     'publish_status': dummyvar[0].get('publish_status'),
                                                                     'updated_by_id': dummyvar[0].get('updated_by_id'),
                                                                     'award_pk': awardpostedRFQobj[i].get('id'),
+                                                                    'awarderd_date': awardpostedRFQobj[i].get(
+                                                                        'awarded_date'),
                                                                     'po_status': awardpostedRFQobj[i].get('po_status'),
                                                                     'bill_city':""
                                                                     })
@@ -3624,3 +3626,75 @@ def posted_rfq_award_list(request):
 
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)
+
+
+
+@api_view(['post'])
+def get_landing_page_po_details_based_on_vendor_user_id(request):
+    data=request.data
+    vendor_user_id=data['vendor_user_id']
+    po_list=[]
+    try:
+        landingobj=LandingPageBidding.objects.filter(vendor_user_id=vendor_user_id).values().order_by('id')
+        if len(landingobj)>0:
+            for i in range(0,len(landingobj)):
+                landingpagepublishobj=LandingPageBidding_Publish.objects.filter(listing_leads_id=landingobj[i].get('id')).values().order_by('id')
+                if landingpagepublishobj:
+                    poobj=LandingPageListingLeadsPurchaseOrder.objects.filter(landing_page_publish_pk=landingpagepublishobj[0].get('id')).values()
+                    if poobj:
+                        print(poobj[0].get('id'))
+                        vendorobj=VendorProduct_BasicDetails.objects.filter(item_name=poobj[0].get('product')).values()
+                        if vendorobj:
+                            basicobj=BasicCompanyDetails.objects.filter(updated_by_id=poobj[0].get('updated_by_id')).values()
+                            if basicobj:
+                                billobj=BillingAddress.objects.filter(updated_by_id=basicobj[0].get('updated_by_id')).values()
+                                if billobj:
+                                    po_list.append({'product_name':poobj[0].get('item_name'),
+                                                    'product_description':poobj[0].get('item_description'),
+                                                       'bill_city':billobj[0].get('bill_city'),
+                                                       'uom':poobj[0].get('uom'),
+                                                       'quantity': poobj[0].get('quantity'),
+                                                       'unit_rate': poobj[0].get('unit_rate'),
+                                                       'discount': poobj[0].get('discount'),
+                                                       'tax': poobj[0].get('tax'),
+                                                       'total_amount': poobj[0].get('total_amount'),
+                                                       'awarded_date':poobj[0].get('awarded_date'),
+                                                       'PO_date':poobj[0].get('PO_date'),
+                                                       'PO_num':poobj[0].get('PO_num'),
+                                                       'delivery_date':poobj[0].get('delivery_date'),
+                                                       'remind_date':poobj[0].get('remind_date'),
+                                                       'delivery_days':poobj[0].get('delivery_days'),
+                                                       'company_name': basicobj[0].get('company_name'),
+                                                       'company_code': basicobj[0].get('company_code')
+                                                       })
+                                else:
+                                    po_list.append({'product_name': poobj[0].get('item_name'),
+                                                    'product_description': poobj[0].get('item_description'),
+                                                    'bill_city': "",
+                                                    'uom': poobj[0].get('uom'),
+                                                    'quantity': poobj[0].get('quantity'),
+                                                    'unit_rate': poobj[0].get('unit_rate'),
+                                                    'discount': poobj[0].get('discount'),
+                                                    'tax': poobj[0].get('tax'),
+                                                    'total_amount': poobj[0].get('total_amount'),
+                                                    'awarded_date': poobj[0].get('awarded_date'),
+                                                    'PO_date': poobj[0].get('PO_date'),
+                                                    'PO_num': poobj[0].get('PO_num'),
+                                                    'delivery_date': poobj[0].get('delivery_date'),
+                                                    'remind_date': poobj[0].get('remind_date'),
+                                                    'delivery_days': poobj[0].get('delivery_days'),
+                                                    'company_name': basicobj[0].get('company_name'),
+                                                    'company_code': basicobj[0].get('company_code')
+                                                    })
+
+
+            return Response({'status':200,'message':'Item Listing PO List','data':po_list},status=200)
+
+        else:
+            return Response({'status': 204, 'message': 'Not Present', 'data': []}, status=204)
+
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)
+
+
+    path('get_landing_page_po_details_based_on_vendor_user_id/',views.get_landing_page_po_details_based_on_vendor_user_id)

@@ -139,7 +139,8 @@ urlpatterns = [
     path('get_source_pubish_leads_based_on_publish_pk/',views.get_source_pubish_leads_based_on_publish_pk),
     path('update_source_po_status/',views.update_source_po_status),
     path('source_closed_list/', views.source_closed_list),
-    path('source_publish_view/',views.source_publish_view)
+    path('source_publish_view/',views.source_publish_view),
+    path('edit_terms_master_settings_to_add_description/',views.edit_terms_master_settings_to_add_description)
 
 
 

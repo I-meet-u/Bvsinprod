@@ -5098,19 +5098,34 @@ def terms_master_settings(request):
 
 
 
-# @api_view(['put'])
-# def edit_terms_master_settings(request):
-#     data=request.data
-#     termid=data['termid']
-#     try:
-#         termobj=BiddingTermMasterSettings.objects.filter(id=id).values()
-#         if len(termobj)>0:
-#             termbidobj=BiddingTermMasterSettings.objects.get(id=id)
-#             if termbidobj:
-#                 termobj.term
-#         return Response({'status': 201, 'message': 'Terms Created'}, status=201)
-#     except Exception as e:
-#         return Response({'status': 500, 'error': str(e)}, status=500)
+@api_view(['put'])
+def edit_terms_master_settings_to_add_description(request):
+    data=request.data
+    termid=data['termid']
+    terms_description=data['terms_description']
+    newval=[]
+    try:
+        termobj=BiddingTermMasterSettings.objects.filter(id=termid).values()
+        if len(termobj)>0:
+            termbidobj=BiddingTermMasterSettings.objects.get(id=termobj[0].get('id'))
+            if termbidobj:
+                if termbidobj.terms_description==[]:
+                    termbidobj.terms_description=[terms_description]
+                    termbidobj.save()
+                else:
+                    print('s')
+                    descriptiondata=termbidobj.terms_description
+                    converted_description = ','.join([str(elem) for elem in descriptiondata])
+                    print(converted_description)
+                    newval.append(converted_description)
+                    newval.append(terms_description)
+                    print(newval)
+                    termbidobj.terms_description=newval
+                    termbidobj.save()
+
+        return Response({'status': 201, 'message': 'Description Created and Updated'}, status=201)
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)
 
 
 

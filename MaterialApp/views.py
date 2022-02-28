@@ -3642,7 +3642,6 @@ def get_landing_page_po_details_based_on_vendor_user_id(request):
                 if landingpagepublishobj:
                     poobj=LandingPageListingLeadsPurchaseOrder.objects.filter(landing_page_publish_pk=landingpagepublishobj[0].get('id')).values()
                     if poobj:
-                        print(poobj[0].get('id'))
                         vendorobj=VendorProduct_BasicDetails.objects.filter(item_name=poobj[0].get('product')).values()
                         if vendorobj:
                             basicobj=BasicCompanyDetails.objects.filter(updated_by_id=poobj[0].get('updated_by_id')).values()
@@ -3695,6 +3694,3 @@ def get_landing_page_po_details_based_on_vendor_user_id(request):
 
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)
-
-
-    path('get_landing_page_po_details_based_on_vendor_user_id/',views.get_landing_page_po_details_based_on_vendor_user_id)

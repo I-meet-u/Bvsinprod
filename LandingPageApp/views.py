@@ -1982,7 +1982,7 @@ def source_listings_based_on_category_for_get_vendors(request):
                                               'bill_city': locationobj[0].get('bill_city'),
                                               'get_vendors': sourceobj[i].get('get_vendors')
                                               })
-            return Response({'status': 200, 'message': 'source List', 'data': prodarray},
+            return Response({'status': 200, 'message': 'Get Vendors Source List', 'data': prodarray},
                                     status=status.HTTP_200_OK)
         else:
             return Response({'status': 204, 'message': 'source details are not exist'},
@@ -2056,7 +2056,7 @@ def source_listings_for_invite_vendors(request):
                                               'bill_city': locationobj[0].get('bill_city'),
                                               'get_vendors': sourceobj[i].get('get_vendors')
                                               })
-            return Response({'status': 200, 'message': 'source List', 'data': prodarray},
+            return Response({'status': 200, 'message': 'Invite Vendor Source List', 'data': prodarray},
                                     status=status.HTTP_200_OK)
         else:
             return Response({'status': 204, 'message': 'source details are not exist'},

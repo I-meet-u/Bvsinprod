@@ -101,5 +101,6 @@ urlpatterns = [
     path('posted_rfq_award_list/',views.posted_rfq_award_list),
     path('get_landing_page_po_details_based_on_vendor_user_id/',views.get_landing_page_po_details_based_on_vendor_user_id),
         # path('update_vendor_product_specifications_details', views.update_vendor_product_specifications_details)
-    path('get_landing_page_po_details_based_on_vendor_user_id_hsb/',views.get_landing_page_po_details_based_on_vendor_user_id_hsb)
+    path('get_landing_page_po_details_based_on_vendor_user_id_hsb/',views.get_landing_page_po_details_based_on_vendor_user_id_hsb),
+    path('delete_vendor_product_requirement/',views.delete_vendor_product_requirement)
 ]

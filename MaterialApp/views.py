@@ -3754,3 +3754,19 @@ def get_landing_page_po_details_based_on_vendor_user_id_hsb(request):
             return Response({'status': 201, 'message': 'Company not Exist'}, status=201)
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)
+
+@api_view(['post'])
+def delete_vendor_product_requirement(request):
+    data=request.data
+    try:
+        idarray=data['idarray']
+        i=0
+        while i<len(idarray):
+            vprequirements=VendorProduct_Requirements.objects.filter(id=idarray[i],updated_by=data['userid']).values()
+            if vprequirements:
+                obj=VendorProduct_Requirements.objects.get(id=idarray[i],updated_by=data['userid'])
+                obj.delete()
+            i=i+1
+        return Response({'status': 200, 'message': 'ok'}, status=200)
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)

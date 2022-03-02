@@ -1914,3 +1914,154 @@ def source_listings(request):
                                     status=status.HTTP_204_NO_CONTENT)
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)
+
+
+
+@api_view(['post'])
+@permission_classes((AllowAny,))
+def source_listings_based_on_category_for_get_vendors(request):
+    data = request.data
+    prodarray = []
+    try:
+        sourceobj = SourceList_CreateItems.objects.filter(get_vendors='True').values().order_by('id')
+        print(len(sourceobj))
+        if len(sourceobj) > 0:
+            for i in range(len(sourceobj)):
+                userobj = SelfRegistration.objects.filter(id=sourceobj[i].get('updated_by_id')).values()
+                if userobj:
+                    cmpobj = BasicCompanyDetails.objects.filter(updated_by_id=userobj[0].get('id')).values()
+                    if cmpobj:
+                        locationobj = BillingAddress.objects.filter(updated_by_id=cmpobj[0].get('updated_by_id')).values()
+                        if locationobj:
+                            prodarray.append({'source_id':sourceobj[i].get('id'),
+                                              'source_item_type': sourceobj[i].get('item_type'),
+                                              'source_code': sourceobj[i].get('source_code'),
+                                              'source': sourceobj[i].get('source'),
+                                              'item_name': sourceobj[i].get('item_name'),
+                                              'item_code': sourceobj[i].get('item_code'),
+                                              'item_description': sourceobj[i].get('item_description'),
+                                              'uom': sourceobj[i].get('uom'),
+                                              'department': sourceobj[i].get('department'),
+                                              'quantity': sourceobj[i].get('quantity'),
+                                              'deadline_date': sourceobj[i].get('deadline_date'),
+                                              'publish_date': sourceobj[i].get('publish_date'),
+                                              'source_required_city': sourceobj[i].get('source_required_city'),
+                                              'source_vendors': sourceobj[i].get('source_vendors'),
+                                              'updated_by': sourceobj[i].get('updated_by_id'),
+                                              'admins': sourceobj[i].get('admins_id'),
+                                              'maincore': sourceobj[i].get('maincore'),
+                                              'category': sourceobj[i].get('category'),
+                                              'company_code':cmpobj[0].get('company_code'),
+                                              'company_name': cmpobj[0].get('company_name'),
+                                              'email_id':userobj[0].get('username'),
+                                              'bill_city':locationobj[0].get('bill_city'),
+                                              'get_vendors': sourceobj[i].get('get_vendors')
+                                              })
+                        else:
+                            prodarray.append({'source_id':sourceobj[i].get('id'),
+                                              'source_item_type': sourceobj[i].get('source_item_type'),
+                                              'source_code': sourceobj[i].get('source_code'),
+                                              'source': sourceobj[i].get('source'),
+                                              'item_name': sourceobj[i].get('item_name'),
+                                              'item_code': sourceobj[i].get('item_code'),
+                                              'item_description': sourceobj[i].get('item_description'),
+                                              'uom': sourceobj[i].get('uom'),
+                                              'department': sourceobj[i].get('department'),
+                                              'quantity': sourceobj[i].get('quantity'),
+                                              'deadline_date': sourceobj[i].get('deadline_date'),
+                                              'publish_date': sourceobj[i].get('publish_date'),
+                                              'source_required_city': sourceobj[i].get('source_required_city'),
+                                              'source_vendors': sourceobj[i].get('source_vendors'),
+                                              'updated_by': sourceobj[i].get('updated_by_id'),
+                                              'admins': sourceobj[i].get('admins_id'),
+                                              'maincore': sourceobj[i].get('maincore'),
+                                              'category': sourceobj[i].get('category'),
+                                              'company_code': cmpobj[0].get('company_code'),
+                                              'company_name': cmpobj[0].get('company_name'),
+                                              'email_id': userobj[0].get('username'),
+                                              'bill_city': locationobj[0].get('bill_city'),
+                                              'get_vendors': sourceobj[i].get('get_vendors')
+                                              })
+            return Response({'status': 200, 'message': 'source List', 'data': prodarray},
+                                    status=status.HTTP_200_OK)
+        else:
+            return Response({'status': 204, 'message': 'source details are not exist'},
+                                    status=status.HTTP_204_NO_CONTENT)
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)
+
+
+@api_view(['post'])
+@permission_classes((AllowAny,))
+def source_listings_for_invite_vendors(request):
+    data = request.data
+    prodarray = []
+    try:
+        sourceobj = SourceList_CreateItems.objects.filter(get_vendors='False').values().order_by('id')
+        print(len(sourceobj))
+        if len(sourceobj) > 0:
+            for i in range(len(sourceobj)):
+                userobj = SelfRegistration.objects.filter(id=sourceobj[i].get('updated_by_id')).values()
+                if userobj:
+                    cmpobj = BasicCompanyDetails.objects.filter(updated_by_id=userobj[0].get('id')).values()
+                    if cmpobj:
+                        locationobj = BillingAddress.objects.filter(updated_by_id=cmpobj[0].get('updated_by_id')).values()
+                        if locationobj:
+                            prodarray.append({'source_id':sourceobj[i].get('id'),
+                                               'source_item_type': sourceobj[i].get('item_type'),
+                                              'source_code': sourceobj[i].get('source_code'),
+                                              'source': sourceobj[i].get('source'),
+                                              'item_name': sourceobj[i].get('item_name'),
+                                              'item_code': sourceobj[i].get('item_code'),
+                                              'item_description': sourceobj[i].get('item_description'),
+                                              'uom': sourceobj[i].get('uom'),
+                                              'department': sourceobj[i].get('department'),
+                                              'quantity': sourceobj[i].get('quantity'),
+                                              'deadline_date': sourceobj[i].get('deadline_date'),
+                                              'publish_date': sourceobj[i].get('publish_date'),
+                                              'source_required_city': sourceobj[i].get('source_required_city'),
+                                              'source_vendors': sourceobj[i].get('source_vendors'),
+                                              'updated_by': sourceobj[i].get('updated_by_id'),
+                                              'admins': sourceobj[i].get('admins_id'),
+                                              'maincore': sourceobj[i].get('maincore'),
+                                              'category': sourceobj[i].get('category'),
+                                              'company_code':cmpobj[0].get('company_code'),
+                                              'company_name': cmpobj[0].get('company_name'),
+                                              'email_id':userobj[0].get('username'),
+                                              'bill_city':locationobj[0].get('bill_city'),
+                                              'get_vendors':sourceobj[i].get('get_vendors')
+                                              })
+                        else:
+                            prodarray.append({'source_id':sourceobj[i].get('id'),
+                                               'source_item_type': sourceobj[i].get('source_item_type'),
+                                              'source_code': sourceobj[i].get('source_code'),
+                                              'source': sourceobj[i].get('source'),
+                                              'item_name': sourceobj[i].get('item_name'),
+                                              'item_code': sourceobj[i].get('item_code'),
+                                              'item_description': sourceobj[i].get('item_description'),
+                                              'uom': sourceobj[i].get('uom'),
+                                              'department': sourceobj[i].get('department'),
+                                              'quantity': sourceobj[i].get('quantity'),
+                                              'deadline_date': sourceobj[i].get('deadline_date'),
+                                              'publish_date': sourceobj[i].get('publish_date'),
+                                              'source_required_city': sourceobj[i].get('source_required_city'),
+                                              'source_vendors': sourceobj[i].get('source_vendors'),
+                                              'updated_by': sourceobj[i].get('updated_by_id'),
+                                              'admins': sourceobj[i].get('admins_id'),
+                                              'maincore': sourceobj[i].get('maincore'),
+                                              'category': sourceobj[i].get('category'),
+                                              'company_code': cmpobj[0].get('company_code'),
+                                              'company_name': cmpobj[0].get('company_name'),
+                                              'email_id': userobj[0].get('username'),
+                                              'bill_city': locationobj[0].get('bill_city'),
+                                              'get_vendors': sourceobj[i].get('get_vendors')
+                                              })
+            return Response({'status': 200, 'message': 'source List', 'data': prodarray},
+                                    status=status.HTTP_200_OK)
+        else:
+            return Response({'status': 204, 'message': 'source details are not exist'},
+                                    status=status.HTTP_204_NO_CONTENT)
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)
+
+

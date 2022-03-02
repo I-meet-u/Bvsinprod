@@ -2092,7 +2092,7 @@ def source_listings_for_invite_vendors(request):
 
 @api_view(['post'])
 @permission_classes((AllowAny,))
-def get_buyer_data_to_show_to_internal_vendors(request):
+def get_buyer_data_to_show_to_invite_vendors(request):
     data = request.data
     vendor_user_id=data['vendor_user_id']
     code_list = []
@@ -2122,7 +2122,7 @@ def get_buyer_data_to_show_to_internal_vendors(request):
 
 
 
-            return Response({'status': 200, 'message': 'Source Buyer Details List', 'data': source_list},
+            return Response({'status': 200, 'message': 'Source Buyer Details List For invite vendors', 'data': source_list},
                             status=status.HTTP_200_OK)
         else:
             return Response({'status': 204, 'message': 'source details are not exist'},

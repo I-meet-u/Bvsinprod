@@ -3694,3 +3694,40 @@ def get_landing_page_po_details_based_on_vendor_user_id(request):
 
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)
+
+@api_view(['post'])
+def get_landing_page_po_details_based_on_vendor_user_id_hsb(request):
+    data=request.data
+    vendor_user_id=data['vendor_user_id']
+    po_list=[]
+    i=0
+    try:
+        vendorcompinfo=BasicCompanyDetails.objects.filter(updated_by=vendor_user_id).values()
+        if vendorcompinfo:
+            poobj = LandingPageListingLeadsPurchaseOrder.objects.filter(vendorcode=vendorcompinfo[0].get('company_code')).values()
+            while i<len(poobj):
+                buyercompinf0=BasicCompanyDetails.objects.filter(updated_by=poobj[i].get('updated_by_id')).values()
+                if buyercompinf0:
+                    po_list.append({'buyercode':buyercompinf0[0].get('company_code'),
+                                'company_name':buyercompinf0[0].get('company_name'),
+                                'awarded_date':poobj[i].get('awarded_date'),
+                                'PO_date':poobj[i].get('PO_date'),
+                                'PO_num':poobj[i].get('PO_num'),
+                                'delivery_date':poobj[i].get('delivery_date'),
+                                'remind_date':poobj[i].get('remind_date'),
+                                'delivery_days':poobj[i].get('delivery_days'),
+                                'uom':poobj[i].get('uom'),
+                                'quantity':poobj[i].get('quantity'),
+                                'item_name':poobj[i].get('item_name'),
+                                'item_description':poobj[i].get('item_description'),
+                                'unit_rate':poobj[i].get('unit_rate'),
+                                'discount':poobj[i].get('discount'),
+                                'tax':poobj[i].get('tax'),
+                                'total_amount':poobj[i].get('total_amount'),
+                                'id':poobj[i].get('id')})
+                i=i+1
+            return Response({'status': 200, 'message': 'ok', 'data': po_list}, status=200)
+        else:
+            return Response({'status': 201, 'message': 'Company not Exist'}, status=201)
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)

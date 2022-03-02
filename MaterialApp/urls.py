@@ -99,7 +99,7 @@ urlpatterns = [
     path('update_vendor_product_documents_details/', views.update_vendor_product_documents_details),
     path('get_vendor_product_requirements_based_on_vendor_pk/',views.get_vendor_product_requirements_based_on_vendor_pk),
     path('posted_rfq_award_list/',views.posted_rfq_award_list),
-    path('get_landing_page_po_details_based_on_vendor_user_id/',views.get_landing_page_po_details_based_on_vendor_user_id)
+    path('get_landing_page_po_details_based_on_vendor_user_id/',views.get_landing_page_po_details_based_on_vendor_user_id),
         # path('update_vendor_product_specifications_details', views.update_vendor_product_specifications_details)
-
+    path('get_landing_page_po_details_based_on_vendor_user_id_hsb/',views.get_landing_page_po_details_based_on_vendor_user_id_hsb)
 ]

@@ -5752,3 +5752,20 @@ def source_publish_view(request):
 
     except Exception as e:
         return Response({'status':500,'error':str(e)},status=500)
+
+
+@api_view(['post'])
+def particular_terms_description_list(request):
+    data = request.data
+    term_id = data['term_id']
+    try:
+        termbidobj = BiddingTermMasterSettings.objects.filter(id=term_id).values()
+        if len(termbidobj):
+            return Response({'status':200,'message':'Terms List','data':termbidobj},status=200)
+
+        else:
+            return Response({'status': 204, 'message': 'Not Present'}, status=204)
+
+
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)

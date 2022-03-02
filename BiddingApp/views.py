@@ -5761,7 +5761,7 @@ def particular_terms_description_list(request):
     try:
         termbidobj = BiddingTermMasterSettings.objects.filter(id=term_id).values()
         if len(termbidobj):
-            return Response({'status':200,'message':'Terms List','data':termbidobj},status=200)
+            return Response({'status':200,'message':'Description List','data':termbidobj},status=200)
 
         else:
             return Response({'status': 204, 'message': 'Not Present'}, status=204)

@@ -1597,44 +1597,80 @@ def internal_external_trail_buyers_users_list(request):
             else:
                 return Response({'status': 204, 'message': 'Not Present'}, status=204)
         elif users=='buyer':
-            regobjdata = SelfRegistration.objects.filter(user_type='Buyer',admin_approve='Approved').values().order_by('id')
-            print(len(regobjdata))
-            if len(regobjdata) > 0:
-                internalbuyer = InternalBuyer.objects.filter(updated_by_id=user_id).values()
-                for i in range(0, len(internalbuyer)):
-                    internalbuyerarray.append(internalbuyer[i].get('company_code'))
-                for i in range(0, len(regobjdata)):
-                    basicobj = BasicCompanyDetails.objects.get(updated_by_id=regobjdata[i].get('id'))
-                    if basicobj:
-                        billobj = BillingAddress.objects.filter(updated_by_id=basicobj.updated_by_id).values()
+            internalbuyer = InternalBuyer.objects.filter(updated_by_id=user_id).values().order_by('internal_buyer_id')
+            print(len(internalbuyer))
+            if len(internalbuyer):
+                for i in range(0,len(internalbuyer)):
+                    regobj=SelfRegistration.objects.filter(username=internalbuyer[i].get('email_id')).values()
+                    if regobj:
+                        billobj = BillingAddress.objects.filter(updated_by_id=regobj[0].get('updated_by_id')).values()
                         if billobj:
-                            if basicobj.company_code not in internalarray or basicobj.company_code not in internalbuyerarray:
-                                buyer_list.append({'company_code': basicobj.company_code,
-                                                  'company_name': basicobj.company_name,
-                                                  'phone_no': regobjdata[i].get('phone_number'),
-                                                  'email_id': regobjdata[i].get('username'),
-                                                  'user_name': regobjdata[i].get('contact_person'),
-                                                  'user_id': regobjdata[i].get('id'),
-                                                  'profile_cover_photo': regobjdata[i].get('profile_cover_photo'),
-                                                   'bill_city': billobj[0].get('bill_city'),
-                                                   'bill_state': billobj[0].get('bill_state'),
-                                                   'bill_country': billobj[0].get('bill_country'),
-                                                    })
-                            else:
-                                buyer_list.append({'company_code': basicobj.company_code,
-                                                   'company_name': basicobj.company_name,
-                                                   'phone_no': regobjdata[i].get('phone_number'),
-                                                   'email_id': regobjdata[i].get('username'),
-                                                   'user_name': regobjdata[i].get('contact_person'),
-                                                   'user_id': regobjdata[i].get('id'),
-                                                   'profile_cover_photo': regobjdata[i].get('profile_cover_photo'),
-                                                   'bill_city': "",
-                                                   'bill_state': "",
-                                                   'bill_country': "",
-                                                   })
+                            buyer_list.append({'company_code': internalbuyer[i].get('company_code'),
+                                               'company_name': internalbuyer[i].get('company_name'),
+                                               'phone_no': internalbuyer[i].get('phone_number'),
+                                               'email_id': internalbuyer[i].get('email_id'),
+                                               'user_name': regobj[0].get('contact_person'),
+                                               'user_id': regobj[0].get('id'),
+                                               'profile_cover_photo': regobj[0].get('profile_cover_photo'),
+                                               'bill_city': internalbuyer[i].get('city'),
+                                               'bill_state': internalbuyer[i].get('state'),
+                                               'bill_country': billobj[0].get('bill_country'),
+                                               })
+                        else:
+                            buyer_list.append({'company_code': internalbuyer[i].get('company_code'),
+                                               'company_name': internalbuyer[i].get('company_name'),
+                                               'phone_no': internalbuyer[i].get('phone_number'),
+                                               'email_id': internalbuyer[i].get('email_id'),
+                                               'user_name': regobj[0].get('contact_person'),
+                                               'user_id': regobj[0].get('id'),
+                                               'profile_cover_photo': regobj[0].get('profile_cover_photo'),
+                                               'bill_city': internalbuyer[i].get('city'),
+                                               'bill_state': internalbuyer[i].get('state'),
+                                               'bill_country': "",
+                                               })
+
                 return Response({'status': 200, 'message': 'Buyers List', 'data': buyer_list}, status=200)
             else:
                 return Response({'status': 204, 'message': 'Not Present'}, status=204)
+
+            # regobjdata = SelfRegistration.objects.filter(user_type='Buyer',admin_approve='Approved').values().order_by('id')
+            # print(len(regobjdata))
+            # if len(regobjdata) > 0:
+            #     internalbuyer = InternalBuyer.objects.filter(updated_by_id=user_id).values()
+            #     for i in range(0, len(internalbuyer)):
+            #         internalbuyerarray.append(internalbuyer[i].get('company_code'))
+            #     for i in range(0, len(regobjdata)):
+            #         basicobj = BasicCompanyDetails.objects.get(updated_by_id=regobjdata[i].get('id'))
+            #         if basicobj:
+            #             billobj = BillingAddress.objects.filter(updated_by_id=basicobj.updated_by_id).values()
+            #             if billobj:
+            #                 if basicobj.company_code not in internalarray or basicobj.company_code not in internalbuyerarray:
+            #                     buyer_list.append({'company_code': basicobj.company_code,
+            #                                       'company_name': basicobj.company_name,
+            #                                       'phone_no': regobjdata[i].get('phone_number'),
+            #                                       'email_id': regobjdata[i].get('username'),
+            #                                       'user_name': regobjdata[i].get('contact_person'),
+            #                                       'user_id': regobjdata[i].get('id'),
+            #                                       'profile_cover_photo': regobjdata[i].get('profile_cover_photo'),
+            #                                        'bill_city': billobj[0].get('bill_city'),
+            #                                        'bill_state': billobj[0].get('bill_state'),
+            #                                        'bill_country': billobj[0].get('bill_country'),
+            #                                         })
+            #                 else:
+            #                     buyer_list.append({'company_code': basicobj.company_code,
+            #                                        'company_name': basicobj.company_name,
+            #                                        'phone_no': regobjdata[i].get('phone_number'),
+            #                                        'email_id': regobjdata[i].get('username'),
+            #                                        'user_name': regobjdata[i].get('contact_person'),
+            #                                        'user_id': regobjdata[i].get('id'),
+            #                                        'profile_cover_photo': regobjdata[i].get('profile_cover_photo'),
+            #                                        'bill_city': "",
+            #                                        'bill_state': "",
+            #                                        'bill_country': "",
+            #                                        })
+            #     return Response({'status': 200, 'message': 'Buyers List', 'data': buyer_list}, status=200)
+            # else:
+            #     return Response({'status': 204, 'message': 'Not Present'}, status=204)
 
         elif users == 'internal_user':
             internalobj = InternalVendor.objects.filter(updated_by_id=user_id).values().order_by('internal_vendor_id')

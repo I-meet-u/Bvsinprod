@@ -5764,7 +5764,7 @@ def particular_terms_description_list(request):
             return Response({'status':200,'message':'Description List','data':termbidobj},status=200)
 
         else:
-            return Response({'status': 204, 'message': 'Not Present'}, status=204)
+            return Response({'status': 204, 'message': 'Not Present','data':termbidobj}, status=204)
 
 
     except Exception as e:

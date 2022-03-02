@@ -116,6 +116,8 @@ class SelectVendorsForBiddingProduct(models.Model):
 class BiddingTermMasterSettings(models.Model):
     terms_name=models.CharField(max_length=80,null=True,blank=True)
     terms_description=ArrayField(models.CharField(max_length=800,blank=True,null=True))
+    terms_code=ArrayField(models.CharField(max_length=800,blank=True,null=True))
+    terms_status=models.CharField(max_length=100,default='Active',null=True,blank=True)
     created_on = models.DateTimeField(auto_now_add=True)
     updated_on = models.DateTimeField(auto_now=True)
     created_by = models.BigIntegerField(null=True,blank=True)

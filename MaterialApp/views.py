@@ -1614,6 +1614,14 @@ def get_vendor_details_by_sub_category(request):
     vendordetails=[]
     ccodearray=[]
     average=0
+    nature_of_business=""
+    industry_to_serve=""
+    bill_city=""
+    bill_address=""
+    maincore=""
+    category=""
+    subcategory=""
+
     try:
         if key=='vsinadmindb':
             vendorobj = VendorProduct_BasicDetails.objects.filter(sub_category__icontains=subcategoryname).distinct('sub_category','company_code').values()
@@ -1623,8 +1631,23 @@ def get_vendor_details_by_sub_category(request):
                     basicobj=BasicCompanyDetails.objects.filter(company_code=vendorobj[i].get('company_code')).values()
                     regobj=SelfRegistration.objects.filter(id=basicobj[0].get('updated_by_id')).values()
                     industryobj=IndustrialInfo.objects.filter(company_code=vendorobj[i].get('company_code')).values()
+                    if industryobj:
+                        nature_of_business=industryobj[0].get('nature_of_business')
+                        industry_to_serve=industryobj[0].get('industry_to_serve')
+
+
                     billobj=BillingAddress.objects.filter(company_code_id=vendorobj[i].get('company_code')).values()
+                    if billobj:
+                        bill_city=billobj[0].get('bill_city')
+                        bill_address=billobj[0].get('bill_address')
+
+
                     hierarchyobj=IndustrialHierarchy.objects.filter(company_code_id=vendorobj[i].get('company_code')).values()
+                    if hierarchyobj:
+                        maincore=hierarchyobj[0].get('maincore')
+                        category=hierarchyobj[0].get('category')
+                        subcategory=hierarchyobj[0].get('subcategory')
+
                     reviewobj = CompanyReviewAndRating.objects.filter(company_code=vendorobj[i].get('company_code')).values()
                     print(len(reviewobj))
                     if len(reviewobj) > 0:
@@ -1645,15 +1668,15 @@ def get_vendor_details_by_sub_category(request):
                         'email':regobj[0].get('username'),
                         'phone_number':regobj[0].get('phone_number'),
                         'profile_photo': regobj[0].get('profile_cover_photo'),
-                        'city':billobj[0].get('bill_city'),
-                        'nature_of_business':industryobj[0].get('nature_of_business'),
-                        'industry_to_serve':industryobj[0].get('industry_to_serve'),
+                        'city':bill_city,
+                        'nature_of_business':nature_of_business,
+                        'industry_to_serve':industry_to_serve,
                         'user_type': regobj[0].get('user_type'),
-                        'bill_city': billobj[0].get('bill_city'),
-                        'bill_address': billobj[0].get('bill_address'),
-                        'maincore': hierarchyobj[0].get('maincore'),
-                        'category': hierarchyobj[0].get('category'),
-                        'subcategory': hierarchyobj[0].get('subcategory'),
+                        'bill_city': bill_city,
+                        'bill_address':bill_address,
+                        'maincore': maincore,
+                        'category': category,
+                        'subcategory':subcategory,
                         'industrial_scale': basicobj[0].get('industrial_scale'),
                         'registered_date': regobj[0].get('created_on'),
                         'rating': round(average)

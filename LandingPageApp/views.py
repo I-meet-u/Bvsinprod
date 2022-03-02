@@ -2030,6 +2030,7 @@ def source_listings_for_invite_vendors(request):
                                               'company_code':cmpobj[0].get('company_code'),
                                               'company_name': cmpobj[0].get('company_name'),
                                               'email_id':userobj[0].get('username'),
+                                              'user_name': userobj[0].get('contact_person'),
                                               'bill_city':locationobj[0].get('bill_city'),
                                               'get_vendors':sourceobj[i].get('get_vendors')
                                               })
@@ -2055,6 +2056,7 @@ def source_listings_for_invite_vendors(request):
                                               'company_code': cmpobj[0].get('company_code'),
                                               'company_name': cmpobj[0].get('company_name'),
                                               'email_id': userobj[0].get('username'),
+                                              'user_name': userobj[0].get('contact_person'),
                                               'bill_city': locationobj[0].get('bill_city'),
                                               'get_vendors': sourceobj[i].get('get_vendors')
                                               })

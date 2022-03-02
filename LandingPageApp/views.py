@@ -2099,26 +2099,29 @@ def get_buyer_data_to_show_to_invite_vendors(request):
     source_list=[]
     try:
 
-        sourcepublishobj = SourcePublish.objects.filter(updated_by_id=vendor_user_id).values()
+        sourcepublishobj = SourcePublish.objects.filter(updated_by_id__in=vendor_user_id).values()
+        print(len(sourcepublishobj),'ok')
         if sourcepublishobj:
             for i in range(0,len(sourcepublishobj)):
-                sourceobj = SourceList_CreateItems.objects.filter(id=sourcepublishobj[i].get('source_id'),updated_by_id=sourcepublishobj[0].get('source_user_id')).values()
-                if len(sourceobj)>0:
-                    source_list.append({'source_id': sourceobj[0].get('id'),
-                                      'source_code': sourceobj[0].get('source_code'),
-                                      'source': sourceobj[0].get('source'),
-                                      'item_name': sourceobj[0].get('item_name'),
-                                      'item_code': sourceobj[0].get('item_code'),
-                                      'item_description': sourceobj[0].get('item_description'),
-                                      'uom': sourceobj[0].get('uom'),
-                                      'quantity': sourceobj[0].get('quantity'),
-                                      'deadline_date': sourceobj[0].get('deadline_date'),
-                                      'publish_date': sourceobj[0].get('publish_date'),
-                                      'updated_by': sourceobj[0].get('updated_by_id'),
-                                      'created_by': sourceobj[0].get('created_by')
+                code_list.append(sourcepublishobj[i].get('source_id'))
+            sourceobj = SourceList_CreateItems.objects.filter(id__in=code_list).values()
+            if len(sourceobj)>0:
+                for i in range(0,len(sourceobj)):
+                    source_list.append({'source_id': sourceobj[i].get('id'),
+                                      'source_code': sourceobj[i].get('source_code'),
+                                      'source': sourceobj[i].get('source'),
+                                      'item_name': sourceobj[i].get('item_name'),
+                                      'item_code': sourceobj[i].get('item_code'),
+                                      'item_description': sourceobj[i].get('item_description'),
+                                      'uom': sourceobj[i].get('uom'),
+                                      'quantity': sourceobj[i].get('quantity'),
+                                      'deadline_date': sourceobj[i].get('deadline_date'),
+                                      'publish_date': sourceobj[i].get('publish_date'),
+                                      'updated_by': sourceobj[i].get('updated_by_id'),
+                                      'created_by': sourceobj[i].get('created_by')
                                             })
-                else:
-                    source_list=[]
+            else:
+                source_list=[]
 
 
 

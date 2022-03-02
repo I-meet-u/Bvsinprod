@@ -1954,6 +1954,7 @@ def source_listings_based_on_category_for_get_vendors(request):
                                               'company_code':cmpobj[0].get('company_code'),
                                               'company_name': cmpobj[0].get('company_name'),
                                               'email_id':userobj[0].get('username'),
+                                              'user_name':userobj[0].get('contact_person'),
                                               'bill_city':locationobj[0].get('bill_city'),
                                               'get_vendors': sourceobj[i].get('get_vendors')
                                               })
@@ -1979,8 +1980,9 @@ def source_listings_based_on_category_for_get_vendors(request):
                                               'company_code': cmpobj[0].get('company_code'),
                                               'company_name': cmpobj[0].get('company_name'),
                                               'email_id': userobj[0].get('username'),
+                                              'user_name': userobj[0].get('contact_person'),
                                               'bill_city': locationobj[0].get('bill_city'),
-                                              'get_vendors': sourceobj[i].get('get_vendors')
+                                              'get_vendors': sourceobj[i].get('get_vendors'),
                                               })
             return Response({'status': 200, 'message': 'Get Vendors Source List', 'data': prodarray},
                                     status=status.HTTP_200_OK)

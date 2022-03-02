@@ -2049,7 +2049,7 @@ def source_listings_for_invite_vendors(request):
                                                   'email_id': userobj[0].get('username'),
                                                   'user_name': userobj[0].get('contact_person'),
                                                   'bill_city': locationobj[0].get('bill_city'),
-                                                  'get_vendors': sourceobj[0].get('get_vendors')
+                                                  'get_vendors': sourceobj[0].get('get_vendors'),
                                                   })
                             else:
                                 prodarray.append({'source_id': sourceobj[0].get('source_id'),
@@ -2086,6 +2086,48 @@ def source_listings_for_invite_vendors(request):
         else:
             return Response({'status': 204, 'message': 'source details are not exist'},
                             status=status.HTTP_204_NO_CONTENT)
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)
+
+
+@api_view(['post'])
+@permission_classes((AllowAny,))
+def get_buyer_data_to_show_to_internal_vendors(request):
+    data = request.data
+    vendor_user_id=data['vendor_user_id']
+    code_list = []
+    source_list=[]
+    try:
+
+        sourcepublishobj = SourcePublish.objects.filter(updated_by_id=vendor_user_id).values()
+        if sourcepublishobj:
+            for i in range(0,len(sourcepublishobj)):
+                sourceobj = SourceList_CreateItems.objects.filter(id=sourcepublishobj[i].get('source_id'),updated_by_id=sourcepublishobj[0].get('source_user_id')).values()
+                if len(sourceobj)>0:
+                    source_list.append({'source_id': sourceobj[0].get('id'),
+                                      'source_code': sourceobj[0].get('source_code'),
+                                      'source': sourceobj[0].get('source'),
+                                      'item_name': sourceobj[0].get('item_name'),
+                                      'item_code': sourceobj[0].get('item_code'),
+                                      'item_description': sourceobj[0].get('item_description'),
+                                      'uom': sourceobj[0].get('uom'),
+                                      'quantity': sourceobj[0].get('quantity'),
+                                      'deadline_date': sourceobj[0].get('deadline_date'),
+                                      'publish_date': sourceobj[0].get('publish_date'),
+                                      'updated_by': sourceobj[0].get('updated_by_id'),
+                                      'created_by': sourceobj[0].get('created_by')
+                                            })
+                else:
+                    source_list=[]
+
+
+
+            return Response({'status': 200, 'message': 'source List', 'data': source_list},
+                            status=status.HTTP_200_OK)
+        else:
+            return Response({'status': 204, 'message': 'source details are not exist'},
+                            status=status.HTTP_204_NO_CONTENT)
+
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)
 

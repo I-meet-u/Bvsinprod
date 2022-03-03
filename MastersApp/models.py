@@ -405,7 +405,7 @@ class GuaranteeMaster(models.Model):
 class DeliveryMaster(models.Model):
     # delivery_master models and fields
     delivery_id = models.BigAutoField(primary_key=True)
-    delivery_code = models.CharField(max_length=30,unique=True)
+    delivery_code = models.CharField(max_length=30,unique=True,null=True,blank=True)
     delivery_description = models.CharField(max_length=200,null=True,blank=True)
     is_verified = models.BooleanField(default=False)
     created_on = models.DateTimeField(auto_now_add=True)
@@ -467,7 +467,7 @@ class ItemGroupMaster(models.Model):
 class TransitInsuranceMaster(models.Model):
     # transit_insurance models and fields
     transit_id = models.BigAutoField(primary_key=True)
-    transit_code = models.CharField(max_length=30,null=True)
+    transit_code = models.CharField(max_length=30,null=True,blank=True)
     transit_name = models.CharField(max_length=200, unique=True)
     is_verified = models.BooleanField(default=False)
     created_on = models.DateTimeField(auto_now_add=True)
@@ -487,7 +487,7 @@ class TransitInsuranceMaster(models.Model):
 class ValidityMaster(models.Model):
     # validity_master models and fields
     validity_id = models.BigAutoField(primary_key=True)
-    validity_code = models.CharField(max_length=30,null=True)
+    validity_code = models.CharField(max_length=30,null=True,blank=True)
     validity_name = models.CharField(max_length=200, unique=True)
     is_verified = models.BooleanField(default=False)
     created_on = models.DateTimeField(auto_now_add=True)
@@ -508,7 +508,7 @@ class ValidityMaster(models.Model):
 class PaymentMaster(models.Model):
     # payment_master models and fields
     payment_id = models.BigAutoField(primary_key=True)
-    payment_code = models.CharField(max_length=30,null=True)
+    payment_code = models.CharField(max_length=30,null=True,blank=True)
     payment_terms = models.CharField(max_length=200, unique=True)
     is_verified = models.BooleanField(default=False)
     created_on = models.DateTimeField(auto_now_add=True)

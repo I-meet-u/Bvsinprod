@@ -1663,6 +1663,8 @@ def get_vendor_details_by_sub_category(request):
                     else:
                         pass
                     vendordetails.append({
+                        'company_code':basicobj[0].get('company_code'),
+                        'gst_no':basicobj[0].get('gst_number'),
                         'company_name':basicobj[0].get('company_name'),
                         'name': regobj[0].get('contact_person'),
                         'email':regobj[0].get('username'),

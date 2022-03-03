@@ -4058,6 +4058,7 @@ def getsorcelistresponse(request):
                                     'UOM':srcobj[i].get('uom'),
                                     'qty':srcobj[i].get('quantity'),
                                     'source_code':srcobj[i].get('source_code'),
+                                    'source':srcobj[i].get('source'),
                                     'publishcount':5})
                 else:
                     resarry.append({'type': srcobj[i].get('item_type'),
@@ -4066,6 +4067,7 @@ def getsorcelistresponse(request):
                                     'UOM': srcobj[i].get('uom'),
                                     'qty': srcobj[i].get('quantity'),
                                     'source_code': srcobj[i].get('source_code'),
+                                    'source': srcobj[i].get('source'),
                                     'publishcount': len(srcpublishobj)})
             return Response({'status': 200,'message':'ok','data':resarry},status=200)
         else:

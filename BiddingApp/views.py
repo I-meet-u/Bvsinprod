@@ -5772,3 +5772,90 @@ def particular_terms_description_list(request):
 
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)
+
+
+@api_view(['put'])
+@permission_classes((AllowAny,))
+def edit_terms_master_settings_to_add_description(request):
+    data=request.data
+    termid=data['termid']
+    terms_description=data['terms_description']
+    termarray1=[]
+    termarray2=[]
+    integer_list=[]
+    max_num=0
+    newval=[]
+    newcode=[]
+    count=0
+
+
+    try:
+        termobj1=BiddingTermMasterSettings.objects.filter().values().order_by('id')
+        termobj=BiddingTermMasterSettings.objects.filter(id=termid).values()
+        if len(termobj):
+            termbidobj = BiddingTermMasterSettings.objects.get(id=termobj[0].get('id'))
+
+        for i in range(0, len(termobj1)):
+            if termobj1[i].get('terms_description') == []:
+                count = count + 1
+        print(count)
+        if count == len(termobj1):
+            print('s')
+            x = termobj1[0].get('description_code')
+            print(x)
+            if x == []:
+                x = ['5101']
+            print(x, type(x))
+            if len(termobj):
+                termbidobj = BiddingTermMasterSettings.objects.get(id=termobj[0].get('id'))
+                if termbidobj:
+                    if termbidobj.terms_description == []:
+                        termbidobj.terms_description = [terms_description]
+                        termbidobj.terms_status=['Active']
+                        termbidobj.description_code = x
+                        termbidobj.save()
+
+        else:
+            for i in range(len(termobj1)):
+                if termobj1[i].get('description_code') != []:
+                    termarray1.append(termobj1[i].get('description_code'))
+            print(termarray1)
+            for j in range(len(termarray1)):
+                for k in range(len(termarray1[j])):
+                    if k == 0:
+                        termarray2.append((termarray1[j])[k])
+            print(termarray2, type(termarray2))
+            termarray2 = list(map(int, termarray2))
+            print(max(termarray2), type(max(termarray2)))
+            max_num = max(termarray2)
+            temp = int(max_num) + 1000
+            print(temp)
+            if len(termobj):
+                termbidobj = BiddingTermMasterSettings.objects.get(id=termobj[0].get('id'))
+                if termbidobj:
+                    if termbidobj.terms_description == []:
+                        termbidobj.terms_description = [terms_description]
+                        termbidobj.terms_status=['Active']
+                        termbidobj.description_code = [temp]
+                        termbidobj.save()
+                    else:
+
+                        descriptiondata = termbidobj.terms_description
+                        descriptiondata.append(terms_description)
+                        termbidobj.terms_description = descriptiondata
+                        termstatus=termbidobj.terms_status
+                        termstatus.append('Active')
+                        termbidobj.save()
+                        # code
+                        length = len(termbidobj.description_code)
+                        codeval = termbidobj.description_code[length - 1]
+                        codeval = int(codeval) + 1
+                        termcodedata = termbidobj.description_code
+                        termcodedata.append(str(codeval))
+                        termbidobj.description_code = termcodedata
+
+                        termbidobj.save()
+
+        return Response({'status': 201, 'message': 'Description Created and Updated'}, status=201)
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)

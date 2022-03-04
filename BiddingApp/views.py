@@ -5369,8 +5369,9 @@ def getpublishedcommonrfqbid(request):
 def get_source_items_list_by_source_user_id(request):
     data = request.data
     sourceuserid = data['sourceuserid']
+    source_id=data['source_id']
     try:
-        sourceobj = SourcePublish.objects.filter(source_user_id=sourceuserid).values()
+        sourceobj = SourcePublish.objects.filter(source_user_id=sourceuserid,source_id=source_id).values()
         if len(sourceobj) > 0:
             for i in range(0,len(sourceobj)):
                 compobj=BasicCompanyDetails.objects.filter(updated_by=sourceobj[i].get('updated_by_id')).values()

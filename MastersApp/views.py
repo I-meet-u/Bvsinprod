@@ -11,6 +11,7 @@ from rest_framework.response import Response
 from django.http import HttpResponse, JsonResponse
 from datetime import datetime
 import io, csv
+from MaterialApp.models import LandingPageBidding
 
 from rest_framework.views import APIView
 
@@ -696,6 +697,36 @@ def all_masters(request):
 
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)
+
+
+@api_view(['post'])
+@permission_classes([AllowAny,])
+def all_masterswithpostrfqbuyerdataexist(request):
+    masterslist=[]
+    data=request.data
+    userid=data['userid']
+    try:
+        if data['key']=="vsinadmindb":
+            landingpageobj=LandingPageBidding.objects.filter(updated_by=userid).values().order_by('-id')
+            if landingpageobj:
+                landingpageobj=landingpageobj[0]
+            else:
+                landingpageobj=""
+            pfchargesmasterobj = PFChargesMaster.objects.filter().values()
+            if pfchargesmasterobj:
+                masterslist.append({'p_f_charges_master': pfchargesmasterobj})
+            deliverymasterobj = DeliveryMaster.objects.filter().values()
+            if deliverymasterobj:
+                masterslist.append({'delivery_master': deliverymasterobj})
+            paymentmasterobj = PaymentMaster.objects.filter().values()
+            if paymentmasterobj:
+                masterslist.append({'payment_master': paymentmasterobj})
+            return Response({'status': 200, 'message': 'Masters List','data':masterslist,'landingpagebid':landingpageobj}, status=200)
+        else:
+            return Response({'status': 400, 'message': 'Not Authorized'}, status=400)
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)
+
 
 @api_view(['put'])
 @permission_classes([AllowAny,])

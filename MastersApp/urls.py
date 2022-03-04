@@ -64,6 +64,7 @@ urlpatterns = [
     path('disable-uom-master/',views.disable_uom_master),
     path('enable-uom-master/',views.enable_uom_master),
     path('all-masters/',views.all_masters),
+    path('all_masterswithpostrfqbuyerdataexist/',views.all_masterswithpostrfqbuyerdataexist),
     path('delete-uom-masters/',views.delete_uom_master),
     # path('uom-master-history/',views.uom_master_history),
     path('uom-master-user-id/',views. uom_master_user_id),

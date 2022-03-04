@@ -5775,7 +5775,6 @@ def particular_terms_description_list(request):
 
 
 @api_view(['put'])
-@permission_classes((AllowAny,))
 def edit_terms_master_settings_to_add_description(request):
     data=request.data
     termid=data['termid']

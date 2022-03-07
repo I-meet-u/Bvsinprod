@@ -2281,8 +2281,6 @@ def bidding_invite_vendor(request):
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)
 
-
-
 @api_view(['post'])
 @permission_classes((AllowAny,))
 def bidding_get_vendor(request):

@@ -61,8 +61,10 @@ class MessageSerializer(serializers.ModelSerializer):
                     receiver_name=regobj1[0].get('contact_person'),
                     vendor_product_pk=validated_data['vendor_product_pk'],
                     source=validated_data['source'],
-                    get_vendor=validated_data['get_vendor']
-                )
+                    get_vendor=validated_data['get_vendor'],
+                    rfq = validated_data['rfq']
+
+            )
             return msgobj
         except(AssertionError):
             raise serializers.ValidationError("Error!")

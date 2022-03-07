@@ -663,8 +663,11 @@ class VendorBiddingBuyerProductDetailsView(viewsets.ModelViewSet):
                                                                 updated_by=SelfRegistration.objects.get(id=userid),
                                                                 created_by=userid)
             return Response({'status': 201, 'message': 'Vendor Bidding Buyer Product Details are Created'}, status=201)
-        except Exception as e:
-            return Response({'status': 500, 'error': str(e)}, status=500)
+        except Exception as e: buyerproductbiddingobj = BuyerProductBidding.objects.filter(updated_by=self.request.GET.get('updated_by'))
+        if buyerproductbiddingobj:
+            return buyerproductbiddingobj
+        raise ValidationError(
+            {'message': 'Buyer Product Bidding details of particular user id is not exist', 'status': 204})
 
     def get_queryset(self):
         vendorproductdetailsobj = VendorBiddingBuyerProductDetails.objects.filter(
@@ -5092,6 +5095,7 @@ def terms_master_settings(request):
         termmastersettingsobj=BiddingTermMasterSettings.objects.create(terms_name=data['terms_name'],
                                                                        terms_description=[],
                                                                        description_code=[],
+                                                                       terms_status=[],
                                                                        updated_by=SelfRegistration.objects.get(id=userid),
                                                                        created_by=userid
                                                                        )
@@ -5859,3 +5863,29 @@ def edit_terms_master_settings_to_add_description(request):
         return Response({'status': 201, 'message': 'Description Created and Updated'}, status=201)
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)
+
+
+class AddTermsToRfqBidViewset(viewsets.ModelViewSet):
+    queryset = AddTermsToRfqBid.objects.all()
+    serializer_class = AddTermsToRfqBidSerializer
+
+
+    def create(self, request, *args, **kwargs):
+        terms_list=request.data['terms_list']
+        user_id=request.data['user_id']
+        try:
+            for i in range(0,len(terms_list)):
+                termsobj=AddTermsToRfqBid.objects.create(terms_name=terms_list[i],
+                                                         updated_by=SelfRegistration.objects.get(id=user_id),
+                                                         created_by=user_id)
+            return Response({'status': 201, 'message': 'Terms are Added'}, status=201)
+        except Exception as e:
+            return Response({'status': 500, 'error': str(e)}, status=500)
+
+
+    def get_queryset(self):
+
+        rfqbidobj = AddTermsToRfqBid.objects.filter(updated_by=self.request.GET.get('updated_by'))
+        if rfqbidobj:
+            return rfqbidobj
+        raise ValidationError({'message': 'Terms List', 'status': 204})

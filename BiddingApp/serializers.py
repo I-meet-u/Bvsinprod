@@ -157,3 +157,9 @@ class SourcePurchaseOrderSerializer(serializers.ModelSerializer):
     class Meta:
         model=SourcePurchaseOrder
         fields='__all__'
+
+
+class AddTermsToRfqBidSerializer(serializers.ModelSerializer):
+    class Meta:
+        model=AddTermsToRfqBid
+        fields='__all__'

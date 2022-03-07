@@ -24,6 +24,7 @@ router.register('source-list-create-items',views.SourceList_CreateItemViewSet)
 router.register('source-publish',views.SourcePublishViewSet)
 router.register('source-awards',views.SourceAwardsViewSet)
 router.register('source-purchase-order',views.SourcePurchaseOrderViewset)
+router.register('add-terms-to-rfq-bid',views.AddTermsToRfqBidViewset)
 
 #common open rfq leads vendor publish
 router.register('VendorProductBiddingOpenCommonBidView',views.VendorProductBiddingOpenCommonBidView)

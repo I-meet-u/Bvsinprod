@@ -691,3 +691,14 @@ class SourcePurchaseOrder(models.Model):
 
     class Meta:
         db_table = "SourcePurchaseOrder"
+
+
+class AddTermsToRfqBid(models.Model):
+    terms_name=models.CharField(max_length=800,null=True,blank=True)
+    created_on = models.DateTimeField(null=True, auto_now_add=True, blank=True)
+    updated_on = models.DateTimeField(auto_now=True, null=True, blank=True)
+    created_by = models.BigIntegerField(null=True, blank=True)
+    updated_by = models.ForeignKey(SelfRegistration, on_delete=models.CASCADE, null=True, blank=True)
+
+    class Meta:
+        db_table="AddTermsToRfqBid"

@@ -11,7 +11,7 @@ from rest_framework.parsers import FileUploadParser, MultiPartParser
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 # Create your views here.
-from BiddingApp.models import SourcePublish, SourceList_CreateItems
+from BiddingApp.models import SourcePublish, SourceList_CreateItems,BuyerProductBidding, BiddingBuyerProductDetails
 from DashboardApp.models import InternalVendor, TrailVendors, BusinessRequest, InternalBuyer
 from LandingPageApp.models import CompanyReviewAndRating, Message
 from LandingPageApp.serializers import CompanyReviewSerializer, MessageSerializer

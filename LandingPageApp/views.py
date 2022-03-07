@@ -2332,7 +2332,7 @@ def bidding_get_vendor(request):
                                                   'subcategory':bidobj[0].get('subcategory')
                                                   })
 
-            return Response({'status': 200, 'message': 'Vendors List', 'data': prodarray},
+            return Response({'status': 200, 'message': ' Get Vendors List', 'data': prodarray},
                     status=status.HTTP_200_OK)
         else:
             return Response({'status': 204, 'message': 'Bidding details are not exist'},

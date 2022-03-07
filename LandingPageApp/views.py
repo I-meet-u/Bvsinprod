@@ -12,7 +12,7 @@ from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 # Create your views here.
 from BiddingApp.models import SourcePublish, SourceList_CreateItems, BuyerProductBidding, BiddingBuyerProductDetails, \
-    SelectVendorsForBiddingProduct
+    SelectVendorsForBiddingProduct,VendorProductBidding
 from DashboardApp.models import InternalVendor, TrailVendors, BusinessRequest, InternalBuyer
 from LandingPageApp.models import CompanyReviewAndRating, Message
 from LandingPageApp.serializers import CompanyReviewSerializer, MessageSerializer
@@ -2337,6 +2337,23 @@ def bidding_get_vendor(request):
         else:
             return Response({'status': 204, 'message': 'Bidding details are not exist'},
                     status=status.HTTP_204_NO_CONTENT)
+
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)
+
+
+@api_view(['post'])
+@permission_classes((AllowAny,))
+def vendors_list_based_on_rfq_Code(request):
+    data = request.data
+    rfq_code = data['rfq_code']
+    try:
+        vendorobj = VendorProductBidding.objects.filter(vendor_product_rfq_number=rfq_code).values().order_by('id')
+        if len(vendorobj)>0:
+            return Response({'status': 201, 'message': 'OK','data':vendorobj}, status=201)
+        else:
+            return Response({'status': 204, 'message': 'Not Present','data':vendorobj}, status=204)
+
 
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)

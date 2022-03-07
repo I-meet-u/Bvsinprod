@@ -2234,8 +2234,74 @@ def bidding_invite_vendor(request):
             selectobj=SelectVendorsForBiddingProduct.objects.filter(rfq_number__in=bidlist,updated_by_id=user_id).values()
             if len(selectobj) > 0:
                 for i in range(len(selectobj)):
-                    basicobj=BasicCompanyDetails.objects.filter(company_code=selectobj[i].get('vendor_code')).values()
-                    if basicobj:
+                    bidobj=BuyerProductBidding.objects.filter(updated_by_id=user_id,product_rfq_number=selectobj[i].get('rfq_number'),get_vendors='False').values()
+                    if bidobj:
+                        basicobj=BasicCompanyDetails.objects.filter(company_code=selectobj[i].get('vendor_code')).values()
+                        if basicobj:
+                            regobj=SelfRegistration.objects.filter(id=basicobj[0].get('updated_by_id')).values()
+                            if regobj:
+                                locationobj = BillingAddress.objects.filter(updated_by_id=regobj[0].get('id')).values()
+                                if locationobj:
+                                    prodarray.append({'company_name': basicobj[0].get('company_name'),
+                                                      'company_code':basicobj[0].get('company_code'),
+                                                      'contact_name': regobj[0].get('contact_name'),
+                                                      'location': locationobj[0].get('bill_location'),
+                                                      'userid':regobj[0].get('id'),
+                                                      'email_id':regobj[0].get('username'),
+                                                      'vendor_status': selectobj[i].get('vendor_status'),
+                                                      'rfq_number': selectobj[i].get('rfq_number'),
+                                                      'buyer_user_id':user_id,
+                                                      'get_vendors': bidobj[0].get('get_vendors'),
+                                                      'maincore': bidobj[0].get('maincore'),
+                                                      'category': bidobj[0].get('category'),
+                                                      'sub_category': bidobj[0].get('sub_category'),
+                                                      })
+                                else:
+                                    prodarray.append({'company_name': basicobj[0].get('company_name'),
+                                                      'company_code': basicobj[0].get('company_code'),
+                                                      'contact_name': regobj[0].get('contact_name'),
+                                                      'location': "",
+                                                      'userid': regobj[0].get('id'),
+                                                      'email_id': regobj[0].get('username'),
+                                                      'vendor_status': selectobj[i].get('vendor_status'),
+                                                      'rfq_number': selectobj[i].get('rfq_number'),
+                                                      'buyer_user_id': user_id,
+                                                      'get_vendors': bidobj[0].get('get_vendors'),
+                                                      'maincore': bidobj[0].get('maincore'),
+                                                      'category': bidobj[0].get('category'),
+                                                      'sub_category': bidobj[0].get('sub_category'),
+                                                      })
+
+            return Response({'status': 200, 'message': 'Vendors List', 'data': prodarray},
+                    status=status.HTTP_200_OK)
+        else:
+            return Response({'status': 204, 'message': 'Bidding details are not exist'},
+                    status=status.HTTP_204_NO_CONTENT)
+
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)
+
+
+
+@api_view(['post'])
+@permission_classes((AllowAny,))
+def bidding_get_vendor(request):
+    data = request.data
+    user_id = data['user_id']
+    prodarray = []
+    bidlist=[]
+    industry=[]
+    try:
+        biddingobj = BuyerProductBidding.objects.filter(updated_by_id=user_id,get_vendors='True').values()
+        if biddingobj:
+            for i in range(0,len(biddingobj)):
+                heirarchyobj=IndustrialHierarchy.objects.filter(category__icontains=biddingobj[i].get('category')).values()
+                industry.append(heirarchyobj[0].get('updated_by_id'))
+                print(heirarchyobj[0].get('category'))
+                basicobj=BasicCompanyDetails.objects.filter(updated_by_id__in=industry).values()
+                if basicobj:
+                    bidobj = BuyerProductBidding.objects.filter(category__in=heirarchyobj[0].get('category')).values()
+                    if bidobj:
                         regobj=SelfRegistration.objects.filter(id=basicobj[0].get('updated_by_id')).values()
                         if regobj:
                             locationobj = BillingAddress.objects.filter(updated_by_id=regobj[0].get('id')).values()
@@ -2246,9 +2312,11 @@ def bidding_invite_vendor(request):
                                                   'location': locationobj[0].get('bill_location'),
                                                   'userid':regobj[0].get('id'),
                                                   'email_id':regobj[0].get('username'),
-                                                  'vendor_status': selectobj[i].get('vendor_status'),
-                                                  'rfq_number': selectobj[i].get('rfq_number'),
-                                                  'buyer_user_id':user_id
+                                                  'buyer_user_id':user_id,
+                                                  'get_vendors':'True',
+                                                  'maincore':bidobj[0].get('maincore'),
+                                                  'category':bidobj[0].get('category'),
+                                                  'subcategory':bidobj[0].get('subcategory')
                                                   })
                             else:
                                 prodarray.append({'company_name': basicobj[0].get('company_name'),
@@ -2257,9 +2325,11 @@ def bidding_invite_vendor(request):
                                                   'location': "",
                                                   'userid': regobj[0].get('id'),
                                                   'email_id': regobj[0].get('username'),
-                                                  'vendor_status': selectobj[i].get('vendor_status'),
-                                                  'rfq_number': selectobj[i].get('rfq_number'),
-                                                  'buyer_user_id': user_id
+                                                  'buyer_user_id': user_id,
+                                                  'get_vendors':'True',
+                                                   'maincore':bidobj[0].get('maincore'),
+                                                  'category':bidobj[0].get('category'),
+                                                  'subcategory':bidobj[0].get('subcategory')
                                                   })
 
             return Response({'status': 200, 'message': 'Vendors List', 'data': prodarray},

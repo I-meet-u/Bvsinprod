@@ -23,7 +23,7 @@ class MessageSerializer(serializers.ModelSerializer):
     # reguser=SelfRegistrationSerializer(required=False)
     class Meta:
         model=Message
-        fields=['sender','receiver','messages','created_time','company_name_sender','company_name_receiver','sender_files','receiver_files','sender_images','receiver_images','sender_designation','receiver_designation','sender_name','receiver_name','sender_id','receiver_id','vendor_product_pk','source','get_vendor']
+        fields=['sender','receiver','messages','created_time','company_name_sender','company_name_receiver','sender_files','receiver_files','sender_images','receiver_images','sender_designation','receiver_designation','sender_name','receiver_name','sender_id','receiver_id','vendor_product_pk','source','get_vendor','rfq']
 
     def create(self, validated_data):
         print(validated_data['sender_files'])

@@ -11,7 +11,8 @@ from rest_framework.parsers import FileUploadParser, MultiPartParser
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 # Create your views here.
-from BiddingApp.models import SourcePublish, SourceList_CreateItems,BuyerProductBidding, BiddingBuyerProductDetails
+from BiddingApp.models import SourcePublish, SourceList_CreateItems, BuyerProductBidding, BiddingBuyerProductDetails, \
+    SelectVendorsForBiddingProduct
 from DashboardApp.models import InternalVendor, TrailVendors, BusinessRequest, InternalBuyer
 from LandingPageApp.models import CompanyReviewAndRating, Message
 from LandingPageApp.serializers import CompanyReviewSerializer, MessageSerializer
@@ -2205,7 +2206,49 @@ def buyer_bidding_rfq(request):
                                       'userid':userobj[0].get('id'),
                                       'email_id':userobj[0].get('username')
                                       })
-                return Response({'status': 200, 'message': 'source List', 'data': prodarray},
+                return Response({'status': 200, 'message': 'Bidding List', 'data': prodarray},
+                    status=status.HTTP_200_OK)
+        else:
+            return Response({'status': 204, 'message': 'Bidding details are not exist'},
+                    status=status.HTTP_204_NO_CONTENT)
+
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)
+
+
+
+
+@api_view(['post'])
+@permission_classes((AllowAny,))
+def bidding_invite_vendor(request):
+    data = request.data
+    user_id = data['user_id']
+    prodarray = []
+    try:
+        selectobj=SelectVendorsForBiddingProduct.objects.filter(updated_by_id=user_id).values()
+        if len(selectobj) > 0:
+            for i in range(len(selectobj)):
+                basicobj=BasicCompanyDetails.objects.filter(company_code=selectobj[i].get('vendor_code')).values()
+                regobj=SelfRegistration.objects.filter(id=basicobj[0].get('updated_by_id')).values()
+                locationobj = BillingAddress.objects.filter(updated_by_id=basicobj[0].get('updated_by_id')).values()
+                if locationobj:
+                    prodarray.append({'company_name': basicobj[0].get('company_name'),
+                                      'company_code':basicobj[0].get('company_code'),
+                                      'contact_name': regobj[0].get('contact_name'),
+                                      'location': locationobj[0].get('bill_location'),
+                                      'userid':regobj[0].get('id'),
+                                      'email_id':regobj[0].get('username')
+                                      })
+                else:
+                    prodarray.append({'company_name': basicobj[0].get('company_name'),
+                                      'company_code': basicobj[0].get('company_code'),
+                                      'contact_name': regobj[0].get('contact_name'),
+                                      'location': "",
+                                      'userid': regobj[0].get('id'),
+                                      'email_id': regobj[0].get('username')
+                                      })
+
+            return Response({'status': 200, 'message': 'Vendors List', 'data': prodarray},
                     status=status.HTTP_200_OK)
         else:
             return Response({'status': 204, 'message': 'source details are not exist'},
@@ -2213,4 +2256,3 @@ def buyer_bidding_rfq(request):
 
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)
-

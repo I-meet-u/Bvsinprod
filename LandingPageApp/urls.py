@@ -55,6 +55,7 @@ urlpatterns = [
     path('source_listings_based_on_category_for_get_vendors/',views.source_listings_based_on_category_for_get_vendors),
     path('source_listings_for_invite_vendors/',views.source_listings_for_invite_vendors),
     path('get_buyer_data_to_show_to_invite_vendors/',views.get_buyer_data_to_show_to_invite_vendors),
-    path('buyer_bidding_rfq/', views.buyer_bidding_rfq)
+    path('buyer_bidding_rfq/', views.buyer_bidding_rfq),
+    path('bidding_invite_vendor/',views.bidding_invite_vendor)
 
 ]

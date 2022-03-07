@@ -695,6 +695,7 @@ class SourcePurchaseOrder(models.Model):
 
 class AddTermsToRfqBid(models.Model):
     terms_name=models.CharField(max_length=800,null=True,blank=True)
+    terms_description = ArrayField(models.CharField(max_length=800, blank=True, null=True))
     created_on = models.DateTimeField(null=True, auto_now_add=True, blank=True)
     updated_on = models.DateTimeField(auto_now=True, null=True, blank=True)
     created_by = models.BigIntegerField(null=True, blank=True)

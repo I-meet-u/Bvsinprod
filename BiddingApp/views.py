@@ -5870,19 +5870,6 @@ class AddTermsToRfqBidViewset(viewsets.ModelViewSet):
     serializer_class = AddTermsToRfqBidSerializer
 
 
-    def create(self, request, *args, **kwargs):
-        terms_list=request.data['terms_list']
-        user_id=request.data['user_id']
-        try:
-            for i in range(0,len(terms_list)):
-                termsobj=AddTermsToRfqBid.objects.create(terms_name=terms_list[i],
-                                                         updated_by=SelfRegistration.objects.get(id=user_id),
-                                                         created_by=user_id)
-            return Response({'status': 201, 'message': 'Terms are Added'}, status=201)
-        except Exception as e:
-            return Response({'status': 500, 'error': str(e)}, status=500)
-
-
     def get_queryset(self):
 
         rfqbidobj = AddTermsToRfqBid.objects.filter(updated_by=self.request.GET.get('updated_by')).order_by('id')

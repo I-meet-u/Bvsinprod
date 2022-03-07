@@ -2213,3 +2213,4 @@ def buyer_bidding_rfq(request):
 
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)
+

@@ -2297,8 +2297,7 @@ def bidding_get_vendor(request):
             for i in range(0,len(biddingobj)):
                 heirarchyobj=IndustrialHierarchy.objects.filter(category__icontains=biddingobj[i].get('category')).values()
                 industry.append(heirarchyobj[0].get('updated_by_id'))
-                print(heirarchyobj[0].get('category'))
-                basicobj=BasicCompanyDetails.objects.filter(updated_by_id__in=industry).values()
+                basicobj=BasicCompanyDetails.objects.filter(updated_by_id=heirarchyobj[0].get('updated_by_id')).values()
                 if basicobj:
                     bidobj = BuyerProductBidding.objects.filter(category__in=heirarchyobj[0].get('category')).values()
                     if bidobj:

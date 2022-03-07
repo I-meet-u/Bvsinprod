@@ -2182,7 +2182,7 @@ def buyer_bidding_rfq(request):
     user_id = data['user_id']
     prodarray = []
     try:
-        biddingobj = BuyerProductBidding.objects.filter(updated_by_id=user_id).values()
+        biddingobj = BuyerProductBidding.objects.filter(updated_by_id=user_id,get_vendors='False').values()
         print(len(biddingobj))
         if len(biddingobj) > 0:
             for i in range(len(biddingobj)):
@@ -2224,37 +2224,43 @@ def bidding_invite_vendor(request):
     data = request.data
     user_id = data['user_id']
     prodarray = []
+    bidlist=[]
     try:
-        selectobj=SelectVendorsForBiddingProduct.objects.filter(updated_by_id=user_id).values()
-        if len(selectobj) > 0:
-            for i in range(len(selectobj)):
-                basicobj=BasicCompanyDetails.objects.filter(company_code=selectobj[i].get('vendor_code')).values()
-                if basicobj:
-                    regobj=SelfRegistration.objects.filter(id=basicobj[0].get('updated_by_id')).values()
-                    if regobj:
-                        locationobj = BillingAddress.objects.filter(updated_by_id=regobj[0].get('id')).values()
-                        if locationobj:
-                            prodarray.append({'company_name': basicobj[0].get('company_name'),
-                                              'company_code':basicobj[0].get('company_code'),
-                                              'contact_name': regobj[0].get('contact_name'),
-                                              'location': locationobj[0].get('bill_location'),
-                                              'userid':regobj[0].get('id'),
-                                              'email_id':regobj[0].get('username'),
-                                              'vendor_status': selectobj[i].get('vendor_status'),
-                                              'rfq_number': selectobj[i].get('rfq_number'),
-                                              'buyer_user_id':user_id
-                                              })
-                        else:
-                            prodarray.append({'company_name': basicobj[0].get('company_name'),
-                                              'company_code': basicobj[0].get('company_code'),
-                                              'contact_name': regobj[0].get('contact_name'),
-                                              'location': "",
-                                              'userid': regobj[0].get('id'),
-                                              'email_id': regobj[0].get('username'),
-                                              'vendor_status': selectobj[i].get('vendor_status'),
-                                              'rfq_number': selectobj[i].get('rfq_number'),
-                                              'buyer_user_id': user_id
-                                              })
+        biddingobj = BuyerProductBidding.objects.filter(updated_by_id=user_id,get_vendors='False').values()
+        if biddingobj:
+            for i in range(0,len(biddingobj)):
+                bidlist.append(biddingobj[i].get('product_rfq_number'))
+
+            selectobj=SelectVendorsForBiddingProduct.objects.filter(rfq_number__in=bidlist,updated_by_id=user_id).values()
+            if len(selectobj) > 0:
+                for i in range(len(selectobj)):
+                    basicobj=BasicCompanyDetails.objects.filter(company_code=selectobj[i].get('vendor_code')).values()
+                    if basicobj:
+                        regobj=SelfRegistration.objects.filter(id=basicobj[0].get('updated_by_id')).values()
+                        if regobj:
+                            locationobj = BillingAddress.objects.filter(updated_by_id=regobj[0].get('id')).values()
+                            if locationobj:
+                                prodarray.append({'company_name': basicobj[0].get('company_name'),
+                                                  'company_code':basicobj[0].get('company_code'),
+                                                  'contact_name': regobj[0].get('contact_name'),
+                                                  'location': locationobj[0].get('bill_location'),
+                                                  'userid':regobj[0].get('id'),
+                                                  'email_id':regobj[0].get('username'),
+                                                  'vendor_status': selectobj[i].get('vendor_status'),
+                                                  'rfq_number': selectobj[i].get('rfq_number'),
+                                                  'buyer_user_id':user_id
+                                                  })
+                            else:
+                                prodarray.append({'company_name': basicobj[0].get('company_name'),
+                                                  'company_code': basicobj[0].get('company_code'),
+                                                  'contact_name': regobj[0].get('contact_name'),
+                                                  'location': "",
+                                                  'userid': regobj[0].get('id'),
+                                                  'email_id': regobj[0].get('username'),
+                                                  'vendor_status': selectobj[i].get('vendor_status'),
+                                                  'rfq_number': selectobj[i].get('rfq_number'),
+                                                  'buyer_user_id': user_id
+                                                  })
 
             return Response({'status': 200, 'message': 'Vendors List', 'data': prodarray},
                     status=status.HTTP_200_OK)

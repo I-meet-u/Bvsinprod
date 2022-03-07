@@ -2229,24 +2229,32 @@ def bidding_invite_vendor(request):
         if len(selectobj) > 0:
             for i in range(len(selectobj)):
                 basicobj=BasicCompanyDetails.objects.filter(company_code=selectobj[i].get('vendor_code')).values()
-                regobj=SelfRegistration.objects.filter(id=basicobj[0].get('updated_by_id')).values()
-                locationobj = BillingAddress.objects.filter(updated_by_id=basicobj[0].get('updated_by_id')).values()
-                if locationobj:
-                    prodarray.append({'company_name': basicobj[0].get('company_name'),
-                                      'company_code':basicobj[0].get('company_code'),
-                                      'contact_name': regobj[0].get('contact_name'),
-                                      'location': locationobj[0].get('bill_location'),
-                                      'userid':regobj[0].get('id'),
-                                      'email_id':regobj[0].get('username')
-                                      })
-                else:
-                    prodarray.append({'company_name': basicobj[0].get('company_name'),
-                                      'company_code': basicobj[0].get('company_code'),
-                                      'contact_name': regobj[0].get('contact_name'),
-                                      'location': "",
-                                      'userid': regobj[0].get('id'),
-                                      'email_id': regobj[0].get('username')
-                                      })
+                if basicobj:
+                    regobj=SelfRegistration.objects.filter(id=basicobj[0].get('updated_by_id')).values()
+                    if regobj:
+                        locationobj = BillingAddress.objects.filter(updated_by_id=regobj[0].get('id')).values()
+                        if locationobj:
+                            prodarray.append({'company_name': basicobj[0].get('company_name'),
+                                              'company_code':basicobj[0].get('company_code'),
+                                              'contact_name': regobj[0].get('contact_name'),
+                                              'location': locationobj[0].get('bill_location'),
+                                              'userid':regobj[0].get('id'),
+                                              'email_id':regobj[0].get('username'),
+                                              'vendor_status': selectobj[i].get('vendor_status'),
+                                              'rfq_number': selectobj[i].get('rfq_number'),
+                                              'buyer_user_id':user_id
+                                              })
+                        else:
+                            prodarray.append({'company_name': basicobj[0].get('company_name'),
+                                              'company_code': basicobj[0].get('company_code'),
+                                              'contact_name': regobj[0].get('contact_name'),
+                                              'location': "",
+                                              'userid': regobj[0].get('id'),
+                                              'email_id': regobj[0].get('username'),
+                                              'vendor_status': selectobj[i].get('vendor_status'),
+                                              'rfq_number': selectobj[i].get('rfq_number'),
+                                              'buyer_user_id': user_id
+                                              })
 
             return Response({'status': 200, 'message': 'Vendors List', 'data': prodarray},
                     status=status.HTTP_200_OK)

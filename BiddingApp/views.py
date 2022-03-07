@@ -5885,7 +5885,7 @@ class AddTermsToRfqBidViewset(viewsets.ModelViewSet):
 
     def get_queryset(self):
 
-        rfqbidobj = AddTermsToRfqBid.objects.filter(updated_by=self.request.GET.get('updated_by'))
+        rfqbidobj = AddTermsToRfqBid.objects.filter(updated_by=self.request.GET.get('updated_by')).order_by('id')
         if rfqbidobj:
             return rfqbidobj
         raise ValidationError({'message': 'Terms List', 'status': 204})

@@ -5091,6 +5091,7 @@ def terms_master_settings(request):
     try:
         termmastersettingsobj=BiddingTermMasterSettings.objects.create(terms_name=data['terms_name'],
                                                                        terms_description=[],
+                                                                       description_code=[],
                                                                        updated_by=SelfRegistration.objects.get(id=userid),
                                                                        created_by=userid
                                                                        )

@@ -2265,7 +2265,7 @@ def bidding_invite_vendor(request):
             return Response({'status': 200, 'message': 'Vendors List', 'data': prodarray},
                     status=status.HTTP_200_OK)
         else:
-            return Response({'status': 204, 'message': 'source details are not exist'},
+            return Response({'status': 204, 'message': 'Bidding details are not exist'},
                     status=status.HTTP_204_NO_CONTENT)
 
     except Exception as e:

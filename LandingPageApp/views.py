@@ -2173,3 +2173,43 @@ def source_listings_based_on_category_for_get_vendors(request):
 
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)
+
+@api_view(['post'])
+@permission_classes((AllowAny,))
+def buyer_bidding_rfq(request):
+    data = request.data
+    user_id = data['user_id']
+    prodarray = []
+    try:
+        biddingobj = BuyerProductBidding.objects.filter(updated_by_id=user_id).values()
+        print(len(biddingobj))
+        if len(biddingobj) > 0:
+            for i in range(len(biddingobj)):
+                userobj = SelfRegistration.objects.filter(id=biddingobj[i].get('updated_by_id')).values()
+                buyproobj = BiddingBuyerProductDetails.objects.filter(updated_by=biddingobj[i].get('updated_by_id')).values()
+                cmpobj = BasicCompanyDetails.objects.filter(updated_by_id=biddingobj[i].get('updated_by_id')).values()
+                locationobj = BillingAddress.objects.filter(updated_by_id=biddingobj[i].get('updated_by_id')).values()
+                if locationobj:
+                    prodarray.append({'buyer_item_name': buyproobj[0].get('buyer_item_name'),
+                                      'buyer_item_type': buyproobj[0].get('buyer_item_type'),
+                                      'buyer_quantity': buyproobj[0].get('buyer_quantity'),
+                                      'buyer_item_description': buyproobj[0].get('buyer_item_description'),
+                                      'company_name': cmpobj[0].get('company_name'),
+                                      'company_code':cmpobj[0].get('company_code'),
+                                      'contact_name': biddingobj[0].get('contact_name'),
+                                      'buyer_uom': buyproobj[0].get('buyer_uom'),
+                                      'date_time': biddingobj[i].get('created_on'),
+                                      'publish_date': biddingobj[i].get('product_publish_date'),
+                                      'deadline_date': biddingobj[i].get('product_deadline_date'),
+                                      'location': locationobj[0].get('bill_location'),
+                                      'userid':userobj[0].get('id'),
+                                      'email_id':userobj[0].get('username')
+                                      })
+                return Response({'status': 200, 'message': 'source List', 'data': prodarray},
+                    status=status.HTTP_200_OK)
+        else:
+            return Response({'status': 204, 'message': 'source details are not exist'},
+                    status=status.HTTP_204_NO_CONTENT)
+
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)

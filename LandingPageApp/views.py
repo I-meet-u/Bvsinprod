@@ -1206,8 +1206,8 @@ def messages_user_list(request):
                                              'company_name_sender':msgobj[i].get('company_name_sender'),
                                              'company_name_receiver':msgobj[i].get('company_name_receiver'),
                                              'vendor_product_pk':msgobj[i].get('vendor_product_pk_id'),
-                                             'source':msgobj[i].get('source')
-
+                                             'source':msgobj[i].get('source'),
+                                             'get_vendor': msgobj[i].get('get_vendor')
 
                                              })
                     else:
@@ -1230,7 +1230,8 @@ def messages_user_list(request):
                                              'company_name_sender': msgobj[i].get('company_name_sender'),
                                              'company_name_receiver': msgobj[i].get('company_name_receiver'),
                                              'vendor_product_pk': msgobj[i].get('vendor_product_pk_id'),
-                                             'source': msgobj[i].get('source')
+                                             'source': msgobj[i].get('source'),
+                                             'get_vendor': msgobj[i].get('get_vendor')
 
                                              })
             return Response({'status':200,'message':'Users List','data':message_list},status=200)
@@ -1509,8 +1510,8 @@ def messages_user_list_receiver(request):
                                              'company_name_sender':msgobj[i].get('company_name_sender'),
                                              'company_name_receiver':msgobj[i].get('company_name_receiver'),
                                              'vendor_product_pk': msgobj[i].get('vendor_product_pk_id'),
-                                             'source': msgobj[i].get('source')
-
+                                             'source': msgobj[i].get('source'),
+                                             'get_vendor': msgobj[i].get('get_vendor'),
 
                                              })
                     else:
@@ -1533,7 +1534,8 @@ def messages_user_list_receiver(request):
                                              'company_name_sender': msgobj[i].get('company_name_sender'),
                                              'company_name_receiver': msgobj[i].get('company_name_receiver'),
                                              'vendor_product_pk': msgobj[i].get('vendor_product_pk_id'),
-                                             'source': msgobj[i].get('source')
+                                             'source': msgobj[i].get('source'),
+                                             'get_vendor': msgobj[i].get('get_vendor'),
 
                                              })
             return Response({'status':200,'message':'Receiver Users List','data':message_list},status=200)

@@ -69,6 +69,7 @@ class Message(models.Model):
     is_read=models.BooleanField(default=False)
     vendor_product_pk=models.ForeignKey(VendorProduct_BasicDetails,on_delete=models.CASCADE,null=True,blank=True)
     source=models.BooleanField(default=False,null=True,blank=True)
+    get_vendor=models.BooleanField(default=False,null=True,blank=True)
     history=HistoricalRecords()
 
     def __str__(self):

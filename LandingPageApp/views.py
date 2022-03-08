@@ -2411,3 +2411,87 @@ def buyer_data_based_on_vendor_code_and_vendor_rfq(request):
             return Response({'status': 202, 'message': 'No Data Found', 'data': vendorobj}, status=202)
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)
+
+@api_view(['post'])
+@permission_classes((AllowAny,))
+def vendors_details_to_show_buyer(request):
+    data = request.data
+    vendor_code = data['vendor_code']
+    vendor_rfq=data['vendor_rfq']
+    buyerarray = []
+    quantity=0
+    total_unit_price=0
+    total_tax=0.00
+    total_discount=0
+    total_amount=0.0
+    try:
+        vendorobj = VendorProductBidding.objects.filter(vendor_code__in=vendor_code,
+                                                        vendor_product_rfq_number=vendor_rfq).values()
+        if len(vendorobj) > 0:
+            for i in range(0,len(vendorobj)):
+                vendorproductobj = VendorBiddingBuyerProductDetails.objects.filter(
+                    vendor_rfq_number=vendorobj[i].get('vendor_product_rfq_number'),
+                    vendor_code=vendorobj[i].get('vendor_code')).values()
+                if vendorproductobj:
+                    quantity = quantity + int(vendorproductobj[0].get('vendor_quantity'))
+                    total_unit_price = total_unit_price + int(vendorproductobj[0].get('vendor_rate'))
+                    val = vendorproductobj[0].get('vendor_tax')
+                    taxval = val.split('%')
+                    total_tax = total_tax + float(taxval[0])
+                    total_discount = total_discount + int(vendorproductobj[0].get('vendor_discount'))
+                    total_amount = total_amount + float(vendorproductobj[0].get('vendor_total_amount'))
+                    userobj = SelfRegistration.objects.filter(id=vendorobj[i].get('updated_by_id')).values()
+                    if userobj:
+                        cmpobj = BasicCompanyDetails.objects.filter(updated_by_id=userobj[0].get('id')).values()
+                        if cmpobj:
+                            locationobj = BillingAddress.objects.filter(updated_by_id=cmpobj[0].get('updated_by_id')).values()
+                            if locationobj:
+                                buyerarray.append({'company_name': cmpobj[0].get('company_name'),
+                                                   'company_code': cmpobj[0].get('company_code'),
+                                                   'contact_name': userobj[0].get('contact_name'),
+                                                   'product_publish_date': vendorobj[i].get('vendor_product_publish_date'),
+                                                   'product_deadline_date': vendorobj[i].get('vendor_product_deadline_date'),
+                                                   'location': locationobj[0].get('bill_location'),
+                                                   'city':locationobj[0].get('bill_city'),
+                                                   'userid': userobj[0].get('id'),
+                                                   'email_id': userobj[0].get('username'),
+                                                   'vendor_rfq_number':vendorobj[i].get('vendor_product_rfq_number'),
+                                                   'vendor_rfq_title':vendorobj[i].get('vendor_product_rfq_title'),
+                                                   'no_of_items':len(vendorproductobj),
+                                                   'no_of_quantity':quantity,
+                                                   'no_of_unit_price':total_unit_price,
+                                                   'no_of_tax':total_tax,
+                                                   'no_of_discount':total_discount,
+                                                   'no_of_amount':total_amount
+
+                                                   })
+                            else:
+                                buyerarray.append({'company_name': cmpobj[0].get('company_name'),
+                                                   'company_code': cmpobj[0].get('company_code'),
+                                                   'contact_name': userobj[0].get('contact_name'),
+                                                   'product_publish_date': vendorobj[i].get(
+                                                       'vendor_product_publish_date'),
+                                                   'product_deadline_date': vendorobj[i].get(
+                                                       'vendor_product_deadline_date'),
+                                                   'location': locationobj[0].get('bill_location'),
+                                                   'city': locationobj[0].get('bill_city'),
+                                                   'userid': userobj[0].get('id'),
+                                                   'email_id': userobj[0].get('username'),
+                                                   'vendor_rfq_number': vendorobj[i].get('vendor_product_rfq_number'),
+                                                   'vendor_rfq_title': vendorobj[i].get('vendor_product_rfq_title'),
+                                                   'no_of_items': len(vendorproductobj),
+                                                   'no_of_quantity': quantity,
+                                                   'no_of_unit_price': total_unit_price,
+                                                   'no_of_tax': total_tax,
+                                                   'no_of_discount': total_discount,
+                                                   'no_of_amount': total_amount
+
+                                                   })
+
+
+
+                return Response({'status': 200, 'message': 'Vendr Details List', 'data': buyerarray}, status=200)
+        else:
+            return Response({'status': 202, 'message': 'No Data Found', 'data': vendorobj}, status=202)
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)

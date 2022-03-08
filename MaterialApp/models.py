@@ -129,25 +129,6 @@ class VendorProduct_Documents(models.Model):
 
 
 
-class VendorProduct_Requirements(models.Model):
-    label_name=models.CharField(max_length=600,null=True,blank=True)
-    data_type=models.CharField(max_length=700,null=True,blank=True)
-    is_mandatory=models.BooleanField(default=False)
-    default_value=ArrayField(models.CharField(max_length=200),null=True,blank=True)
-    text_box_with_dropdown=models.BooleanField(default=False)
-    number_with_dropdown = models.BooleanField(default=False)
-    textbox_w_dropdown_text_value=models.CharField(max_length=800,null=True,blank=True)
-    textbox_w_dropdown_dropdown_value=ArrayField(models.CharField(max_length=200),null=True,blank=True)
-    number_with_dropdown_num_value=models.FloatField(null=True,blank=True)
-    number_wih_dropdown_dropdown_value=ArrayField(models.CharField(max_length=200),null=True,blank=True)
-    created_on = models.DateTimeField(auto_now_add=True)
-    updated_on = models.DateTimeField(auto_now=True)
-    created_by = models.BigIntegerField()
-    updated_by = models.ForeignKey(SelfRegistration, on_delete=models.CASCADE,null=True,blank=True)
-    vendor_products=models.ForeignKey(VendorProduct_BasicDetails,on_delete=models.CASCADE,null=True,blank=True)
-
-    class Meta:
-        db_table="VendorProduct_Requirements"
 
 
 class BuyerProductDetails(models.Model):
@@ -273,6 +254,48 @@ class ItemCodeSettings(models.Model):
 
 
 
+
+
+class VendorProduct_Requirements(models.Model):
+    label_name=models.CharField(max_length=600,null=True,blank=True)
+    data_type=models.CharField(max_length=700,null=True,blank=True)
+    is_mandatory=models.BooleanField(default=False)
+    default_value=ArrayField(models.CharField(max_length=200),null=True,blank=True)
+    text_box_with_dropdown=models.BooleanField(default=False)
+    number_with_dropdown = models.BooleanField(default=False)
+    textbox_w_dropdown_text_value=models.CharField(max_length=800,null=True,blank=True)
+    textbox_w_dropdown_dropdown_value=ArrayField(models.CharField(max_length=200),null=True,blank=True)
+    number_with_dropdown_num_value=models.FloatField(null=True,blank=True)
+    number_wih_dropdown_dropdown_value=ArrayField(models.CharField(max_length=200),null=True,blank=True)
+    created_on = models.DateTimeField(auto_now_add=True)
+    updated_on = models.DateTimeField(auto_now=True)
+    created_by = models.BigIntegerField()
+    updated_by = models.ForeignKey(SelfRegistration, on_delete=models.CASCADE,null=True,blank=True)
+    vendor_products=models.ForeignKey(VendorProduct_BasicDetails,on_delete=models.CASCADE,null=True,blank=True)
+
+    class Meta:
+        db_table="VendorProduct_Requirements"
+
+
+
+class BuyerProduct_Requirements(models.Model):
+    buyer_label_name=models.CharField(max_length=600,null=True,blank=True)
+    buyer_data_type = models.CharField(max_length=700, null=True, blank=True)
+    buyer_default_value = ArrayField(models.CharField(max_length=200), null=True, blank=True)
+    is_mandatory=models.BooleanField(default=False,null=True,blank=True)
+    created_on = models.DateTimeField(auto_now_add=True)
+    updated_on = models.DateTimeField(auto_now=True)
+    created_by = models.BigIntegerField()
+    updated_by = models.ForeignKey(SelfRegistration, on_delete=models.CASCADE,null=True,blank=True)
+    vendor_product_basic_pk = models.ForeignKey(VendorProduct_BasicDetails,on_delete=models.CASCADE, null=True,blank=True)
+    vendor_product_requirement_pk = models.ForeignKey(VendorProduct_Requirements, on_delete=models.CASCADE, null=True,
+                                                      blank=True)
+    landing_page_pk=models.IntegerField(null=True,blank=True)
+
+
+    class Meta:
+        db_table="BuyerProduct_Requirements"
+
 class LandingPageBidding(models.Model):
     publish_date=models.CharField(max_length=200)
     deadline_date=models.CharField(max_length=200)
@@ -292,9 +315,11 @@ class LandingPageBidding(models.Model):
     status=models.CharField(max_length=100,default='Pending')
     product_name=models.CharField(max_length=400)
     vendor_user_id=models.CharField(max_length=100,null=True,blank=True)
-
+    buyer_requirement_pk=models.ForeignKey(BuyerProduct_Requirements,on_delete=models.CASCADE,null=True,blank=True)
     class Meta:
         db_table="LandingPageBidding"
+
+
 
 
 class LandingPageBidding_Publish(models.Model):
@@ -396,23 +421,3 @@ class LandingPageListingLeadsPurchaseOrder(models.Model):
 
     class Meta:
         db_table = "LandingPageListingLeadsPurchaseOrder"
-
-
-
-
-class BuyerProduct_Requirements(models.Model):
-    buyer_label_name=models.CharField(max_length=600,null=True,blank=True)
-    buyer_data_type = models.CharField(max_length=700, null=True, blank=True)
-    buyer_default_value = ArrayField(models.CharField(max_length=200), null=True, blank=True)
-    is_mandatory=models.BooleanField(default=False,null=True,blank=True)
-    created_on = models.DateTimeField(auto_now_add=True)
-    updated_on = models.DateTimeField(auto_now=True)
-    created_by = models.BigIntegerField()
-    updated_by = models.ForeignKey(SelfRegistration, on_delete=models.CASCADE,null=True,blank=True)
-    vendor_product_basic_pk = models.ForeignKey(VendorProduct_BasicDetails,on_delete=models.CASCADE, null=True,blank=True)
-    vendor_product_requirement_pk = models.ForeignKey(VendorProduct_Requirements, on_delete=models.CASCADE, null=True,
-                                                      blank=True)
-
-
-    class Meta:
-        db_table="BuyerProduct_Requirements"

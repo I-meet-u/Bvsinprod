@@ -5483,8 +5483,10 @@ def get_source_pubish_leads_based_on_publish_pk(request):
             for i in range(0, len(sourceobj)):
                 sourcecreateobj = SourceList_CreateItems.objects.filter(id=sourceobj[i].get('source_id')).values()
                 basicmpobj = BasicCompanyDetails.objects.filter(updated_by=sourceobj[i].get('updated_by_id')).values()
+                billobj = BillingAddress.objects.filter(updated_by_id=sourceobj[i].get('updated_by_id')).values()
                 sourceobj[i].setdefault('company_code', basicmpobj[0].get('company_code'))
                 sourceobj[i].setdefault('company_name', basicmpobj[0].get('company_name'))
+                sourceobj[i].setdefault('bill_address', billobj[0].get('bill_address'))
                 return Response(
                     {'status': 200, 'message': 'Source Publish List', 'source_create_buyer_data': sourcecreateobj,
                      'source_publish_vendor_data': sourceobj}, status=status.HTTP_200_OK)

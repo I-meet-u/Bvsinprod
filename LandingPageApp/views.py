@@ -2349,12 +2349,65 @@ def vendors_list_based_on_rfq_Code(request):
     data = request.data
     rfq_code = data['rfq_code']
     try:
-        vendorobj = VendorProductBidding.objects.filter(vendor_product_rfq_number=rfq_code).values().order_by('id')
+        vendorobj = VendorProductBidding.objects.filter(vendor_product_rfq_number=rfq_code).values().order_by('vendor_product_bidding_id')
         if len(vendorobj)>0:
             return Response({'status': 201, 'message': 'OK','data':vendorobj}, status=201)
         else:
             return Response({'status': 204, 'message': 'Not Present','data':vendorobj}, status=204)
 
 
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)
+
+
+@api_view(['post'])
+@permission_classes((AllowAny,))
+def buyer_data_based_on_vendor_code_and_vendor_rfq(request):
+    data = request.data
+    vendor_code = data['vendor_code']
+    vendor_rfq=data['vendor_rfq']
+    buyerarray = []
+    try:
+        vendorobj = VendorProductBidding.objects.filter(vendor_code__in=vendor_code,
+                                                        vendor_product_rfq_number=vendor_rfq).values()
+        if len(vendorobj) > 0:
+            for i in range(0,len(vendorobj)):
+                buyerobj = BuyerProductBidding.objects.filter(product_rfq_number=vendorobj[i].get('vendor_product_rfq_number')).values()
+                if buyerobj:
+                    userobj = SelfRegistration.objects.filter(id=buyerobj[0].get('updated_by_id')).values()
+                    if userobj:
+                        cmpobj = BasicCompanyDetails.objects.filter(updated_by_id=userobj[0].get('id')).values()
+                        if cmpobj:
+                            locationobj = BillingAddress.objects.filter(updated_by_id=cmpobj[0].get('updated_by_id')).values()
+                            if locationobj:
+                                buyerarray.append({'company_name': cmpobj[0].get('company_name'),
+                                                   'company_code': cmpobj[0].get('company_code'),
+                                                   'contact_name': userobj[0].get('contact_name'),
+                                                   'product_publish_date': buyerobj[0].get('product_publish_date'),
+                                                   'product_deadline_date': buyerobj[0].get('product_deadline_date'),
+                                                   'location': locationobj[0].get('bill_location'),
+                                                   'city':locationobj[0].get('bill_city'),
+                                                   'userid': userobj[0].get('id'),
+                                                   'email_id': userobj[0].get('username'),
+                                                   'buyer_rfq_number':buyerobj[0].get('product_rfq_number'),
+                                                   'buyer_user_id':buyerobj[0].get('updated_by_id')
+                                                   })
+                            else:
+                                buyerarray.append({'company_name': cmpobj[0].get('company_name'),
+                                                   'company_code': cmpobj[0].get('company_code'),
+                                                   'contact_name': userobj[0].get('contact_name'),
+                                                   'product_publish_date': buyerobj[0].get('product_publish_date'),
+                                                   'product_deadline_date': buyerobj[0].get('product_deadline_date'),
+                                                   'location':"",
+                                                   'city':"",
+                                                   'userid': userobj[0].get('id'),
+                                                   'email_id': userobj[0].get('username'),
+                                                   'buyer_rfq_number': buyerobj[0].get('product_rfq_number'),
+                                                   'buyer_user_id': buyerobj[0].get('updated_by_id')
+                                                   })
+
+                return Response({'status': 200, 'message': 'Getting data', 'data': buyerarray}, status=200)
+        else:
+            return Response({'status': 202, 'message': 'No Data Found', 'data': vendorobj}, status=202)
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)

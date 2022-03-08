@@ -2406,7 +2406,7 @@ def buyer_data_based_on_vendor_code_and_vendor_rfq(request):
                                                    'buyer_user_id': buyerobj[0].get('updated_by_id')
                                                    })
 
-                return Response({'status': 200, 'message': 'Getting data', 'data': buyerarray}, status=200)
+                return Response({'status': 200, 'message': 'Buyer Rfq List', 'data': buyerarray}, status=200)
         else:
             return Response({'status': 202, 'message': 'No Data Found', 'data': vendorobj}, status=202)
     except Exception as e:

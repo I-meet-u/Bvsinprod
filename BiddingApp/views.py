@@ -4988,6 +4988,8 @@ def get_all_source_leads(request):
                         print('s', bidobj[i].get('deadline_date'),'not expired')
 
                         basicobj=BasicCompanyDetails.objects.filter(updated_by_id=bidobj[i].get('updated_by_id')).values()
+                        billobj=BillingAddress.objects.filter(updated_by_id=bidobj[i].get('updated_by_id')).values()
+
                         source_create_list.append({'id':bidobj[i].get('id'),
                                                     'item_type':bidobj[i].get('item_type'),
                                                    'source_code':bidobj[i].get('source_code'),
@@ -5026,7 +5028,8 @@ def get_all_source_leads(request):
                                                    'maincore': bidobj[i].get('maincore'),
                                                    'category': bidobj[i].get('category'),
                                                    'get_vendors': bidobj[i].get('get_vendors'),
-                                                   'company_name': basicobj[0].get('company_name')
+                                                   'company_name': basicobj[0].get('company_name'),
+                                                   'bill_address':billobj[0].get('bill_address')
 
                                                    })
 

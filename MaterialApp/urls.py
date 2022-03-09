@@ -102,5 +102,7 @@ urlpatterns = [
     path('get_landing_page_po_details_based_on_vendor_user_id/',views.get_landing_page_po_details_based_on_vendor_user_id),
         # path('update_vendor_product_specifications_details', views.update_vendor_product_specifications_details)
     path('get_landing_page_po_details_based_on_vendor_user_id_hsb/',views.get_landing_page_po_details_based_on_vendor_user_id_hsb),
-    path('delete_vendor_product_requirement/',views.delete_vendor_product_requirement)
+    path('delete_vendor_product_requirement/',views.delete_vendor_product_requirement),
+    path('update_buyer_requirement_pk_in_post_rfq/',views.update_buyer_requirement_pk_in_post_rfq),
+    path('update_landing_pk_in_buyer_requirement/',views.update_landing_pk_in_buyer_requirement)
 ]

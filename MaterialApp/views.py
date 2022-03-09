@@ -3772,3 +3772,50 @@ def delete_vendor_product_requirement(request):
         return Response({'status': 200, 'message': 'ok'}, status=200)
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)
+
+@api_view(['put'])
+@permission_classes((AllowAny,))
+def update_buyer_requirement_pk_in_post_rfq(request):
+    data=request.data
+    key=data['key']
+    landing_page_pk=data['landing_page_pk']
+    buyer_requirement_pk=data['buyer_requirement_pk']
+    try:
+        if key=='vsinadmindb':
+            landingobj=LandingPageBidding.objects.filter(id=landing_page_pk).values()
+            print(len(landingobj))
+            if len(landingobj)>0:
+                landingvalue=LandingPageBidding.objects.get(id=landingobj[0].get('id'))
+                landingvalue.buyer_requirement_pk_id=buyer_requirement_pk
+                landingvalue.save()
+                return Response({'status':202,'message':'Updated'},status=202)
+            else:
+                return Response({'status': 204, 'message': 'Post Rfq is not present'}, status=204)
+        else:
+            return Response({'status':401,'message':'UnAuthorized'},status=401)
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)
+
+
+@api_view(['put'])
+@permission_classes((AllowAny,))
+def update_landing_pk_in_buyer_requirement(request):
+    data=request.data
+    key=data['key']
+    landing_page_pk=data['landing_page_pk']
+    buyer_requirement_pk=data['buyer_requirement_pk']
+    try:
+        if key=='vsinadmindb':
+            buyerobj=BuyerProduct_Requirements.objects.filter(id=buyer_requirement_pk).values()
+            print(len(buyerobj))
+            if len(buyerobj)>0:
+                buyervalue=BuyerProduct_Requirements.objects.get(id=buyerobj[0].get('id'))
+                buyervalue.landing_page_pk=landing_page_pk
+                buyervalue.save()
+                return Response({'status':202,'message':'Updated'},status=202)
+            else:
+                return Response({'status': 204, 'message': 'Send Requirement is not present'}, status=204)
+        else:
+            return Response({'status': 401, 'message': 'UnAuthorized'}, status=401)
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)

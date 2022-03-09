@@ -3561,22 +3561,40 @@ class BuyerProduct_RequirementsViewSet(viewsets.ModelViewSet):
     def create(self, request, *args, **kwargs):
         key=request.data['key']
         values_array=request.data['values_array']
+        landing_page_pk=request.data['landing_page_pk']
         try:
             if key=='vsinadmindb':
-                for i in range(0,len(values_array)):
-                    print(next(iter(values_array[i])))
-                    buyerlabelvalue=next(iter(values_array[i]))
-                    values = list(values_array[i].items())[0][1]
+                if landing_page_pk!=None or landing_page_pk!="":
+                    for i in range(0,len(values_array)):
+                        print(next(iter(values_array[i])))
+                        buyerlabelvalue=next(iter(values_array[i]))
+                        values = list(values_array[i].items())[0][1]
 
 
-                    vendorobj=BuyerProduct_Requirements.objects.create(buyer_label_name=buyerlabelvalue,
-                                                                       buyer_default_value=values,
-                                                                       buyer_data_type=values_array[i].get('datatype'),
-                                                                       is_mandatory=values_array[i].get('mandatory'),
-                                                                       created_by=request.data['created_by'],
-                                                                       updated_by=SelfRegistration.objects.get(id=request.data['updated_by']),
-                                                                       vendor_product_basic_pk=VendorProduct_BasicDetails.objects.get(vendor_product_id=request.data['vendor_product_basic_pk'])
-                                                                       )
+                        vendorobj=BuyerProduct_Requirements.objects.create(buyer_label_name=buyerlabelvalue,
+                                                                           buyer_default_value=values,
+                                                                           buyer_data_type=values_array[i].get('datatype'),
+                                                                           is_mandatory=values_array[i].get('mandatory'),
+                                                                           created_by=request.data['created_by'],
+                                                                           updated_by=SelfRegistration.objects.get(id=request.data['updated_by']),
+                                                                           vendor_product_basic_pk=VendorProduct_BasicDetails.objects.get(vendor_product_id=request.data['vendor_product_basic_pk']),
+                                                                           landing_page_pk=landing_page_pk
+                                                                           )
+                else:
+                    for i in range(0, len(values_array)):
+                        vendorobj = BuyerProduct_Requirements.objects.create(buyer_label_name=buyerlabelvalue,
+                                                                             buyer_default_value=values,
+                                                                             buyer_data_type=values_array[i].get(
+                                                                                 'datatype'),
+                                                                             is_mandatory=values_array[i].get('mandatory'),
+                                                                             created_by=request.data['created_by'],
+                                                                             updated_by=SelfRegistration.objects.get(
+                                                                                 id=request.data['updated_by']),
+                                                                             vendor_product_basic_pk=VendorProduct_BasicDetails.objects.get(
+                                                                                 vendor_product_id=request.data[
+                                                                                     'vendor_product_basic_pk']),
+                                                                             landing_page_pk=""
+                                                                             )
 
                 return Response({'status':201,'message':'Buyer Product Requirements are  Created'},status=201)
             else:

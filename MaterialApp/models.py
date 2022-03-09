@@ -290,7 +290,7 @@ class BuyerProduct_Requirements(models.Model):
     vendor_product_basic_pk = models.ForeignKey(VendorProduct_BasicDetails,on_delete=models.CASCADE, null=True,blank=True)
     vendor_product_requirement_pk = models.ForeignKey(VendorProduct_Requirements, on_delete=models.CASCADE, null=True,
                                                       blank=True)
-    landing_page_pk=models.IntegerField(null=True,blank=True)
+    landing_page_pk=models.CharField(null=True,blank=True,max_length=100)
 
 
     class Meta:

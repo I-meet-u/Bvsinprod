@@ -700,6 +700,7 @@ class AddTermsToRfqBid(models.Model):
     updated_on = models.DateTimeField(auto_now=True, null=True, blank=True)
     created_by = models.BigIntegerField(null=True, blank=True)
     updated_by = models.ForeignKey(SelfRegistration, on_delete=models.CASCADE, null=True, blank=True)
+    terms_pk=models.ForeignKey(BiddingTermMasterSettings,on_delete=models.CASCADE,null=True,blank=True)
 
     class Meta:
         db_table="AddTermsToRfqBid"

@@ -5884,7 +5884,8 @@ class AddTermsToRfqBidViewset(viewsets.ModelViewSet):
                 bidobj=AddTermsToRfqBid.objects.create(terms_name=terms_array[i].get('terms_name'),
                                                        terms_description=terms_array[i].get('terms_description'),
                                                        created_by=terms_array[i].get('user_id'),
-                                                       updated_by=SelfRegistration.objects.get(id=terms_array[i].get('user_id'))
+                                                       updated_by=SelfRegistration.objects.get(id=terms_array[i].get('user_id')),
+                                                       terms_pk=BiddingTermMasterSettings.objects.get(id=terms_array[i].get('terms_pk'))
 
 
                                                        )
@@ -5910,7 +5911,12 @@ def delete_terms_by_id(request):
         if len(bidobj)>0:
             for i in range(0,len(bidobj)):
                 bidval=BiddingTermMasterSettings.objects.get(id=bidobj[i].get('id'))
-                bidval.delete()
+
+                rfqbid=AddTermsToRfqBid.objects.filter(terms_pk_id=bidobj[i].get('id')).values()
+                if rfqbid:
+                    rfqval=AddTermsToRfqBid.objects.get(id=rfqbid[0].get('id'))
+                    bidval.delete()
+                    rfqval.delete()
             return Response({'status': 204, 'message': 'Term Data Deleted'}, status=204)
         else:
             return Response({'status': 202, 'message': 'Not Present'}, status=202)

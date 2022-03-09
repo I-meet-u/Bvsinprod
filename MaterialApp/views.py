@@ -3582,6 +3582,9 @@ class BuyerProduct_RequirementsViewSet(viewsets.ModelViewSet):
                                                                            )
                 else:
                     for i in range(0, len(values_array)):
+                        print(next(iter(values_array[i])))
+                        buyerlabelvalue = next(iter(values_array[i]))
+                        values = list(values_array[i].items())[0][1]
                         vendorobj = BuyerProduct_Requirements.objects.create(buyer_label_name=buyerlabelvalue,
                                                                              buyer_default_value=values,
                                                                              buyer_data_type=values_array[i].get(

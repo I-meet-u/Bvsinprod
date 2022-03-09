@@ -1994,6 +1994,7 @@ def get_landing_page_bidding_by_pk(request):
     basicarray={}
     try:
         landingobj=LandingPageBidding.objects.filter(id=landingpk).values()
+        landingpagerequirement=BuyerProduct_Requirements.objects.filter(landing_page_pk=landingpk).values()
         if len(landingobj)>0:
             basicobj = BasicCompanyDetails.objects.filter(updated_by_id=landingobj[0].get('updated_by_id')).values()
             billobj=BillingAddress.objects.filter(updated_by_id=landingobj[0].get('updated_by_id')).values()
@@ -2002,7 +2003,8 @@ def get_landing_page_bidding_by_pk(request):
             basicarray.setdefault('cname',basicobj[0].get('company_name'))
             landingobj[0].setdefault('basic_details',basicarray)
             landingobj[0].setdefault('bill_city',billobj[0].get('bill_city'))
-            return Response({'status':200,'message':'Landing Page Bidding List','landingpagedata':landingobj,'vendorproductdata':vendorproductobj},status=200)
+
+            return Response({'status':200,'message':'Landing Page Bidding List','landingpagedata':landingobj,'vendorproductdata':vendorproductobj,'buyerpublishedrequirements':landingpagerequirement},status=200)
         else:
             return Response({'status':204,'message':'Not Present','data':landingobj},status=200)
     except Exception as e:

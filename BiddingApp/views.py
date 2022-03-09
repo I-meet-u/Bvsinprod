@@ -5916,14 +5916,20 @@ class AddTermsToRfqBidViewset(viewsets.ModelViewSet):
         terms_array=request.data['terms_array']
         try:
             for i in range(0,len(terms_array)):
-                bidobj=AddTermsToRfqBid.objects.create(terms_name=terms_array[i].get('terms_name'),
-                                                       terms_description=terms_array[i].get('terms_description'),
-                                                       created_by=terms_array[i].get('user_id'),
-                                                       updated_by=SelfRegistration.objects.get(id=terms_array[i].get('user_id')),
-                                                       terms_pk=BiddingTermMasterSettings.objects.get(id=terms_array[i].get('terms_pk'))
+                if terms_array[i].get('terms_pk')!="":
+                    bidobj=AddTermsToRfqBid.objects.create(terms_name=terms_array[i].get('terms_name'),
+                                                           terms_description=terms_array[i].get('terms_description'),
+                                                           created_by=terms_array[i].get('user_id'),
+                                                           updated_by=SelfRegistration.objects.get(id=terms_array[i].get('user_id')),
+                                                           terms_pk=BiddingTermMasterSettings.objects.get(id=terms_array[i].get('terms_pk')))
+                else:
+                    bidobj = AddTermsToRfqBid.objects.create(terms_name=terms_array[i].get('terms_name'),
+                                                             terms_description=terms_array[i].get('terms_description'),
+                                                             created_by=terms_array[i].get('user_id'),
+                                                             updated_by=SelfRegistration.objects.get(
+                                                                 id=terms_array[i].get('user_id')),
+                                                             terms_pk_id="")
 
-
-                                                       )
             return Response({'status':201,'message':'Created'},status=201)
         except Exception as e:
             return Response({'status': 500, 'error': str(e)}, status=500)

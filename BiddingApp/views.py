@@ -5901,7 +5901,7 @@ class AddTermsToRfqBidViewset(viewsets.ModelViewSet):
         raise ValidationError({'message': 'Terms List', 'status': 204})
 
 
-@api_view(['delete'])
+@api_view(['post'])
 def delete_terms_by_id(request):
     data=request.data
     id=data['id']

@@ -5950,6 +5950,8 @@ def delete_terms_by_id(request):
                     rfqval=AddTermsToRfqBid.objects.get(id=rfqbid[0].get('id'))
                     bidval.delete()
                     rfqval.delete()
+                else:
+                    bidval.delete()
             return Response({'status': 204, 'message': 'Term Data Deleted'}, status=204)
         else:
             return Response({'status': 202, 'message': 'Not Present'}, status=202)

@@ -1739,39 +1739,42 @@ def landing_page_bidding_create(request):
     vendorcodearray=[]
     company_namearray=[]
     try:
+
         vendorobj = VendorProduct_BasicDetails.objects.filter(item_name=product_name).distinct('updated_by_id').values()
         if len(vendorobj)>0:
             print(len(vendorobj))
-            for i in range(0, len(vendorobj)):
-                print(len(vendorobj))
-                pname=vendorobj[i].get('item_name')
-                print(pname,'ok')
-                useridcode=vendorobj[i].get('updated_by_id')
-                print(useridcode,'sfsd')
-                basic = BasicCompanyDetails.objects.get(updated_by_id=useridcode)
-                vendorcodearray.append(basic.company_code)
-                print(vendorcodearray,'ok')
-                company_namearray.append(basic.company_name)
-                print(basic.updated_by_id)
-                regobj = SelfRegistration.objects.get(id=basic.updated_by_id)
-                print(regobj.username)
-                configuration = sib_api_v3_sdk.Configuration()
-                configuration.api_key[
-                    'api-key'] = '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'
-
-                api_instance = sib_api_v3_sdk.TransactionalEmailsApi(sib_api_v3_sdk.ApiClient(configuration))
-                subject = "Posted RFQ"
-                text_content = "Dear , " + regobj.contact_person + "\n\n" + "This  " + basic.company_name + " company name posted RFQ by your product name i.e by " + pname
-                sender = {"name": "Admin", "email": "admin@vendorsin.com"}
-                # text_content = 'Hello '+regobj.contact_person+',''\n You are selected for bidding'
-                to = [{"email": regobj.username, "name": regobj.contact_person}]
-                reply_to = {"email": "admin@vendorsin.com", "name": "Admin"}
-                send_smtp_email = sib_api_v3_sdk.SendSmtpEmail(to=to, reply_to=reply_to, text_content=text_content,
-                                                               sender=sender, subject=subject)
-                print(send_smtp_email, 'okkkkkkkkkkkkkkkkkkk')
-                api_response = api_instance.send_transac_email(send_smtp_email)
-                pprint(api_response)
-            landingpagebiddingobj = LandingPageBidding.objects.create(publish_date=publish_date,
+            # for i in range(0, len(vendorobj)):
+            #     print(len(vendorobj))
+            #     pname=vendorobj[i].get('item_name')
+            #     print(pname,'ok')
+            #     useridcode=vendorobj[i].get('updated_by_id')
+            #     print(useridcode,'sfsd')
+            #     basic = BasicCompanyDetails.objects.get(updated_by_id=useridcode)
+            #     vendorcodearray.append(basic.company_code)
+            #     print(vendorcodearray,'ok')
+            #     company_namearray.append(basic.company_name)
+            #     print(basic.updated_by_id)
+            #     regobj = SelfRegistration.objects.get(id=basic.updated_by_id)
+            #     print(regobj.username)
+            #     configuration = sib_api_v3_sdk.Configuration()
+            #     configuration.api_key[
+            #         'api-key'] = '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'
+            #
+            #     api_instance = sib_api_v3_sdk.TransactionalEmailsApi(sib_api_v3_sdk.ApiClient(configuration))
+            #     subject = "Posted RFQ"
+            #     text_content = "Dear , " + regobj.contact_person + "\n\n" + "This  " + basic.company_name + " company name posted RFQ by your product name i.e by " + pname
+            #     sender = {"name": "Admin", "email": "admin@vendorsin.com"}
+            #     # text_content = 'Hello '+regobj.contact_person+',''\n You are selected for bidding'
+            #     to = [{"email": regobj.username, "name": regobj.contact_person}]
+            #     reply_to = {"email": "admin@vendorsin.com", "name": "Admin"}
+            #     send_smtp_email = sib_api_v3_sdk.SendSmtpEmail(to=to, reply_to=reply_to, text_content=text_content,
+            #                                                    sender=sender, subject=subject)
+            #     print(send_smtp_email, 'okkkkkkkkkkkkkkkkkkk')
+            #     api_response = api_instance.send_transac_email(send_smtp_email)
+            #     pprint(api_response)
+            if data['buyer_requirement_pk'] != "":
+                print('s')
+                landingpagebiddingobj = LandingPageBidding.objects.create(publish_date=publish_date,
                                                                       deadline_date=deadline_date,
                                                                       delivery_terms=delivery_terms,
                                                                       packaging_forwarding=packaging_forwarding,
@@ -1785,7 +1788,27 @@ def landing_page_bidding_create(request):
                                                                       vendors_code=vendorcodearray,
                                                                       company_name=company_namearray,
                                                                       product_name=product_name,
-                                                                      vendor_user_id=vendor_user_id
+                                                                      vendor_user_id=vendor_user_id,
+                                                                      buyer_requirement_pk=BuyerProduct_Requirements.objects.get(id=data['buyer_requirement_pk'])
+
+                                                                      )
+            else:
+                landingpagebiddingobj = LandingPageBidding.objects.create(publish_date=publish_date,
+                                                                      deadline_date=deadline_date,
+                                                                      delivery_terms=delivery_terms,
+                                                                      packaging_forwarding=packaging_forwarding,
+                                                                      # priority=priority,
+                                                                      payment_terms=payment_terms,
+                                                                      quantity=quantity,
+                                                                      vendor_product_pk=vendor_product_pk,
+                                                                      updated_by=SelfRegistration.objects.get(
+                                                                          id=userid),
+                                                                      created_by=userid,
+                                                                      vendors_code=vendorcodearray,
+                                                                      company_name=company_namearray,
+                                                                      product_name=product_name,
+                                                                      vendor_user_id=vendor_user_id,
+                                                                      buyer_requirement_pk_id=''
 
                                                                       )
             data={

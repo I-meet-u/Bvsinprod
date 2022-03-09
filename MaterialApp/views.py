@@ -2779,6 +2779,7 @@ def get_award_list_by_pk_value(request):
     data=request.data
     id=data['id']
     landingarray=[]
+    BuyerProduct_Requirementsobj=""
     try:
         landingobj = LandingPageBidding_Publish.objects.filter(id=id).values().order_by('id')
         landingarray.append(landingobj[0].get('id'))
@@ -2797,7 +2798,10 @@ def get_award_list_by_pk_value(request):
             else:
                 landingobj[0].__setitem__('bill_city',"")
             landingbidobj=LandingPageBidding.objects.filter(id=landingobj[0].get('listing_leads_id')).values()
-            return Response({'status': 200, 'message': 'Ok', 'data':landingobj,'delivery_terms':landingbidobj[0].get('delivery_terms'),'pf_charges':landingbidobj[0].get('packaging_forwarding'),'payment_terms':landingbidobj[0].get('payment_terms')}, status=200)
+            print(landingbidobj)
+            if landingbidobj:
+                BuyerProduct_Requirementsobj=BuyerProduct_Requirements.objects.filter(landing_page_pk=landingbidobj[0].get('id')).values()
+            return Response({'status': 200, 'message': 'Ok', 'data':landingobj,'delivery_terms':landingbidobj[0].get('delivery_terms'),'pf_charges':landingbidobj[0].get('packaging_forwarding'),'payment_terms':landingbidobj[0].get('payment_terms'),'buyerrequirements':BuyerProduct_Requirementsobj}, status=200)
         else:
             return Response({'status': 204, 'message': 'Data Not Present'}, status=204)
 

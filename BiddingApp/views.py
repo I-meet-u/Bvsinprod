@@ -1039,22 +1039,57 @@ def get_vendor_published_leads(request):
             print(len(bidobj))
             for i in range(0, len(selects)):
                 basicobj = BasicCompanyDetails.objects.filter(updated_by_id=bidobj[i].get('updated_by_id')).values()
-                vendorpublishleads.append({'user_rfq_number': bidobj[i].get('user_rfq_number'),
-                                           'vendor_code': basicobj[0].get('company_code'),
-                                           'vendor_status': selects[i].get('vendor_status'),
-                                           'updatedby': selects[i].get('updated_by_id'),
-                                           'product_bidding_id': bidobj[i].get('product_bidding_id'),
-                                           'product_rfq_status': bidobj[i].get('product_rfq_status'),
-                                           'product_rfq_type': bidobj[i].get('product_rfq_type'),
-                                           'product_publish_date': bidobj[i].get('product_publish_date'),
-                                           'product_department': bidobj[i].get('product_department'),
-                                           'product_deadline_date': bidobj[i].get('product_deadline_date'),
-                                           'product_bill_address': bidobj[i].get('product_bill_address'),
-                                           'product_ship_address': bidobj[i].get('product_ship_address'),
-                                           'product_rfq_title': bidobj[i].get('product_rfq_title'),
-                                           'company_name': basicobj[0].get('company_name')
+                if basicobj:
+                    regobj=SelfRegistration.objects.filter(id=basicobj[0].get('updated_by_id')).values()
+                    if regobj:
+                        billobj=BillingAddress.objects.filter(updated_by_id=basicobj[0].get('updated_by_id')).values()
+                        if billobj:
+                            vendorpublishleads.append({'user_rfq_number': bidobj[i].get('user_rfq_number'),
+                                                       'vendor_code': basicobj[0].get('company_code'),
+                                                       'vendor_status': selects[i].get('vendor_status'),
+                                                       'updatedby': selects[i].get('updated_by_id'),
+                                                       'product_bidding_id': bidobj[i].get('product_bidding_id'),
+                                                       'product_rfq_status': bidobj[i].get('product_rfq_status'),
+                                                       'product_rfq_type': bidobj[i].get('product_rfq_type'),
+                                                       'product_publish_date': bidobj[i].get('product_publish_date'),
+                                                       'product_department': bidobj[i].get('product_department'),
+                                                       'product_deadline_date': bidobj[i].get('product_deadline_date'),
+                                                       'product_bill_address': bidobj[i].get('product_bill_address'),
+                                                       'product_ship_address': bidobj[i].get('product_ship_address'),
+                                                       'product_rfq_title': bidobj[i].get('product_rfq_title'),
+                                                       'company_name': basicobj[0].get('company_name'),
+                                                       'bill_city':billobj[0].get('bill_city'),
+                                                       'bill_address': billobj[0].get('bill_address'),
+                                                       'bill_state': billobj[0].get('bill_state'),
+                                                       'bill_city': billobj[0].get('bill_city'),
+                                                       'user_name':regobj[0].get('contact_person'),
+                                                       'email_id': regobj[0].get('username')
 
-                                           })
+                                                       })
+                        else:
+                            vendorpublishleads.append({'user_rfq_number': bidobj[i].get('user_rfq_number'),
+                                                       'vendor_code': basicobj[0].get('company_code'),
+                                                       'vendor_status': selects[i].get('vendor_status'),
+                                                       'updatedby': selects[i].get('updated_by_id'),
+                                                       'product_bidding_id': bidobj[i].get('product_bidding_id'),
+                                                       'product_rfq_status': bidobj[i].get('product_rfq_status'),
+                                                       'product_rfq_type': bidobj[i].get('product_rfq_type'),
+                                                       'product_publish_date': bidobj[i].get('product_publish_date'),
+                                                       'product_department': bidobj[i].get('product_department'),
+                                                       'product_deadline_date': bidobj[i].get('product_deadline_date'),
+                                                       'product_bill_address': bidobj[i].get('product_bill_address'),
+                                                       'product_ship_address': bidobj[i].get('product_ship_address'),
+                                                       'product_rfq_title': bidobj[i].get('product_rfq_title'),
+                                                       'company_name': basicobj[0].get('company_name'),
+                                                       'bill_city':"",
+                                                       'bill_address': "",
+                                                       'bill_state': "",
+                                                       'bill_city': "",
+                                                       'user_name': regobj[0].get('contact_person'),
+                                                       'email_id': regobj[0].get('username')
+
+                                                       })
+
 
             return Response({'status': 200, 'message': 'Getting data', 'data': vendorpublishleads}, status=200)
         else:

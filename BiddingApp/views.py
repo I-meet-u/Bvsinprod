@@ -1061,6 +1061,7 @@ def get_vendor_published_leads(request):
                                                        'bill_address': billobj[0].get('bill_address'),
                                                        'bill_state': billobj[0].get('bill_state'),
                                                        'bill_city': billobj[0].get('bill_city'),
+                                                       'bill_country': billobj[0].get('bill_country'),
                                                        'user_name':regobj[0].get('contact_person'),
                                                        'email_id': regobj[0].get('username')
 
@@ -1084,7 +1085,8 @@ def get_vendor_published_leads(request):
                                                        'bill_state': "",
                                                        'bill_city': "",
                                                        'user_name': regobj[0].get('contact_person'),
-                                                       'email_id': regobj[0].get('username')
+                                                       'email_id': regobj[0].get('username'),
+                                                       'bill_country':""
 
                                                        })
 

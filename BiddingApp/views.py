@@ -5960,7 +5960,6 @@ def delete_terms_by_id(request):
         return Response({'status': 500, 'error': str(e)}, status=500)
 
 
-
 @api_view(['post'])
 def get_source_po_details_based_on_vendor_user_id(request):
     data=request.data

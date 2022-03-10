@@ -5956,8 +5956,6 @@ def delete_terms_by_id(request):
             return Response({'status': 204, 'message': 'Term Data Deleted'}, status=204)
         else:
             return Response({'status': 202, 'message': 'Not Present'}, status=202)
-
-
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)
 

@@ -688,6 +688,10 @@ class SourcePurchaseOrder(models.Model):
     source_type=models.CharField(max_length=100,null=True,blank=True)
     source_award_pk = models.ForeignKey(SourceAwards, on_delete=models.CASCADE, null=True, blank=True)
     source_publish_pk = models.ForeignKey(SourcePublish, on_delete=models.CASCADE, null=True, blank=True)
+    address = models.TextField(null=True, blank=True)
+    po_status = models.CharField(max_length=100, null=True, blank=True, default='PO_Sent')
+    priority = models.CharField(max_length=100, null=True, blank=True)
+    source = models.CharField(max_length=400, null=True, blank=True)
 
     class Meta:
         db_table = "SourcePurchaseOrder"

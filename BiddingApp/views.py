@@ -5943,21 +5943,6 @@ class AddTermsToRfqBidViewset(viewsets.ModelViewSet):
         raise ValidationError({'message': 'Terms List', 'status': 204})
 
 
-@api_view(['post'])
-def delete_terms_by_id(request):
-    data=request.data
-    id=data['id']
-    try:
-        bidobj=BiddingTermMasterSettings.objects.filter(id__in=id).values()
-        if len(bidobj)>0:
-            for i in range(0,len(bidobj)):
-                bidval=BiddingTermMasterSettings.objects.get(id=bidobj[i].get('id'))
-                bidval.delete()
-            return Response({'status': 204, 'message': 'Term Data Deleted'}, status=204)
-        else:
-            return Response({'status': 202, 'message': 'Not Present'}, status=202)
-    except Exception as e:
-        return Response({'status': 500, 'error': str(e)}, status=500)
 
 @api_view(['post'])
 def get_source_po_details_based_on_vendor_user_id(request):
@@ -6047,5 +6032,21 @@ def delete_rfq_terms_by_id(request):
             return Response({'status': 202, 'message': 'Not Present'}, status=202)
 
 
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)
+
+@api_view(['post'])
+def delete_terms_by_id(request):
+    data=request.data
+    id=data['id']
+    try:
+        bidobj=BiddingTermMasterSettings.objects.filter(id__in=id).values()
+        if len(bidobj)>0:
+            for i in range(0,len(bidobj)):
+                bidval=BiddingTermMasterSettings.objects.filter(id=bidobj[i].get('id'))
+                bidval.delete()
+            return Response({'status': 204, 'message': 'Term Data Deleted'}, status=204)
+        else:
+            return Response({'status': 202, 'message': 'Not Present'}, status=202)
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)

@@ -143,7 +143,8 @@ urlpatterns = [
     path('source_publish_view/',views.source_publish_view),
     path('edit_terms_master_settings_to_add_description/',views.edit_terms_master_settings_to_add_description),
     path('particular_terms_description_list/',views.particular_terms_description_list),
-    path('delete_terms_by_id/',views.delete_terms_by_id)
+    path('delete_terms_by_id/',views.delete_terms_by_id),
+    path('get_source_po_details_based_on_vendor_user_id/',views.get_source_po_details_based_on_vendor_user_id)
 
 
 

@@ -5969,3 +5969,75 @@ def delete_terms_by_id(request):
         return Response({'status': 500, 'error': str(e)}, status=500)
 
 
+
+@api_view(['post'])
+def get_source_po_details_based_on_vendor_user_id(request):
+    data=request.data
+    vendor_user_id=data['vendor_user_id']
+    po_list=[]
+    i=0
+    try:
+        compobj=BasicCompanyDetails.objects.filter(updated_by=vendor_user_id).values()
+        if compobj:
+            sourceobj = SourcePurchaseOrder.objects.filter(vendor_code=compobj[0].get('company_code')).values()
+            for i in range(0,len(sourceobj)):
+                basicobj=BasicCompanyDetails.objects.filter(updated_by=sourceobj[i].get('updated_by_id')).values()
+                if basicobj:
+                    billobj=BillingAddress.objects.filter(updated_by_id=basicobj[0].get('updated_by_id')).values()
+                    if billobj:
+                        po_list.append({'buyer_code':basicobj[0].get('company_code'),
+                                        'company_name':basicobj[0].get('company_name'),
+                                        'awarded_date':sourceobj[i].get('awarded_date'),
+                                        'PO_date':sourceobj[i].get('po_date'),
+                                        'PO_num':sourceobj[i].get('po_number'),
+                                        'delivery_date':sourceobj[i].get('delivery_date'),
+                                        'remind_date':sourceobj[i].get('remind_date'),
+                                        'delivery_days':sourceobj[i].get('delivery_days'),
+                                        'uom':sourceobj[i].get('uom'),
+                                        'quantity':sourceobj[i].get('quantity'),
+                                        'item_name':sourceobj[i].get('item_name'),
+                                        'item_description':sourceobj[i].get('item_description'),
+                                        'unit_rate':sourceobj[i].get('unit_rate'),
+                                        'discount':sourceobj[i].get('discount'),
+                                        'tax':sourceobj[i].get('tax'),
+                                        'total_amount':sourceobj[i].get('total_amount'),
+                                        'id':sourceobj[i].get('id'),
+                                        'source_code':sourceobj[i].get('source_code'),
+                                        'source_type':sourceobj[i].get('source_type'),
+                                        'address':billobj[0].get('bill_address'),
+                                        'po_status':sourceobj[i].get('po_status'),
+                                        'priority':sourceobj[i].get('priority'),
+                                        'source':sourceobj[i].get('source')
+
+                                        })
+                    else:
+                        po_list.append({'buyer_code': basicobj[0].get('company_code'),
+                                        'company_name': basicobj[0].get('company_name'),
+                                        'awarded_date': sourceobj[i].get('awarded_date'),
+                                        'PO_date': sourceobj[i].get('po_date'),
+                                        'PO_num': sourceobj[i].get('po_number'),
+                                        'delivery_date': sourceobj[i].get('delivery_date'),
+                                        'remind_date': sourceobj[i].get('remind_date'),
+                                        'delivery_days': sourceobj[i].get('delivery_days'),
+                                        'uom': sourceobj[i].get('uom'),
+                                        'quantity': sourceobj[i].get('quantity'),
+                                        'item_name': sourceobj[i].get('item_name'),
+                                        'item_description': sourceobj[i].get('item_description'),
+                                        'unit_rate': sourceobj[i].get('unit_rate'),
+                                        'discount': sourceobj[i].get('discount'),
+                                        'tax': sourceobj[i].get('tax'),
+                                        'total_amount': sourceobj[i].get('total_amount'),
+                                        'id': sourceobj[i].get('id'),
+                                        'source_code': sourceobj[i].get('source_code'),
+                                        'source_type': sourceobj[i].get('source_type'),
+                                        'address': "",
+                                        'po_status': sourceobj[i].get('po_status'),
+                                        'priority': sourceobj[i].get('priority'),
+                                        'source': sourceobj[i].get('source')
+
+                                        })
+            return Response({'status': 200, 'message': 'PO List', 'data': po_list}, status=200)
+        else:
+            return Response({'status': 201, 'message': 'Company not Exist'}, status=201)
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)

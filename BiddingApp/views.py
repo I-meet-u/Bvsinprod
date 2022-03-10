@@ -5952,14 +5952,7 @@ def delete_terms_by_id(request):
         if len(bidobj)>0:
             for i in range(0,len(bidobj)):
                 bidval=BiddingTermMasterSettings.objects.get(id=bidobj[i].get('id'))
-
-                rfqbid=AddTermsToRfqBid.objects.filter(terms_pk_id=bidobj[i].get('id')).values()
-                if rfqbid:
-                    rfqval=AddTermsToRfqBid.objects.get(id=rfqbid[0].get('id'))
-                    bidval.delete()
-                    rfqval.delete()
-                else:
-                    bidval.delete()
+                bidval.delete()
             return Response({'status': 204, 'message': 'Term Data Deleted'}, status=204)
         else:
             return Response({'status': 202, 'message': 'Not Present'}, status=202)
@@ -6039,5 +6032,24 @@ def get_source_po_details_based_on_vendor_user_id(request):
             return Response({'status': 200, 'message': 'PO List', 'data': po_list}, status=200)
         else:
             return Response({'status': 201, 'message': 'Company not Exist'}, status=201)
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)
+
+
+@api_view(['post'])
+def delete_rfq_terms_by_id(request):
+    data=request.data
+    rfq_id=data['rfq_id']
+    try:
+        rfqbidobj=AddTermsToRfqBid.objects.filter(id__in=rfq_id).values()
+        if len(rfqbidobj)>0:
+            for i in range(0,len(rfqbidobj)):
+                rfqbidval=AddTermsToRfqBid.objects.get(id=rfqbidobj[i].get('id'))
+                rfqbidval.delete()
+            return Response({'status': 204, 'message': 'Rfq Term Data Deleted'}, status=204)
+        else:
+            return Response({'status': 202, 'message': 'Not Present'}, status=202)
+
+
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)

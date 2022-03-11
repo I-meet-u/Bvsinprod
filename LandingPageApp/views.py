@@ -1144,10 +1144,10 @@ def messages_lists(request,sender=None,receiver=None):
         if request.method=='GET':
             messages=Message.objects.filter(sender_id=sender,receiver_id=receiver)
             serializer=MessageSerializer(messages,many=True)
-            for msg in messages:
-                if msg.is_read==False:
-                    msg.is_read=True
-                    msg.save()
+            # for msg in messages:
+            #     if msg.is_read==False:
+            #         msg.is_read=True
+            #         msg.save()
             return Response(serializer.data)
         elif(request.method=='POST'):
             if request.data['key'] == 'vsinadmindb':
@@ -2493,5 +2493,41 @@ def vendors_details_to_show_buyer(request):
                 return Response({'status': 200, 'message': 'Vendr Details List', 'data': buyerarray}, status=200)
         else:
             return Response({'status': 202, 'message': 'No Data Found', 'data': vendorobj}, status=202)
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)
+
+@api_view(['post'])
+@permission_classes((AllowAny,))
+def get_all_message_list(request):
+    key=request.data['key']
+    try:
+        if key=='vsinadmindb':
+            msgobj=Message.objects.filter().values().order_by('id')
+            if len(msgobj)>0:
+                return Response({'status':200,'message':'Message List','data':msgobj},status=200)
+            else:
+                return Response({'status': 204, 'message': 'No Data Found'}, status=204)
+        else:
+            return Response({'status':401,'message':'UnAuthorized'},status=401)
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)
+
+
+@api_view(['put'])
+@permission_classes((AllowAny,))
+def update_message_data(request):
+    id=request.data['id']
+    try:
+        msgobj=Message.objects.filter(id=id).values()
+        if len(msgobj)>0:
+            msgval=Message.objects.get(id=msgobj[0].get('id'))
+            if msgval.is_read==False:
+                msgval.is_read=True
+                msgval.save()
+                return Response({'status':202,'message':'Updated','data':msgval.is_read},status=202)
+            else:
+                return Response({'status': 200, 'message': ' Already Updated'}, status=200)
+        else:
+            return Response({'status': 204, 'message': 'No Data Found'}, status=204)
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)

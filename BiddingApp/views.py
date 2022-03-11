@@ -5517,16 +5517,22 @@ def get_source_pubish_leads_based_on_publish_pk(request):
         if len(sourceobj) > 0:
             for i in range(0, len(sourceobj)):
                 sourcecreateobj = SourceList_CreateItems.objects.filter(id=sourceobj[i].get('source_id')).values()
-                basicmpobj = BasicCompanyDetails.objects.filter(updated_by=sourceobj[i].get('updated_by_id')).values()
-                billobj = BillingAddress.objects.filter(updated_by_id=sourceobj[i].get('updated_by_id')).values()
-                sourceobj[i].setdefault('company_code', basicmpobj[0].get('company_code'))
-                sourceobj[i].setdefault('company_name', basicmpobj[0].get('company_name'))
-                sourceobj[i].setdefault('bill_address', billobj[0].get('bill_address'))
+                if sourcecreateobj:
+                    basicmpobj = BasicCompanyDetails.objects.filter(updated_by=sourceobj[i].get('updated_by_id')).values()
+                    if basicmpobj:
+                        billobj = BillingAddress.objects.filter(updated_by_id=sourceobj[i].get('updated_by_id')).values()
+                        if billobj:
+                            sourceobj[i].setdefault('company_code', basicmpobj[0].get('company_code'))
+                            sourceobj[i].setdefault('company_name', basicmpobj[0].get('company_name'))
+                            sourceobj[i].setdefault('bill_address', billobj[0].get('bill_address'))
+                        else:
+                            sourceobj[i].setdefault('bill_address', "")
+
                 return Response(
                     {'status': 200, 'message': 'Source Publish List', 'source_create_buyer_data': sourcecreateobj,
                      'source_publish_vendor_data': sourceobj}, status=status.HTTP_200_OK)
         else:
-            return Response({'status': 204, 'message': 'Source Award Not Present', 'data': sourceobj},
+            return Response({'status': 204, 'message': 'Source Publish Not Present', 'data': sourceobj},
                             status=status.HTTP_204_NO_CONTENT)
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

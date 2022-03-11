@@ -1240,22 +1240,48 @@ def trail_vendor_data_based_on_userid(request):
     user_id = data['user_id']
     data3=[]
     try:
-        data1 = TrailVendors.objects.filter(updated_by=user_id).values()
+        data1 = TrailVendors.objects.filter(updated_by_id=user_id).values()
         for i in range(0, len(data1)):
             cmp_code_name_gst= BasicCompanyDetails.objects.filter(company_code=data1[i].get('company_code_id')).values()
-            ind_serve_nature_business=IndustrialInfo.objects.filter(company_code=data1[i].get('company_code_id')).values()
-            city_state=BillingAddress.objects.filter(company_code=data1[i].get('company_code_id')).values()
-            regobj=SelfRegistration.objects.filter(id=cmp_code_name_gst[0].get('updated_by_id')).values()
-            if cmp_code_name_gst :
-                data3.append({'company_code': cmp_code_name_gst[0].get('company_code'),
-                            'company_name': cmp_code_name_gst[0].get('company_name'),
-                            'city': city_state[0].get('bill_city'),
-                            'state': city_state[0].get('bill_state'),
-                            'indurstry_to_serve': ind_serve_nature_business[0].get('industry_to_serve'),
-                            'nature_of_business': ind_serve_nature_business[0].get('nature_of_business'),
-                            'gst_number': cmp_code_name_gst[0].get('gst_number'),
-                            'user_type':regobj[0].get('user_type')
-                              })
+            print(cmp_code_name_gst[0].get('updated_by_id'))
+            if cmp_code_name_gst:
+                regobj = SelfRegistration.objects.filter(id=cmp_code_name_gst[0].get('updated_by_id')).values()
+                print(regobj[0].get('id'),'reg')
+                if regobj:
+                    city_state=BillingAddress.objects.filter(updated_by_id=regobj[0].get('id')).values()
+                    print(city_state[0].get('updated_by_id'), 'city')
+                    if city_state:
+                        hierarchyobj=IndustrialHierarchy.objects.filter(updated_by_id=city_state[0].get('updated_by_id')).values()
+                        print(hierarchyobj[0].get('updated_by_id'), 'hierarchyobj')
+                        if hierarchyobj:
+                            industryobj=IndustrialInfo.objects.filter(updated_by_id=city_state[0].get('updated_by_id')).values()
+                            print(industryobj[0].get('updated_by_id'), 'industryobj')
+                            if industryobj:
+                                data3.append({'company_code': cmp_code_name_gst[0].get('company_code'),
+                                              'company_name': cmp_code_name_gst[0].get('company_name'),
+                                              'city': city_state[0].get('bill_city'),
+                                              'state': city_state[0].get('bill_state'),
+                                              'maincore':hierarchyobj[0].get('maincore'),
+                                              'category': hierarchyobj[0].get('category'),
+                                              'subcategory': hierarchyobj[0].get('subcategory'),
+                                              'indurstry_to_serve': industryobj[0].get('industry_to_serve'),
+                                              'nature_of_business': industryobj[0].get('nature_of_business'),
+                                              'gst_number': cmp_code_name_gst[0].get('gst_number'),
+                                              'user_type':regobj[0].get('user_type')
+                                              })
+                            else:
+                                data3.append({'company_code': cmp_code_name_gst[0].get('company_code'),
+                                              'company_name': cmp_code_name_gst[0].get('company_name'),
+                                              'city': city_state[0].get('bill_city'),
+                                              'state': city_state[0].get('bill_state'),
+                                              'maincore': hierarchyobj[0].get('maincore'),
+                                              'category': hierarchyobj[0].get('category'),
+                                              'subcategory': hierarchyobj[0].get('subcategory'),
+                                              'indurstry_to_serve': "",
+                                              'nature_of_business': "",
+                                              'gst_number': cmp_code_name_gst[0].get('gst_number'),
+                                              'user_type': regobj[0].get('user_type')
+                                              })
         return Response({'status': 200, 'message': 'ok','trail_vendor_data':data3}, status=200)
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)

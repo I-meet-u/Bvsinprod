@@ -5511,26 +5511,27 @@ def get_source_awards_by_user_id(request):
 @api_view(['post'])
 def get_source_pubish_leads_based_on_publish_pk(request):
     data = request.data
-    source_publish_pk = data['source_publish_pk']
+    source_publish_pk= data['source_publish_pk']
     try:
         sourceobj = SourcePublish.objects.filter(id=source_publish_pk).values().order_by('id')
         if len(sourceobj) > 0:
-            for i in range(0, len(sourceobj)):
-                sourcecreateobj = SourceList_CreateItems.objects.filter(id=sourceobj[i].get('source_id')).values()
-                if sourcecreateobj:
-                    basicmpobj = BasicCompanyDetails.objects.filter(updated_by=sourceobj[i].get('updated_by_id')).values()
-                    if basicmpobj:
-                        billobj = BillingAddress.objects.filter(updated_by_id=sourceobj[i].get('updated_by_id')).values()
-                        if billobj:
-                            sourceobj[i].setdefault('company_code', basicmpobj[0].get('company_code'))
-                            sourceobj[i].setdefault('company_name', basicmpobj[0].get('company_name'))
-                            sourceobj[i].setdefault('bill_address', billobj[0].get('bill_address'))
-                        else:
-                            sourceobj[i].setdefault('bill_address', "")
+            # for i in range(0, len(sourceobj)):
+            # print(sourceobj[i].get('updated_by_id'))
+            sourcecreateobj = SourceList_CreateItems.objects.filter(id=sourceobj[0].get('source_id')).values()
+            if sourcecreateobj:
+                basicmpobj = BasicCompanyDetails.objects.filter(updated_by_id=sourceobj[0].get('updated_by_id')).values()
+                if basicmpobj:
+                    billobj = BillingAddress.objects.filter(updated_by_id=basicmpobj[0].get('updated_by_id')).values()
+                    if billobj:
+                        sourceobj[0].setdefault('company_code', basicmpobj[0].get('company_code'))
+                        sourceobj[0].setdefault('company_name', basicmpobj[0].get('company_name'))
+                        sourceobj[0].setdefault('bill_address', billobj[0].get('bill_address'))
+                    else:
+                        sourceobj[0].setdefault('bill_address', "")
 
-                return Response(
-                    {'status': 200, 'message': 'Source Publish List', 'source_create_buyer_data': sourcecreateobj,
-                     'source_publish_vendor_data': sourceobj}, status=status.HTTP_200_OK)
+            return Response(
+                {'status': 200, 'message': 'Source Publish List', 'source_create_buyer_data': sourcecreateobj,
+                 'source_publish_vendor_data': sourceobj}, status=status.HTTP_200_OK)
         else:
             return Response({'status': 204, 'message': 'Source Publish Not Present', 'data': sourceobj},
                             status=status.HTTP_204_NO_CONTENT)

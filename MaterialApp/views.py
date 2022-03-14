@@ -3609,12 +3609,12 @@ class BuyerProduct_RequirementsViewSet(viewsets.ModelViewSet):
                                                                        vendor_product_basic_pk=VendorProduct_BasicDetails.objects.get(vendor_product_id=vendor_product_basic_pk),
                                                                        landing_page_pk=landing_page_pk
                                                                        )
-                vendorprobj=VendorProduct_BasicDetails.objects.filter(vendor_product_id=vendor_product_basic_pk).values()
-                vendor_array={
-                    'id':vendorobj.id,
-                    'vendor_product_id':vendor_product_basic_pk,
-                    'product_name':vendorprobj[0].get('item_name')
-                }
+                    vendorprobj=VendorProduct_BasicDetails.objects.filter(vendor_product_id=vendor_product_basic_pk).values()
+                    vendor_array={
+                        'id':vendorobj.id,
+                        'vendor_product_id':vendor_product_basic_pk,
+                        'product_name':vendorprobj[0].get('item_name')
+                    }
 
 
                 return Response({'status':201,'message':'Buyer Product Requirements are  Created','data':vendor_array},status=201)

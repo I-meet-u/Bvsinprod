@@ -3592,6 +3592,7 @@ class BuyerProduct_RequirementsViewSet(viewsets.ModelViewSet):
         values_array=request.data['values_array']
         landing_page_pk=request.data['landing_page_pk']
         vendor_product_basic_pk=request.data['vendor_product_basic_pk']
+        id_array=[]
         try:
             if key=='vsinadmindb':
                 for i in range(0,len(values_array)):
@@ -3609,15 +3610,18 @@ class BuyerProduct_RequirementsViewSet(viewsets.ModelViewSet):
                                                                        vendor_product_basic_pk=VendorProduct_BasicDetails.objects.get(vendor_product_id=vendor_product_basic_pk),
                                                                        landing_page_pk=landing_page_pk
                                                                        )
-                    vendorprobj=VendorProduct_BasicDetails.objects.filter(vendor_product_id=vendor_product_basic_pk).values()
-                    vendor_array={
-                        'id':vendorobj.id,
-                        'vendor_product_id':vendor_product_basic_pk,
-                        'product_name':vendorprobj[0].get('item_name')
-                    }
+                    print(vendorobj.id)
+                    id_array.append((vendorobj.id))
+                    print(id_array,'pl')
+                vendorprobj=VendorProduct_BasicDetails.objects.filter(vendor_product_id=vendor_product_basic_pk).values()
+                vendor_array={
+                    'vendor_product_id':vendor_product_basic_pk,
+                    'product_name':vendorprobj[0].get('item_name')
+                }
 
 
-                return Response({'status':201,'message':'Buyer Product Requirements are  Created','data':vendor_array},status=201)
+
+                return Response({'status':201,'message':'Buyer Product Requirements are  Created','data':vendor_array,'id_array':id_array},status=201)
             else:
                 return Response({'status':401,'message':'UnAuthorized'},status=401)
 

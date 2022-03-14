@@ -3591,6 +3591,7 @@ class BuyerProduct_RequirementsViewSet(viewsets.ModelViewSet):
         key=request.data['key']
         values_array=request.data['values_array']
         landing_page_pk=request.data['landing_page_pk']
+        vendor_product_basic_pk=request.data['vendor_product_basic_pk']
         try:
             if key=='vsinadmindb':
                 for i in range(0,len(values_array)):
@@ -3605,11 +3606,17 @@ class BuyerProduct_RequirementsViewSet(viewsets.ModelViewSet):
                                                                        is_mandatory=values_array[i].get('mandatory'),
                                                                        created_by=request.data['created_by'],
                                                                        updated_by=SelfRegistration.objects.get(id=request.data['updated_by']),
-                                                                       vendor_product_basic_pk=VendorProduct_BasicDetails.objects.get(vendor_product_id=request.data['vendor_product_basic_pk']),
+                                                                       vendor_product_basic_pk=VendorProduct_BasicDetails.objects.get(vendor_product_id=vendor_product_basic_pk),
                                                                        landing_page_pk=landing_page_pk
                                                                        )
+                vendorobj=VendorProduct_BasicDetails.objects.filter(vendor_product_id=vendor_product_basic_pk).values()
+                vendor_array={
+                    'vendor_product_id':vendor_product_basic_pk,
+                    'product_name':vendorobj[0].get('item_name')
+                }
 
-                return Response({'status':201,'message':'Buyer Product Requirements are  Created'},status=201)
+
+                return Response({'status':201,'message':'Buyer Product Requirements are  Created','data':vendor_array},status=201)
             else:
                 return Response({'status':401,'message':'UnAuthorized'},status=401)
 

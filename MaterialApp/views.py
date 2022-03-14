@@ -3610,7 +3610,6 @@ class BuyerProduct_RequirementsViewSet(viewsets.ModelViewSet):
                                                                        vendor_product_basic_pk=VendorProduct_BasicDetails.objects.get(vendor_product_id=vendor_product_basic_pk),
                                                                        landing_page_pk=landing_page_pk
                                                                        )
-                    print(vendorobj.id)
                     id_array.append((vendorobj.id))
                     print(id_array,'pl')
                 vendorprobj=VendorProduct_BasicDetails.objects.filter(vendor_product_id=vendor_product_basic_pk).values()

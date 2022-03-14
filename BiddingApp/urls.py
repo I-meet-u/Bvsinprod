@@ -109,7 +109,7 @@ urlpatterns = [
     path('advance-search-expired-list/', views.advance_search_expired_list),
     path('advance-search-po-list/', views.advance_search_po_list),
     path('advance-search-award-list/', views.advance_search_award_list),
-    path('source-awards/', views.source_awards),
+    path('source-award/', views.source_awards),
     path('update-status-to-po-sent/', views.update_status_to_po_sent),
     path('source-po-list-based-on-userid/', views.source_po_list_based_on_userid),
     path('vendor-side-award-search/', views.vendor_side_award_search),

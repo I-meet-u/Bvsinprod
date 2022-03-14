@@ -5515,8 +5515,6 @@ def get_source_pubish_leads_based_on_publish_pk(request):
     try:
         sourceobj = SourcePublish.objects.filter(id=source_publish_pk).values().order_by('id')
         if len(sourceobj) > 0:
-            # for i in range(0, len(sourceobj)):
-            # print(sourceobj[i].get('updated_by_id'))
             sourcecreateobj = SourceList_CreateItems.objects.filter(id=sourceobj[0].get('source_id')).values()
             if sourcecreateobj:
                 basicmpobj = BasicCompanyDetails.objects.filter(updated_by_id=sourceobj[0].get('updated_by_id')).values()

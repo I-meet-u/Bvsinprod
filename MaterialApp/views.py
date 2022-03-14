@@ -3861,3 +3861,26 @@ def update_landing_pk_in_buyer_requirement(request):
             return Response({'status': 401, 'message': 'UnAuthorized'}, status=401)
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)
+
+
+@api_view(['put'])
+@permission_classes((AllowAny,))
+def update_listing_leads_pk_in_buyer_requirement(request):
+    data=request.data
+    try:
+        if data['key']=="vsinadmindb":
+            buyerobj=BuyerProduct_Requirements.objects.filter(id__in=data['id_array']).values()
+            if len(buyerobj)>0:
+                for i in range(0,len(buyerobj)):
+                    buyerval=BuyerProduct_Requirements.objects.get(id=buyerobj[i].get('id'))
+                    buyerval.landing_page_pk=data['landing_page_pk']
+                    buyerval.save()
+                return Response({'status': 202, 'message': 'Updated'}, status=202)
+            else:
+                return Response({'status': 204, 'message': 'Buyer Requirement is not present'}, status=204)
+        else:
+            return Response({'status': 401, 'message': 'UnAuthorized'}, status=401)
+
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)
+

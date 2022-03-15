@@ -2098,3 +2098,11 @@ class PostEnquiryViewSets(viewsets.ModelViewSet):
         except ApiException as e:
             print("Exception when calling SMTPApi->send_transac_email: %s\n" % e)
         return super().create(request, *args, **kwargs)
+
+
+    def get_queryset(self):
+        # overriding get_queryset by passing user_id. Here user_id is nothing but updated_by
+        postobj = PostEnquiry.objects.filter(updated_by=self.request.GET.get('updated_by')).order_by('id')
+        if not postobj:
+            raise ValidationError({'message': 'Post Enquiry details not exist', 'status': 204})
+        return postobj

@@ -71,6 +71,7 @@ class Message(models.Model):
     source=models.BooleanField(default=False,null=True,blank=True)
     get_vendor=models.BooleanField(default=False,null=True,blank=True)
     rfq=models.BooleanField(default=False,null=True,blank=True)
+    enquiry=models.BooleanField(default=False,null=True,blank=True)
 
     history=HistoricalRecords()
 

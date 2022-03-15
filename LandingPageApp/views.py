@@ -1209,7 +1209,8 @@ def messages_user_list(request):
                                              'vendor_product_pk':msgobj[i].get('vendor_product_pk_id'),
                                              'source':msgobj[i].get('source'),
                                              'get_vendor': msgobj[i].get('get_vendor'),
-                                             'rfq': msgobj[i].get('rfq')
+                                             'rfq': msgobj[i].get('rfq'),
+                                             'enquiry':msgobj[i].get('enquiry')
 
                                              })
                     else:
@@ -1234,7 +1235,8 @@ def messages_user_list(request):
                                              'vendor_product_pk': msgobj[i].get('vendor_product_pk_id'),
                                              'source': msgobj[i].get('source'),
                                              'get_vendor': msgobj[i].get('get_vendor'),
-                                             'rfq': msgobj[i].get('rfq')
+                                             'rfq': msgobj[i].get('rfq'),
+                                             'enquiry': msgobj[i].get('enquiry')
 
                                              })
             return Response({'status':200,'message':'Users List','data':message_list},status=200)
@@ -1516,6 +1518,7 @@ def messages_user_list_receiver(request):
                                              'source': msgobj[i].get('source'),
                                              'get_vendor': msgobj[i].get('get_vendor'),
                                              'rfq': msgobj[i].get('rfq'),
+                                             'enquiry': msgobj[i].get('enquiry')
 
                                              })
                     else:
@@ -1541,6 +1544,7 @@ def messages_user_list_receiver(request):
                                              'source': msgobj[i].get('source'),
                                              'get_vendor': msgobj[i].get('get_vendor'),
                                              'rfq': msgobj[i].get('rfq'),
+                                             'enquiry': msgobj[i].get('enquiry')
 
                                              })
             return Response({'status':200,'message':'Receiver Users List','data':message_list},status=200)

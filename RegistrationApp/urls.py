@@ -24,6 +24,8 @@ router.register('employee-basic-details',views.Employee_CompanyDetailsView)
 router.register('employee-industry-info',views.EmployeeIndustrialInfoView)
 router.register('contact-details',views.ContactDetailsViewset)
 router.register('communication-details',views.CommunicationDetailsViewset)
+router.register('post-enquiry',views.PostEnquiryViewSets)
+
 urlpatterns = [
     path('router-register-urls/',include(router.urls)), #router urls are included
 
@@ -92,7 +94,6 @@ urlpatterns = [
     path('getregistrationbyccode/',views.getregistrationbyccode),
     path('postenquery/',views.postenquery),
     path('get_approved_companies_list/',views.get_approved_companies_list),  #get approved companies list
-
 
     # phone and email verificaiton
     path('phone-otp-verification/', views.phone_otp_verification),

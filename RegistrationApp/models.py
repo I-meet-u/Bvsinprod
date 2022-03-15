@@ -338,3 +338,24 @@ class ShippingAddress(models.Model):
 
     class Meta:
         db_table = "ShippingAddress"
+
+
+class PostEnquiry(models.Model):
+    company_code=models.CharField(max_length=100,null=True,blank=True)
+    product_name=models.CharField(max_length=300,null=True,blank=True)
+    product_description=models.TextField(null=True,blank=True)
+    quantity=models.CharField(max_length=100,null=True,blank=True)
+    order_value=models.CharField(max_length=100,null=True,blank=True)
+    email=models.CharField(max_length=300,null=True,blank=True)
+    phone_number=models.CharField(max_length=100,null=True,blank=True)
+    company_name = models.CharField(max_length=300, null=True, blank=True)
+    uom = models.CharField(max_length=200, null=True, blank=True)
+    created_on = models.DateTimeField(auto_now_add=True)
+    updated_on = models.DateTimeField(auto_now=True)
+    created_by = models.BigIntegerField(null=True,blank=True)
+    updated_by = models.ForeignKey(SelfRegistration, on_delete=models.CASCADE, null=True, blank=True)
+
+    class Meta:
+        db_table="PostEnquiry"
+
+

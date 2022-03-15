@@ -31,11 +31,12 @@ from sib_api_v3_sdk.rest import ApiException
 from .models import SelfRegistration, SelfRegistration_Sample, BasicCompanyDetails, BillingAddress, ShippingAddress, \
     IndustrialInfo, IndustrialHierarchy, BankDetails, LegalDocuments, BasicCompanyDetails_Others, BillingAddress_Others, \
     ShippingAddress_Others, Employee_CompanyDetails, Employee_IndustryInfo, ContactDetails, \
-    CommunicationDetails
+    CommunicationDetails, PostEnquiry
 from .serializers import SelfRegistrationSerializer, SelfRegistrationSerializerSample, BasicCompanyDetailsSerializers, \
     BillingAddressSerializer, ShippingAddressSerializer, IndustrialInfoSerializer, IndustrialHierarchySerializer, \
-    BankDetailsSerializer, LegalDocumentsSerializers, BasicCompanyDetailsOthersSerializers,Employee_CompanyDetailsSerializers, Employee_IndustryInfoSerializer, \
-    ContactDetailsSerializer, CommunicationDetailsSerializer
+    BankDetailsSerializer, LegalDocumentsSerializers, BasicCompanyDetailsOthersSerializers, \
+    Employee_CompanyDetailsSerializers, Employee_IndustryInfoSerializer, \
+    ContactDetailsSerializer, CommunicationDetailsSerializer, PostEnquirySerializer
 from rest_framework.permissions import AllowAny
 from rest_framework import status
 from rest_framework.response import Response
@@ -2042,3 +2043,58 @@ def get_approved_companies_list(request):
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
+class PostEnquiryViewSets(viewsets.ModelViewSet):
+    queryset = PostEnquiry.objects.all()
+    serializer_class = PostEnquirySerializer
+    permission_classes = (AllowAny,)
+
+    def create(self, request, *args, **kwargs):
+        data = request.data
+        userid = data['userid']
+        company_code = data['company_code']
+        product_name = data['product_name']
+        product_description = data['product_description']
+        quantity = data['quantity']
+        order_value = data['order_value']
+        email = data['email']
+        phone_number = data['phone_number']
+        uom=data['uom']
+
+
+        basicobj = BasicCompanyDetails.objects.filter(company_code=company_code).values()
+        print(basicobj[0].get('updated_by_id'))
+        request.data['company_name'] = basicobj[0].get('company_name')
+        request.data['updated_by'] = basicobj[0].get('updated_by_id')
+        request.data['created_by'] = basicobj[0].get('updated_by_id')
+        regobj = SelfRegistration.objects.filter(id=basicobj[0].get('updated_by_id')).values()
+        print(regobj[0].get('id'),'registration')
+        # Configure API key authorization: api-key
+        configuration = sib_api_v3_sdk.Configuration()
+        configuration.api_key[
+            'api-key'] = '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'
+
+        # create an instance of the API class
+        configuration = sib_api_v3_sdk.Configuration()
+        configuration.api_key[
+            'api-key'] = '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'
+
+        api_instance = sib_api_v3_sdk.TransactionalEmailsApi(sib_api_v3_sdk.ApiClient(configuration))
+        subject = "Enquiry from Vendorsin"
+        text_content = "Dear , " + regobj[0].get(
+            'contact_person') + "\n\n" + "Your have following material Enquiry" + "\n" + \
+                       "Product Name :" + product_name + "\n" + "Product Description :" + product_description + "\n" + "Quantity :" + quantity + "\n" + "Order value :" + order_value + "\n" + "Sender Email :" + email + "\n" + "Sender Phone Number :" + phone_number + "uom :" + uom+ "\n\n" + "Thank You" + "\n\n" + "Note: Please Don't Share this email with anyone"
+        sender = {"name": "Admin", "email": "admin@vendorsin.com"}
+        # text_content = 'Hello '+regobj.contact_person+',''\n You are selected for bidding'
+        to = [{"email": regobj[0].get('username'), "name": regobj[0].get('contact_person')}]
+        reply_to = {"email": "admin@vendorsin.com", "name": "Admin"}
+        send_smtp_email = sib_api_v3_sdk.SendSmtpEmail(to=to, reply_to=reply_to, text_content=text_content,
+                                                       sender=sender, subject=subject)
+
+        api_response = api_instance.send_transac_email(send_smtp_email)
+        try:
+            # Send a transactional email
+            api_response = api_instance.send_transac_email(send_smtp_email)
+            pprint(api_response)
+        except ApiException as e:
+            print("Exception when calling SMTPApi->send_transac_email: %s\n" % e)
+        return super().create(request, *args, **kwargs)

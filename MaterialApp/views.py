@@ -3672,6 +3672,7 @@ def posted_rfq_award_list(request):
                                                        'bill_city': billcityobj[0].get('bill_city'),
                                                        'company_code': cmpnameobj[0].get('company_code'),
                                                        'company_name': cmpnameobj[0].get('company_name'),
+                                                      'landing_pk':vendorobj[i].get('id')
                                                        })
                                 else:
                                     listarray.append({'award_id':awardobj[0].get('id'),
@@ -3688,6 +3689,7 @@ def posted_rfq_award_list(request):
                                                        'bill_city': billcityobj[0].get('bill_city'),
                                                       'company_code': "",
                                                       'company_name': "",
+                                                      'landing_pk': vendorobj[i].get('id')
                                                       })
 
 

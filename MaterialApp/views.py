@@ -3642,6 +3642,7 @@ def posted_rfq_award_list(request):
     data = request.data
     vendor_user_id=data['vendor_user_id']
     listarray=[]
+    # buyerrequirementsobj=""
     try:
         basicobj=BasicCompanyDetails.objects.filter(updated_by_id=vendor_user_id).values()
         if basicobj:
@@ -3670,10 +3671,13 @@ def posted_rfq_award_list(request):
                                                    'bill_city': billcityobj[0].get('bill_city'),
                                                    'company_code': cmpnameobj[0].get('company_code'),
                                                    'company_name': cmpnameobj[0].get('company_name'),
-                                                  'landing_pk':postlist[0].get('listing_leads_id')
+                                                  'landing_pk':postlist[0].get('listing_leads_id'),
+                                                  'pf_charges':postlist[0].get('pf_charges'),
+                                                  'payment_charges':postlist[0].get('payment_charges'),
+                                                  'delivery_charges':postlist[0].get('delivery_charges')
                                                    })
                             else:
-                                listarray.append({'award_id':awardobj[0].get('id'),
+                                listarray.append({'award_id': awardobj[0].get('id'),
                                                   'awarded_date': awardobj[0].get('awarded_date'),
                                                   'po_status': awardobj[0].get('po_status'),
                                                   'uom': postlist[0].get('uom'),
@@ -3682,16 +3686,21 @@ def posted_rfq_award_list(request):
                                                   'tax': postlist[0].get('tax'),
                                                   'discount': postlist[0].get('discount'),
                                                   'unit_rate': postlist[0].get('unit_rate'),
-                                                  'item_name': awardobj[0].get('item_name'),
+                                                  'item_name': awardobj[0].get('product'),
                                                   'item_description': prodobj[0].get('item_description'),
-                                                   'bill_city': billcityobj[0].get('bill_city'),
-                                                  'company_code': "",
-                                                  'company_name': "",
-                                                  'landing_pk':postlist[0].get('listing_leads_id')
+                                                  'bill_city': billcityobj[0].get('bill_city'),
+                                                  'company_code': cmpnameobj[0].get('company_code'),
+                                                  'company_name': cmpnameobj[0].get('company_name'),
+                                                  'landing_pk': postlist[0].get('listing_leads_id'),
+                                                  'pf_charges': postlist[0].get('pf_charges'),
+                                                  'payment_charges': postlist[0].get('payment_charges'),
+                                                  'delivery_charges': postlist[0].get('delivery_charges')
                                                   })
+                    if postlist:
+                        buyerrequirementsobj=BuyerProduct_Requirements.objects.filter(landing_page_pk=postlist[0].get('listing_leads_id')).values()
 
 
-            return Response({'status': 200,'message':'buyer posted item list','data': listarray}, status=200)
+            return Response({'status': 200,'message':'buyer posted item list','data': listarray,'buyer_requirements':buyerrequirementsobj}, status=200)
         else:
             return Response({'status': 204, 'message': 'Not Present'}, status=204)
 

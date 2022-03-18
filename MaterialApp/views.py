@@ -3658,7 +3658,8 @@ def posted_rfq_award_list(request):
                                 cmpnameobj=BasicCompanyDetails.objects.filter(updated_by_id=awardobj[0].get('updated_by_id')).values()
                                 if cmpnameobj:
 
-                                    listarray.append({ 'awarded_date':awardobj[0].get('awarded_date'),
+                                    listarray.append({'award_id':awardobj[0].get('id'),
+                                                        'awarded_date':awardobj[0].get('awarded_date'),
                                                        'po_status': awardobj[0].get('po_status'),
                                                        'uom': postlist[0].get('uom'),
                                                        'quantity': postlist[0].get('quantity'),
@@ -3673,7 +3674,8 @@ def posted_rfq_award_list(request):
                                                        'company_name': cmpnameobj[0].get('company_name'),
                                                        })
                                 else:
-                                    listarray.append({'awarded_date': awardobj[0].get('awarded_date'),
+                                    listarray.append({'award_id':awardobj[0].get('id'),
+                                                      'awarded_date': awardobj[0].get('awarded_date'),
                                                       'po_status': awardobj[0].get('po_status'),
                                                       'uom': postlist[0].get('uom'),
                                                       'quantity': postlist[0].get('quantity'),

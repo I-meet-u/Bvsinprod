@@ -2055,19 +2055,29 @@ def otp_verification_status(request):
 @permission_classes((AllowAny,))
 def get_approved_companies_list(request):
     company_array=[]
+    compcode=""
+    compname=""
+    gstnumber=""
+    billcity=""
+
     try:
         if request.data['key']=="vsinadmindb":
             regobj=SelfRegistration.objects.filter(admin_approve='Approved').values().order_by('id')
             if len(regobj)>0:
                 for i in range(0,len(regobj)):
                     basicobj=BasicCompanyDetails.objects.filter(updated_by_id=regobj[i].get('id')).values()
+                    if basicobj:
+                        compcode=basicobj[0].get('company_code')
+                        compname=basicobj[0].get('company_name')
+                        gstnumber=basicobj[0].get('gst_number')
                     billobj=BillingAddress.objects.filter(updated_by_id=regobj[i].get('id')).values()
+                    if billobj:
+                        billcity=billobj[0].get('bill_city')
                     company_array.append({'user_id':regobj[i].get('id'),
-                                          'company_code':basicobj[0].get('company_code'),
-                                          'company_name':basicobj[0].get('company_name'),
-                                          'gst_number':basicobj[0].get('gst_number'),
-                                          'bill_city':billobj[0].get('bill_city')
-
+                                          'company_code':compcode,
+                                          'company_name':compname,
+                                          'gst_number':gstnumber,
+                                          'bill_city':billcity
                                           })
                 return Response({'status':200,'message':'Approved Companies List','data':company_array},status=status.HTTP_200_OK)
             else:

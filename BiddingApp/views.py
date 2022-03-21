@@ -5064,7 +5064,8 @@ def get_all_source_leads(request):
                                                    'category': bidobj[i].get('category'),
                                                    'get_vendors': bidobj[i].get('get_vendors'),
                                                    'company_name': basicobj[0].get('company_name'),
-                                                   'bill_address':billobj[0].get('bill_address')
+                                                   'bill_address':billobj[0].get('bill_address'),
+                                                   'sub_category': bidobj[i].get('sub_category'),
 
                                                    })
 

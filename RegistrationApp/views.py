@@ -1796,7 +1796,7 @@ def vendor_buyer_list(request):
                                             average = sum / len(reviewobj)
                                         else:
                                             average = 0
-                                    print(average)
+                                    # print(average)
                                     detailslist.append({"company_code": basicobj[0].get('company_code'),
                                                         "company_name": basicobj[0].get('company_name'),
                                                         "company_type": basicobj[0].get('company_type'),

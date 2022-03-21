@@ -105,6 +105,7 @@ urlpatterns = [
     path('delete_vendor_product_requirement/',views.delete_vendor_product_requirement),
     path('update_buyer_requirement_pk_in_post_rfq/',views.update_buyer_requirement_pk_in_post_rfq),
     path('update_landing_pk_in_buyer_requirement/',views.update_landing_pk_in_buyer_requirement),
-    path('update_listing_leads_pk_in_buyer_requirement/',views.update_listing_leads_pk_in_buyer_requirement)
+    path('update_listing_leads_pk_in_buyer_requirement/',views.update_listing_leads_pk_in_buyer_requirement),
+    path('posted_rfq_award_list_based_on_award_id/',views.posted_rfq_award_list_based_on_award_id)
         # fghjj
 ]

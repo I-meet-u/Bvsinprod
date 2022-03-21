@@ -27,7 +27,7 @@ from rest_framework.views import APIView
 import sib_api_v3_sdk
 from sib_api_v3_sdk.rest import ApiException
 
-
+from LandingPageApp.models import CompanyReviewAndRating
 from .models import SelfRegistration, SelfRegistration_Sample, BasicCompanyDetails, BillingAddress, ShippingAddress, \
     IndustrialInfo, IndustrialHierarchy, BankDetails, LegalDocuments, BasicCompanyDetails_Others, BillingAddress_Others, \
     ShippingAddress_Others, Employee_CompanyDetails, Employee_IndustryInfo, ContactDetails, \
@@ -1782,40 +1782,76 @@ def vendor_buyer_list(request):
             if len(regobj) > 0:
                 for i in range(0, len(regobj)):
                     basicobj = BasicCompanyDetails.objects.filter(updated_by_id=regobj[i].get('id')).values()
-
                     if len(basicobj) > 0:
-                        addressobj = BillingAddress.objects.filter(updated_by_id=regobj[i].get('id')).values()
-                        maincoreobj=IndustrialHierarchy.objects.filter(updated_by_id=regobj[i].get('id')).values()
-                        if len(maincoreobj)>0 and len(addressobj)>0:
-                            detailslist.append({"company_code": basicobj[0].get('company_code'),
-                                                "company_name": basicobj[0].get('company_name'),
-                                                "company_type": basicobj[0].get('company_type'),
-                                                "address": addressobj[0].get('bill_address'),
-                                                "gst_number": basicobj[0].get('gst_number'),
-                                                "profile_image": regobj[i].get('profile_cover_photo'),
-                                                "user_type": regobj[i].get('user_type'),
-                                                "nature_of_business":regobj[i].get('nature_of_business'),
-                                                "maincore": maincoreobj[0].get('maincore'),
-                                                "category":maincoreobj[0].get('category'),
-                                                "subcategory":maincoreobj[0].get('subcategory')
+                        addressobj = BillingAddress.objects.filter(updated_by_id=basicobj[0].get('updated_by_id')).values()
+                        if addressobj:
+                            maincoreobj=IndustrialHierarchy.objects.filter(updated_by_id=addressobj[0].get('updated_by_id')).values()
+                            if maincoreobj:
+                                reviewobj=CompanyReviewAndRating.objects.filter(company_code_id=maincoreobj[0].get('company_code_id')).values()
+                                if reviewobj:
+                                    sum = 0
+                                    for rating in reviewobj:
+                                        sum = sum + rating['rating']
+                                        if len(reviewobj) > 0:
+                                            average = sum / len(reviewobj)
+                                        else:
+                                            average = 0
+                                    print(average)
+                                    detailslist.append({"company_code": basicobj[0].get('company_code'),
+                                                        "company_name": basicobj[0].get('company_name'),
+                                                        "company_type": basicobj[0].get('company_type'),
+                                                        "address": addressobj[0].get('bill_address'),
+                                                        "gst_number": basicobj[0].get('gst_number'),
+                                                        "profile_image": regobj[i].get('profile_cover_photo'),
+                                                        "user_type": regobj[i].get('user_type'),
+                                                        "nature_of_business":regobj[i].get('nature_of_business'),
+                                                        "maincore": maincoreobj[0].get('maincore'),
+                                                        "category":maincoreobj[0].get('category'),
+                                                        "subcategory":maincoreobj[0].get('subcategory'),
+                                                        "listing_date":basicobj[0].get('listing_date'),
+                                                        "pan_number":basicobj[0].get('pan_number'),
+                                                        "tax_payer_type":basicobj[0].get('tax_payer_type'),
+                                                        "msme_registered":basicobj[0].get('msme_registered'),
+                                                        "company_established":basicobj[0].get('company_established'),
+                                                        "registered_date":basicobj[0].get('registered_iec'),
+                                                        "industrial_scale":basicobj[0].get('industrial_scale'),
+                                                        "phone_number":regobj[i].get('phone_number'),
+                                                        "email_id":regobj[i].get('username'),
+                                                        "bill_city":addressobj[0].get('bill_city'),
+                                                        "updated_by":regobj[i].get('updated_by_id'),
+                                                        "rating":round(average)
 
 
-                                                })
 
+                                                        })
+
+                                else:
+                                    detailslist.append({"company_code": basicobj[0].get('company_code'),
+                                                        "company_name": basicobj[0].get('company_name'),
+                                                        "company_type": basicobj[0].get('company_type'),
+                                                        "address": addressobj[0].get('bill_address'),
+                                                        "gst_number": basicobj[0].get('gst_number'),
+                                                        "profile_image": regobj[i].get('profile_cover_photo'),
+                                                        "user_type": regobj[i].get('user_type'),
+                                                        "nature_of_business": regobj[i].get('nature_of_business'),
+                                                        "maincore": maincoreobj[0].get('maincore'),
+                                                        "category": maincoreobj[0].get('category'),
+                                                        "subcategory": maincoreobj[0].get('subcategory'),
+                                                        "listing_date": basicobj[0].get('listing_date'),
+                                                        "pan_number": basicobj[0].get('pan_number'),
+                                                        "tax_payer_type": basicobj[0].get('tax_payer_type'),
+                                                        "msme_registered": basicobj[0].get('msme_registered'),
+                                                        "company_established": basicobj[0].get('company_established'),
+                                                        "registered_date": basicobj[0].get('registered_iec'),
+                                                        "industrial_scale": basicobj[0].get('industrial_scale'),
+                                                        "phone_number": regobj[i].get('phone_number'),
+                                                        "email_id": regobj[i].get('username'),
+                                                        "bill_city": addressobj[0].get('bill_city'),
+                                                        "updated_by": regobj[i].get('updated_by_id'),
+                                                        "rating": ""
+                                                        })
                         else:
-                            detailslist.append({"company_code": basicobj[0].get('company_code'),
-                                                "company_name": basicobj[0].get('company_name'),
-                                                "company_type": basicobj[0].get('company_type'),
-                                                "address": "",
-                                                "gst_number": basicobj[0].get('gst_number'),
-                                                "profile_image": regobj[i].get('profile_cover_photo'),
-                                                "user_type": regobj[i].get('user_type'),
-                                                "nature_of_business": regobj[i].get('nature_of_business'),
-                                                "maincore": ""
-
-                                                })
-                    else:
-                        pass
+                            pass
                 return Response({'status': 200, 'message': 'List Of Vendors & Buyers','data':detailslist}, status=200)
             else:
                 return Response({'status': 204, 'message': 'Registered Details Are Not Present'}, status=204)

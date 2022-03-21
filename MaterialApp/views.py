@@ -4001,8 +4001,17 @@ def posted_rfq_po_list_based_on_po_id(request):
                                           'landing_pk':postlist[0].get('listing_leads_id'),
                                           'pf_charges':postlist[0].get('pf_charges'),
                                           'payment_charges':postlist[0].get('payment_charges'),
-                                          'delivery_charges':postlist[0].get('delivery_charges')
-                                           })
+                                          'delivery_charges':postlist[0].get('delivery_charges'),
+                                          "PO_date":poobj[0].get('PO_date'),
+                                          "PO_num":poobj[0].get('PO_num'),
+                                          "delivery_date":poobj[0].get('delivery_date'),
+                                          "remind_date":poobj[0].get('remind_date'),
+                                          "delivery_days":poobj[0].get('delivery_days'),
+                                          "subject":poobj[0].get('subject'),
+                                          "attachment1":poobj[0].get('attachment1'),
+                                          "attachment2": poobj[0].get('attachment2'),
+                                          "attachment3": poobj[0].get('attachment3'),
+                                          })
                     else:
                         listarray.append({'po_id': poobj[0].get('id'),
                                           'awarded_date': poobj[0].get('awarded_date'),
@@ -4021,7 +4030,16 @@ def posted_rfq_po_list_based_on_po_id(request):
                                           'landing_pk': postlist[0].get('listing_leads_id'),
                                           'pf_charges': postlist[0].get('pf_charges'),
                                           'payment_charges': postlist[0].get('payment_charges'),
-                                          'delivery_charges': postlist[0].get('delivery_charges')
+                                          'delivery_charges': postlist[0].get('delivery_charges'),
+                                          "PO_date": poobj[0].get('PO_date'),
+                                          "PO_num": poobj[0].get('PO_num'),
+                                          "delivery_date": poobj[0].get('delivery_date'),
+                                          "remind_date": poobj[0].get('remind_date'),
+                                          "delivery_days": poobj[0].get('delivery_days'),
+                                          "subject": poobj[0].get('subject'),
+                                          "attachment1": poobj[0].get('attachment1'),
+                                          "attachment2": poobj[0].get('attachment2'),
+                                          "attachment3": poobj[0].get('attachment3'),
                                           })
             if postlist:
                 buyerrequirementsobj=BuyerProduct_Requirements.objects.filter(landing_page_pk=postlist[0].get('listing_leads_id')).values()

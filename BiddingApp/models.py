@@ -455,6 +455,7 @@ class SourceList_CreateItems(models.Model):
     remarks=models.CharField(max_length=200,null=True,blank=True)
     maincore = models.CharField(max_length=200, null=True, blank=True)
     category = models.CharField(max_length=200, null=True, blank=True)
+    sub_category = models.CharField(max_length=800, null=True, blank=True)
     get_vendors = models.CharField(max_length=100, null=True, blank=True, default='False')
 
 

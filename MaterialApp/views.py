@@ -3966,3 +3966,70 @@ def posted_rfq_award_list_based_on_award_id(request):
 
     except Exception as e:
         return Response({'status': 500, 'error': str(e)}, status=500)
+
+
+
+@api_view(['post'])
+def posted_rfq_po_list_based_on_po_id(request):
+    data = request.data
+    po_id=data['po_id']
+    listarray=[]
+    try:
+        poobj= LandingPageListingLeadsPurchaseOrder.objects.filter(id=po_id).values()
+        if poobj:
+            postlist = LandingPageBidding_Publish.objects.filter(id=poobj[0].get('landing_page_publish_pk_id')).values()
+            if postlist:
+                billcityobj=BillingAddress.objects.filter(updated_by_id=poobj[0].get('updated_by_id')).values()
+                if billcityobj:
+                    cmpnameobj=BasicCompanyDetails.objects.filter(updated_by_id=poobj[0].get('updated_by_id')).values()
+                    if cmpnameobj:
+
+                        listarray.append({'po_id':poobj[0].get('id'),
+                                           'awarded_date':poobj[0].get('awarded_date'),
+                                           'po_status': poobj[0].get('po_status'),
+                                           'uom': postlist[0].get('uom'),
+                                           'quantity': postlist[0].get('quantity'),
+                                           'total_amount': postlist[0].get('total_amount'),
+                                           'tax': postlist[0].get('tax'),
+                                           'discount': postlist[0].get('discount'),
+                                           'unit_rate': postlist[0].get('unit_rate'),
+                                           'item_name': poobj[0].get('item_name'),
+                                           'item_description':poobj[0].get('item_description'),
+                                           'bill_city': billcityobj[0].get('bill_city'),
+                                           'company_code': cmpnameobj[0].get('company_code'),
+                                           'company_name': cmpnameobj[0].get('company_name'),
+                                          'landing_pk':postlist[0].get('listing_leads_id'),
+                                          'pf_charges':postlist[0].get('pf_charges'),
+                                          'payment_charges':postlist[0].get('payment_charges'),
+                                          'delivery_charges':postlist[0].get('delivery_charges')
+                                           })
+                    else:
+                        listarray.append({'po_id': poobj[0].get('id'),
+                                          'awarded_date': poobj[0].get('awarded_date'),
+                                          'po_status': poobj[0].get('po_status'),
+                                          'uom': postlist[0].get('uom'),
+                                          'quantity': postlist[0].get('quantity'),
+                                          'total_amount': postlist[0].get('total_amount'),
+                                          'tax': postlist[0].get('tax'),
+                                          'discount': postlist[0].get('discount'),
+                                          'unit_rate': postlist[0].get('unit_rate'),
+                                          'item_name': poobj[0].get('item_name'),
+                                          'item_description': poobj[0].get('item_description'),
+                                          'bill_city': billcityobj[0].get('bill_city'),
+                                          'company_code': "",
+                                          'company_name': "",
+                                          'landing_pk': postlist[0].get('listing_leads_id'),
+                                          'pf_charges': postlist[0].get('pf_charges'),
+                                          'payment_charges': postlist[0].get('payment_charges'),
+                                          'delivery_charges': postlist[0].get('delivery_charges')
+                                          })
+            if postlist:
+                buyerrequirementsobj=BuyerProduct_Requirements.objects.filter(landing_page_pk=postlist[0].get('listing_leads_id')).values()
+
+
+            return Response({'status': 200,'message':'Buyer Posted Item List','data': listarray,'buyer_requirements':buyerrequirementsobj}, status=200)
+        else:
+            return Response({'status': 204, 'message': 'Not Present'}, status=204)
+
+    except Exception as e:
+        return Response({'status': 500, 'error': str(e)}, status=500)

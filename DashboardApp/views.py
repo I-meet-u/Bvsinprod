@@ -1408,17 +1408,21 @@ def all_vendors_list(request):
             if len(regobjdata) > 0:
                 for i in range(0, len(regobjdata)):
                     basicobj = BasicCompanyDetails.objects.get(updated_by_id=regobjdata[i].get('id'))
-                    industryobj = IndustrialInfo.objects.get(updated_by_id=regobjdata[i].get('id'),
-                                                             company_code=basicobj.company_code)
-                    billingobj = BillingAddress.objects.filter(updated_by_id=regobjdata[i].get('id')).values()
-                    hierarchyobj = IndustrialHierarchy.objects.get(updated_by_id=regobjdata[i].get('id'),
-                                                                      company_code=basicobj.company_code)
-                    if basicobj.company_code not in internalarray or basicobj.company_code not in internalbuyerarray:
-                        externalarray.append({'company_code': basicobj.company_code,
+                    if basicobj:
+                        industryobj = IndustrialInfo.objects.filter(updated_by_id=basicobj.updated_by_id,
+                                                             company_code=basicobj.company_code).values()
+                        if industryobj:
+                            hierarchyobj = IndustrialHierarchy.objects.get(updated_by_id=industryobj[0].get('updated_by_id'),
+                                                                           company_code=industryobj[0].get('company_code_id'))
+                            if hierarchyobj:
+                                billingobj = BillingAddress.objects.filter(updated_by_id=hierarchyobj.updated_by_id).values()
+                                if billingobj:
+                                    if basicobj.company_code not in internalarray or basicobj.company_code not in internalbuyerarray:
+                                        externalarray.append({'company_code': basicobj.company_code,
                                               'company_name': basicobj.company_name,
                                               'industry_scale': basicobj.industrial_scale,
-                                              'nature_of_business': industryobj.nature_of_business,
-                                              'industry_to_serve': industryobj.industry_to_serve,
+                                              'nature_of_business': industryobj[0].get('nature_of_business'),
+                                              'industry_to_serve': industryobj[0].get('industry_to_serve'),
                                                'maincore': hierarchyobj.maincore,
                                               'category': hierarchyobj.category,
                                               'subcategory': hierarchyobj.subcategory,
@@ -1429,31 +1433,66 @@ def all_vendors_list(request):
                                               'email_id': regobjdata[i].get('username'),
                                               'usertype':regobjdata[i].get('user_type'),
                                                   })
+                                else:
+                                    externalarray.append({'company_code': basicobj.company_code,
+                                                          'company_name': basicobj.company_name,
+                                                          'industry_scale': basicobj.industrial_scale,
+                                                          'nature_of_business': industryobj[0].get('nature_of_business'),
+                                                          'industry_to_serve': industryobj[0].get('industry_to_serve'),
+                                                          'maincore': hierarchyobj.maincore,
+                                                          'category': hierarchyobj.category,
+                                                          'subcategory': hierarchyobj.subcategory,
+                                                          'bill_city': "",
+                                                          'bill_state': "",
+                                                          'gst_number': basicobj.gst_number,
+                                                          'phone_no': regobjdata[i].get('phone_number'),
+                                                          'email_id': regobjdata[i].get('username'),
+                                                          'usertype': regobjdata[i].get('user_type'),
+                                                          })
             regobjdata1 = SelfRegistration.objects.filter(user_type='Buyer',admin_approve='Approved').values().order_by('id')
             if len(regobjdata1) > 0:
                 for i in range(0, len(regobjdata1)):
                     print(regobjdata1[i].get('id'))
                     basicobj = BasicCompanyDetails.objects.get(updated_by_id=regobjdata1[i].get('id'))
-                    industryobj = IndustrialInfo.objects.get(updated_by_id=regobjdata1[i].get('id'),
-                                                             company_code=basicobj.company_code)
-                    billingobj = BillingAddress.objects.filter(updated_by_id=regobjdata1[i].get('id')).values()
+                    if basicobj:
+                        industryobj = IndustrialInfo.objects.filter(updated_by_id=basicobj.updated_by_id,
+                                                             company_code=basicobj.company_code).values()
+                        if industryobj:
+                            billingobj = BillingAddress.objects.filter(updated_by_id=industryobj[0].get('updated_by_id')).values()
+                            if billingobj:
+                                if basicobj.company_code not in internalarray or basicobj.company_code not in internalbuyerarray:
+                                    externalarray.append({'company_code': basicobj.company_code,
+                                                          'company_name': basicobj.company_name,
+                                                          'industry_scale': basicobj.industrial_scale,
+                                                          'nature_of_business': industryobj[0].get('nature_of_business'),
+                                                          'industry_to_serve': industryobj[0].get('industry_to_serve'),
+                                                          'maincore': "",
+                                                          'category': "",
+                                                          'subcategory': "",
+                                                          'bill_city': billingobj[0].get('bill_city'),
+                                                          'bill_state': billingobj[0].get('bill_state'),
+                                                          'gst_number': basicobj.gst_number,
+                                                          'phone_no': regobjdata1[i].get('phone_number'),
+                                                          'email_id': regobjdata1[i].get('username'),
+                                                          'usertype': regobjdata1[i].get('user_type'),
+                                                          })
+                            else:
+                                externalarray.append({'company_code': basicobj.company_code,
+                                                      'company_name': basicobj.company_name,
+                                                      'industry_scale': basicobj.industrial_scale,
+                                                      'nature_of_business': industryobj[0].get('nature_of_business'),
+                                                      'industry_to_serve': industryobj[0].get('industry_to_serve'),
+                                                      'maincore': "",
+                                                      'category': "",
+                                                      'subcategory': "",
+                                                      'bill_city': "",
+                                                      'bill_state': "",
+                                                      'gst_number': basicobj.gst_number,
+                                                      'phone_no': regobjdata1[i].get('phone_number'),
+                                                      'email_id': regobjdata1[i].get('username'),
+                                                      'usertype': regobjdata1[i].get('user_type'),
+                                                      })
 
-                    if basicobj.company_code not in internalarray or basicobj.company_code not in internalbuyerarray:
-                        externalarray.append({'company_code': basicobj.company_code,
-                                              'company_name': basicobj.company_name,
-                                              'industry_scale': basicobj.industrial_scale,
-                                              'nature_of_business': industryobj.nature_of_business,
-                                              'industry_to_serve': industryobj.industry_to_serve,
-                                              'maincore': "",
-                                              'category': "",
-                                              'subcategory': "",
-                                              'bill_city': billingobj[0].get('bill_city'),
-                                              'bill_state': billingobj[0].get('bill_state'),
-                                              'gst_number': basicobj.gst_number,
-                                              'phone_no': regobjdata1[i].get('phone_number'),
-                                              'email_id': regobjdata1[i].get('username'),
-                                              'usertype': regobjdata1[i].get('user_type'),
-                                              })
             else:
                 pass
             return Response({'status': 200, 'message': 'External Vendor List', 'data': externalarray}, status=200)

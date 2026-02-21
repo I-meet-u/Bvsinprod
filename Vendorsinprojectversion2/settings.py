@@ -101,6 +101,40 @@ DATABASES = {
 
 }
 
+# Development convenience: use SQLite when the environment variable is set
+# (e.g. in local containers where the production database isn't reachable).
+#
+# To launch the app without altering the real DATABASES block above, start the
+# server with ``USE_SQLITE=1``.  The file ``db.sqlite3`` will live in
+# ``BASE_DIR``.
+# define a boolean to let other code (including migrations) know we're in
+# sqlite mode; migrations have been patched to consult this setting.
+USE_SQLITE = DEBUG and os.environ.get('USE_SQLITE') == '1'
+
+if USE_SQLITE:
+    # use a database file inside the workspace so the container user can write
+    sqlite_path = os.path.join(os.getcwd(), 'db.sqlite3')
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': sqlite_path,
+        }
+    }
+
+    # When running on SQLite, postgres.ArrayField is not supported by the SQL
+    # dialect.  During migrations we still import ArrayField but its
+    # ``db_type()`` must produce something SQLite accepts.  Monkey-patch the
+    # class so all existing migrations automatically use TEXT instead of
+    # ``varchar(… )[]``.  This saves us from editing dozens of files.
+    try:
+        from django.contrib.postgres.fields import ArrayField
+        def _sqlite_array_db_type(self, connection):
+            # ignore base_field, always create a generic text column
+            return 'text'
+        ArrayField.db_type = _sqlite_array_db_type
+    except ImportError:
+        pass
+
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
 

@@ -2,6 +2,7 @@
 
 import django.contrib.postgres.fields
 from django.db import migrations, models
+from django.conf import settings
 
 
 class Migration(migrations.Migration):
@@ -18,6 +19,8 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='openleadsawards',
             name='product_description',
-            field=django.contrib.postgres.fields.ArrayField(base_field=models.CharField(max_length=800), blank=True, null=True, size=None),
+            field=(django.contrib.postgres.fields.ArrayField(base_field=models.CharField(max_length=800), blank=True, null=True, size=None)
+                   if not getattr(settings, 'USE_SQLITE', False)
+                   else models.TextField(blank=True, null=True)),
         ),
     ]

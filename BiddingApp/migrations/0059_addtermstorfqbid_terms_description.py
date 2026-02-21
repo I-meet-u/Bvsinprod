@@ -2,6 +2,8 @@
 
 import django.contrib.postgres.fields
 from django.db import migrations, models
+from django.conf import settings
+from django.conf import settings
 
 
 class Migration(migrations.Migration):
@@ -14,7 +16,9 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='addtermstorfqbid',
             name='terms_description',
-            field=django.contrib.postgres.fields.ArrayField(base_field=models.CharField(blank=True, max_length=800, null=True), default=[], size=None),
+            field=(django.contrib.postgres.fields.ArrayField(base_field=models.CharField(blank=True, max_length=800, null=True), default=[], size=None)
+                   if not getattr(settings, 'USE_SQLITE', False)
+                   else models.TextField(blank=True, null=True)),
             preserve_default=False,
         ),
     ]

@@ -13,9 +13,9 @@ class Migration(migrations.Migration):
 
     initial = True
 
-    # dependencies = [
-    #     ('auth','0012_alter_user_first_name_max_length')
-    # ]
+    dependencies = [
+        ('auth','0012_alter_user_first_name_max_length'),
+    ]
 
     operations = [
         migrations.CreateModel(
@@ -100,7 +100,8 @@ class Migration(migrations.Migration):
                 ('contact_person', models.CharField(max_length=200)),
                 ('business_to_serve', models.CharField(max_length=50)),
                 ('country', models.CharField(max_length=100)),
-                ('nature_of_business', django.contrib.postgres.fields.ArrayField(base_field=models.CharField(max_length=800), size=None)),
+                # sqlite3 does not support PostgreSQL ArrayField; fall back to text
+                ('nature_of_business', models.TextField(max_length=800) if 'sqlite3' in settings.DATABASES['default']['ENGINE'] else django.contrib.postgres.fields.ArrayField(base_field=models.CharField(max_length=800), size=None)),
                 ('user_type', models.CharField(max_length=100)),
                 ('phone_number', models.CharField(max_length=15, unique=True)),
                 ('created_on', models.DateTimeField(auto_now_add=True)),
@@ -128,7 +129,8 @@ class Migration(migrations.Migration):
                 ('contact_person', models.CharField(max_length=200)),
                 ('business_to_serve', models.CharField(max_length=50, null=True)),
                 ('country', models.CharField(max_length=100)),
-                ('nature_of_business', django.contrib.postgres.fields.ArrayField(base_field=models.CharField(max_length=500), null=True, size=None)),
+                # use TextField on sqlite since ArrayField isn't available
+                ('nature_of_business', models.TextField(max_length=500, null=True) if 'sqlite3' in settings.DATABASES['default']['ENGINE'] else django.contrib.postgres.fields.ArrayField(base_field=models.CharField(max_length=500), null=True, size=None)),
                 ('user_type', models.CharField(max_length=100)),
                 ('phone_number', models.CharField(max_length=15, unique=True)),
                 ('created_on', models.DateTimeField(auto_now_add=True)),
@@ -211,10 +213,10 @@ class Migration(migrations.Migration):
             name='IndustrialInfo',
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('nature_of_business', django.contrib.postgres.fields.ArrayField(base_field=models.CharField(max_length=800), size=None)),
-                ('geographical_area', django.contrib.postgres.fields.ArrayField(base_field=models.CharField(max_length=100), size=None)),
-                ('supply_capabilites', django.contrib.postgres.fields.ArrayField(base_field=models.CharField(max_length=800), size=None)),
-                ('industry_to_serve', django.contrib.postgres.fields.ArrayField(base_field=models.CharField(max_length=800), size=None)),
+                ('nature_of_business', models.TextField(max_length=800) if 'sqlite3' in settings.DATABASES['default']['ENGINE'] else django.contrib.postgres.fields.ArrayField(base_field=models.CharField(max_length=800), size=None)),
+                ('geographical_area', models.TextField(max_length=100) if 'sqlite3' in settings.DATABASES['default']['ENGINE'] else django.contrib.postgres.fields.ArrayField(base_field=models.CharField(max_length=100), size=None)),
+                ('supply_capabilites', models.TextField(max_length=800) if 'sqlite3' in settings.DATABASES['default']['ENGINE'] else django.contrib.postgres.fields.ArrayField(base_field=models.CharField(max_length=800), size=None)),
+                ('industry_to_serve', models.TextField(max_length=800) if 'sqlite3' in settings.DATABASES['default']['ENGINE'] else django.contrib.postgres.fields.ArrayField(base_field=models.CharField(max_length=800), size=None)),
                 ('created_on', models.DateTimeField(auto_now_add=True)),
                 ('updated_on', models.DateTimeField(auto_now=True)),
                 ('created_by', models.BigIntegerField()),
@@ -229,9 +231,9 @@ class Migration(migrations.Migration):
             name='IndustrialHierarchy',
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('maincore', django.contrib.postgres.fields.ArrayField(base_field=models.CharField(max_length=500), size=None)),
-                ('category', django.contrib.postgres.fields.ArrayField(base_field=models.CharField(max_length=500), size=None)),
-                ('subcategory', django.contrib.postgres.fields.ArrayField(base_field=models.CharField(max_length=500), size=None)),
+                ('maincore', models.TextField(max_length=500) if 'sqlite3' in settings.DATABASES['default']['ENGINE'] else django.contrib.postgres.fields.ArrayField(base_field=models.CharField(max_length=500), size=None)),
+                ('category', models.TextField(max_length=500) if 'sqlite3' in settings.DATABASES['default']['ENGINE'] else django.contrib.postgres.fields.ArrayField(base_field=models.CharField(max_length=500), size=None)),
+                ('subcategory', models.TextField(max_length=500) if 'sqlite3' in settings.DATABASES['default']['ENGINE'] else django.contrib.postgres.fields.ArrayField(base_field=models.CharField(max_length=500), size=None)),
                 ('created_on', models.DateTimeField(auto_now_add=True)),
                 ('updated_on', models.DateTimeField(auto_now=True)),
                 ('created_by', models.BigIntegerField()),
@@ -246,9 +248,9 @@ class Migration(migrations.Migration):
             name='Employee_IndustryInfo',
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('emp_nature_of_business', django.contrib.postgres.fields.ArrayField(base_field=models.CharField(max_length=800), size=None)),
-                ('emp_supply_capabilites', django.contrib.postgres.fields.ArrayField(base_field=models.CharField(max_length=800), size=None)),
-                ('emp_industry_to_serve', django.contrib.postgres.fields.ArrayField(base_field=models.CharField(max_length=800), size=None)),
+                ('emp_nature_of_business', models.TextField(max_length=800) if 'sqlite3' in settings.DATABASES['default']['ENGINE'] else django.contrib.postgres.fields.ArrayField(base_field=models.CharField(max_length=800), size=None)),
+                ('emp_supply_capabilites', models.TextField(max_length=800) if 'sqlite3' in settings.DATABASES['default']['ENGINE'] else django.contrib.postgres.fields.ArrayField(base_field=models.CharField(max_length=800), size=None)),
+                ('emp_industry_to_serve', models.TextField(max_length=800) if 'sqlite3' in settings.DATABASES['default']['ENGINE'] else django.contrib.postgres.fields.ArrayField(base_field=models.CharField(max_length=800), size=None)),
                 ('emp_created_on', models.DateTimeField(auto_now_add=True)),
                 ('emp_updated_on', models.DateTimeField(auto_now=True)),
                 ('emp_created_by', models.BigIntegerField()),
